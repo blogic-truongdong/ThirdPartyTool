@@ -31,7 +31,7 @@ namespace ThirdPartyTool
                 BLogicLogger.Debug("Connect Merchant Database");
                 using (var conn = new SqlConnection(MerchantConnection))
                 {
-                    var sql = $"select * from TransactionDetail t where t.BatchStatus = 'Closed' and (t.BatchUnique = '' or t.BatchUnique is null) and t.BatchID <> '' and t.BatchID is not null ";
+                    var sql = $"select * from TransactionDetail t where t.BatchUnique = '1b4deaac-15ae-4fe5-973e-d6778c9d5c72' ";
 
                     var listTransactionDetails = await conn.QueryAsync<TransactionDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
 
@@ -42,7 +42,7 @@ namespace ThirdPartyTool
                         this.Close();
                     }
 
-                    var groupTransactions = listTransactionDetails.GroupBy(x => new { x.BatchID, x.MerchantID });
+                    var groupTransactions = listTransactionDetails.GroupBy(x => new { x.BatchUnique });
 
                     BLogicLogger.Debug($"Start insert new batch & update TransactionDetail");
 
@@ -96,6 +96,14 @@ namespace ThirdPartyTool
                                     dTotalReturns += subReturn;
                                     dTotalMerchantFee -= item.MerchantFee;
                                 }
+                                else
+                                {
+
+                                }
+                            }
+                            else
+                            {
+
                             }
                         }
                         var TotalReturns = dTotalReturns;
@@ -112,7 +120,7 @@ namespace ThirdPartyTool
 
                         if (TransactionCount <= 0)
                             continue;
-
+                        return;
                         Guid batchUnique = Guid.NewGuid();
 
                         DateTime date = listTransactions[0].Date.Date + new TimeSpan(23, 55, 00);

@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,6 +72,13 @@
     </Compile>
     <Compile Include="ListEmployeeResponseModel.cs" />
     <Compile Include="Models\BatchEntity.cs" />
+    <Compile Include="Models\EmployeeEntity.cs" />
+    <Compile Include="Models\EmployeeRoleEntity.cs" />
+    <Compile Include="Models\RoleEntity.cs" />
+    <Compile Include="Models\SaleReceiptEntity.cs" />
+    <Compile Include="Models\SaleReceiptPaymentDetailEntity.cs" />
+    <Compile Include="Models\StoreEntity.cs" />
+    <Compile Include="Models\TimeClockEntity.cs" />
     <Compile Include="Models\TransactionDetailEntity.cs" />
     <Compile Include="SevenShiftsForm.cs">
       <SubType>Form</SubType>
@@ -81,6 +89,18 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateEmployee7ShiftsModel.cs" />
+    <Compile Include="UpdateTipForSaleReceiptFile_0_0.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateTipForSaleReceiptFile_0_0.Designer.cs">
+      <DependentUpon>UpdateTipForSaleReceiptFile_0_0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VoidSaleReceipt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VoidSaleReceipt.Designer.cs">
+      <DependentUpon>VoidSaleReceipt.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AddBatchDetailForm.resx">
       <DependentUpon>AddBatchDetailForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +118,12 @@
     </Compile>
     <EmbeddedResource Include="SevenShiftsForm.resx">
       <DependentUpon>SevenShiftsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateTipForSaleReceiptFile_0_0.resx">
+      <DependentUpon>UpdateTipForSaleReceiptFile_0_0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VoidSaleReceipt.resx">
+      <DependentUpon>VoidSaleReceipt.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
