@@ -16,7 +16,7 @@ namespace ThirdPartyTool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UpdateTipForSaleReceiptFile_0_0());
+            Application.Run(new FormMain());
         }
     }
 }

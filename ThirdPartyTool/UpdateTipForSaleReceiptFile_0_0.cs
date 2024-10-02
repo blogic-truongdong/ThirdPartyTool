@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
@@ -28,156 +29,218 @@ namespace ThirdPartyTool
             btnConnect.Click += BtnConnect_Click;
 
             btnGetScript.Click += BtnGetScript_Click;
+
+            btnClose.Click += BtnClose_Click;
+        }
+
+        private void BtnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private async void BtnGetScript_Click(object sender, EventArgs e)
         {
-            txtScript.Text = "";
-
-            if (string.IsNullOrWhiteSpace(txtTicketNumber.Text) || string.IsNullOrWhiteSpace(txtGratuity.Text))
-                return;
-
-            string creditCardTransactionID = string.Empty;
-
-            decimal.TryParse(txtGratuity.Text.Trim(), out decimal gratuity);
-
-            if (gratuity == 0)
-                return;
-
-            using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+            try
             {
-                var sql = $"select sp.Gratuity, sp.SVCFeeForGratuity,sp.CreditCardTransactionID, s.SaleReceiptNumber, sp.*" +
-                    $" from SaleReceiptPaymentDetails sp left join SaleReceipts s on sp.SaleReceiptID = s.SaleReceiptID" +
-                    $" where s.SaleReceiptNumber = '{txtTicketNumber.Text.Trim()}'";
+                string posCondition = string.Empty;
+                string crudScriptPOS = string.Empty;
 
-                var payment = await conn.QuerySingleAsync<SaleReceiptPaymentDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                string merchantCondition = string.Empty;
+                string crudScriptMerchant = string.Empty;
 
-                if (!string.IsNullOrWhiteSpace(payment.SaleReceiptPaymentDetailID) && payment.Gratuity == 0)
+                txtScript.Text = "";
+
+                if (string.IsNullOrWhiteSpace(txtTicketNumber.Text) || string.IsNullOrWhiteSpace(txtGratuity.Text))
+                    return;
+
+                string creditCardTransactionID = string.Empty;
+
+                decimal.TryParse(txtGratuity.Text.Trim(), out decimal gratuity);
+
+                if (gratuity == 0)
                 {
-                    #region get Role ID
-                    string roleID = "0";
+                    return;
+                }
 
-                    sql = $"select * from EmployeeRoles where EmployeeID = '{payment.Cashier}'";
-                    var listRole = (await conn.QueryAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text)).ToList();
+                using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+                {
+                    var sql = $"select sp.Gratuity, sp.SVCFeeForGratuity,sp.CreditCardTransactionID, s.SaleReceiptNumber, sp.*" +
+                        $" from SaleReceiptPaymentDetails sp left join SaleReceipts s on sp.SaleReceiptID = s.SaleReceiptID" +
+                        $" where s.SaleReceiptNumber = '{txtTicketNumber.Text.Trim()}'";
 
-                    if (listRole.Count == 1)
-                        roleID = listRole[0].RolesID;
-                    else
+                    var payment = await conn.QuerySingleAsync<SaleReceiptPaymentDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    if (!string.IsNullOrWhiteSpace(payment.SaleReceiptPaymentDetailID) && payment.Gratuity == 0)
                     {
-                        sql = $"select top 1 EmployeeID, RolesID " +
-                            $" from TimeClock " +
-                            $" where EmployeeID = '{payment.Cashier}' " +
-                            $" and DateTimeIn <= '{payment.CreatedDate}' and DateTimeOut >= '{payment.CreatedDate}' " +
-                            $" order by DateTimeIn desc";
-                        var timeClockEntity = await conn.QuerySingleAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                        #region get Role ID
+                        string roleID = "0";
 
-                        if (!string.IsNullOrWhiteSpace(timeClockEntity.RolesID))
-                            roleID = timeClockEntity.RolesID;
+                        sql = $"select * from EmployeeRoles where EmployeeID = '{payment.Cashier}'";
+                        var listRole = (await conn.QueryAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text)).ToList();
+
+                        if (listRole.Count == 1)
+                            roleID = listRole[0].RolesID;
                         else
                         {
                             sql = $"select top 1 EmployeeID, RolesID " +
                                 $" from TimeClock " +
                                 $" where EmployeeID = '{payment.Cashier}' " +
+                                $" and DateTimeIn <= '{payment.CreatedDate}' and DateTimeOut >= '{payment.CreatedDate}' " +
                                 $" order by DateTimeIn desc";
-                            timeClockEntity = await conn.QuerySingleAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                            var timeClockEntity = await conn.QuerySingleAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
 
                             if (!string.IsNullOrWhiteSpace(timeClockEntity.RolesID))
                                 roleID = timeClockEntity.RolesID;
+                            else
+                            {
+                                sql = $"select top 1 EmployeeID, RolesID " +
+                                    $" from TimeClock " +
+                                    $" where EmployeeID = '{payment.Cashier}' " +
+                                    $" order by DateTimeIn desc";
+                                timeClockEntity = await conn.QuerySingleAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                                if (!string.IsNullOrWhiteSpace(timeClockEntity.RolesID))
+                                    roleID = timeClockEntity.RolesID;
+                            }
                         }
-                    }
-                    #endregion
+                        #endregion
 
-                    #region Get employee Info
-                    decimal tipRate = 0;
-                    decimal tipRateOT = 0;
+                        #region Get employee Info
+                        decimal tipRate = 0;
+                        decimal tipRateOT = 0;
 
-                    sql = $"select * from Employees where EmployeeID = '{payment.Cashier}'";
-                    var employee = await conn.QuerySingleAsync<EmployeeEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                        sql = $"select * from Employees where EmployeeID = '{payment.Cashier}'";
+                        var employee = await conn.QuerySingleAsync<EmployeeEntity>(sql, "", null, 180, System.Data.CommandType.Text);
 
-                    sql = $"select * from Roles where RolesID = '{roleID}'";
-                    var role = await conn.QuerySingleAsync<RoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
-                    
-                    if(employee.IsUsingRoleTipPool)
-                    {
-                        tipRate = employee.TipRate;
-                        tipRateOT = employee.TipRateOT;
+                        sql = $"select * from Roles where RolesID = '{roleID}'";
+                        var role = await conn.QuerySingleAsync<RoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                        if (employee.IsUsingRoleTipPool)
+                        {
+                            tipRate = employee.TipRate;
+                            tipRateOT = employee.TipRateOT;
+                        }
+                        else
+                        {
+                            tipRate = role.TipRate;
+                            tipRateOT = role.TipRateOT;
+                        }
+                        #endregion
+
+                        posCondition = $" SELECT * FROM SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{payment.SaleReceiptPaymentDetailID}' and Gratuity = 0 ";
+                        crudScriptPOS += $" update SaleReceiptPaymentDetails set Gratuity = '{gratuity}' where SaleReceiptPaymentDetailID  ='{payment.SaleReceiptPaymentDetailID}';{Environment.NewLine}{Environment.NewLine}";
+                        crudScriptPOS += $" insert into PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee) {Environment.NewLine}" +
+                            $" values (NEWID(), '{payment.SaleReceiptID}', '{payment.SaleReceiptPaymentDetailID}','2','2', '{payment.Cashier}','{roleID}', '{tipRate}','{tipRateOT}','{gratuity}','0','0','{payment.CreatedDate}', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'); {Environment.NewLine}";
+
+                        creditCardTransactionID = payment.CreditCardTransactionID;
                     }
                     else
                     {
-                        tipRate = role.TipRate;
-                        tipRateOT = role.TipRateOT;
+                        txtScript.Text = string.Empty;
+                        return;
                     }
-                    #endregion
-
-                    string text = $"use BLogicPOS7{Environment.NewLine}";
-
-                    text += $"IF EXISTS (SELECT * FROM SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{payment.SaleReceiptPaymentDetailID}' and Gratuity = 0) {Environment.NewLine}";
-                    text += $"BEGIN {Environment.NewLine}";
-                    text += $" update SaleReceiptPaymentDetails set Gratuity = '{gratuity}' where SaleReceiptPaymentDetailID  ='{payment.SaleReceiptPaymentDetailID}';";
-
-                    text += $"{Environment.NewLine}{Environment.NewLine}" +
-                        $" insert into PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee) {Environment.NewLine}" +
-                        $" values (NEWID(), '{payment.SaleReceiptID}', '{payment.SaleReceiptPaymentDetailID}','2','2', '{payment.Cashier}','{roleID}', '{tipRate}','{tipRateOT}','{gratuity}','0','0','{payment.CreatedDate}', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'); {Environment.NewLine}";
-                    text += $"END {Environment.NewLine}";
-                    text += $"GO {Environment.NewLine}";
-
-                    creditCardTransactionID = payment.CreditCardTransactionID;
-
-                    txtScript.Text += text;
                 }
-                else
-                {
-                    txtScript.Text = string.Empty;
+
+                if (string.IsNullOrWhiteSpace(creditCardTransactionID))
                     return;
+
+                using (var conn = new SqlConnection(txtMerchantConnection.Text.Trim()))
+                {
+                    var sql = $"select * from TransactionDetail where ID = '{creditCardTransactionID}' ";
+
+                    var transactionDetail = await conn.QuerySingleAsync<TransactionDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    merchantCondition = $" SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0 ";
+                    crudScriptMerchant += $" update TransactionDetail set Gratuity = '{gratuity}', Total = Total + {gratuity} where ID = '{creditCardTransactionID}';{Environment.NewLine}";
+                    crudScriptMerchant += $" update Batch set TotalTips = TotalTips + {gratuity}, DepositAmount = DepositAmount + {gratuity}, Total = Total + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}';{Environment.NewLine}";
+                    crudScriptMerchant += $" update TransactionDetail set BatchTotal = BatchTotal + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}' ; {Environment.NewLine}";
+
                 }
+
+                string templateScriptPOS = $"use BLogicPOS7{Environment.NewLine}" +
+                    $"IF EXISTS ({posCondition}) {Environment.NewLine}" +
+                    $"BEGIN {Environment.NewLine}" +
+                    $"{crudScriptPOS}" +
+                    $"END {Environment.NewLine}" +
+                    $"GO {Environment.NewLine}";
+
+                string templateScriptMerchant = $"use Merchant{Environment.NewLine}" +
+                    $"IF EXISTS ({merchantCondition}) {Environment.NewLine}" +
+                    $"BEGIN {Environment.NewLine}" +
+                    $"{crudScriptMerchant}" +
+                    $"END {Environment.NewLine}" +
+                    $"GO {Environment.NewLine}";
+
+                txtScript.Text = $"{templateScriptPOS}{Environment.NewLine}{templateScriptMerchant}";
             }
-
-            if (string.IsNullOrWhiteSpace(creditCardTransactionID))
-                return;
-
-            using (var conn = new SqlConnection(txtMerchantConnection.Text.Trim()))
+            catch (Exception ex)
             {
-                var sql = $"select * from TransactionDetail where ID = '{creditCardTransactionID}' ";
-
-                var transactionDetail = await conn.QuerySingleAsync<TransactionDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
-
-                string text = $"{Environment.NewLine}use MERCHANT{Environment.NewLine}";
-
-                text += $"IF EXISTS (SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0) {Environment.NewLine}";
-                text += $"BEGIN {Environment.NewLine}";
-                text += $" update TransactionDetail set Gratuity = '{gratuity}', Total = Total + {gratuity} where ID = '{creditCardTransactionID}';{Environment.NewLine}";
-                text += $" update Batch set TotalTips = TotalTips + {gratuity}, DepositAmount = DepositAmount + {gratuity}, Total = Total + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}';{Environment.NewLine}";
-                text += $" update TransactionDetail set BatchTotal = BatchTotal + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}' ; {Environment.NewLine}";
-                text += $"END {Environment.NewLine}";
-                text += $"GO {Environment.NewLine}";
-
-                txtScript.Text += text;
+                BLogicLogger.Error($"BtnGetScript_Click in UpdateTipForSaleReceiptFile_0_0 error with:  {ex.Message}", ex);
             }
         }
 
         private async void BtnConnect_Click(object sender, EventArgs e)
         {
-            using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+            try
             {
-                var sql = $"select * from Stores ";
+                using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+                using (var connMerchant = new SqlConnection(txtMerchantConnection.Text.Trim()))
+                {
+                    try
+                    {
+                        conn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        lblStatusPOS.Text = "Connection to the POS database => Error.";
+                        lblStatusPOS.ForeColor = Color.Red;
+                        return;
+                    }
+                    lblStatusPOS.Text = "Connection to the POS database => Success.";
+                    lblStatusPOS.ForeColor = Color.Green;
 
-                var listStore = await conn.QueryAsync<StoreEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                    try
+                    {
+                        connMerchant.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        lblStatusMerchant.Text = "Connection to the Merchant database => Error.";
+                        lblStatusMerchant.ForeColor = Color.Red;
+                        return;
+                    }
+                    lblStatusMerchant.Text = "Connection to the Merchant database => Success.";
+                    lblStatusMerchant.ForeColor = Color.Green;
+                }
 
-                lblStatusPOS.Visible = listStore.Any();
-                txtPOSConnection.Enabled = !listStore.Any();
+                pnlDetail.Visible = true;
+
+                using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+                {
+                    var sql = $"select * from Stores ";
+
+                    var listStore = await conn.QueryAsync<StoreEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    lblStatusPOS.Visible = listStore.Any();
+                    txtPOSConnection.Enabled = !listStore.Any();
+                }
+
+                using (var conn = new SqlConnection(txtMerchantConnection.Text.Trim()))
+                {
+                    var sql = $"select top 1 * from Batch ";
+
+                    var listStore = await conn.QueryAsync<BatchEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    lblStatusMerchant.Visible = listStore.Any();
+                    txtMerchantConnection.Enabled = !listStore.Any();
+                }
+
+                btnConnect.Enabled = !lblStatusMerchant.Visible || !lblStatusPOS.Visible;
             }
-
-            using (var conn = new SqlConnection(txtMerchantConnection.Text.Trim()))
+            catch (Exception ex)
             {
-                var sql = $"select top 1 * from Batch ";
-
-                var listStore = await conn.QueryAsync<BatchEntity>(sql, "", null, 180, System.Data.CommandType.Text);
-
-                lblStatusMerchant.Visible = listStore.Any();
-                txtMerchantConnection.Enabled = !listStore.Any();
+                BLogicLogger.Error($"BtnConnect_Click in UpdateTipForSaleReceiptFile_0_0 error with:  {ex.Message}", ex);
             }
-
-            btnConnect.Enabled = !lblStatusMerchant.Visible || !lblStatusPOS.Visible;
         }
 
         private async void BtnStart_Click(object sender, EventArgs e)
