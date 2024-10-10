@@ -1,0 +1,511 @@
+﻿using Dapper;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using ThirdPartyTool.Models;
+
+namespace ThirdPartyTool
+{
+    public partial class UpdateTipForSaleReceiptModeDualPrice : Form
+    {
+        public const int TimeOutQuery = 180;
+        private decimal MerchantFeeValue = 3.84620000m;
+
+        //private string BLOGICPOSConnection = "data source=.;Initial Catalog=BLogicPOS7;integrated security = SSPI";
+        //private string MerchantConnection = "data source=.;Initial Catalog=Merchant;integrated security = SSPI";
+
+        private string BLOGICPOSConnection = "data source=.;Initial Catalog=BLogicPOS7;integrated security = SSPI";
+        private string MerchantConnection = "data source=.;Initial Catalog=Merchant;integrated security = SSPI";
+
+        public UpdateTipForSaleReceiptModeDualPrice()
+        {
+            InitializeComponent();
+
+            btnConnect.Click += BtnConnect_Click;
+
+            btnGetScript.Click += BtnGetScript_Click;
+
+            btnClose.Click += BtnClose_Click;
+
+            btnCopy.Click += BtnCopy_Click;
+
+            this.Load += UpdateTipForSaleReceiptFile_0_0_Load;
+        }
+
+        private void UpdateTipForSaleReceiptFile_0_0_Load(object sender, EventArgs e)
+        {
+            txtPOSConnection.Text = BLOGICPOSConnection;
+            txtMerchantConnection.Text = MerchantConnection;
+        }
+
+        private void BtnCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(txtScript.Text);
+        }
+
+        private void BtnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private async void BtnGetScript_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                decimal merchantFee = 0;
+                decimal merchantFeeAdded = 0;
+                decimal merchantFeeForTip = 0;
+
+                string posCondition = string.Empty;
+                string crudScriptPOS = string.Empty;
+
+                string merchantCondition = string.Empty;
+                string crudScriptMerchant = string.Empty;
+
+                txtScript.Text = "";
+
+                if (string.IsNullOrWhiteSpace(txtTicketNumber.Text) || string.IsNullOrWhiteSpace(txtGratuity.Text))
+                    return;
+
+                string creditCardTransactionID = string.Empty;
+
+                decimal.TryParse(txtGratuity.Text.Trim(), out decimal gratuity);
+
+                if (gratuity == 0)
+                {
+                    return;
+                }
+
+                using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+                {
+                    decimal DualPricePercent = 0;
+                    decimal MerchantFeePercentDualPrice = 0;
+                    bool EnableDualPrice = false;
+
+
+                    var sql = "select * from Configurations where ConfigurationName in (" +
+                        "'SystemConfigValue.EnableDualPrice'," +
+                        "'CreditCardConfigValue.MerchantFeePercentDualPrice'," +
+                        "'CreditCardConfigValue.DualPricePercent'" +
+                        ");";
+                    var listConfigurations = await conn.QueryAsync<ConfigurationEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                    foreach (ConfigurationEntity item in listConfigurations)
+                    {
+                        switch (item.ConfigurationName)
+                        {
+                            case "CreditCardConfigValue.DualPricePercent":
+                                DualPricePercent = Utility.GetDecimalFromObject(item.ConfigurationValue);
+                                break;
+                            case "CreditCardConfigValue.MerchantFeePercentDualPrice":
+                                MerchantFeePercentDualPrice = Utility.GetDecimalFromObject(item.ConfigurationValue);
+                                break;
+                            case "SystemConfigValue.EnableDualPrice":
+                                EnableDualPrice = Utility.GetIntFromObject(item.ConfigurationValue) == 1;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    if (!EnableDualPrice)
+                        return;
+
+                    sql = $"select sp.*" +
+                        $" from SaleReceiptPaymentDetails sp left join SaleReceipts s on sp.SaleReceiptID = s.SaleReceiptID" +
+                        $" where s.SaleReceiptNumber = '{txtTicketNumber.Text.Trim()}'";
+
+                    var listPayments = (await conn.QueryAsync<SaleReceiptPaymentDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text))?.ToList();
+                    SaleReceiptPaymentDetailEntity payment;
+                    if (listPayments?.Count == 1)
+                        payment = listPayments[0];
+                    else
+                        return;
+
+                    if (!string.IsNullOrWhiteSpace(payment.SaleReceiptPaymentDetailID) && payment.Gratuity == 0)
+                    {
+                        #region get Role ID
+                        string roleID = "0";
+
+                        sql = $"select * from EmployeeRoles where EmployeeID = '{payment.Cashier}'";
+                        var listRole = (await conn.QueryAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text)).ToList();
+
+                        if (listRole.Count == 1)
+                            roleID = listRole[0].RolesID;
+                        else
+                        {
+                            sql = $"select top 1 EmployeeID, RolesID " +
+                                $" from TimeClock " +
+                                $" where EmployeeID = '{payment.Cashier}' " +
+                                $" and DateTimeIn <= '{payment.CreatedDate}' and DateTimeOut >= '{payment.CreatedDate}' " +
+                                $" order by DateTimeIn desc";
+                            var timeClockEntity = await conn.QuerySingleAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                            if (!string.IsNullOrWhiteSpace(timeClockEntity.RolesID))
+                                roleID = timeClockEntity.RolesID;
+                            else
+                            {
+                                sql = $"select top 1 EmployeeID, RolesID " +
+                                    $" from TimeClock " +
+                                    $" where EmployeeID = '{payment.Cashier}' " +
+                                    $" order by DateTimeIn desc";
+                                timeClockEntity = await conn.QuerySingleAsync<EmployeeRoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                                if (!string.IsNullOrWhiteSpace(timeClockEntity.RolesID))
+                                    roleID = timeClockEntity.RolesID;
+                            }
+                        }
+                        #endregion
+
+                        #region Get employee Info
+                        decimal tipRate = 0;
+                        decimal tipRateOT = 0;
+
+                        sql = $"select * from Employees where EmployeeID = '{payment.Cashier}'";
+                        var employee = await conn.QuerySingleAsync<EmployeeEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                        sql = $"select * from Roles where RolesID = '{roleID}'";
+                        var role = await conn.QuerySingleAsync<RoleEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                        if (employee.IsUsingRoleTipPool)
+                        {
+                            tipRate = employee.TipRate;
+                            tipRateOT = employee.TipRateOT;
+                        }
+                        else
+                        {
+                            tipRate = role.TipRate;
+                            tipRateOT = role.TipRateOT;
+                        }
+                        #endregion
+
+                        if(gratuity > 0 && MerchantFeePercentDualPrice > 0)
+                        {
+                            merchantFeeForTip = Utility.CalculateMerchantFeeWithPercent(gratuity, MerchantFeePercentDualPrice);
+                            merchantFee = Utility.CalculateMerchantFeeWithPercent(gratuity + payment.AmountTendered, MerchantFeePercentDualPrice);
+                            merchantFeeAdded = merchantFee - payment.MerchantFee;
+                        }
+
+                        posCondition = $" SELECT * FROM SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{payment.SaleReceiptPaymentDetailID}' and Gratuity = 0 ";
+                        crudScriptPOS += $" update SaleReceiptPaymentDetails set Gratuity = '{gratuity}',MerchantFee = MerchantFee + {merchantFeeAdded},MerchantFeeForTip = '{merchantFeeForTip}' where SaleReceiptPaymentDetailID  ='{payment.SaleReceiptPaymentDetailID}';{Environment.NewLine}{Environment.NewLine}";
+                        crudScriptPOS += $" insert into PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee) {Environment.NewLine}" +
+                            $" values (NEWID(), '{payment.SaleReceiptID}', '{payment.SaleReceiptPaymentDetailID}','2','2', '{payment.Cashier}','{roleID}', '{tipRate}','{tipRateOT}','{gratuity}','0','{merchantFeeForTip}','{payment.CreatedDate}', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'); {Environment.NewLine}";
+
+                        creditCardTransactionID = payment.CreditCardTransactionID;
+                    }
+                    else
+                    {
+                        txtScript.Text = string.Empty;
+                        return;
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(creditCardTransactionID))
+                    return;
+
+                using (var conn = new SqlConnection(txtMerchantConnection.Text.Trim()))
+                {
+                    var sql = $"select * from TransactionDetail where ID = '{creditCardTransactionID}' ";
+
+                    var transactionDetail = await conn.QuerySingleAsync<TransactionDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    merchantCondition = $" SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0 ";
+
+                    crudScriptMerchant += $" update TransactionDetail set Gratuity = '{gratuity}'," +
+                        $" MerchantFee = MerchantFee + {merchantFeeAdded}," +
+                        $" MerchantFeeForTip = '{merchantFeeForTip}'," +
+                        $" Total = Total + {gratuity} where ID = '{creditCardTransactionID}';{Environment.NewLine}";
+
+                    if (transactionDetail.BatchStatus == "Closed")
+                    {
+                        crudScriptMerchant += $" update Batch set TotalTips = TotalTips + {gratuity}," +
+                            $" DepositAmount = DepositAmount + {gratuity - merchantFeeAdded}," +
+                            $" MerchantFeeAmount = MerchantFeeAmount + {merchantFeeAdded}," +
+                            $" Total = Total + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}';{Environment.NewLine}";
+                        crudScriptMerchant += $" update TransactionDetail set BatchTotal = BatchTotal + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}' ; {Environment.NewLine}";
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                string templateScriptPOS = $"use BLogicPOS7{Environment.NewLine}" +
+                    $"IF EXISTS ({posCondition}) {Environment.NewLine}" +
+                    $"BEGIN {Environment.NewLine}" +
+                    $"{crudScriptPOS}" +
+                    $"END {Environment.NewLine}" +
+                    $"GO {Environment.NewLine}";
+
+                string templateScriptMerchant = $"use Merchant{Environment.NewLine}" +
+                    $"IF EXISTS ({merchantCondition}) {Environment.NewLine}" +
+                    $"BEGIN {Environment.NewLine}" +
+                    $"{crudScriptMerchant}" +
+                    $"END {Environment.NewLine}" +
+                    $"GO {Environment.NewLine}";
+
+                txtScript.Text = $"{templateScriptPOS}{Environment.NewLine}{templateScriptMerchant}";
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Error($"BtnGetScript_Click in UpdateTipForSaleReceiptFile_0_0 error with:  {ex.Message}", ex);
+            }
+        }
+
+        private async void BtnConnect_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+                using (var connMerchant = new SqlConnection(txtMerchantConnection.Text.Trim()))
+                {
+                    try
+                    {
+                        conn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        lblStatusPOS.Text = "Connection to the POS database => Error.";
+                        lblStatusPOS.ForeColor = Color.Red;
+                        return;
+                    }
+                    lblStatusPOS.Text = "Connection to the POS database => Success.";
+                    lblStatusPOS.ForeColor = Color.Green;
+
+                    try
+                    {
+                        connMerchant.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        lblStatusMerchant.Text = "Connection to the Merchant database => Error.";
+                        lblStatusMerchant.ForeColor = Color.Red;
+                        return;
+                    }
+                    lblStatusMerchant.Text = "Connection to the Merchant database => Success.";
+                    lblStatusMerchant.ForeColor = Color.Green;
+                }
+
+                pnlDetail.Visible = true;
+
+                using (var conn = new SqlConnection(txtPOSConnection.Text.Trim()))
+                {
+                    var sql = $"select * from Stores ";
+
+                    var listStore = await conn.QueryAsync<StoreEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    lblStatusPOS.Visible = listStore.Any();
+                    txtPOSConnection.Enabled = !listStore.Any();
+                }
+
+                using (var conn = new SqlConnection(txtMerchantConnection.Text.Trim()))
+                {
+                    var sql = $"select top 1 * from Batch ";
+
+                    var listStore = await conn.QueryAsync<BatchEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    lblStatusMerchant.Visible = listStore.Any();
+                    txtMerchantConnection.Enabled = !listStore.Any();
+                }
+
+                btnConnect.Enabled = !lblStatusMerchant.Visible || !lblStatusPOS.Visible;
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Error($"BtnConnect_Click in UpdateTipForSaleReceiptFile_0_0 error with:  {ex.Message}", ex);
+            }
+        }
+
+        private async void BtnStart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BLogicLogger.Debug("----- START ADD BATCH DETAIL -----");
+                BLogicLogger.Debug("Connect Merchant Database");
+                using (var conn = new SqlConnection(MerchantConnection))
+                {
+                    var sql = $"select * from TransactionDetail t where t.BatchUnique = '1b4deaac-15ae-4fe5-973e-d6778c9d5c72' ";
+
+                    var listTransactionDetails = await conn.QueryAsync<TransactionDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
+                    BLogicLogger.Debug($"Get TransactionDetail -> return {listTransactionDetails.Count()} transaction");
+                    if (listTransactionDetails.Count() == 0)
+                    {
+                        MessageBox.Show("Can not found any transaction to add new Batch", "Error");
+                        this.Close();
+                    }
+
+                    var groupTransactions = listTransactionDetails.GroupBy(x => new { x.BatchUnique });
+
+                    BLogicLogger.Debug($"Start insert new batch & update TransactionDetail");
+
+                    foreach (var group in groupTransactions)
+                    {
+                        var listTransactions = group.OrderByDescending(x => x.Date).ToList();
+
+                        int iCount = 0;
+                        decimal dTotal = 0;
+                        decimal dTotalSales = 0;
+                        decimal dTotalTips = 0;
+                        decimal dSVCFeeAmount = 0;
+                        decimal dSVCFeeForTip = 0;
+                        string sWorkstationName = string.Empty;
+                        decimal dTotalReturns = 0;
+                        decimal dTotalMerchantFee = 0;
+                        foreach (var item in listTransactions)
+                        {
+                            string result = item.Result;
+                            string type = item.TranType;
+                            string sMerchantID = item.MerchantID;
+                            decimal subTotal = item.Total;
+                            decimal subAmount = item.Amount;
+                            decimal subSVCFee = item.SVCFee;
+                            decimal subTip = item.Gratuity;
+                            decimal subSVCFeeAmount = item.SVCFee;
+                            decimal subSVCFeeForTip = item.SVCFeeForGratuity;
+                            decimal subReturn = item.Amount;
+                            string tranStatus = item.TranStatus;
+                            if (result == "Approved")
+                            {
+                                var BatchID = item.BatchID;
+                                iCount++;
+                                if (!string.IsNullOrEmpty(item.WorkstationName))
+                                    sWorkstationName = item.WorkstationName;
+                                if (type == "Sale" || type == "PreAuthCapture")
+                                {
+                                    if (tranStatus == "ACTIVE")
+                                    {
+                                        dTotal += subTotal;
+                                        dTotalSales += (subAmount - subSVCFee);
+                                        dTotalTips += subTip;
+                                        dSVCFeeAmount += subSVCFeeAmount;
+                                        dSVCFeeForTip += subSVCFeeForTip;
+                                        dTotalMerchantFee += item.MerchantFee;
+                                    }
+                                }
+                                else if (type == "Return")
+                                {
+                                    dTotal -= subTotal;
+                                    dTotalReturns += subReturn;
+                                    dTotalMerchantFee -= item.MerchantFee;
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        var TotalReturns = dTotalReturns;
+                        var TotalSales = dTotalSales;
+                        var TotalTips = dTotalTips;
+                        var WorkStationName = sWorkstationName;
+                        var TransactionCount = iCount;
+                        var Total = dTotal;
+                        var MerchantFeePercent = MerchantFeeValue;
+                        var MerchantFeeAmount = dTotalMerchantFee;// CalculateMerchantFee(dTotal + dTotalReturns);
+                        var DepositAmount = dTotal - MerchantFeeAmount;
+                        var TotalSVCFeeAmount = dSVCFeeAmount;
+                        var TotalSVCFeeForTip = dSVCFeeForTip;
+
+                        if (TransactionCount <= 0)
+                            continue;
+                        return;
+                        Guid batchUnique = Guid.NewGuid();
+
+                        DateTime date = listTransactions[0].Date.Date + new TimeSpan(23, 55, 00);
+
+                        sql = $"INSERT INTO Batch (Date, ID, Status, MerchantID, Quantity, Total, BatchUnique, TotalSVCFeeForTip, TotalSales, TotalReturns, TotalTips, TotalSVCFeeAmount, DepositAmount, WorkStationName, MerchantFeeAmount, MerchantFeePercent, ExpandInfo) " +
+                            $"values ('{date}'," +
+                            $"'{listTransactions[0].BatchID}'," +
+                            $"'Closed'," +
+                            $"'{listTransactions[0].MerchantID}'," +
+                            $"'{TransactionCount}'," +
+                            $"'{Total}'," +
+                            $"'{batchUnique}'," +
+                            $"'{TotalSVCFeeForTip}'," +
+                            $"'{TotalSales}'," +
+                            $"'{TotalReturns}'," +
+                            $"'{TotalTips}'," +
+                            $"'{TotalSVCFeeAmount}'," +
+                            $"'{DepositAmount}'," +
+                            $"'{sWorkstationName}'," +
+                            $"'{MerchantFeeAmount}'," +
+                            $"'{MerchantFeeValue}'," +
+                        $"NULL)";
+
+                        var resultInsert = await conn.ExecuteAsync(sql, null, null, TimeOutQuery, System.Data.CommandType.Text);
+
+                        if (resultInsert > 0)
+                        {
+                            string ids = String.Join(",", listTransactions.Select(i => { return "'" + i.ID + "'"; }));
+
+                            sql = $"update TransactionDetail set BatchUnique = '{batchUnique}', BatchTotal = '{Total}' where ID in ({ids})";
+
+                            var resultUpdate = await conn.ExecuteAsync(sql, null, null, TimeOutQuery, System.Data.CommandType.Text);
+
+                            if (resultInsert <= 0)
+                            {
+                                BLogicLogger.Error($"Update TransactionDetail error with query: {sql}");
+                            }
+                        }
+                        else
+                        {
+                            BLogicLogger.Error($"Insert new Batch error with query: {sql}");
+                        }
+                    }
+
+                    MessageBox.Show("Add new Batch & update TransactionDetail -> Success.", "Information");
+
+                    BLogicLogger.Debug($"Close Form");
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Error($"BtnStart_Click error with: {ex.Message}", ex);
+                this.Close();
+            }
+
+        }
+
+        public decimal CalculateMerchantFee(decimal total)
+        {
+            if (total <= 0)
+                return 0;
+            return RoundUp(total * (MerchantFeeValue / 100));
+
+            //if (CSetting.SVCFeeType == "1")
+            //{
+            //    return RoundUp(total * (CSetting.MerchantFeeValue / 100));
+            //}
+            //else
+            //{
+            //    return 0;
+            //}
+
+        }
+
+        public static decimal RoundUp(decimal dInValue)
+        {
+            decimal dReturn = Math.Round(dInValue, 2);
+            if (dReturn >= dInValue)
+                return dReturn;
+            //dReturn < dInValue
+            decimal dSub = dInValue - dReturn;
+            if (dSub >= (decimal)0.005)
+                dReturn += (decimal)0.01;
+            return dReturn;
+        }
+    }
+}

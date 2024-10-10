@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="ListEmployeeResponseModel.cs" />
     <Compile Include="Models\BatchEntity.cs" />
+    <Compile Include="Models\ConfigurationEntity.cs" />
     <Compile Include="Models\EmployeeEntity.cs" />
     <Compile Include="Models\EmployeeRoleEntity.cs" />
     <Compile Include="Models\RoleEntity.cs" />
@@ -101,6 +102,13 @@
     <Compile Include="UpdateTipForSaleReceiptFile_0_0.Designer.cs">
       <DependentUpon>UpdateTipForSaleReceiptFile_0_0.cs</DependentUpon>
     </Compile>
+    <Compile Include="UpdateTipForSaleReceiptModeDualPrice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateTipForSaleReceiptModeDualPrice.Designer.cs">
+      <DependentUpon>UpdateTipForSaleReceiptModeDualPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utility.cs" />
     <Compile Include="VoidSaleReceipt.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateTipForSaleReceiptFile_0_0.resx">
       <DependentUpon>UpdateTipForSaleReceiptFile_0_0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateTipForSaleReceiptModeDualPrice.resx">
+      <DependentUpon>UpdateTipForSaleReceiptModeDualPrice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VoidSaleReceipt.resx">
       <DependentUpon>VoidSaleReceipt.cs</DependentUpon>

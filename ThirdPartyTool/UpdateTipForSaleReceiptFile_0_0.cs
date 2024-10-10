@@ -19,8 +19,11 @@ namespace ThirdPartyTool
         public const int TimeOutQuery = 180;
         private decimal MerchantFeeValue = 3.84620000m;
 
-        private string BLOGICPOSConnection = "data source=.;Initial Catalog=BLogicPOS7;integrated security = SSPI";
-        private string MerchantConnection = "data source=.;Initial Catalog=Merchant;integrated security = SSPI";
+        //private string BLOGICPOSConnection = "data source=.;Initial Catalog=BLogicPOS7;integrated security = SSPI";
+        //private string MerchantConnection = "data source=.;Initial Catalog=Merchant;integrated security = SSPI";
+
+        private string BLOGICPOSConnection = "data source=.;Initial Catalog=BLogicPOS7_AdjustTip;integrated security = SSPI";
+        private string MerchantConnection = "data source=.;Initial Catalog=Merchant_AdjustTip;integrated security = SSPI";
 
         public UpdateTipForSaleReceiptFile_0_0()
         {
@@ -31,6 +34,21 @@ namespace ThirdPartyTool
             btnGetScript.Click += BtnGetScript_Click;
 
             btnClose.Click += BtnClose_Click;
+
+            btnCopy.Click += BtnCopy_Click;
+
+            this.Load += UpdateTipForSaleReceiptFile_0_0_Load;
+        }
+
+        private void UpdateTipForSaleReceiptFile_0_0_Load(object sender, EventArgs e)
+        {
+            txtPOSConnection.Text = BLOGICPOSConnection;
+            txtMerchantConnection.Text = MerchantConnection;
+        }
+
+        private void BtnCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(txtScript.Text);
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
@@ -68,7 +86,12 @@ namespace ThirdPartyTool
                         $" from SaleReceiptPaymentDetails sp left join SaleReceipts s on sp.SaleReceiptID = s.SaleReceiptID" +
                         $" where s.SaleReceiptNumber = '{txtTicketNumber.Text.Trim()}'";
 
-                    var payment = await conn.QuerySingleAsync<SaleReceiptPaymentDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                    var listPayments = (await conn.QueryAsync<SaleReceiptPaymentDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text))?.ToList();
+                    SaleReceiptPaymentDetailEntity payment;
+                    if (listPayments?.Count == 1)
+                        payment = listPayments[0];
+                    else
+                        return;
 
                     if (!string.IsNullOrWhiteSpace(payment.SaleReceiptPaymentDetailID) && payment.Gratuity == 0)
                     {
@@ -151,10 +174,18 @@ namespace ThirdPartyTool
                     var transactionDetail = await conn.QuerySingleAsync<TransactionDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
 
                     merchantCondition = $" SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0 ";
-                    crudScriptMerchant += $" update TransactionDetail set Gratuity = '{gratuity}', Total = Total + {gratuity} where ID = '{creditCardTransactionID}';{Environment.NewLine}";
-                    crudScriptMerchant += $" update Batch set TotalTips = TotalTips + {gratuity}, DepositAmount = DepositAmount + {gratuity}, Total = Total + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}';{Environment.NewLine}";
-                    crudScriptMerchant += $" update TransactionDetail set BatchTotal = BatchTotal + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}' ; {Environment.NewLine}";
 
+                    crudScriptMerchant += $" update TransactionDetail set Gratuity = '{gratuity}', Total = Total + {gratuity} where ID = '{creditCardTransactionID}';{Environment.NewLine}";
+
+                    if (transactionDetail.BatchStatus == "Closed")
+                    {
+                        crudScriptMerchant += $" update Batch set TotalTips = TotalTips + {gratuity}, DepositAmount = DepositAmount + {gratuity}, Total = Total + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}';{Environment.NewLine}";
+                        crudScriptMerchant += $" update TransactionDetail set BatchTotal = BatchTotal + {gratuity} where BatchUnique = '{transactionDetail.BatchUnique}' ; {Environment.NewLine}";
+                    }
+                    else
+                    {
+
+                    }
                 }
 
                 string templateScriptPOS = $"use BLogicPOS7{Environment.NewLine}" +

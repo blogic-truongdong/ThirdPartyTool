@@ -26,8 +26,10 @@ namespace ThirdPartyTool
 
         private void BtnAdjustipFile_0_0_Click(object sender, EventArgs e)
         {
+            this.Hide();
             UpdateTipForSaleReceiptFile_0_0 form  = new UpdateTipForSaleReceiptFile_0_0();
-            form.ShowDialog();  
+            form.ShowDialog();
+            this.Show();
         }
     }
 }
