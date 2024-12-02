@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ThirdPartyTool.AddTipForPayment;
 
 namespace ThirdPartyTool
 {
@@ -16,7 +17,7 @@ namespace ThirdPartyTool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UpdateTipForSaleReceiptModeDualPrice());
+            Application.Run(new AddTipForPaymentForm());
         }
     }
 }

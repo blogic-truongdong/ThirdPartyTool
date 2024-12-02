@@ -14,6 +14,8 @@ namespace ThirdPartyTool.Models
 
         public int PaymentMethodID { get; set; }
 
+        public string PaymentMethodName { get; set; }
+
         public decimal AmountTendered { get; set; }
 
         public decimal AmountReturn { get; set; }

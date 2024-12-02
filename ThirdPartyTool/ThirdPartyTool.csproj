@@ -63,6 +63,12 @@
     <Compile Include="AddBatchDetailForm.Designer.cs">
       <DependentUpon>AddBatchDetailForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddTipForPayment\AddTipForPaymentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddTipForPayment\AddTipForPaymentForm.Designer.cs">
+      <DependentUpon>AddTipForPaymentForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLogicLogger.cs" />
     <Compile Include="EmployeeInfo.cs">
       <SubType>UserControl</SubType>
@@ -87,6 +93,12 @@
     <Compile Include="Models\StoreEntity.cs" />
     <Compile Include="Models\TimeClockEntity.cs" />
     <Compile Include="Models\TransactionDetailEntity.cs" />
+    <Compile Include="AddTipForPayment\AddTipForPaymentRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AddTipForPayment\AddTipForPaymentRow.Designer.cs">
+      <DependentUpon>AddTipForPaymentRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="SevenShiftsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,11 +130,17 @@
     <EmbeddedResource Include="AddBatchDetailForm.resx">
       <DependentUpon>AddBatchDetailForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AddTipForPayment\AddTipForPaymentForm.resx">
+      <DependentUpon>AddTipForPaymentForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EmployeeInfo.resx">
       <DependentUpon>EmployeeInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddTipForPayment\AddTipForPaymentRow.resx">
+      <DependentUpon>AddTipForPaymentRow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

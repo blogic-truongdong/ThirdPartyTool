@@ -63,6 +63,11 @@ namespace ThirdPartyTool
             return RoundUp(total * (percent / 100));
         }
 
+        public static decimal CalculateSVCFeeWithPercent(decimal total, decimal percent)
+        {
+            return RoundUp(total * (percent / 100));
+        }
+
         public static decimal RoundUp(decimal dInValue)
         {
             if (dInValue >= 0)
@@ -94,5 +99,7 @@ namespace ThirdPartyTool
                 return dReturn;
             }
         }
+
+
     }
 }
