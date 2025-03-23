@@ -33,23 +33,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtTokenTicketNumber = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnSearchMainTicket = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtChildTicketNumber = new System.Windows.Forms.TextBox();
-            this.btnSearchChildTicket = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.btnGenerateScript = new System.Windows.Forms.Button();
+            this.txtScript = new System.Windows.Forms.RichTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.btnCopyScript = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -83,17 +74,18 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(387, 50);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Main Ticket";
+            this.label3.Text = "Main Receipt";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.btnSearchChildTicket);
-            this.panel1.Controls.Add(this.btnSearchMainTicket);
+            this.panel1.Controls.Add(this.btnClose);
+            this.panel1.Controls.Add(this.btnCopyScript);
+            this.panel1.Controls.Add(this.btnGenerateScript);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.txtChildTicketNumber);
+            this.panel1.Controls.Add(this.txtTokenTicketNumber);
             this.panel1.Controls.Add(this.txtMainTicketNumber);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label5);
@@ -110,8 +102,18 @@
             this.label1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.label1.Location = new System.Drawing.Point(400, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(2, 600);
+            this.label1.Size = new System.Drawing.Size(2, 100);
             this.label1.TabIndex = 6;
+            // 
+            // txtTokenTicketNumber
+            // 
+            this.txtTokenTicketNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtTokenTicketNumber.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtTokenTicketNumber.Location = new System.Drawing.Point(542, 65);
+            this.txtTokenTicketNumber.Margin = new System.Windows.Forms.Padding(5);
+            this.txtTokenTicketNumber.Name = "txtTokenTicketNumber";
+            this.txtTokenTicketNumber.Size = new System.Drawing.Size(213, 27);
+            this.txtTokenTicketNumber.TabIndex = 4;
             // 
             // label2
             // 
@@ -121,20 +123,8 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(387, 50);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Child Ticket";
+            this.label2.Text = "Token Receipt";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnSearchMainTicket
-            // 
-            this.btnSearchMainTicket.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchMainTicket.Font = new System.Drawing.Font("Roboto", 12F);
-            this.btnSearchMainTicket.Location = new System.Drawing.Point(100, 104);
-            this.btnSearchMainTicket.Margin = new System.Windows.Forms.Padding(5);
-            this.btnSearchMainTicket.Name = "btnSearchMainTicket";
-            this.btnSearchMainTicket.Size = new System.Drawing.Size(200, 40);
-            this.btnSearchMainTicket.TabIndex = 8;
-            this.btnSearchMainTicket.Text = "Search Ticket";
-            this.btnSearchMainTicket.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -147,163 +137,58 @@
             this.label5.Text = "Ticket #";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // txtChildTicketNumber
+            // btnGenerateScript
             // 
-            this.txtChildTicketNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtChildTicketNumber.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtChildTicketNumber.Location = new System.Drawing.Point(542, 65);
-            this.txtChildTicketNumber.Margin = new System.Windows.Forms.Padding(5);
-            this.txtChildTicketNumber.Name = "txtChildTicketNumber";
-            this.txtChildTicketNumber.Size = new System.Drawing.Size(213, 27);
-            this.txtChildTicketNumber.TabIndex = 4;
+            this.btnGenerateScript.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerateScript.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerateScript.Location = new System.Drawing.Point(250, 120);
+            this.btnGenerateScript.Name = "btnGenerateScript";
+            this.btnGenerateScript.Size = new System.Drawing.Size(300, 50);
+            this.btnGenerateScript.TabIndex = 8;
+            this.btnGenerateScript.Text = "Generate Script";
+            this.btnGenerateScript.UseVisualStyleBackColor = true;
             // 
-            // btnSearchChildTicket
+            // txtScript
             // 
-            this.btnSearchChildTicket.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchChildTicket.Font = new System.Drawing.Font("Roboto", 12F);
-            this.btnSearchChildTicket.Location = new System.Drawing.Point(502, 102);
-            this.btnSearchChildTicket.Margin = new System.Windows.Forms.Padding(5);
-            this.btnSearchChildTicket.Name = "btnSearchChildTicket";
-            this.btnSearchChildTicket.Size = new System.Drawing.Size(200, 40);
-            this.btnSearchChildTicket.TabIndex = 8;
-            this.btnSearchChildTicket.Text = "Search Ticket";
-            this.btnSearchChildTicket.UseVisualStyleBackColor = true;
-            // 
-            // label6
-            // 
-            this.label6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(10, 60);
-            this.label6.Margin = new System.Windows.Forms.Padding(5);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(123, 30);
-            this.label6.TabIndex = 3;
-            this.label6.Text = "Ticket #";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // textBox2
-            // 
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Font = new System.Drawing.Font("Roboto", 12F);
-            this.textBox2.Location = new System.Drawing.Point(143, 62);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(230, 27);
-            this.textBox2.TabIndex = 4;
-            // 
-            // label7
-            // 
-            this.label7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label7.Font = new System.Drawing.Font("Roboto", 15F, System.Drawing.FontStyle.Bold);
-            this.label7.Location = new System.Drawing.Point(0, 0);
-            this.label7.Margin = new System.Windows.Forms.Padding(5);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(378, 50);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Ticket Detail";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.txtScript.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtScript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtScript.Location = new System.Drawing.Point(0, 0);
+            this.txtScript.Name = "txtScript";
+            this.txtScript.ReadOnly = true;
+            this.txtScript.Size = new System.Drawing.Size(778, 343);
+            this.txtScript.TabIndex = 9;
+            this.txtScript.Text = "";
             // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.label7);
-            this.panel2.Controls.Add(this.textBox6);
-            this.panel2.Controls.Add(this.label11);
-            this.panel2.Controls.Add(this.textBox5);
-            this.panel2.Controls.Add(this.label10);
-            this.panel2.Controls.Add(this.textBox4);
-            this.panel2.Controls.Add(this.label9);
-            this.panel2.Controls.Add(this.textBox3);
-            this.panel2.Controls.Add(this.label8);
-            this.panel2.Controls.Add(this.textBox2);
-            this.panel2.Controls.Add(this.label6);
-            this.panel2.Location = new System.Drawing.Point(10, 152);
+            this.panel2.Controls.Add(this.txtScript);
+            this.panel2.Location = new System.Drawing.Point(10, 180);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(380, 252);
-            this.panel2.TabIndex = 9;
+            this.panel2.Size = new System.Drawing.Size(780, 345);
+            this.panel2.TabIndex = 10;
             // 
-            // label8
+            // btnCopyScript
             // 
-            this.label8.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(10, 97);
-            this.label8.Margin = new System.Windows.Forms.Padding(5);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(123, 30);
-            this.label8.TabIndex = 3;
-            this.label8.Text = "Sub Total";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCopyScript.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopyScript.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCopyScript.Location = new System.Drawing.Point(190, 537);
+            this.btnCopyScript.Name = "btnCopyScript";
+            this.btnCopyScript.Size = new System.Drawing.Size(200, 50);
+            this.btnCopyScript.TabIndex = 8;
+            this.btnCopyScript.Text = "Copy Script";
+            this.btnCopyScript.UseVisualStyleBackColor = true;
             // 
-            // textBox3
+            // btnClose
             // 
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Font = new System.Drawing.Font("Roboto", 12F);
-            this.textBox3.Location = new System.Drawing.Point(143, 99);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(230, 27);
-            this.textBox3.TabIndex = 4;
-            // 
-            // label9
-            // 
-            this.label9.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(10, 134);
-            this.label9.Margin = new System.Windows.Forms.Padding(5);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(123, 30);
-            this.label9.TabIndex = 3;
-            this.label9.Text = "Tax";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // textBox4
-            // 
-            this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Font = new System.Drawing.Font("Roboto", 12F);
-            this.textBox4.Location = new System.Drawing.Point(143, 136);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(230, 27);
-            this.textBox4.TabIndex = 4;
-            // 
-            // label10
-            // 
-            this.label10.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(10, 171);
-            this.label10.Margin = new System.Windows.Forms.Padding(5);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(123, 30);
-            this.label10.TabIndex = 3;
-            this.label10.Text = "Tip";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // textBox5
-            // 
-            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox5.Font = new System.Drawing.Font("Roboto", 12F);
-            this.textBox5.Location = new System.Drawing.Point(143, 173);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(230, 27);
-            this.textBox5.TabIndex = 4;
-            // 
-            // label11
-            // 
-            this.label11.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(10, 208);
-            this.label11.Margin = new System.Windows.Forms.Padding(5);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(123, 30);
-            this.label11.TabIndex = 3;
-            this.label11.Text = "Total";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // textBox6
-            // 
-            this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox6.Font = new System.Drawing.Font("Roboto", 12F);
-            this.textBox6.Location = new System.Drawing.Point(143, 210);
-            this.textBox6.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(230, 27);
-            this.textBox6.TabIndex = 4;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.Location = new System.Drawing.Point(410, 537);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(200, 50);
+            this.btnClose.TabIndex = 8;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
             // 
             // AddTipForTicketByPaymentDetailForm
             // 
@@ -318,7 +203,6 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -331,21 +215,12 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnSearchMainTicket;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button btnSearchChildTicket;
-        private System.Windows.Forms.TextBox txtChildTicketNumber;
+        private System.Windows.Forms.TextBox txtTokenTicketNumber;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.RichTextBox txtScript;
+        private System.Windows.Forms.Button btnGenerateScript;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnCopyScript;
     }
 }

@@ -28,21 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnAddTipBySaleToken = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // button1
+            // btnAddTipBySaleToken
             // 
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(12, 349);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(300, 100);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Add a tip to the ticket using the payment details from another ticket.";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnAddTipBySaleToken.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddTipBySaleToken.Location = new System.Drawing.Point(12, 349);
+            this.btnAddTipBySaleToken.Name = "btnAddTipBySaleToken";
+            this.btnAddTipBySaleToken.Size = new System.Drawing.Size(300, 100);
+            this.btnAddTipBySaleToken.TabIndex = 0;
+            this.btnAddTipBySaleToken.Text = "Add Tip by Sale Token Ticket";
+            this.btnAddTipBySaleToken.UseVisualStyleBackColor = true;
             // 
             // textBox1
             // 
@@ -71,7 +71,7 @@
             this.ClientSize = new System.Drawing.Size(916, 461);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnAddTipBySaleToken);
             this.Name = "MainForm";
             this.Text = "FormMain";
             this.Load += new System.EventHandler(this.FormMain_Load);
@@ -82,7 +82,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnAddTipBySaleToken;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
     }
