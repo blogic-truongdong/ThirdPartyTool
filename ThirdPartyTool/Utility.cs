@@ -84,5 +84,108 @@ namespace ThirdPartyTool
 
             return employeeClockInInfoEntity;
         }
+
+        public static decimal GetDecimalFromObject(object oValue)
+        {
+            return GetDecimalFromObjectWithDefault(oValue, 0);
+        }
+        public static decimal GetDecimalFromObjectWithDefault(object oValue, decimal iDefault)
+        {
+            decimal iReturn = iDefault;
+            string sTemp = GetStringFromObject(oValue);
+            if (string.IsNullOrEmpty(sTemp))
+                return iReturn;
+            if (!decimal.TryParse(sTemp, out iReturn))
+                return iDefault;
+
+            return iReturn;
+        }
+
+        public static string GetStringFromObject(object oValue)
+        {
+            string sReturn = string.Empty;
+            try
+            {
+                if (oValue != null && oValue != DBNull.Value)
+                    sReturn = oValue.ToString();
+            }
+            catch (Exception oe)
+            {
+                sReturn = string.Empty;
+            }
+            return sReturn;
+        }
+
+        public static int GetIntFromObject(object oValue)
+        {
+            return GetIntFromObjectWithDefault(oValue, 0);
+        }
+        public static int GetIntFromObjectWithDefault(object oValue, int iDefault)
+        {
+            int iReturn = iDefault;
+            string sTemp = GetStringFromObject(oValue);
+            if (string.IsNullOrEmpty(sTemp))
+                return iReturn;
+            if (!int.TryParse(sTemp, out iReturn))
+                return iDefault;
+
+            return iReturn;
+        }
+
+        public static decimal CalculateSVCFeeAdjustTipWithPara(decimal total, decimal svcFee, decimal merchantFee)
+        {
+            if (total <= 0 || svcFee == 0)
+                return 0;
+            return RoundUp(total * (merchantFee / 100));
+
+        }
+
+        public static decimal CalculateMerchantFeeForTipWithParams(decimal total, decimal svcFee, decimal merchantFee, bool SVCFeeType)
+        {
+            if (total <= 0 || !SVCFeeType || merchantFee == 0)
+                return 0;
+            return RoundUp(total * (merchantFee / 100));
+        }
+
+        public static decimal CalculateMerchantFeeWithParams(decimal total, decimal svcFee, decimal merchantFee, bool SVCFeeType)
+        {
+            if (total <= 0 || (svcFee == 0 && merchantFee == 0))
+                return 0;
+            if (!SVCFeeType)
+                return merchantFee;
+            return RoundUp(total * (merchantFee / 100));
+        }
+
+        public static decimal RoundUp(decimal dInValue, int intPlaces = 2)
+        {
+            if (dInValue >= 0)
+            {
+                decimal dReturn = Math.Round(dInValue, intPlaces);
+                if (dReturn >= dInValue)
+                    return dReturn;
+                //dReturn < dInValue
+                decimal dSub = dInValue - dReturn;
+                if (dSub >= (decimal)0.005)
+                    dReturn += (decimal)0.01;
+                return dReturn;
+            }
+            else
+            {
+                dInValue = dInValue * -1;
+                decimal dReturn = Math.Round(dInValue, 2);
+                if (dReturn >= dInValue)
+                {
+                    dReturn = dReturn * -1;
+                    return dReturn;
+                }
+                //dReturn < dInValue
+                decimal dSub = dInValue - dReturn;
+                if (dSub >= (decimal)0.005)
+                    dReturn += (decimal)0.01;
+
+                dReturn = dReturn * -1;
+                return dReturn;
+            }
+        }
     }
 }

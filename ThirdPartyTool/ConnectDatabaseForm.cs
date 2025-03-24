@@ -46,75 +46,75 @@ namespace ThirdPartyTool
             {
                 bool isConnectPosSuccess = false;
                 bool isConnectMerchantSuccess = false;
-                //try
-                //{
-                //    string connectionString = $@"data source=.;Initial Catalog={txtPOSName.Text.Trim()};integrated security = SSPI";
-                //    using (var connection = new SqlConnection(connectionString))
-                //    {
-                //        connection.Open();
-
-                //        connection.Close();
-
-                //        isConnectPosSuccess = true;
-
-                //        Utility.BLOGICPOS7_Connection = connectionString;
-                //    }
-                //}
-                //catch (Exception) { }
-
-                if (!isConnectPosSuccess)
+                try
                 {
-                    try
+                    string connectionString = $@"data source=.;Initial Catalog={txtPOSName.Text.Trim()};integrated security = SSPI";
+                    using (var connection = new SqlConnection(connectionString))
                     {
-                        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtPOSName.Text.Trim()};integrated security = SSPI";
-                        using (var connection = new SqlConnection(connectionString))
-                        {
-                            connection.Open();
+                        connection.Open();
 
-                            connection.Close();
+                        connection.Close();
 
-                            isConnectPosSuccess = true;
+                        isConnectPosSuccess = true;
 
-                            Utility.BLOGICPOS7_Connection = connectionString;
-                        }
+                        Utility.BLOGICPOS7_Connection = connectionString;
                     }
-                    catch (Exception) { }
                 }
+                catch (Exception) { }
 
-                //try
+                //if (!isConnectPosSuccess)
                 //{
-                //    string connectionString = $@"data source=.;Initial Catalog={txtMerchantName.Text.Trim()};integrated security = SSPI";
-                //    using (var connection = new SqlConnection(connectionString))
+                //    try
                 //    {
-                //        connection.Open();
+                //        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtPOSName.Text.Trim()};integrated security = SSPI";
+                //        using (var connection = new SqlConnection(connectionString))
+                //        {
+                //            connection.Open();
 
-                //        connection.Close();
+                //            connection.Close();
 
-                //        isConnectMerchantSuccess = true;
+                //            isConnectPosSuccess = true;
 
-                //        Utility.Merchant_Connection = connectionString;
+                //            Utility.BLOGICPOS7_Connection = connectionString;
+                //        }
                 //    }
+                //    catch (Exception) { }
                 //}
-                //catch (Exception) { }
 
-                if (!isConnectMerchantSuccess)
+                try
                 {
-                    try
+                    string connectionString = $@"data source=.;Initial Catalog={txtMerchantName.Text.Trim()};integrated security = SSPI";
+                    using (var connection = new SqlConnection(connectionString))
                     {
-                        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtMerchantName.Text.Trim()};integrated security = SSPI";
-                        using (var connection = new SqlConnection(connectionString))
-                        {
-                            connection.Open();
+                        connection.Open();
 
-                            connection.Close();
+                        connection.Close();
 
-                            isConnectMerchantSuccess = true;
+                        isConnectMerchantSuccess = true;
 
-                            Utility.Merchant_Connection = connectionString;
-                        }
+                        Utility.Merchant_Connection = connectionString;
                     }
-                    catch (Exception) { }
                 }
+                catch (Exception) { }
+
+                //if (!isConnectMerchantSuccess)
+                //{
+                //    try
+                //    {
+                //        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtMerchantName.Text.Trim()};integrated security = SSPI";
+                //        using (var connection = new SqlConnection(connectionString))
+                //        {
+                //            connection.Open();
+
+                //            connection.Close();
+
+                //            isConnectMerchantSuccess = true;
+
+                //            Utility.Merchant_Connection = connectionString;
+                //        }
+                //    }
+                //    catch (Exception) { }
+                //}
 
                 if (isConnectPosSuccess && isConnectMerchantSuccess)
                     ProcessBackgroundWorker = ConnectDatabaseSuccess;

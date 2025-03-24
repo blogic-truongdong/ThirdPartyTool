@@ -77,6 +77,12 @@
     <Compile Include="AddTipForTicketByPaymentDetailForm.Designer.cs">
       <DependentUpon>AddTipForTicketByPaymentDetailForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddTipForTicketForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddTipForTicketForm.Designer.cs">
+      <DependentUpon>AddTipForTicketForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLogicLogger.cs" />
     <Compile Include="ConnectDatabaseForm.cs">
       <SubType>Form</SubType>
@@ -104,6 +110,7 @@
     </Compile>
     <Compile Include="ListEmployeeResponseModel.cs" />
     <Compile Include="Models\BatchEntity.cs" />
+    <Compile Include="Models\ConfigurationEntity.cs" />
     <Compile Include="Models\EmployeeClockInInfoEntity.cs" />
     <Compile Include="Models\EmployeeEntity.cs" />
     <Compile Include="Models\EmployeeRoleEntity.cs" />
@@ -127,6 +134,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddTipForTicketByPaymentDetailForm.resx">
       <DependentUpon>AddTipForTicketByPaymentDetailForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddTipForTicketForm.resx">
+      <DependentUpon>AddTipForTicketForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectDatabaseForm.resx">
       <DependentUpon>ConnectDatabaseForm.cs</DependentUpon>

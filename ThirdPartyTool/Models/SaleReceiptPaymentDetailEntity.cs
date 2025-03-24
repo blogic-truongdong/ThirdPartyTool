@@ -4,7 +4,7 @@ namespace ThirdPartyTool.Models
 {
     public class SaleReceiptPaymentDetailEntity
     {
-        public long SaleReceiptPaymentDetailID { get; set; }
+        public string SaleReceiptPaymentDetailID { get; set; }
 
         public Guid SaleReceiptID { get; set; }
 
@@ -125,6 +125,7 @@ namespace ThirdPartyTool.Models
         public string CreditCardTransactionMerchantID { get; set; }
 
         public int EmployeePaidID { get; set; }
+        public int EmployeeID { get; set; }
 
     }
 }

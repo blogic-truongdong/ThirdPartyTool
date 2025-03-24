@@ -12,7 +12,7 @@ namespace ThirdPartyTool.Models
 
         public int EmployeeID { get; set; }
 
-        public int RolesID { get; set; }
+        public string RolesID { get; set; }
 
         public bool IsDeleted { get; set; }
     }

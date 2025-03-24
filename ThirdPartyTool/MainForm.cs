@@ -20,6 +20,16 @@ namespace ThirdPartyTool
             this.Load += MainForm_Load;
 
             btnAddTipBySaleToken.Click += BtnAddTipBySaleToken_Click;
+
+            btnAddTipForTicket.Click += BtnAddTipForTicket_Click;
+        }
+
+        private void BtnAddTipForTicket_Click(object sender, EventArgs e)
+        {
+            AddTipForTicketForm form = new AddTipForTicketForm();
+            this.Hide();
+            form.ShowDialog();
+            this.Show();
         }
 
         private void BtnAddTipBySaleToken_Click(object sender, EventArgs e)
