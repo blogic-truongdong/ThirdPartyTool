@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ThirdPartyTool.Models;
 
@@ -135,7 +134,7 @@ namespace ThirdPartyTool
                         stringBuilder.AppendLine("USE MERCHANT");
                         stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM TransactionDetail where ID = '{item.CreditCardTransactionID}' and Gratuity = 0)");
                         stringBuilder.AppendLine("BEGIN");
-                        stringBuilder.AppendLine($"     update TransactionDetail set Amount = 0, Gratuity = '{Math.Round(item.AmountTendered, 2)}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0' where ID = '{item.CreditCardTransactionID}'");
+                        stringBuilder.AppendLine($"     update TransactionDetail set Amount = 0, Gratuity = '{Math.Round(item.AmountTendered, 2)}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0', TicketNumber = '{txtMainTicketNumber.Text}' where ID = '{item.CreditCardTransactionID}'");
                         stringBuilder.AppendLine($"END");
                         stringBuilder.AppendLine($"GO");
                     }
