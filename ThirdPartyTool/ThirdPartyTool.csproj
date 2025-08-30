@@ -114,11 +114,18 @@
     <Compile Include="Models\EmployeeClockInInfoEntity.cs" />
     <Compile Include="Models\EmployeeEntity.cs" />
     <Compile Include="Models\EmployeeRoleEntity.cs" />
+    <Compile Include="Models\PaymentRoleDetailEntity.cs" />
     <Compile Include="Models\RoleEntity.cs" />
     <Compile Include="Models\SaleReceiptEntity.cs" />
     <Compile Include="Models\SaleReceiptPaymentDetailEntity.cs" />
     <Compile Include="Models\TimeClockEntity.cs" />
     <Compile Include="Models\TransactionDetailEntity.cs" />
+    <Compile Include="SettleBatchByMerchantIDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettleBatchByMerchantIDForm.Designer.cs">
+      <DependentUpon>SettleBatchByMerchantIDForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SevenShiftsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +164,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SettleBatchByMerchantIDForm.resx">
+      <DependentUpon>SettleBatchByMerchantIDForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SevenShiftsForm.resx">
       <DependentUpon>SevenShiftsForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -101,6 +101,9 @@ namespace ThirdPartyTool
 
                     if (saleReceiptPaymentDetails?.Count() > 0)
                     {
+                        sql = $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{mainReceiptEntity.SaleReceiptID}'";
+                        var paymentRoleDetail = await conn.QuerySingleOrDefaultAsync<PaymentRoleDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+
                         stringBuilder.AppendLine($"USE BLOGICPOS7");
                         stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID='{tokenReceiptEntity.SaleReceiptID}' and TransactionStatusID = 'FIN')");
                         stringBuilder.AppendLine($"BEGIN");
@@ -111,8 +114,15 @@ namespace ThirdPartyTool
 
                         foreach (var payment in saleReceiptPaymentDetails)
                         {
-                            stringBuilder.AppendLine($"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)");
-                            stringBuilder.AppendLine($"    VALUES (NEWID(), '{mainReceiptEntity.SaleReceiptID}', '{payment.SaleReceiptPaymentDetailID}', '{payment.PaymentMethodID}', '2', '{mainReceiptEntity.CashierID}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{payment.AmountTendered}', '{payment.SVCFeeAmount}', '{payment.MerchantFee}', '{payment.CreatedDate}', '{payment.PartyServiceFeeAmount}', '{payment.PartyServiceFeeTaxAmount}', '{payment.SVCFeeForPartyServiceFeeAmount}', '{payment.MerchantFeeForPartyServiceFeeAmount}', '{payment.AutoGratuityAmount}', '{payment.AutoGratuityTaxAmount}', '{payment.SVCFeeForAutoGratuityAmount}', '{payment.MerchantFeeForAutoGratuityAmount}', '{payment.AreaFeeAmount}', '{payment.AreaFeeTaxAmount}', '{payment.SVCFeeForAreaFeeAmount}', '{payment.MerchantFeeForAreaFeeAmount}', '{payment.ServiceFee}', '{payment.ServiceFeeTaxAmount}', '{payment.SVCFeeForServiceFee}', '{payment.MerchantFeeForServiceFee}'  )");
+                            if (paymentRoleDetail != null && paymentRoleDetail.ID != null && paymentRoleDetail.ID != Guid.Empty)
+                            {
+                                stringBuilder.AppendLine($"    update PaymentRoleDetails set Gratuity = Gratuity + '{payment.AmountTendered}' , SVCFeeForGratuity = SVCFeeForGratuity + '{payment.SVCFeeAmount}' , MerchantFeeForTip = MerchantFeeForTip + '{payment.MerchantFee}' where ID = '{paymentRoleDetail.ID}';");
+                            }
+                            else
+                            {
+                                stringBuilder.AppendLine($"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)");
+                                stringBuilder.AppendLine($"    VALUES (NEWID(), '{mainReceiptEntity.SaleReceiptID}', '{payment.SaleReceiptPaymentDetailID}', '{payment.PaymentMethodID}', '2', '{mainReceiptEntity.CashierID}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{payment.AmountTendered}', '{payment.SVCFeeAmount}', '{payment.MerchantFee}', '{payment.CreatedDate}', '{payment.PartyServiceFeeAmount}', '{payment.PartyServiceFeeTaxAmount}', '{payment.SVCFeeForPartyServiceFeeAmount}', '{payment.MerchantFeeForPartyServiceFeeAmount}', '{payment.AutoGratuityAmount}', '{payment.AutoGratuityTaxAmount}', '{payment.SVCFeeForAutoGratuityAmount}', '{payment.MerchantFeeForAutoGratuityAmount}', '{payment.AreaFeeAmount}', '{payment.AreaFeeTaxAmount}', '{payment.SVCFeeForAreaFeeAmount}', '{payment.MerchantFeeForAreaFeeAmount}', '{payment.ServiceFee}', '{payment.ServiceFeeTaxAmount}', '{payment.SVCFeeForServiceFee}', '{payment.MerchantFeeForServiceFee}'  )");
+                            }
                         }
 
                         stringBuilder.AppendLine($"END");
