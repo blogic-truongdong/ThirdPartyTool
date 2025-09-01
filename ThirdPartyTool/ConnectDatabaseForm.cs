@@ -51,11 +51,11 @@ namespace ThirdPartyTool
                     using (var connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
-
+                
                         connection.Close();
-
+                
                         isConnectPosSuccess = true;
-
+                
                         Utility.BLOGICPOS7_Connection = connectionString;
                     }
                 }

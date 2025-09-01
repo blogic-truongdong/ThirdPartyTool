@@ -96,6 +96,18 @@
     <Compile Include="CustomControl\CommonLabel.Designer.cs">
       <DependentUpon>CommonLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomReceipt\CustomReceiptForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomReceipt\CustomReceiptForm.Designer.cs">
+      <DependentUpon>CustomReceiptForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomReceipt\ReceiptDetail_Row.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomReceipt\ReceiptDetail_Row.Designer.cs">
+      <DependentUpon>ReceiptDetail_Row.cs</DependentUpon>
+    </Compile>
     <Compile Include="EmployeeInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -116,6 +128,7 @@
     <Compile Include="Models\EmployeeRoleEntity.cs" />
     <Compile Include="Models\PaymentRoleDetailEntity.cs" />
     <Compile Include="Models\RoleEntity.cs" />
+    <Compile Include="Models\SaleReceiptDetailEntity.cs" />
     <Compile Include="Models\SaleReceiptEntity.cs" />
     <Compile Include="Models\SaleReceiptPaymentDetailEntity.cs" />
     <Compile Include="Models\TimeClockEntity.cs" />
@@ -134,6 +147,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartForm.Designer.cs">
+      <DependentUpon>StartForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UpdateEmployee7ShiftsModel.cs" />
     <Compile Include="Utility.cs" />
     <EmbeddedResource Include="AddBatchDetailForm.resx">
@@ -147,6 +166,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectDatabaseForm.resx">
       <DependentUpon>ConnectDatabaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomReceipt\CustomReceiptForm.resx">
+      <DependentUpon>CustomReceiptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomReceipt\ReceiptDetail_Row.resx">
+      <DependentUpon>ReceiptDetail_Row.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EmployeeInfo.resx">
       <DependentUpon>EmployeeInfo.cs</DependentUpon>
@@ -170,6 +195,9 @@
     <EmbeddedResource Include="SevenShiftsForm.resx">
       <DependentUpon>SevenShiftsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="StartForm.resx">
+      <DependentUpon>StartForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -187,6 +215,8 @@
   <ItemGroup>
     <Content Include="Lib\BLogicSystems.XPos.DTO.dll" />
     <Content Include="Lib\log4net.dll" />
+    <None Include="Resources\BlogicSystemsWhite.png" />
+    <None Include="Resources\BLogicLoading.gif" />
     <None Include="Resources\Loading.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

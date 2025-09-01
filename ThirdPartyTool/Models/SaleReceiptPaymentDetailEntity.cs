@@ -126,6 +126,6 @@ namespace ThirdPartyTool.Models
 
         public int EmployeePaidID { get; set; }
         public int EmployeeID { get; set; }
-
+        public string PaymentMethodName { get; set; }
     }
 }

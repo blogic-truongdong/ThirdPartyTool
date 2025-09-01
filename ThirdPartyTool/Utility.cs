@@ -1,14 +1,10 @@
 ﻿using Dapper;
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ThirdPartyTool.Models;
-using static System.Collections.Specialized.BitVector32;
 
 namespace ThirdPartyTool
 {
@@ -186,6 +182,20 @@ namespace ThirdPartyTool
                 dReturn = dReturn * -1;
                 return dReturn;
             }
+        }
+
+        public static string ConvertToMoneyString(object oValue)
+        {
+            string sReturn = "$0";
+            try
+            {
+                return $"${Math.Round(GetDecimalFromObject(oValue), 2)}";
+            }
+            catch (Exception oe)
+            {
+
+            }
+            return sReturn;
         }
     }
 }
