@@ -45,21 +45,21 @@ namespace ThirdPartyTool
             {
                 bool isConnectPosSuccess = false;
                 bool isConnectMerchantSuccess = false;
-                try
-                {
-                    string connectionString = $@"data source=.;Initial Catalog={txtPOSName.Text.Trim()};integrated security = SSPI";
-                    using (var connection = new SqlConnection(connectionString))
-                    {
-                        connection.Open();
+                //try
+                //{
+                //    string connectionString = $@"data source=.;Initial Catalog={txtPOSName.Text.Trim()};integrated security = SSPI";
+                //    using (var connection = new SqlConnection(connectionString))
+                //    {
+                //        connection.Open();
 
-                        connection.Close();
+                //        connection.Close();
 
-                        isConnectPosSuccess = true;
+                //        isConnectPosSuccess = true;
 
-                        Utility.BLOGICPOS7_Connection = connectionString;
-                    }
-                }
-                catch (Exception) { }
+                //        Helper.BLOGICPOS7_Connection = connectionString;
+                //    }
+                //}
+                //catch (Exception) { }
 
                 if (!isConnectPosSuccess)
                 {
@@ -74,7 +74,7 @@ namespace ThirdPartyTool
 
                             isConnectPosSuccess = true;
 
-                            Utility.BLOGICPOS7_Connection = connectionString;
+                            Helper.BLOGICPOS7_Connection = connectionString;
                         }
                     }
                     catch (Exception) { }
@@ -91,7 +91,7 @@ namespace ThirdPartyTool
 
                         isConnectMerchantSuccess = true;
 
-                        Utility.Merchant_Connection = connectionString;
+                        Helper.Merchant_Connection = connectionString;
                     }
                 }
                 catch (Exception) { }
@@ -109,7 +109,7 @@ namespace ThirdPartyTool
 
                             isConnectMerchantSuccess = true;
 
-                            Utility.Merchant_Connection = connectionString;
+                            Helper.Merchant_Connection = connectionString;
                         }
                     }
                     catch (Exception) { }

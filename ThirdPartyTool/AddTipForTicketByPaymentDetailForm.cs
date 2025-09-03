@@ -48,12 +48,12 @@ namespace ThirdPartyTool
                 string mainSaleReceiptNumber = txtMainTicketNumber.Text;
                 string tokenSaleReceiptNumber = txtTokenTicketNumber.Text;
 
-                using (SqlConnection conn = new SqlConnection(Utility.BLOGICPOS7_Connection))
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
                 {
                     if (conn.State == ConnectionState.Closed)
                         conn.Open();
 
-                    sql = $"select * from SaleReceipts where SaleReceiptNumber = '{mainSaleReceiptNumber}' and TransactionStatusID = 'FIN'";
+                    sql = $"select * from SaleReceipts where SaleReceiptNumber = '{mainSaleReceiptNumber}'";
                     var mainSaleReceipts = await conn.QueryAsync<SaleReceiptEntity>(sql, null, null, 180, System.Data.CommandType.Text);
 
                     sql = $"select * from SaleReceipts where SaleReceiptNumber = '{tokenSaleReceiptNumber}' and TransactionStatusID = 'FIN'";
@@ -97,7 +97,7 @@ namespace ThirdPartyTool
                     }
                     #endregion
 
-                    var employeeClockInInfoEntity = await Utility.GetEmployeeClockInInfo(conn, mainReceiptEntity.CashierID, mainReceiptEntity.DateCreated);
+                    var employeeClockInInfoEntity = await Helper.GetEmployeeClockInInfo(conn, mainReceiptEntity.CashierID, mainReceiptEntity.DateCreated);
 
                     if (saleReceiptPaymentDetails?.Count() > 0)
                     {

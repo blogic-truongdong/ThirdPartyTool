@@ -32,15 +32,15 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.txtScript = new System.Windows.Forms.RichTextBox();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnCopyScript = new System.Windows.Forms.Button();
+            this.btnGenerateScript = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtTokenTicketNumber = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnGenerateScript = new System.Windows.Forms.Button();
-            this.txtScript = new System.Windows.Forms.RichTextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.btnCopyScript = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -97,6 +97,59 @@
             this.panel1.Size = new System.Drawing.Size(800, 600);
             this.panel1.TabIndex = 8;
             // 
+            // panel2
+            // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.txtScript);
+            this.panel2.Location = new System.Drawing.Point(10, 180);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(780, 345);
+            this.panel2.TabIndex = 10;
+            // 
+            // txtScript
+            // 
+            this.txtScript.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtScript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtScript.Location = new System.Drawing.Point(0, 0);
+            this.txtScript.Name = "txtScript";
+            this.txtScript.ReadOnly = true;
+            this.txtScript.Size = new System.Drawing.Size(778, 343);
+            this.txtScript.TabIndex = 9;
+            this.txtScript.Text = "";
+            // 
+            // btnClose
+            // 
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.Location = new System.Drawing.Point(410, 537);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(200, 50);
+            this.btnClose.TabIndex = 8;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
+            // 
+            // btnCopyScript
+            // 
+            this.btnCopyScript.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopyScript.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCopyScript.Location = new System.Drawing.Point(190, 537);
+            this.btnCopyScript.Name = "btnCopyScript";
+            this.btnCopyScript.Size = new System.Drawing.Size(200, 50);
+            this.btnCopyScript.TabIndex = 8;
+            this.btnCopyScript.Text = "Copy Script";
+            this.btnCopyScript.UseVisualStyleBackColor = true;
+            // 
+            // btnGenerateScript
+            // 
+            this.btnGenerateScript.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerateScript.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerateScript.Location = new System.Drawing.Point(250, 120);
+            this.btnGenerateScript.Name = "btnGenerateScript";
+            this.btnGenerateScript.Size = new System.Drawing.Size(300, 50);
+            this.btnGenerateScript.TabIndex = 8;
+            this.btnGenerateScript.Text = "Generate Script";
+            this.btnGenerateScript.UseVisualStyleBackColor = true;
+            // 
             // label1
             // 
             this.label1.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -137,59 +190,6 @@
             this.label5.Text = "Ticket #";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnGenerateScript
-            // 
-            this.btnGenerateScript.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGenerateScript.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGenerateScript.Location = new System.Drawing.Point(250, 120);
-            this.btnGenerateScript.Name = "btnGenerateScript";
-            this.btnGenerateScript.Size = new System.Drawing.Size(300, 50);
-            this.btnGenerateScript.TabIndex = 8;
-            this.btnGenerateScript.Text = "Generate Script";
-            this.btnGenerateScript.UseVisualStyleBackColor = true;
-            // 
-            // txtScript
-            // 
-            this.txtScript.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtScript.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtScript.Location = new System.Drawing.Point(0, 0);
-            this.txtScript.Name = "txtScript";
-            this.txtScript.ReadOnly = true;
-            this.txtScript.Size = new System.Drawing.Size(778, 343);
-            this.txtScript.TabIndex = 9;
-            this.txtScript.Text = "";
-            // 
-            // panel2
-            // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.txtScript);
-            this.panel2.Location = new System.Drawing.Point(10, 180);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(780, 345);
-            this.panel2.TabIndex = 10;
-            // 
-            // btnCopyScript
-            // 
-            this.btnCopyScript.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCopyScript.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCopyScript.Location = new System.Drawing.Point(190, 537);
-            this.btnCopyScript.Name = "btnCopyScript";
-            this.btnCopyScript.Size = new System.Drawing.Size(200, 50);
-            this.btnCopyScript.TabIndex = 8;
-            this.btnCopyScript.Text = "Copy Script";
-            this.btnCopyScript.UseVisualStyleBackColor = true;
-            // 
-            // btnClose
-            // 
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Location = new System.Drawing.Point(410, 537);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(200, 50);
-            this.btnClose.TabIndex = 8;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            // 
             // AddTipForTicketByPaymentDetailForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,7 +198,7 @@
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "AddTipForTicketByPaymentDetailForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AddTipForTicketByPaymentDetailForm";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

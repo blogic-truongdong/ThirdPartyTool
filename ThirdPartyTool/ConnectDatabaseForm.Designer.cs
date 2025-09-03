@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.pnlContainer = new System.Windows.Forms.Panel();
+            this.picLoading = new System.Windows.Forms.PictureBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.txtMerchantName = new System.Windows.Forms.TextBox();
@@ -36,7 +37,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.picLoading = new System.Windows.Forms.PictureBox();
             this.pnlContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -58,6 +58,18 @@
             this.pnlContainer.Name = "pnlContainer";
             this.pnlContainer.Size = new System.Drawing.Size(400, 300);
             this.pnlContainer.TabIndex = 0;
+            // 
+            // picLoading
+            // 
+            this.picLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.picLoading.Image = global::ThirdPartyTool.Properties.Resources.Loading;
+            this.picLoading.Location = new System.Drawing.Point(150, 100);
+            this.picLoading.Name = "picLoading";
+            this.picLoading.Size = new System.Drawing.Size(100, 100);
+            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picLoading.TabIndex = 4;
+            this.picLoading.TabStop = false;
+            this.picLoading.Visible = false;
             // 
             // btnCancel
             // 
@@ -134,17 +146,6 @@
             this.label1.Text = "Database connection";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // picLoading
-            // 
-            this.picLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picLoading.Image = global::ThirdPartyTool.Properties.Resources.Loading;
-            this.picLoading.Location = new System.Drawing.Point(150, 100);
-            this.picLoading.Name = "picLoading";
-            this.picLoading.Size = new System.Drawing.Size(100, 100);
-            this.picLoading.TabIndex = 4;
-            this.picLoading.TabStop = false;
-            this.picLoading.Visible = false;
-            // 
             // ConnectDatabaseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -153,6 +154,7 @@
             this.Controls.Add(this.pnlContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ConnectDatabaseForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ConnectDatabaseForm";
             this.pnlContainer.ResumeLayout(false);
             this.pnlContainer.PerformLayout();

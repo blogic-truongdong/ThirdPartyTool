@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BLogicSystems.XPos.Utilites;
+using System;
+using System.Data;
 
 namespace ThirdPartyTool.Models
 {
@@ -62,7 +64,62 @@ namespace ThirdPartyTool.Models
 
         public decimal MerchantFeeForServiceFee { get; set; }
 
+        /// <summary>
+        /// Updates the properties of this instance from a DataRow
+        /// </summary>
+        /// <param name="row">The DataRow containing the data</param>
+        public void UpdateFromDataRow(DataRow row)
+        {
+            try
+            {
+                if (row == null) return;
+
+                ID = Utility.GetGuidFromObject(row["ID"]);
+                SaleReceiptID = Utility.GetGuidFromObject(row["SaleReceiptID"]);
+                SaleReceiptPaymentDetailID = (long)Utility.GetIntFromObject(row["SaleReceiptPaymentDetailID"]);
+                PaymentMethodID = (short)Utility.GetIntFromObject(row["PaymentMethodID"]);
+                PaymentMethodType = (short)Utility.GetIntFromObject(row["PaymentMethodType"]);
+                EmployeeID = (short)Utility.GetIntFromObject(row["EmployeeID"]);
+                RolesID = (short)Utility.GetIntFromObject(row["RolesID"]);
+                TipRate = Utility.GetDecimalFromObject(row["TipRate"]);
+                TipRateOT = Utility.GetDecimalFromObject(row["TipRateOT"]);
+                Gratuity = Utility.GetDecimalFromObject(row["Gratuity"]);
+                SVCFeeForGratuity = Utility.GetDecimalFromObject(row["SVCFeeForGratuity"]);
+                MerchantFeeForTip = Utility.GetDecimalFromObject(row["MerchantFeeForTip"]);
+                DateCreated = Utility.GetDateTimeFromObject(row["DateCreated"]);
+                PartyServiceFeeAmount = Utility.GetDecimalFromObject(row["PartyServiceFeeAmount"]);
+                PartyServiceFeeTaxAmount = Utility.GetDecimalFromObject(row["PartyServiceFeeTaxAmount"]);
+                SVCFeeForPartyServiceFeeAmount = Utility.GetDecimalFromObject(row["SVCFeeForPartyServiceFeeAmount"]);
+                MerchantFeeForPartyServiceFeeAmount = Utility.GetDecimalFromObject(row["MerchantFeeForPartyServiceFeeAmount"]);
+                AutoGratuityAmount = Utility.GetDecimalFromObject(row["AutoGratuityAmount"]);
+                AutoGratuityTaxAmount = Utility.GetDecimalFromObject(row["AutoGratuityTaxAmount"]);
+                SVCFeeForAutoGratuityAmount = Utility.GetDecimalFromObject(row["SVCFeeForAutoGratuityAmount"]);
+                MerchantFeeForAutoGratuityAmount = Utility.GetDecimalFromObject(row["MerchantFeeForAutoGratuityAmount"]);
+                AreaFeeAmount = Utility.GetDecimalFromObject(row["AreaFeeAmount"]);
+                AreaFeeTaxAmount = Utility.GetDecimalFromObject(row["AreaFeeTaxAmount"]);
+                SVCFeeForAreaFeeAmount = Utility.GetDecimalFromObject(row["SVCFeeForAreaFeeAmount"]);
+                MerchantFeeForAreaFeeAmount = Utility.GetDecimalFromObject(row["MerchantFeeForAreaFeeAmount"]);
+                ServiceFee = Utility.GetDecimalFromObject(row["ServiceFee"]);
+                ServiceFeeTaxAmount = Utility.GetDecimalFromObject(row["ServiceFeeTaxAmount"]);
+                SVCFeeForServiceFee = Utility.GetDecimalFromObject(row["SVCFeeForServiceFee"]);
+                MerchantFeeForServiceFee = Utility.GetDecimalFromObject(row["MerchantFeeForServiceFee"]);
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Error("Error updating PaymentRoleDetailEntity from DataRow", ex);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new instance of PaymentRoleDetailEntity from a DataRow
+        /// </summary>
+        /// <param name="row">The DataRow containing the data</param>
+        /// <returns>A new PaymentRoleDetailEntity instance</returns>
+        public static PaymentRoleDetailEntity FromDataRow(DataRow row)
+        {
+            var entity = new PaymentRoleDetailEntity();
+            entity.UpdateFromDataRow(row);
+            return entity;
+        }
     }
-
-
 }

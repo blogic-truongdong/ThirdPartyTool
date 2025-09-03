@@ -51,7 +51,7 @@ namespace ThirdPartyTool
                     StringBuilder stringBuilder = new StringBuilder();
                     try
                     {
-                        using (var conn = new SqlConnection(Utility.Merchant_Connection))
+                        using (var conn = new SqlConnection(Helper.Merchant_Connection))
                         {
                             string sql = $"select * from TransactionDetail where MerchantID = '{merchantID}' and BatchStatus <> 'Closed'";
                             var transactionDetails = await conn.QueryAsync<TransactionDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);
@@ -70,7 +70,7 @@ namespace ThirdPartyTool
                             }
                         }
 
-                        using (var conn = new SqlConnection(Utility.BLOGICPOS7_Connection))
+                        using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
                         {
 
                         }

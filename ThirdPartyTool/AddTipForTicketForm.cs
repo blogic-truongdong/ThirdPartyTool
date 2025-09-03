@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using BLogicSystems.XPos.Utilites;
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -38,14 +39,17 @@ namespace ThirdPartyTool
             string path = "newfile.sql";
 
             Dictionary<string, string> keyValues = new Dictionary<string, string>();
-            keyValues.Add("263482", "15");
-            keyValues.Add("263489", "28.95");
-            keyValues.Add("263495", "5.28");
-            keyValues.Add("263510", "5.03");
-            keyValues.Add("263509", "5");
-            keyValues.Add("261231", "10.85");
-            keyValues.Add("263537", "56.66");
-            keyValues.Add("261214", "5.37");
+            keyValues.Add("113636", "20.7");
+            keyValues.Add("113618", "8");
+            keyValues.Add("113615", "2");
+            keyValues.Add("113631", "7");
+            keyValues.Add("113641", "10");
+            keyValues.Add("113628", "10");
+            keyValues.Add("113668", "22");
+            keyValues.Add("113663", "40");
+            keyValues.Add("113699", "15");
+            keyValues.Add("113651", "30");
+
             if (File.Exists(path))
                 File.Delete(path);
             using (FileStream fs = File.Create(path))
@@ -88,7 +92,7 @@ namespace ThirdPartyTool
                         decimal BaseAmountFee = 0;
                         decimal MerchantFee = 0;
                         bool SVCFeeType = false;
-                        using (var conn = new SqlConnection(Utility.BLOGICPOS7_Connection))
+                        using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
                         {
                             string sql = "select * from Configurations where ConfigurationName in (" +
                                 "'CreditCardConfigValue.CashDiscount'," +
@@ -148,8 +152,9 @@ namespace ThirdPartyTool
                                 merchantFeeForTip = Utility.CalculateMerchantFeeForTipWithParams(gratuity, SVCFee, MerchantFee, SVCFeeType);
                                 merchantFeeForPayment = Utility.CalculateMerchantFeeWithParams(payment.AmountTendered + gratuity, SVCFee, MerchantFee, SVCFeeType);
 
-                                var employeeClockInInfoEntity = await Utility.GetEmployeeClockInInfo(conn, payment.EmployeeID, payment.CreatedDate);
+                                var employeeClockInInfoEntity = await Helper.GetEmployeeClockInInfo(conn, payment.EmployeeID, payment.CreatedDate);
 
+                                stringBuilder.AppendLine($"--------- Ticket #: {keyValuePair.Key}");
                                 stringBuilder.AppendLine($"USE BLOGICPOS7");
                                 stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{payment.SaleReceiptPaymentDetailID}' and Gratuity = 0)");
                                 stringBuilder.AppendLine($"BEGIN");
@@ -184,7 +189,7 @@ namespace ThirdPartyTool
                         if (string.IsNullOrWhiteSpace(creditCardTransactionID))
                             return;
 
-                        using (var conn = new SqlConnection(Utility.Merchant_Connection))
+                        using (var conn = new SqlConnection(Helper.Merchant_Connection))
                         {
                             var sql = $"select * from TransactionDetail where ID = '{creditCardTransactionID}' ";
 
@@ -196,6 +201,7 @@ namespace ThirdPartyTool
 
 
                             stringBuilder.AppendLine($"");
+                            stringBuilder.AppendLine($"--------- Ticket #: {keyValuePair.Key}");
                             stringBuilder.AppendLine($"USE MERCHANT");
                             stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0 and BatchStatus = 'Closed')");
                             stringBuilder.AppendLine($"BEGIN");
@@ -205,6 +211,7 @@ namespace ThirdPartyTool
                             stringBuilder.AppendLine($"GO");
 
                             stringBuilder.AppendLine($"");
+                            stringBuilder.AppendLine($"--------- Ticket #: {keyValuePair.Key}");
                             stringBuilder.AppendLine($"USE MERCHANT");
                             stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0)");
                             stringBuilder.AppendLine($"BEGIN");
@@ -214,9 +221,9 @@ namespace ThirdPartyTool
 
                         }
 
-                        //txtScript.Text = stringBuilder.ToString();
+                        txtScript.Text = stringBuilder.ToString();
 
-                        //Clipboard.SetText(txtScript.Text);
+                        Clipboard.SetText(txtScript.Text);
                         writer.WriteLine(stringBuilder.ToString());
                     }
                     catch (Exception ex)

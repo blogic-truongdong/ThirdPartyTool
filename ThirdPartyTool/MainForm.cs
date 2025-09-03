@@ -45,7 +45,7 @@ namespace ThirdPartyTool
            ConnectDatabaseForm connectDatabaseForm = new ConnectDatabaseForm();
             connectDatabaseForm.ShowDialog();
 
-            if (string.IsNullOrWhiteSpace(Utility.BLOGICPOS7_Connection) || string.IsNullOrWhiteSpace(Utility.Merchant_Connection))
+            if (string.IsNullOrWhiteSpace(Helper.BLOGICPOS7_Connection) || string.IsNullOrWhiteSpace(Helper.Merchant_Connection))
                 this.Close();
         }
 

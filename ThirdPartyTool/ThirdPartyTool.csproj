@@ -33,8 +33,234 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BLogicSystems.Merchant.BusinessServiceClient">
+      <HintPath>Lib\BLogicSystems.Merchant.BusinessServiceClient.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.ClientFactory, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.ClientFactory.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.DebitModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.DebitModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.DejavooClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.DejavooClient.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.DejavooTerminalHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.DejavooTerminalHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.ExportModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.ExportModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.GiftModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.GiftModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.HomeModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.HomeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.LoginModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.LoginModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.ManageModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.ManageModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.MPSClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.MPSClient.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.MPSTranSentryClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.MPSTranSentryClient.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.PAXClient">
+      <HintPath>Lib\BLogicSystems.Merchant.PAXClient.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.PAXTerminalHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.PAXTerminalHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.Resource, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.Resource.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.Resources, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.Resources.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.SecurityModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.SecurityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.SettingModule, Version=1.0.8021.17148, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.SettingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.SpringControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.SpringControl.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.SpringDocument, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.SpringDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.SpringPrinterHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.SpringPrinterHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.USAePAYClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.USAePAYClient.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.Merchant.Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.Merchant.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.MessageBox">
+      <HintPath>Lib\BLogicSystems.MessageBox.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.MonthCalendar">
+      <HintPath>Lib\BLogicSystems.MonthCalendar.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.POSBackOffice.CheckBoxComboBox">
+      <HintPath>Lib\BLogicSystems.POSBackOffice.CheckBoxComboBox.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.POSBackOffice.Common">
+      <HintPath>Lib\BLogicSystems.POSBackOffice.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.POSBackOffice.Control">
+      <HintPath>Lib\BLogicSystems.POSBackOffice.Control.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.POSServiceClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.POSServiceClient.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.SpringControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.SpringControl.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.SyncDataPOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BLogicSystems.SyncDataPOS.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Cab">
+      <HintPath>Lib\BLogicSystems.XPos.Cab.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.ClientUtilities">
+      <HintPath>Lib\BLogicSystems.XPos.ClientUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Devices">
+      <HintPath>Lib\BLogicSystems.XPos.Devices.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.DTO">
+      <HintPath>Lib\BLogicSystems.XPos.DTO.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.License">
+      <HintPath>Lib\BLogicSystems.XPos.License.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Resources">
+      <HintPath>Lib\BLogicSystems.XPos.Resources.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.RoutingServices">
+      <HintPath>Lib\BLogicSystems.XPos.RoutingServices.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.RoutingServices.XmlSerializers">
+      <HintPath>Lib\BLogicSystems.XPos.RoutingServices.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.SharedModule">
+      <HintPath>Lib\BLogicSystems.XPos.SharedModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Utilities">
+      <HintPath>Lib\BLogicSystems.XPos.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.XPOSReports">
+      <HintPath>Lib\BLogicSystems.XPos.XPOSReports.dll</HintPath>
+    </Reference>
+    <Reference Include="ChartFX.WinForms, Version=7.0.2330.23824, Culture=neutral, PublicKeyToken=a1878e2052c08dce, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\ChartFX.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="ChartFX.WinForms.Adornments, Version=7.0.2330.23795, Culture=neutral, PublicKeyToken=a1878e2052c08dce, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\ChartFX.WinForms.Adornments.dll</HintPath>
+    </Reference>
+    <Reference Include="ChartFX.WinForms.Base, Version=7.0.2330.23772, Culture=neutral, PublicKeyToken=a1878e2052c08dce, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\ChartFX.WinForms.Base.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.1.66\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DevAge.Core, Version=4.10.2845.21697, Culture=neutral, PublicKeyToken=faad465d84242dbf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevAge.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevAge.Windows.Forms, Version=4.10.2845.21698, Culture=neutral, PublicKeyToken=faad465d84242dbf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevAge.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.Data.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.Utils.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraBars.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraBars.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraCharts.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v7.1.UI, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraCharts.v7.1.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraEditors.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraNavBar.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraNavBar.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraPrinting.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraReports.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraRichTextEdit.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DevExpress.XtraRichTextEdit.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="Edneeis.Controls.MultiColumnCombo, Version=1.0.2042.37225, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Edneeis.Controls.MultiColumnCombo.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,8 +272,13 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Printing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\System.Printing.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -63,6 +294,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="zxing">
+      <HintPath>Lib\zxing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddBatchDetailForm.cs">
@@ -90,17 +324,68 @@
     <Compile Include="ConnectDatabaseForm.Designer.cs">
       <DependentUpon>ConnectDatabaseForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Const.cs" />
+    <Compile Include="CustomControl\BLabel_Rounded.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControl\BPanel_Rounded.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControl\BTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControl\BTextBox.Designer.cs">
+      <DependentUpon>BTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControl\CommonLabel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CustomControl\CommonLabel.Designer.cs">
       <DependentUpon>CommonLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomControl\NumericTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControl\NumericTextBox.Designer.cs">
+      <DependentUpon>NumericTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\ConfirmDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\ConfirmDialogForm.Designer.cs">
+      <DependentUpon>ConfirmDialogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\ErrorDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\ErrorDialogForm.Designer.cs">
+      <DependentUpon>ErrorDialogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\FormHelper.cs" />
+    <Compile Include="Dialog\InformationDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\InformationDialogForm.Designer.cs">
+      <DependentUpon>InformationDialogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EmployeeInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="EmployeeInfo.Designer.cs">
       <DependentUpon>EmployeeInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnterDatabaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EnterDatabaseForm.Designer.cs">
+      <DependentUpon>EnterDatabaseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helper.cs" />
+    <Compile Include="HomeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HomeForm.Designer.cs">
+      <DependentUpon>HomeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -116,10 +401,56 @@
     <Compile Include="Models\EmployeeRoleEntity.cs" />
     <Compile Include="Models\PaymentRoleDetailEntity.cs" />
     <Compile Include="Models\RoleEntity.cs" />
+    <Compile Include="Models\SaleReceiptDetailEntity.cs" />
+    <Compile Include="Models\SaleReceiptDetailTaxDetailEntity.cs" />
     <Compile Include="Models\SaleReceiptEntity.cs" />
+    <Compile Include="Models\SaleReceiptInfoResponse.cs" />
     <Compile Include="Models\SaleReceiptPaymentDetailEntity.cs" />
+    <Compile Include="Models\SaleReceiptServiceChargeTaxDetailEntity.cs" />
     <Compile Include="Models\TimeClockEntity.cs" />
     <Compile Include="Models\TransactionDetailEntity.cs" />
+    <Compile Include="ProcessForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProcessForm.Designer.cs">
+      <DependentUpon>ProcessForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReceiptView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReceiptView.Designer.cs">
+      <DependentUpon>ReceiptView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\AddTipBySaleTokenView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\AddTipBySaleTokenView.Designer.cs">
+      <DependentUpon>AddTipBySaleTokenView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\AddTipForPaymentDetailView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\AddTipForPaymentDetailView.Designer.cs">
+      <DependentUpon>AddTipForPaymentDetailView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\PaymentDetailView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\PaymentDetailView.Designer.cs">
+      <DependentUpon>PaymentDetailView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\SelectReceiptView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\SelectReceiptView.Designer.cs">
+      <DependentUpon>SelectReceiptView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\SelectSaleReceiptForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\SelectSaleReceiptForm.Designer.cs">
+      <DependentUpon>SelectSaleReceiptForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettleBatchByMerchantIDForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,8 +465,32 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartForm.Designer.cs">
+      <DependentUpon>StartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SystemConfigurations.cs" />
+    <Compile Include="Transactions\SettleBatchOfflineForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Transactions\SettleBatchOfflineForm.Designer.cs">
+      <DependentUpon>SettleBatchOfflineForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transactions\SettleBatchOfflineView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transactions\SettleBatchOfflineView.Designer.cs">
+      <DependentUpon>SettleBatchOfflineView.cs</DependentUpon>
+    </Compile>
     <Compile Include="UpdateEmployee7ShiftsModel.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="WelcomeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WelcomeView.Designer.cs">
+      <DependentUpon>WelcomeView.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AddBatchDetailForm.resx">
       <DependentUpon>AddBatchDetailForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -148,11 +503,29 @@
     <EmbeddedResource Include="ConnectDatabaseForm.resx">
       <DependentUpon>ConnectDatabaseForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\ConfirmDialogForm.resx">
+      <DependentUpon>ConfirmDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\ErrorDialogForm.resx">
+      <DependentUpon>ErrorDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\InformationDialogForm.resx">
+      <DependentUpon>InformationDialogForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EmployeeInfo.resx">
       <DependentUpon>EmployeeInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EnterDatabaseForm.resx">
+      <DependentUpon>EnterDatabaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HomeForm.resx">
+      <DependentUpon>HomeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProcessForm.resx">
+      <DependentUpon>ProcessForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -164,11 +537,41 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ReceiptView.resx">
+      <DependentUpon>ReceiptView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\AddTipBySaleTokenView.resx">
+      <DependentUpon>AddTipBySaleTokenView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\AddTipForPaymentDetailView.resx">
+      <DependentUpon>AddTipForPaymentDetailView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\PaymentDetailView.resx">
+      <DependentUpon>PaymentDetailView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\SelectReceiptView.resx">
+      <DependentUpon>SelectReceiptView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\SelectSaleReceiptForm.resx">
+      <DependentUpon>SelectSaleReceiptForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettleBatchByMerchantIDForm.resx">
       <DependentUpon>SettleBatchByMerchantIDForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SevenShiftsForm.resx">
       <DependentUpon>SevenShiftsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StartForm.resx">
+      <DependentUpon>StartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transactions\SettleBatchOfflineForm.resx">
+      <DependentUpon>SettleBatchOfflineForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transactions\SettleBatchOfflineView.resx">
+      <DependentUpon>SettleBatchOfflineView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WelcomeView.resx">
+      <DependentUpon>WelcomeView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -180,14 +583,91 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Templates\Receipt.repx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\BLogicSystems.Merchant.BusinessServiceClient.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.Client.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.ClientFactory.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.Common.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.Data.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.DebitModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.DejavooClient.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.DejavooTerminalHelper.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.ExportModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.GiftModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.HomeModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.LoginModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.ManageModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.MPSClient.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.MPSTranSentryClient.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.PAXClient.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.PAXTerminalHelper.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.Resource.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.Resources.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.SecurityModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.SettingModule.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.SpringControl.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.SpringDocument.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.SpringPrinterHelper.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.USAePAYClient.dll" />
+    <Content Include="Lib\BLogicSystems.Merchant.Utility.dll" />
+    <Content Include="Lib\BLogicSystems.MessageBox.dll" />
+    <Content Include="Lib\BLogicSystems.MonthCalendar.dll" />
+    <Content Include="Lib\BLogicSystems.POSBackOffice.CheckBoxComboBox.dll" />
+    <Content Include="Lib\BLogicSystems.POSBackOffice.Common.dll" />
+    <Content Include="Lib\BLogicSystems.POSBackOffice.Control.dll" />
+    <Content Include="Lib\BLogicSystems.POSServiceClient.dll" />
+    <Content Include="Lib\BLogicSystems.SpringControl.dll" />
+    <Content Include="Lib\BLogicSystems.SyncDataPOS.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.Cab.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.ClientUtilities.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.Devices.dll" />
     <Content Include="Lib\BLogicSystems.XPos.DTO.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.License.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.Resources.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.RoutingServices.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.RoutingServices.XmlSerializers.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.SharedModule.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.Utilities.dll" />
+    <Content Include="Lib\BLogicSystems.XPos.XPOSReports.dll" />
+    <Content Include="Lib\ChartFX.WinForms.Adornments.dll" />
+    <Content Include="Lib\ChartFX.WinForms.Base.dll" />
+    <Content Include="Lib\ChartFX.WinForms.dll" />
+    <Content Include="Lib\DevAge.Core.dll" />
+    <Content Include="Lib\DevAge.Windows.Forms.dll" />
+    <Content Include="Lib\DevExpress.Data.v7.1.dll" />
+    <Content Include="Lib\DevExpress.Utils.v7.1.dll" />
+    <Content Include="Lib\DevExpress.XtraBars.v7.1.dll" />
+    <Content Include="Lib\DevExpress.XtraCharts.v7.1.dll" />
+    <Content Include="Lib\DevExpress.XtraCharts.v7.1.UI.dll" />
+    <Content Include="Lib\DevExpress.XtraEditors.v7.1.dll" />
+    <Content Include="Lib\DevExpress.XtraNavBar.v7.1.dll" />
+    <Content Include="Lib\DevExpress.XtraPrinting.v7.1.dll" />
+    <Content Include="Lib\DevExpress.XtraReports.v7.1.dll" />
+    <Content Include="Lib\DevExpress.XtraRichTextEdit.v7.1.dll" />
+    <Content Include="Lib\Edneeis.Controls.MultiColumnCombo.dll" />
     <Content Include="Lib\log4net.dll" />
+    <Content Include="Lib\System.Printing.dll" />
+    <Content Include="Lib\zxing.dll" />
+    <None Include="Resources\Icon_Exit.png" />
+    <None Include="Resources\Icon_Home.png" />
+    <None Include="Resources\Icon_Receipt.png" />
+    <None Include="Resources\Icon_Employee.png" />
+    <None Include="Resources\Icon_User.png" />
+    <None Include="Resources\Icon_Search.png" />
+    <None Include="Resources\BlogicSystems_White.png" />
+    <None Include="Resources\BlogicSystems_Black.png" />
+    <None Include="Resources\BLogic_Start_Loading.gif" />
     <None Include="Resources\Loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
