@@ -45,7 +45,6 @@
             // 
             this.pnlContainer.BackColor = System.Drawing.Color.White;
             this.pnlContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlContainer.Controls.Add(this.picLoading);
             this.pnlContainer.Controls.Add(this.btnCancel);
             this.pnlContainer.Controls.Add(this.btnConnect);
             this.pnlContainer.Controls.Add(this.txtMerchantName);
@@ -151,6 +150,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 300);
+            this.Controls.Add(this.picLoading);
             this.Controls.Add(this.pnlContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ConnectDatabaseForm";
