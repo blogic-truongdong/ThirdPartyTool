@@ -49,7 +49,7 @@ namespace ThirdPartyTool.SaleReceipt
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnUpdate = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlSearch = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.numericTextBox1 = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.txtGratuity = new ThirdPartyTool.CustomControl.NumericTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.bPanel_Rounded1.SuspendLayout();
@@ -319,29 +319,29 @@ namespace ThirdPartyTool.SaleReceipt
             this.pnlSearch.BorderColor = System.Drawing.Color.Gray;
             this.pnlSearch.BorderRadius = 5;
             this.pnlSearch.BorderSize = 1;
-            this.pnlSearch.Controls.Add(this.numericTextBox1);
+            this.pnlSearch.Controls.Add(this.txtGratuity);
             this.pnlSearch.Location = new System.Drawing.Point(56, 5);
             this.pnlSearch.Name = "pnlSearch";
             this.pnlSearch.Size = new System.Drawing.Size(170, 40);
             this.pnlSearch.TabIndex = 6;
             // 
-            // numericTextBox1
+            // txtGratuity
             // 
-            this.numericTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.numericTextBox1.FormatSpecifier = "c2";
-            this.numericTextBox1.Location = new System.Drawing.Point(10, 11);
-            this.numericTextBox1.MaxValue = new decimal(new int[] {
+            this.txtGratuity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGratuity.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtGratuity.FormatSpecifier = "c2";
+            this.txtGratuity.Location = new System.Drawing.Point(10, 11);
+            this.txtGratuity.MaxValue = new decimal(new int[] {
             999999999,
             0,
             0,
             0});
-            this.numericTextBox1.Name = "numericTextBox1";
-            this.numericTextBox1.Size = new System.Drawing.Size(150, 20);
-            this.numericTextBox1.TabIndex = 0;
-            this.numericTextBox1.Text = "0.00";
-            this.numericTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericTextBox1.Value = new decimal(new int[] {
+            this.txtGratuity.Name = "txtGratuity";
+            this.txtGratuity.Size = new System.Drawing.Size(150, 20);
+            this.txtGratuity.TabIndex = 0;
+            this.txtGratuity.Text = "0.00";
+            this.txtGratuity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtGratuity.Value = new decimal(new int[] {
             0,
             0,
             0,
@@ -398,7 +398,7 @@ namespace ThirdPartyTool.SaleReceipt
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
         private BPanel_Rounded pnlSearch;
-        public NumericTextBox numericTextBox1;
+        public NumericTextBox txtGratuity;
         public BLabel_Rounded btnUpdate;
     }
 }

@@ -35,12 +35,12 @@
             this.txtSearch = new ThirdPartyTool.CustomControl.BTextBox();
             this.btnSearch = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlPaymentDetails = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnBack = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.bTextBox1 = new ThirdPartyTool.CustomControl.BTextBox();
             this.txtFocus = new ThirdPartyTool.CustomControl.BTextBox();
-            this.pnlPaymentDetails = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -60,7 +60,7 @@
             // 
             // PrintControl_Receipt
             // 
-            this.PrintControl_Receipt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(109)))), ((int)(((byte)(119)))));
+            this.PrintControl_Receipt.BackColor = System.Drawing.Color.White;
             this.PrintControl_Receipt.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PrintControl_Receipt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PrintControl_Receipt.ForeColor = System.Drawing.Color.White;
@@ -142,6 +142,14 @@
             this.panel1.Size = new System.Drawing.Size(434, 417);
             this.panel1.TabIndex = 29;
             // 
+            // pnlPaymentDetails
+            // 
+            this.pnlPaymentDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlPaymentDetails.Location = new System.Drawing.Point(0, 30);
+            this.pnlPaymentDetails.Name = "pnlPaymentDetails";
+            this.pnlPaymentDetails.Size = new System.Drawing.Size(434, 387);
+            this.pnlPaymentDetails.TabIndex = 30;
+            // 
             // label2
             // 
             this.label2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -205,14 +213,6 @@
             this.txtFocus.Size = new System.Drawing.Size(247, 20);
             this.txtFocus.TabIndex = 36;
             this.txtFocus.Text = "Search by Ticket #";
-            // 
-            // pnlPaymentDetails
-            // 
-            this.pnlPaymentDetails.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPaymentDetails.Location = new System.Drawing.Point(0, 30);
-            this.pnlPaymentDetails.Name = "pnlPaymentDetails";
-            this.pnlPaymentDetails.Size = new System.Drawing.Size(434, 387);
-            this.pnlPaymentDetails.TabIndex = 30;
             // 
             // AddTipForPaymentDetailView
             // 

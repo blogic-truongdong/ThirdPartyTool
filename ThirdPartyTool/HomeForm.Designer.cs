@@ -60,7 +60,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1000, 602);
+            this.panel1.Size = new System.Drawing.Size(1000, 700);
             this.panel1.TabIndex = 1;
             // 
             // pnlContainer
@@ -70,7 +70,7 @@
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Size = new System.Drawing.Size(798, 600);
+            this.pnlContainer.Size = new System.Drawing.Size(798, 698);
             this.pnlContainer.TabIndex = 2;
             // 
             // welcomeView
@@ -78,7 +78,7 @@
             this.welcomeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.welcomeView.Location = new System.Drawing.Point(0, 0);
             this.welcomeView.Name = "welcomeView";
-            this.welcomeView.Size = new System.Drawing.Size(798, 600);
+            this.welcomeView.Size = new System.Drawing.Size(798, 698);
             this.welcomeView.TabIndex = 1;
             // 
             // receiptView
@@ -88,7 +88,7 @@
             this.receiptView.Location = new System.Drawing.Point(0, 0);
             this.receiptView.Name = "receiptView";
             this.receiptView.Padding = new System.Windows.Forms.Padding(10);
-            this.receiptView.Size = new System.Drawing.Size(798, 600);
+            this.receiptView.Size = new System.Drawing.Size(798, 698);
             this.receiptView.TabIndex = 0;
             // 
             // pnlLeft
@@ -100,7 +100,7 @@
             this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlLeft.Location = new System.Drawing.Point(0, 0);
             this.pnlLeft.Name = "pnlLeft";
-            this.pnlLeft.Size = new System.Drawing.Size(200, 600);
+            this.pnlLeft.Size = new System.Drawing.Size(200, 698);
             this.pnlLeft.TabIndex = 1;
             // 
             // panel6
@@ -111,7 +111,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 170);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(200, 365);
+            this.panel6.Size = new System.Drawing.Size(200, 463);
             this.panel6.TabIndex = 2;
             // 
             // btnEmployee
@@ -167,7 +167,7 @@
             // 
             this.panel5.Controls.Add(this.btnClose);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 535);
+            this.panel5.Location = new System.Drawing.Point(0, 633);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(200, 65);
             this.panel5.TabIndex = 1;
@@ -235,7 +235,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1000, 602);
+            this.ClientSize = new System.Drawing.Size(1000, 700);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "HomeForm";

@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon_Tool.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BLogicSystems.Merchant.BusinessServiceClient">
       <HintPath>Lib\BLogicSystems.Merchant.BusinessServiceClient.dll</HintPath>
@@ -591,70 +594,203 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\BLogicSystems.Merchant.BusinessServiceClient.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.Client.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.ClientFactory.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.Common.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.Data.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.DebitModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.DejavooClient.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.DejavooTerminalHelper.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.ExportModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.GiftModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.HomeModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.LoginModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.ManageModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.MPSClient.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.MPSTranSentryClient.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.PAXClient.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.PAXTerminalHelper.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.Resource.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.Resources.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.SecurityModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.SettingModule.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.SpringControl.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.SpringDocument.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.SpringPrinterHelper.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.USAePAYClient.dll" />
-    <Content Include="Lib\BLogicSystems.Merchant.Utility.dll" />
-    <Content Include="Lib\BLogicSystems.MessageBox.dll" />
-    <Content Include="Lib\BLogicSystems.MonthCalendar.dll" />
-    <Content Include="Lib\BLogicSystems.POSBackOffice.CheckBoxComboBox.dll" />
-    <Content Include="Lib\BLogicSystems.POSBackOffice.Common.dll" />
-    <Content Include="Lib\BLogicSystems.POSBackOffice.Control.dll" />
-    <Content Include="Lib\BLogicSystems.POSServiceClient.dll" />
-    <Content Include="Lib\BLogicSystems.SpringControl.dll" />
-    <Content Include="Lib\BLogicSystems.SyncDataPOS.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.Cab.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.ClientUtilities.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.Devices.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.DTO.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.License.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.Resources.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.RoutingServices.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.RoutingServices.XmlSerializers.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.SharedModule.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.Utilities.dll" />
-    <Content Include="Lib\BLogicSystems.XPos.XPOSReports.dll" />
-    <Content Include="Lib\ChartFX.WinForms.Adornments.dll" />
-    <Content Include="Lib\ChartFX.WinForms.Base.dll" />
-    <Content Include="Lib\ChartFX.WinForms.dll" />
-    <Content Include="Lib\DevAge.Core.dll" />
-    <Content Include="Lib\DevAge.Windows.Forms.dll" />
-    <Content Include="Lib\DevExpress.Data.v7.1.dll" />
-    <Content Include="Lib\DevExpress.Utils.v7.1.dll" />
-    <Content Include="Lib\DevExpress.XtraBars.v7.1.dll" />
-    <Content Include="Lib\DevExpress.XtraCharts.v7.1.dll" />
-    <Content Include="Lib\DevExpress.XtraCharts.v7.1.UI.dll" />
-    <Content Include="Lib\DevExpress.XtraEditors.v7.1.dll" />
-    <Content Include="Lib\DevExpress.XtraNavBar.v7.1.dll" />
-    <Content Include="Lib\DevExpress.XtraPrinting.v7.1.dll" />
-    <Content Include="Lib\DevExpress.XtraReports.v7.1.dll" />
-    <Content Include="Lib\DevExpress.XtraRichTextEdit.v7.1.dll" />
-    <Content Include="Lib\Edneeis.Controls.MultiColumnCombo.dll" />
-    <Content Include="Lib\log4net.dll" />
-    <Content Include="Lib\System.Printing.dll" />
-    <Content Include="Lib\zxing.dll" />
+    <Content Include="Icon_Tool.ico" />
+    <Content Include="Lib\BLogicSystems.Merchant.BusinessServiceClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.Client.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.ClientFactory.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.Data.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.DebitModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.DejavooClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.DejavooTerminalHelper.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.ExportModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.GiftModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.HomeModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.LoginModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.ManageModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.MPSClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.MPSTranSentryClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.PAXClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.PAXTerminalHelper.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.Resource.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.Resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.SecurityModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.SettingModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.SpringControl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.SpringDocument.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.SpringPrinterHelper.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.USAePAYClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.Merchant.Utility.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.MessageBox.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.MonthCalendar.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.POSBackOffice.CheckBoxComboBox.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.POSBackOffice.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.POSBackOffice.Control.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.POSServiceClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.SpringControl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.SyncDataPOS.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.Cab.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.ClientUtilities.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.Devices.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.DTO.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.License.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.Resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.RoutingServices.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.RoutingServices.XmlSerializers.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.SharedModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.Utilities.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\BLogicSystems.XPos.XPOSReports.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\ChartFX.WinForms.Adornments.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\ChartFX.WinForms.Base.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\ChartFX.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevAge.Core.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevAge.Windows.Forms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.Data.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.Utils.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraBars.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraCharts.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraCharts.v7.1.UI.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraEditors.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraNavBar.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraPrinting.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraReports.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\DevExpress.XtraRichTextEdit.v7.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\Edneeis.Controls.MultiColumnCombo.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\log4net.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\System.Printing.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\zxing.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icon_BLogic_Tool.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\Icon_Tool.png" />
     <None Include="Resources\Icon_Exit.png" />
     <None Include="Resources\Icon_Home.png" />
     <None Include="Resources\Icon_Receipt.png" />

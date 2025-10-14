@@ -140,6 +140,7 @@ namespace ThirdPartyTool
 
                             }
                             POSConfig.Configuration.ConfigValue.GetValueFromTable(dtConfigurations);
+                            Utility.IsCredit = true;
                         }
 
                         break;

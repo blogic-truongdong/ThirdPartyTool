@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ThirdPartyTool
@@ -42,7 +35,7 @@ namespace ThirdPartyTool
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-           ConnectDatabaseForm connectDatabaseForm = new ConnectDatabaseForm();
+            ConnectDatabaseForm connectDatabaseForm = new ConnectDatabaseForm();
             connectDatabaseForm.ShowDialog();
 
             if (string.IsNullOrWhiteSpace(Helper.BLOGICPOS7_Connection) || string.IsNullOrWhiteSpace(Helper.Merchant_Connection))

@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
 using ThirdPartyTool.Models;
@@ -29,8 +28,9 @@ namespace ThirdPartyTool
     public partial class ProcessForm : Form
     {
         BatchStatus batch = new BatchStatus();
-        public string SaleReceiptNumber = string.Empty;
-        public string SaleReceiptID = string.Empty;
+        public string GetReceiptTemplateByTicketNumber_SaleReceiptNumber = string.Empty;
+        public string GetReceiptTemplateByTicketNumber_SaleReceiptID = string.Empty;
+        public decimal GetReceiptTemplateByTicketNumber_TotalAmount = 0;
         public XtraReport ReceiptTemplate = null;
         private BackgroundWorker backgroundWorker;
         private ProcessNameEnum CurrentProcessName = ProcessNameEnum.None;
@@ -61,14 +61,16 @@ namespace ThirdPartyTool
         public void InitGetReceiptTemplate(string ticketNumber)
         {
             CurrentProcessName = ProcessNameEnum.GetReceiptTemplateByTicketNumber;
-            this.SaleReceiptNumber = ticketNumber;
+            this.GetReceiptTemplateByTicketNumber_SaleReceiptNumber = ticketNumber;
         }
 
-        public void InitAddTipByTokenReceipt(string saleReceiptID, string tokenSaleReceiptID)
+        public void InitAddTipByTokenReceipt(string saleReceiptID, string saleReceiptNumber, string tokenSaleReceiptID, string tokenSaleReceiptNumber)
         {
             CurrentProcessName = ProcessNameEnum.AddTipByTokenReceipt;
             this.AddTipByTokenReceipt_MainSaleReceiptID = saleReceiptID;
+            this.AddTipByTokenReceipt_MainSaleReceiptNumber = saleReceiptNumber;
             this.AddTipByTokenReceipt_TokenSaleReceiptID = tokenSaleReceiptID;
+            this.AddTipByTokenReceipt_TokenSaleReceiptNumber = tokenSaleReceiptNumber;
         }
 
         public void InitSettleBatchOffline()
@@ -96,7 +98,7 @@ namespace ThirdPartyTool
                 switch (CurrentProcessName)
                 {
                     case ProcessNameEnum.GetReceiptTemplateByTicketNumber:
-                        GetReceiptTemplateByTicketNumber(SaleReceiptNumber);
+                        GetReceiptTemplateByTicketNumber(GetReceiptTemplateByTicketNumber_SaleReceiptNumber);
                         break;
                     case ProcessNameEnum.AddTipByTokenReceipt:
                         UpdateTipByTokenReceipt();
@@ -123,7 +125,7 @@ namespace ThirdPartyTool
                 if (!IsSuccess)
                 {
                     InformationDialogForm errorDialog = new InformationDialogForm(ErrorMessage);
-                    FormHelper.ShowPopUpFormWithDIMBackground(errorDialog);
+                    errorDialog.ShowDialog();
                     this.Close();
                     return;
                 }
@@ -162,7 +164,6 @@ namespace ThirdPartyTool
                 SaleReceiptDTO saleReceiptDTO = new SaleReceiptDTO();
                 StoreDTO storeDTO = new StoreDTO();
 
-                DataTable dtSaleReceips = new DataTable("SaleReceipts");
                 DataTable dtTaxCodes = new DataTable("TaxCodes");
                 DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
                 DataTable dtCustomer = new DataTable("Customers");
@@ -427,7 +428,11 @@ namespace ThirdPartyTool
                     0, dtSaleReceiptPaymentDetails, null, null, new DataTable(), EmployeePaidName, false);
 
                 IsSuccess = true;
-                SaleReceiptID = Utility.GetStringFromRow("SaleReceiptID", saleReceiptDTO.SaleReceipts.Rows[0]);
+                GetReceiptTemplateByTicketNumber_SaleReceiptID = Utility.GetStringFromRow("SaleReceiptID", saleReceiptDTO.SaleReceipts.Rows[0]);
+                GetReceiptTemplateByTicketNumber_TotalAmount = Utility.GetDecimalFromObject(saleReceiptDTO.SaleReceipts.Compute("SUM(TotalAmount)", "")) +
+                    Utility.GetDecimalFromObject(saleReceiptDTO.SaleReceipts.Compute("SUM(SVCFeePaidAmount)", "")) -
+                    Utility.GetDecimalFromObject(saleReceiptDTO.SaleReceipts.Compute("SUM(CashDiscountPaidAmount)", "")) +
+                    Utility.GetDecimalFromObject(dtSaleReceiptPaymentDetails.Compute("SUM(Gratuity)", ""));
             }
             catch (Exception ex)
             {
@@ -477,7 +482,9 @@ namespace ThirdPartyTool
                     dtSaleReceiptPaymentDetails.Load(reader);
                     reader.Close();
 
-                    sqlCommand.CommandText = $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{AddTipByTokenReceipt_TokenSaleReceiptID}'";
+                    sqlCommand.CommandText = $"select a.*, b.PaymentMethodType from " +
+                        $" SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
+                        $" where SaleReceiptID = '{AddTipByTokenReceipt_TokenSaleReceiptID}'";
                     reader = sqlCommand.ExecuteReader();
                     dtTokenSaleReceiptPaymentDetails.Load(reader);
                     reader.Close();
@@ -489,6 +496,7 @@ namespace ThirdPartyTool
                     reader = sqlCommand.ExecuteReader();
                     dtTablesInDatabase.Load(reader);
                     reader.Close();
+
                     #region verify Receipt
                     if (dtTokenSaleReceiptPaymentDetails == null || dtTokenSaleReceiptPaymentDetails.Rows.Count == 0)
                     {
@@ -506,9 +514,29 @@ namespace ThirdPartyTool
 
                     if (dtTokenSaleReceiptPaymentDetails?.Rows.Count > 0)
                     {
+
+                        DateTime minDate = Utility.GetDateTimeFromObject(dtSaleReceiptPaymentDetails.Compute("MIN(CreatedDate)", ""));
+
+                        scriptUpdate = string.Empty;
+                        scriptUpdate += $"    update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{AddTipByTokenReceipt_TokenSaleReceiptID}';";
+
                         foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
                         {
+                            item["CreatedDate"] = minDate;
+
+                            if (Utility.GetDecimalFromRow("SVCFeeAmount", item) != 0)
+                                item["SVCFeeForGratuity"] = Math.Round(Utility.GetDecimalFromObject(item["AmountTendered"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
+
+                            if (Utility.GetDecimalFromRow("MerchantFee", item) != 0)
+                                item["MerchantFeeForTip"] = Math.Round(Utility.GetDecimalFromObject(item["AmountTendered"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+
+                            item["Gratuity"] = item["AmountTendered"];
+                            item["SVCFeeAmount"] = 0;
+
+                            scriptUpdate += $"    update SaleReceiptPaymentDetails set AmountTendered = '0', SaleReceiptID = '{AddTipByTokenReceipt_MainSaleReceiptID}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', Gratuity = '{item["Gratuity"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}';";
                         }
+
+                        RunQueryUpdate(sqlCommand, scriptUpdate);
 
                         drs = dtTablesInDatabase.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
                         if (drs.Length > 0)
@@ -517,119 +545,60 @@ namespace ThirdPartyTool
                             reader = sqlCommand.ExecuteReader();
                             dtPaymentRoleDetails.Load(reader);
                             reader.Close();
-                        }
 
-                        scriptUpdate = string.Empty;
-                        scriptUpdate += $"    update {Helper.BLOGICPOS7_Name}.dbo.SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{AddTipByTokenReceipt_TokenSaleReceiptID}';";
-                        scriptUpdate += $"    update {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails set SVCFeeForGratuity = ROUND(AmountTendered * {POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee} / 100, 2), Gratuity = AmountTendered, MerchantFeeForTip = MerchantFee where SaleReceiptID = '{AddTipByTokenReceipt_TokenSaleReceiptID}';";
-                        scriptUpdate += $"    update {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails set SaleReceiptID = '{AddTipByTokenReceipt_MainSaleReceiptID}', AmountTendered = 0 where SaleReceiptID = '{AddTipByTokenReceipt_TokenSaleReceiptID}';";
+                            scriptUpdate = string.Empty;
+                            foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
+                            {
+                                drs = dtPaymentRoleDetails.Select($"SaleReceiptID = '{item["SaleReceiptID"]}' and SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}'", "");
+                                if (drs.Length > 0)
+                                {
+                                    scriptUpdate += $"update PaymentRoleDetails set Gratuity = '{item["Gratuity"]}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{drs[0]["ID"]}';";
+                                }
+                                else
+                                {
+                                    scriptUpdate += $"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)";
+                                    scriptUpdate += $"    VALUES (NEWID(), '{AddTipByTokenReceipt_MainSaleReceiptID}', '{item["SaleReceiptPaymentDetailID"]}', '{item["PaymentMethodID"]}', '{item["PaymentMethodType"]}', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{item["Gratuity"]}', '{item["SVCFeeForGratuity"]}', '{item["MerchantFeeForTip"]}', '{minDate}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}'  )";
+                                }
+                            }
 
-                        sqlCommand.CommandText = scriptUpdate;
-                        resultQueryUpdate = sqlCommand.ExecuteNonQuery();
-                        if (resultQueryUpdate <= 0)
-                        {
-                            ErrorMessage = $"Something went wrong while Updating for the ticket.{Environment.NewLine}Please try contact TruongDS.";
-                            BLogicLogger.Exception("UpdateTipByTokenReceipt", null, new System.Collections.Generic.List<object>() { scriptUpdate });
-                            return;
-                        }
-
-                        sqlCommand.CommandText = $"SELECT ISNULL(SUM(SVCFeeAmount), 0) as SumSVCFeeAmount," +
-                            $"ISNULL(SUM(SVCFeeForGratuity), 0) as SumSVCFeeForGratuity," +
-                            $"ISNULL(SUM(MerchantFee), 0) as SumMerchantFee," +
-                            $"ISNULL(SUM(MerchantFeeForTip), 0) as SumMerchantFeeForTip," +
-                            $"ISNULL(SUM(Gratuity), 0) as SumGratuity " +
-                            $"FROM SaleReceiptPaymentDetails WHERE SaleReceiptID = '{AddTipByTokenReceipt_MainSaleReceiptID}'";
-                        reader = sqlCommand.ExecuteReader();
-                        dtSumSaleReceiptPaymentDetails.Load(reader);
-                        reader.Close();
-
-                        scriptUpdate = string.Empty;
-                        foreach (DataRow payment in dtTokenSaleReceiptPaymentDetails.Rows)
-                        {
-                            SaleReceiptPaymentDetailEntity paymentDetailEntity = SaleReceiptPaymentDetailEntity.FromDataRow(payment);
-
-                            decimal svcFeeForGratuity = Math.Round(paymentDetailEntity.AmountTendered * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
-
-                            scriptUpdate += $"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)";
-                            scriptUpdate += $"    VALUES (NEWID(), '{AddTipByTokenReceipt_MainSaleReceiptID}', '{payment["SaleReceiptPaymentDetailID"]}', '{payment["PaymentMethodID"]}', '2', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{payment["AmountTendered"]}', '{svcFeeForGratuity}', '{payment["MerchantFee"]}', '{payment["CreatedDate"]}', '{payment["PartyServiceFeeAmount"]}', '{payment["PartyServiceFeeTaxAmount"]}', '{payment["SVCFeeForPartyServiceFeeAmount"]}', '{payment["MerchantFeeForPartyServiceFeeAmount"]}', '{payment["AutoGratuityAmount"]}', '{payment["AutoGratuityTaxAmount"]}', '{payment["SVCFeeForAutoGratuityAmount"]}', '{payment["MerchantFeeForAutoGratuityAmount"]}', '{payment["AreaFeeAmount"]}', '{payment["AreaFeeTaxAmount"]}', '{payment["SVCFeeForAreaFeeAmount"]}', '{payment["MerchantFeeForAreaFeeAmount"]}', '{payment["ServiceFee"]}', '{payment["ServiceFeeTaxAmount"]}', '{payment["SVCFeeForServiceFee"]}', '{payment["MerchantFeeForServiceFee"]}'  )";
-                        }
-
-                        sqlCommand.CommandText = scriptUpdate;
-                        resultQueryUpdate = sqlCommand.ExecuteNonQuery();
-                        if (resultQueryUpdate <= 0)
-                        {
-                            ErrorMessage = $"Something went wrong while Updating for the ticket.{Environment.NewLine}Please try contact TruongDS.";
-                            BLogicLogger.Exception("UpdateTipByTokenReceipt", null, new System.Collections.Generic.List<object>() { scriptUpdate });
-                            return;
+                            RunQueryUpdate(sqlCommand, scriptUpdate);
                         }
                     }
-
                 }
 
-                DataTable dtTransactionDetail = new DataTable("TransactionDetail");
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                if (dtTokenSaleReceiptPaymentDetails?.Rows.Count > 0)
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
+                    string batchUnique = string.Empty;
+                    DataTable dtTransactionDetail = new DataTable("TransactionDetail");
+                    using (SqlCommand sqlCommand = new SqlCommand())
+                    using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
                     {
-                        scriptUpdate = $"     update TransactionDetail set Amount = 0, Gratuity = '{item["AmountTendered"]}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0', TicketNumber = '{AddTipByTokenReceipt_MainSaleReceiptNumber}' where ID = '{item["CreditCardTransactionID"]}'";
+                        if (conn.State == ConnectionState.Closed)
+                            conn.Open();
 
+                        sqlCommand.Connection = conn;
+                        sqlCommand.CommandType = CommandType.Text;
 
-                        sql = $"select * from TransactionDetail where BatchUnique in (select distinct a.BatchUnique from MERCHANT.dbo.TransactionDetail a where a.ID = '{item["CreditCardTransactionID"]}' and ISNULL(a.BatchUnique, '') <> '')";
-                        sqlCommand.CommandText = sql;
-                        SqlDataReader reader = sqlCommand.ExecuteReader();
-                        dtTransactionDetail.Load(reader);
-                        reader.Close();
+                        scriptUpdate = string.Empty;
 
-                        if (dtTransactionDetail?.Rows.Count > 0)
+                        foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
                         {
-                            scriptUpdate = $"     update Batch set TotalTips = TotalTips + '{item["AmountTendered"]}', TotalSales = TotalSales - '{item["AmountTendered"]}' where BatchUnique = (SELECT t.BatchUnique FROM TransactionDetail t where t.ID = '{item["CreditCardTransactionID"]}');";
-
+                            scriptUpdate = $"update TransactionDetail set Amount = 0, Gratuity = '{item["Gratuity"]}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0', TicketNumber = '{AddTipByTokenReceipt_MainSaleReceiptNumber}', SVCFee = '0',SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}',MerchantFee = '{item["MerchantFeeForTip"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{item["CreditCardTransactionID"]}'";
                         }
+
+                        RunQueryUpdate(sqlCommand, scriptUpdate);
+
+                        sql = $"select distinct BatchUnique from MERCHANT.dbo.TransactionDetail where ID = '{dtTokenSaleReceiptPaymentDetails.Rows[0]["CreditCardTransactionID"]}'";
+                        sqlCommand.CommandText = sql;
+                        batchUnique = Utility.GetStringFromObject(sqlCommand.ExecuteScalar());
                     }
 
-
-
-
+                    if (!string.IsNullOrWhiteSpace(batchUnique))
+                        UpdateBatchByBatchUnique(batchUnique);
                 }
-                //scriptUpdate = string.Empty;
-                //foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
-                //{
-                //    reader = sqlCommand.ExecuteReader();
-                //    dtSumSaleReceiptPaymentDetails.Load(reader);
-                //    reader.Close();
 
+                IsSuccess = true;
 
-
-                //    stringBuilder.AppendLine("");
-                //    stringBuilder.AppendLine("USE MERCHANT");
-                //    stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM TransactionDetail where ID = '{item["CreditCardTransactionID"]}' and Gratuity = 0)");
-                //    stringBuilder.AppendLine("BEGIN");
-                //    stringBuilder.AppendLine($"END");
-                //    stringBuilder.AppendLine($"GO");
-                //}
-
-                //sqlCommand.Connection = conn;
-                //sqlCommand.CommandType = CommandType.Text;
-                //sqlCommand.CommandText = stringBuilder.ToString();
-                //var resultUpdate2 = sqlCommand.ExecuteNonQuery();
-
-                //if (resultUpdate2 <= 0)
-                //{
-                //    BLogicLogger.Error($"Run Script Error: {stringBuilder.ToString()}");
-                //    ErrorMessage = "Update Ticket Error. Please contact TruongDS";
-                //}
-                //else
-                //{
-                //    IsSuccess = true;
-                //}
             }
             catch (Exception ex)
             {
@@ -642,199 +611,214 @@ namespace ThirdPartyTool
             }
         }
 
+        private void RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate)
+        {
+            BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
+            sqlCommand.CommandText = scriptUpdate;
+            var resultQueryUpdate = sqlCommand.ExecuteNonQuery();
+            if (resultQueryUpdate <= 0)
+            {
+                ErrorMessage = $"Something went wrong while run script update.{Environment.NewLine}Please try contact TruongDS.";
+                BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
+                backgroundWorker.CancelAsync();
+            }
+        }
+
+        private void UpdateBatchByBatchUnique(object batchUnique)
+        {
+            DataTable dtCalculateBatch = new DataTable("Batch");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                sqlCommand.Connection = conn;
+                sqlCommand.CommandType = CommandType.Text;
+
+                var sql = $"select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as Total," +
+                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end ) as TotalSVCFeeForTip, " +
+                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end ) as TotalSales, " +
+                    $" sum(case when TranType = 'Return' then Amount - SVCFee else 0 end ) as TotalReturns, " +
+                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end ) as TotalTips, " +
+                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end ) - sum(case when TranType = 'Return' then SVCFee else 0 end ) as TotalSVCFeeAmount," +
+                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as DepositAmount, " +
+                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount " +
+                    $" from TransactionDetail where BatchUnique = '{batchUnique}'";
+                sqlCommand.CommandText = sql;
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                dtCalculateBatch.Load(reader);
+                reader.Close();
+
+                if (dtCalculateBatch?.Rows.Count > 0)
+                {
+                    sql = $"update Batch set " +
+                        $" Total = '{dtCalculateBatch.Rows[0]["Total"]}'," +
+                        $" TotalSVCFeeForTip = {dtCalculateBatch.Rows[0]["TotalSVCFeeForTip"]} ," +
+                        $" TotalSales = {dtCalculateBatch.Rows[0]["TotalSales"]} ," +
+                        $" TotalTips = '{dtCalculateBatch.Rows[0]["TotalTips"]}', " +
+                        $" TotalSVCFeeAmount = {dtCalculateBatch.Rows[0]["TotalSVCFeeAmount"]}," +
+                        $" DepositAmount = {dtCalculateBatch.Rows[0]["DepositAmount"]}," +
+                        $" MerchantFeeAmount = {dtCalculateBatch.Rows[0]["MerchantFeeAmount"]}" +
+                        $" where BatchUnique = '{batchUnique}';";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                }
+            }
+        }
+
         private void AddTipForPaymentDetail()
         {
-            ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, "Are you sure you want to update this receipt?");
-            var result = FormHelper.ShowPopUpFormWithDIMBackground(confirmFirmDialog);
-            if (result == DialogResult.No)
-                return;
+            DataRow[] drs = null;
+            string scriptUpdate = string.Empty;
+            string scriptUpdatePaymentRoleDetails = string.Empty;
+            string sql = string.Empty;
+            int resultQueryUpdate = 0;
 
             try
             {
-                string posCondition = string.Empty;
-                string crudScriptPOS = string.Empty;
+                SaleReceiptPaymentDetailEntity paymentDetailEntity = null;
 
-                string merchantCondition = string.Empty;
-                string crudScriptMerchant = string.Empty;
-
-                var txtScript = "";
-
-                string creditCardTransactionID = string.Empty;
-
-                decimal svcFeeForTip = 0;
-                decimal merchantFeeForTip = 0;
-                decimal merchantFeeForPayment = 0;
-
-                decimal CashDiscount = 0;
-                decimal SVCFee = 0;
-                decimal BaseAmountFee = 0;
-                decimal MerchantFee = 0;
-                bool SVCFeeType = false;
-
-                DataTable dtConfigurations = new DataTable("Configurations");
+                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
                 DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+
                 DataTable dtTablesInDatabase = new DataTable("Tables");
                 DataTable dtPaymentRoleDetails = new DataTable("PaymentRoleDetails");
-                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
-                DataTable dtTransactionDetail = new DataTable("TransactionDetail");
-
-                DataRow[] drs = null;
-                StringBuilder stringBuilder = new StringBuilder();
-
                 using (SqlCommand sqlCommand = new SqlCommand())
                 using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
                 {
-                    string sql = "select * from Configurations where ConfigurationName in (" +
-                        "'CreditCardConfigValue.CashDiscount'," +
-                        "'CreditCardConfigValue.SVCFee'," +
-                        "'CreditCardConfigValue.SVCFeeType'," +
-                        "'CreditCardConfigValue.MerchantFee'," +
-                        "'CreditCardConfigValue.BaseAmountFee');";
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
 
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = sql;
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    dtConfigurations.Load(reader);
-                    reader.Close();
-
-                    foreach (DataRow item in dtConfigurations.Rows)
-                    {
-                        switch (Utility.GetStringFromRow("ConfigurationName", item))
-                        {
-                            case "CreditCardConfigValue.CashDiscount":
-                                CashDiscount = Utility.GetDecimalFromObject(item["ConfigurationValue"]);
-                                break;
-                            case "CreditCardConfigValue.SVCFee":
-                                SVCFee = Utility.GetDecimalFromObject(item["ConfigurationValue"]);
-                                break;
-                            case "CreditCardConfigValue.BaseAmountFee":
-                                BaseAmountFee = Utility.GetDecimalFromObject(item["ConfigurationValue"]);
-                                break;
-                            case "CreditCardConfigValue.MerchantFee":
-                                MerchantFee = Utility.GetDecimalFromObject(item["ConfigurationValue"]);
-                                break;
-                            case "CreditCardConfigValue.SVCFeeType":
-                                SVCFeeType = Utility.GetStringFromRow("ConfigurationValue", item) == "1";
-                                break;
-                        }
-                    }
-
-                    if (SVCFee > 0 && BaseAmountFee == 0)
-                    {
-                        BaseAmountFee = MerchantFee;
-                    }
-
                     sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptID = '{AddTipForPaymentDetail_SaleReceiptID}'";
-                    reader = sqlCommand.ExecuteReader();
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
                     dtSaleReceipts.Load(reader);
                     reader.Close();
 
-                    sql = $"select s.CashierID as EmployeeID, s.SaleReceiptNumber, sp.*" +
-                        $" from SaleReceiptPaymentDetails sp left join SaleReceipts s on sp.SaleReceiptID = s.SaleReceiptID" +
-                        $" where sp.SaleReceiptPaymentDetailID = '{AddTipForPaymentDetail_SaleReceiptPaymentDetailID}'";
-
-                    sqlCommand.CommandText = sql;
+                    sqlCommand.CommandText = $"select a.*, b.PaymentMethodType from " +
+                        $" SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
+                        $" where SaleReceiptPaymentDetailID = '{AddTipForPaymentDetail_SaleReceiptPaymentDetailID}'";
                     reader = sqlCommand.ExecuteReader();
                     dtSaleReceiptPaymentDetails.Load(reader);
                     reader.Close();
 
+                    sqlCommand.CommandText = $"SELECT TABLE_NAME " +
+                       $"FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_NAME in ('SaleReceiptDetailTaxDetails'," +
+                       $"'SaleReceiptServiceChargeTaxDetails'," +
+                       $"'DeliveryDetails', 'PaymentRoleDetails') ";
+                    reader = sqlCommand.ExecuteReader();
+                    dtTablesInDatabase.Load(reader);
+                    reader.Close();
+
+                    #region verify Receipt
+                    if (dtSaleReceiptPaymentDetails == null || dtSaleReceiptPaymentDetails.Rows.Count == 0)
+                    {
+                        ErrorMessage = "The Receipt don't exist any Payment Detail.";
+                        return;
+                    }
+
+                    paymentDetailEntity = SaleReceiptPaymentDetailEntity.FromDataRow(dtSaleReceiptPaymentDetails.Rows[0]);
+
+                    if (paymentDetailEntity.SVCFeeAmount != 0)
+                        paymentDetailEntity.SVCFeeForGratuity = Math.Round(AddTipForPaymentDetail_Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
+
+                    if (paymentDetailEntity.MerchantFee != 0)
+                        paymentDetailEntity.MerchantFee = Math.Round((paymentDetailEntity.AmountTendered - paymentDetailEntity.AmountReturn + AddTipForPaymentDetail_Gratuity) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+
+                    if (paymentDetailEntity.MerchantFee != 0)
+                        paymentDetailEntity.MerchantFeeForTip = Math.Round(AddTipForPaymentDetail_Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+
+                    paymentDetailEntity.Gratuity = AddTipForPaymentDetail_Gratuity;
+
+                    #endregion
+
+                    var CashierID = Utility.GetIntFromRow("CashierID", dtSaleReceipts.Rows[0]);
+                    var DateCreated = Utility.GetDateTimeFromRow("DateCreated", dtSaleReceipts.Rows[0]);
+
+                    var employeeClockInInfoEntity = Helper.GetEmployeeClockInInfoEntity(sqlCommand, CashierID, DateCreated);
+
                     if (dtSaleReceiptPaymentDetails?.Rows.Count > 0)
                     {
-                        var paymentEntity = SaleReceiptPaymentDetailEntity.FromDataRow(dtSaleReceiptPaymentDetails.Rows[0]);
+                        scriptUpdate = $"    update SaleReceiptPaymentDetails set Gratuity = '{paymentDetailEntity.Gratuity}', " +
+                            $" SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}', " +
+                            $" MerchantFee = '{paymentDetailEntity.MerchantFee}', " +
+                            $" MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' " +
+                            $" where SaleReceiptPaymentDetailID = '{paymentDetailEntity.SaleReceiptPaymentDetailID}';";
 
-                        DataRow payment = dtSaleReceiptPaymentDetails.Rows[0];
+                        RunQueryUpdate(sqlCommand, scriptUpdate);
+
                         drs = dtTablesInDatabase.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
                         if (drs.Length > 0)
                         {
-                            sqlCommand.CommandText = $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{AddTipForPaymentDetail_SaleReceiptID}'";
+                            sqlCommand.CommandText = $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{AddTipForPaymentDetail_SaleReceiptID}' and SaleReceiptPaymentDetailID = '{AddTipForPaymentDetail_SaleReceiptPaymentDetailID}'";
                             reader = sqlCommand.ExecuteReader();
                             dtPaymentRoleDetails.Load(reader);
                             reader.Close();
+
+                            scriptUpdate = string.Empty;
+
+                            drs = dtPaymentRoleDetails.Select($"SaleReceiptID = '{paymentDetailEntity.SaleReceiptID}' and SaleReceiptPaymentDetailID = '{paymentDetailEntity.SaleReceiptPaymentDetailID}'", "");
+                            if (drs.Length > 0)
+                            {
+                                scriptUpdate += $"update PaymentRoleDetails set Gratuity = '{paymentDetailEntity.Gratuity}', SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}', MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' where ID = '{drs[0]["ID"]}';";
+                            }
+                            else
+                            {
+                                scriptUpdate += $"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)";
+                                scriptUpdate += $"    VALUES (NEWID(), '{paymentDetailEntity.SaleReceiptID}', '{paymentDetailEntity.SaleReceiptPaymentDetailID}', '{paymentDetailEntity.PaymentMethodID}', '{paymentDetailEntity.PaymentMethodType}', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{paymentDetailEntity.Gratuity}', '{paymentDetailEntity.SVCFeeForGratuity}', '{paymentDetailEntity.MerchantFeeForTip}', '{paymentDetailEntity.CreatedDate}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}'  )";
+                            }
+
+                            RunQueryUpdate(sqlCommand, scriptUpdate);
                         }
-
-                        decimal amountTendered = Utility.GetDecimalFromRow("AmountTendered", dtSaleReceiptPaymentDetails.Rows[0]);
-                        decimal employeeID = Utility.GetIntFromRow("EmployeeID", dtSaleReceiptPaymentDetails.Rows[0]);
-                        DateTime createdDate = Utility.GetDateTimeFromRow("CreatedDate", dtSaleReceiptPaymentDetails.Rows[0]);
-                        svcFeeForTip = Utility.CalculateSVCFeeAdjustTipWithPara(AddTipForPaymentDetail_Gratuity, SVCFee, BaseAmountFee);
-                        merchantFeeForTip = Utility.CalculateMerchantFeeForTipWithParams(AddTipForPaymentDetail_Gratuity, SVCFee, MerchantFee, SVCFeeType);
-                        merchantFeeForPayment = Utility.CalculateMerchantFeeWithParams(amountTendered + AddTipForPaymentDetail_Gratuity, SVCFee, MerchantFee, SVCFeeType);
-                        decimal merchantFeeAmount = Utility.CalculateMerchantFeeForTipWithParams(paymentEntity.AmountTendered - paymentEntity.AmountReturn + AddTipForPaymentDetail_Gratuity, SVCFee, MerchantFee, SVCFeeType);
-
-                        var employeeClockInInfoEntity = Helper.GetEmployeeClockInInfoEntity(sqlCommand, employeeID, createdDate);
-
-                        stringBuilder.AppendLine($"    ");
-                        sqlCommand.CommandText = $"update {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails set Gratuity = '{AddTipForPaymentDetail_Gratuity}', SVCFeeForGratuity = '{svcFeeForTip}', MerchantFeeForTip = '{merchantFeeForTip}', MerchantFee = '{merchantFeeAmount}' where SaleReceiptPaymentDetailID = '{paymentEntity.SaleReceiptPaymentDetailID}';";
-                        var resultUpdate = sqlCommand.ExecuteNonQuery();
-                        if (resultUpdate <= 0)
-                        {
-                            ErrorMessage = "Update Ticket Error. Please contact TruongDS";
-                            return;
-                        }
-
-                        var totalGratuityOfTicket = Utility.GetDecimalFromObject(sqlCommand.ExecuteScalar());
-
-                        if (dtPaymentRoleDetails?.Rows.Count > 0)
-                        {
-                            stringBuilder.AppendLine($"    update PaymentRoleDetails set Gratuity = '{totalGratuityOfTicket}' , SVCFeeForGratuity = SVCFeeForGratuity + '{payment["SVCFeeAmount"]}' , MerchantFeeForTip = MerchantFeeForTip + '{payment["MerchantFee"]}' where ID = '{dtPaymentRoleDetails.Rows[0]["ID"]}';");
-                        }
-                        else
-                        {
-                            stringBuilder.AppendLine($"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)");
-                            stringBuilder.AppendLine($"    VALUES (NEWID(), '{AddTipByTokenReceipt_MainSaleReceiptID}', '{payment["SaleReceiptPaymentDetailID"]}', '{payment["PaymentMethodID"]}', '2', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{payment["AmountTendered"]}', '{payment["SVCFeeAmount"]}', '{payment["MerchantFee"]}', '{payment["CreatedDate"]}', '{payment["PartyServiceFeeAmount"]}', '{payment["PartyServiceFeeTaxAmount"]}', '{payment["SVCFeeForPartyServiceFeeAmount"]}', '{payment["MerchantFeeForPartyServiceFeeAmount"]}', '{payment["AutoGratuityAmount"]}', '{payment["AutoGratuityTaxAmount"]}', '{payment["SVCFeeForAutoGratuityAmount"]}', '{payment["MerchantFeeForAutoGratuityAmount"]}', '{payment["AreaFeeAmount"]}', '{payment["AreaFeeTaxAmount"]}', '{payment["SVCFeeForAreaFeeAmount"]}', '{payment["MerchantFeeForAreaFeeAmount"]}', '{payment["ServiceFee"]}', '{payment["ServiceFeeTaxAmount"]}', '{payment["SVCFeeForServiceFee"]}', '{payment["MerchantFeeForServiceFee"]}'  )");
-                        }
-
-                        stringBuilder.AppendLine($"END");
-                        stringBuilder.AppendLine($"GO");
-
-                        creditCardTransactionID = Utility.GetStringFromRow("CreditCardTransactionID", dtSaleReceiptPaymentDetails.Rows[0]);
                     }
-
                 }
 
-                if (string.IsNullOrWhiteSpace(creditCardTransactionID))
-                    return;
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (var conn = new SqlConnection(Helper.Merchant_Connection))
+                string batchUnique = string.Empty;
+                if (!string.IsNullOrWhiteSpace(paymentDetailEntity.CreditCardTransactionID))
                 {
-                    var sql = $"select * from TransactionDetail where ID = '{creditCardTransactionID}' ";
+                    DataTable dtTransactionDetail = new DataTable("TransactionDetail");
+                    using (SqlCommand sqlCommand = new SqlCommand())
+                    using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                    {
+                        if (conn.State == ConnectionState.Closed)
+                            conn.Open();
 
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = sql;
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    dtTransactionDetail.Load(reader);
-                    reader.Close();
+                        sqlCommand.Connection = conn;
+                        sqlCommand.CommandType = CommandType.Text;
 
-                    merchantCondition = $" SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0 ";
+                        scriptUpdate = $"update TransactionDetail set Gratuity = '{paymentDetailEntity.Gratuity}'," +
+                            $" SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}'," +
+                            $" MerchantFee = '{paymentDetailEntity.MerchantFee}'," +
+                            $" MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' " +
+                            $" where ID = '{paymentDetailEntity.CreditCardTransactionID}'";
 
-                    crudScriptMerchant += $" update TransactionDetail set Gratuity = '{AddTipForPaymentDetail_Gratuity}', Total = Total + {AddTipForPaymentDetail_Gratuity} where ID = '{creditCardTransactionID}';{Environment.NewLine}";
+                        RunQueryUpdate(sqlCommand, scriptUpdate);
 
-
-                    stringBuilder.AppendLine($"");
-                    stringBuilder.AppendLine($"USE MERCHANT");
-                    stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0 and BatchStatus = 'Closed')");
-                    stringBuilder.AppendLine($"BEGIN");
-                    stringBuilder.AppendLine($"    update Batch set TotalTips = TotalTips + {AddTipForPaymentDetail_Gratuity}, DepositAmount = DepositAmount + {AddTipForPaymentDetail_Gratuity}, Total = Total + {AddTipForPaymentDetail_Gratuity}, TotalSVCFeeForTip = TotalSVCFeeForTip + '{svcFeeForTip}', MerchantFeeAmount = MerchantFeeAmount + '{merchantFeeForTip}' where BatchUnique = (SELECT t.BatchUnique FROM TransactionDetail t where t.ID = '{creditCardTransactionID}');");
-                    stringBuilder.AppendLine($"    update TransactionDetail set BatchTotal = BatchTotal + {AddTipForPaymentDetail_Gratuity} where BatchUnique = (SELECT t.BatchUnique FROM TransactionDetail t where t.ID = '{creditCardTransactionID}') ;");
-                    stringBuilder.AppendLine($"END");
-                    stringBuilder.AppendLine($"GO");
-
-                    stringBuilder.AppendLine($"");
-                    stringBuilder.AppendLine($"USE MERCHANT");
-                    stringBuilder.AppendLine($"IF EXISTS (SELECT * FROM TransactionDetail where ID = '{creditCardTransactionID}' and Gratuity = 0)");
-                    stringBuilder.AppendLine($"BEGIN");
-                    stringBuilder.AppendLine($"    update TransactionDetail set Gratuity = '{AddTipForPaymentDetail_Gratuity}', Total = Total + {AddTipForPaymentDetail_Gratuity}, SVCFeeForGratuity = '{svcFeeForTip}', MerchantFeeForTip = '{merchantFeeForTip}', MerchantFee = MerchantFee + '{merchantFeeForTip}' where ID = '{creditCardTransactionID}';");
-                    stringBuilder.AppendLine($"END");
-                    stringBuilder.AppendLine($"GO");
-
+                        sql = $"select distinct BatchUnique from MERCHANT.dbo.TransactionDetail where ID = '{paymentDetailEntity.CreditCardTransactionID}'";
+                        sqlCommand.CommandText = sql;
+                        batchUnique = Utility.GetStringFromObject(sqlCommand.ExecuteScalar());
+                    }
                 }
+
+
+                if (!string.IsNullOrWhiteSpace(batchUnique))
+                    UpdateBatchByBatchUnique(batchUnique);
+
+                IsSuccess = true;
 
             }
             catch (Exception ex)
             {
-                BLogicLogger.Error($"BtnGetScript_Click in UpdateTipForSaleReceiptFile_0_0 error with:  {ex.Message}", ex);
+                ErrorMessage = $"Something went wrong while searching for the ticket.{Environment.NewLine}Please try again or contact TruongDS.";
+                BLogicLogger.Exception("AddTipForPaymentDetail in ProcessForm", ex, new System.Collections.Generic.List<object>() { AddTipForPaymentDetail_SaleReceiptID, AddTipForPaymentDetail_SaleReceiptPaymentDetailID, AddTipForPaymentDetail_Gratuity });
+            }
+            finally
+            {
+
             }
         }
 

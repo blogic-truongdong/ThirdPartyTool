@@ -13,6 +13,7 @@ namespace ThirdPartyTool.SaleReceipt
         private string TokenSaleReceiptID = string.Empty;
         private string MainSaleReceiptNumber = string.Empty;
         private string TokenSaleReceiptNumber = string.Empty;
+        private decimal TokenTotalAmount = 0;
 
         public AddTipBySaleTokenView()
         {
@@ -35,17 +36,17 @@ namespace ThirdPartyTool.SaleReceipt
             if (string.IsNullOrWhiteSpace(MainSaleReceiptNumber) || string.IsNullOrWhiteSpace(TokenSaleReceiptNumber))
             {
                 InformationDialogForm informationDialog = new InformationDialogForm("Please search 2 tickets before processing the update.");
-                FormHelper.ShowPopUpFormWithDIMBackground(informationDialog);
+                informationDialog.ShowDialog();
                 return;
             }
 
-            ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, "Are you sure you want to update this receipt?");
-            var result = FormHelper.ShowPopUpFormWithDIMBackground(confirmFirmDialog);
+            ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to update ${TokenTotalAmount:N2} tip to ticket #{MainSaleReceiptNumber}?");
+            var result = confirmFirmDialog.ShowDialog();
             if (result == DialogResult.No)
                 return;
 
             ProcessForm processForm = new ProcessForm();
-            processForm.InitAddTipByTokenReceipt(MainSaleReceiptID, TokenSaleReceiptID);
+            processForm.InitAddTipByTokenReceipt(MainSaleReceiptID, MainSaleReceiptNumber, TokenSaleReceiptID, TokenSaleReceiptNumber);
             processForm.ShowDialog();
 
             if (processForm.IsSuccess)
@@ -53,9 +54,11 @@ namespace ThirdPartyTool.SaleReceipt
                 TokenSaleReceiptID = string.Empty;
                 TokenSaleReceiptNumber = string.Empty;
 
-                PrintControl_Receipt.PrintingSystem?.Dispose();
-                PrintControl_Receipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
-                PrintControl_Receipt.Refresh();
+                PrintControl_TokenReceipt.PrintingSystem?.Dispose();
+                PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
+                PrintControl_TokenReceipt.Refresh();
+
+                txtSearch.Text = MainSaleReceiptNumber;
 
                 BtnSearch_Click(sender, e);
             }
@@ -96,11 +99,20 @@ namespace ThirdPartyTool.SaleReceipt
 
                 XtraReport xReport = processForm.ReceiptTemplate;
                 if (xReport == null)
+                {
+                    TokenSaleReceiptID = string.Empty;
+                    TokenSaleReceiptNumber = string.Empty;
+
+                    PrintControl_TokenReceipt.PrintingSystem?.Dispose();
+                    PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
+                    PrintControl_TokenReceipt.Refresh();
+
                     return;
+                }
 
-                TokenSaleReceiptID = processForm.SaleReceiptID;
-                TokenSaleReceiptNumber = processForm.SaleReceiptNumber;
-
+                TokenSaleReceiptID = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptID;
+                TokenSaleReceiptNumber = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptNumber;
+                TokenTotalAmount = processForm.GetReceiptTemplateByTicketNumber_TotalAmount;
                 xReport.PrintingSystem.SetCommandVisibility(DevExpress.XtraPrinting.PrintingSystemCommand.DocumentMap, DevExpress.XtraPrinting.CommandVisibility.All);
                 xReport.PrintingSystem.ShowMarginsWarning = false;
                 PrintControl_TokenReceipt.PrintingSystem = xReport.PrintingSystem;
@@ -111,7 +123,7 @@ namespace ThirdPartyTool.SaleReceipt
             {
                 BLogicLogger.Exception("BtnSearchTokenReceipt_Click", ex, new System.Collections.Generic.List<object>() { txtSearchTokenReceipt.Text });
                 ErrorDialogForm errorDialog = new ErrorDialogForm($"Something went wrong while searching for the token ticket.{Environment.NewLine}Please try again or contact TruongDS.");
-                FormHelper.ShowPopUpFormWithDIMBackground(errorDialog);
+                errorDialog.ShowDialog();
             }
         }
 
@@ -132,10 +144,8 @@ namespace ThirdPartyTool.SaleReceipt
                 if (xReport == null)
                     return;
 
-                MainSaleReceiptID = processForm.SaleReceiptID;
-                MainSaleReceiptNumber = processForm.SaleReceiptNumber;
-
-
+                MainSaleReceiptID = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptID;
+                MainSaleReceiptNumber = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptNumber;
 
                 xReport.PrintingSystem.SetCommandVisibility(DevExpress.XtraPrinting.PrintingSystemCommand.DocumentMap, DevExpress.XtraPrinting.CommandVisibility.All);
                 xReport.PrintingSystem.ShowMarginsWarning = false;
@@ -147,7 +157,7 @@ namespace ThirdPartyTool.SaleReceipt
             {
                 BLogicLogger.Exception("BtnSearch_Click", ex, new System.Collections.Generic.List<object>() { txtSearch.Text });
                 ErrorDialogForm errorDialog = new ErrorDialogForm($"Something went wrong while searching for the ticket.{Environment.NewLine}Please try again or contact TruongDS.");
-                FormHelper.ShowPopUpFormWithDIMBackground(errorDialog);
+                errorDialog.ShowDialog();
             }
         }
 

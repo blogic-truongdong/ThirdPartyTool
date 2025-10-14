@@ -92,7 +92,7 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // PrintControl_Receipt
             // 
-            this.PrintControl_Receipt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(109)))), ((int)(((byte)(119)))));
+            this.PrintControl_Receipt.BackColor = System.Drawing.Color.White;
             this.PrintControl_Receipt.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PrintControl_Receipt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PrintControl_Receipt.ForeColor = System.Drawing.Color.White;
@@ -129,7 +129,7 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // PrintControl_TokenReceipt
             // 
-            this.PrintControl_TokenReceipt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(104)))), ((int)(((byte)(109)))), ((int)(((byte)(119)))));
+            this.PrintControl_TokenReceipt.BackColor = System.Drawing.Color.White;
             this.PrintControl_TokenReceipt.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PrintControl_TokenReceipt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PrintControl_TokenReceipt.ForeColor = System.Drawing.Color.White;

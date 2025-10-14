@@ -137,11 +137,11 @@ namespace ThirdPartyTool
                         $"NULL)";
 
                         var resultInsert = await conn.ExecuteAsync(sql, null, null, TimeOutQuery, System.Data.CommandType.Text);
-                        
+
                         if (resultInsert > 0)
                         {
                             string ids = String.Join(",", listTransactions.Select(i => { return "'" + i.ID + "'"; }));
-                            
+
                             sql = $"update TransactionDetail set BatchUnique = '{batchUnique}', BatchTotal = '{Total}' where ID in ({ids})";
 
                             var resultUpdate = await conn.ExecuteAsync(sql, null, null, TimeOutQuery, System.Data.CommandType.Text);
@@ -158,7 +158,7 @@ namespace ThirdPartyTool
                     }
 
                     MessageBox.Show("Add new Batch & update TransactionDetail -> Success.", "Information");
-                    
+
                     BLogicLogger.Debug($"Close Form");
                     this.Close();
                 }
@@ -168,7 +168,7 @@ namespace ThirdPartyTool
                 BLogicLogger.Error($"BtnStart_Click error with: {ex.Message}", ex);
                 this.Close();
             }
-            
+
         }
 
         public decimal CalculateMerchantFee(decimal total)

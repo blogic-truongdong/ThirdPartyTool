@@ -74,35 +74,35 @@ namespace ThirdPartyTool.Models
             {
                 if (row == null) return;
 
-                ID = Utility.GetGuidFromObject(row["ID"]);
-                SaleReceiptID = Utility.GetGuidFromObject(row["SaleReceiptID"]);
-                SaleReceiptPaymentDetailID = (long)Utility.GetIntFromObject(row["SaleReceiptPaymentDetailID"]);
-                PaymentMethodID = (short)Utility.GetIntFromObject(row["PaymentMethodID"]);
-                PaymentMethodType = (short)Utility.GetIntFromObject(row["PaymentMethodType"]);
-                EmployeeID = (short)Utility.GetIntFromObject(row["EmployeeID"]);
-                RolesID = (short)Utility.GetIntFromObject(row["RolesID"]);
-                TipRate = Utility.GetDecimalFromObject(row["TipRate"]);
-                TipRateOT = Utility.GetDecimalFromObject(row["TipRateOT"]);
-                Gratuity = Utility.GetDecimalFromObject(row["Gratuity"]);
-                SVCFeeForGratuity = Utility.GetDecimalFromObject(row["SVCFeeForGratuity"]);
-                MerchantFeeForTip = Utility.GetDecimalFromObject(row["MerchantFeeForTip"]);
+                ID = Utility.GetGuidFromRow("ID", row);
+                SaleReceiptID = Utility.GetGuidFromRow("SaleReceiptID", row);
+                SaleReceiptPaymentDetailID = (long)Utility.GetIntFromRow("SaleReceiptPaymentDetailID", row);
+                PaymentMethodID = (short)Utility.GetIntFromRow("PaymentMethodID", row);
+                PaymentMethodType = (short)Utility.GetIntFromRow("PaymentMethodType", row);
+                EmployeeID = (short)Utility.GetIntFromRow("EmployeeID", row);
+                RolesID = (short)Utility.GetIntFromRow("RolesID", row);
+                TipRate = Utility.GetDecimalFromRow("TipRate", row);
+                TipRateOT = Utility.GetDecimalFromRow("TipRateOT", row);
+                Gratuity = Utility.GetDecimalFromRow("Gratuity", row);
+                SVCFeeForGratuity = Utility.GetDecimalFromRow("SVCFeeForGratuity", row);
+                MerchantFeeForTip = Utility.GetDecimalFromRow("MerchantFeeForTip", row);
                 DateCreated = Utility.GetDateTimeFromObject(row["DateCreated"]);
-                PartyServiceFeeAmount = Utility.GetDecimalFromObject(row["PartyServiceFeeAmount"]);
-                PartyServiceFeeTaxAmount = Utility.GetDecimalFromObject(row["PartyServiceFeeTaxAmount"]);
-                SVCFeeForPartyServiceFeeAmount = Utility.GetDecimalFromObject(row["SVCFeeForPartyServiceFeeAmount"]);
-                MerchantFeeForPartyServiceFeeAmount = Utility.GetDecimalFromObject(row["MerchantFeeForPartyServiceFeeAmount"]);
-                AutoGratuityAmount = Utility.GetDecimalFromObject(row["AutoGratuityAmount"]);
-                AutoGratuityTaxAmount = Utility.GetDecimalFromObject(row["AutoGratuityTaxAmount"]);
-                SVCFeeForAutoGratuityAmount = Utility.GetDecimalFromObject(row["SVCFeeForAutoGratuityAmount"]);
-                MerchantFeeForAutoGratuityAmount = Utility.GetDecimalFromObject(row["MerchantFeeForAutoGratuityAmount"]);
-                AreaFeeAmount = Utility.GetDecimalFromObject(row["AreaFeeAmount"]);
-                AreaFeeTaxAmount = Utility.GetDecimalFromObject(row["AreaFeeTaxAmount"]);
-                SVCFeeForAreaFeeAmount = Utility.GetDecimalFromObject(row["SVCFeeForAreaFeeAmount"]);
-                MerchantFeeForAreaFeeAmount = Utility.GetDecimalFromObject(row["MerchantFeeForAreaFeeAmount"]);
-                ServiceFee = Utility.GetDecimalFromObject(row["ServiceFee"]);
-                ServiceFeeTaxAmount = Utility.GetDecimalFromObject(row["ServiceFeeTaxAmount"]);
-                SVCFeeForServiceFee = Utility.GetDecimalFromObject(row["SVCFeeForServiceFee"]);
-                MerchantFeeForServiceFee = Utility.GetDecimalFromObject(row["MerchantFeeForServiceFee"]);
+                PartyServiceFeeAmount = Utility.GetDecimalFromRow("PartyServiceFeeAmount", row);
+                PartyServiceFeeTaxAmount = Utility.GetDecimalFromRow("PartyServiceFeeTaxAmount", row);
+                SVCFeeForPartyServiceFeeAmount = Utility.GetDecimalFromRow("SVCFeeForPartyServiceFeeAmount", row);
+                MerchantFeeForPartyServiceFeeAmount = Utility.GetDecimalFromRow("MerchantFeeForPartyServiceFeeAmount", row);
+                AutoGratuityAmount = Utility.GetDecimalFromRow("AutoGratuityAmount", row);
+                AutoGratuityTaxAmount = Utility.GetDecimalFromRow("AutoGratuityTaxAmount", row);
+                SVCFeeForAutoGratuityAmount = Utility.GetDecimalFromRow("SVCFeeForAutoGratuityAmount", row);
+                MerchantFeeForAutoGratuityAmount = Utility.GetDecimalFromRow("MerchantFeeForAutoGratuityAmount", row);
+                AreaFeeAmount = Utility.GetDecimalFromRow("AreaFeeAmount", row);
+                AreaFeeTaxAmount = Utility.GetDecimalFromRow("AreaFeeTaxAmount", row);
+                SVCFeeForAreaFeeAmount = Utility.GetDecimalFromRow("SVCFeeForAreaFeeAmount", row);
+                MerchantFeeForAreaFeeAmount = Utility.GetDecimalFromRow("MerchantFeeForAreaFeeAmount", row);
+                ServiceFee = Utility.GetDecimalFromRow("ServiceFee", row);
+                ServiceFeeTaxAmount = Utility.GetDecimalFromRow("ServiceFeeTaxAmount", row);
+                SVCFeeForServiceFee = Utility.GetDecimalFromRow("SVCFeeForServiceFee", row);
+                MerchantFeeForServiceFee = Utility.GetDecimalFromRow("MerchantFeeForServiceFee", row);
             }
             catch (Exception ex)
             {

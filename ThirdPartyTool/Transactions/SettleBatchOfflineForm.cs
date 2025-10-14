@@ -28,7 +28,7 @@ namespace ThirdPartyTool.Transactions
             try
             {
                 ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, "Are you sure you want to settle all batchs?");
-                var result = FormHelper.ShowPopUpFormWithDIMBackground(confirmFirmDialog);
+                var result = confirmFirmDialog.ShowDialog();
                 if (result == DialogResult.No)
                     return;
 

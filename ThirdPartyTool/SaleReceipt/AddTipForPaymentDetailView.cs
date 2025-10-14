@@ -41,8 +41,8 @@ namespace ThirdPartyTool.SaleReceipt
                 if (xReport == null)
                     return;
 
-                MainSaleReceiptID = processForm.SaleReceiptID;
-                MainSaleReceiptNumber = processForm.SaleReceiptNumber;
+                MainSaleReceiptID = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptID;
+                MainSaleReceiptNumber = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptNumber;
 
                 DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
                 DataTable dtTransactionDetail = new DataTable("TransactionDetail");
@@ -74,16 +74,21 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     PaymentDetailView paymentDetailView = new PaymentDetailView();
                     paymentDetailView.Dock = DockStyle.Top;
+                    paymentDetailView.SaleReceiptID = Utility.GetStringFromRow("SaleReceiptID", item);
+                    paymentDetailView.SaleReceiptPaymentDetailID = Utility.GetStringFromRow("SaleReceiptPaymentDetailID", item);
                     paymentDetailView.lblPaymentMethod.Text = Utility.GetStringFromRow("PaymentMethodName", item);
                     paymentDetailView.lblPaymentValue.Text = Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("AmountTendered", item) -
-                        Utility.GetDecimalFromRow("AmountReturn", item) + Utility.GetDecimalFromRow("Gratuity", item));
+                        Utility.GetDecimalFromRow("AmountReturn", item) + Utility.GetDecimalFromRow("Gratuity", item) +
+                        Utility.GetDecimalFromRow("SVCFeeAmount", item) - Utility.GetDecimalFromRow("CashDiscountAmount", item));
                     paymentDetailView.lblCardValue.Text = Utility.GetStringFromRow("CreditCardTransactionCardNumber", item);
                     paymentDetailView.lblCardType.Text = Utility.GetStringFromRow("CreditCardCardType", item);
                     paymentDetailView.lblApprovalValue.Text = Utility.GetStringFromRow("CreditCardAuthCode", item);
                     paymentDetailView.lblTotalValue.Text = Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("AmountTendered", item) -
-                        Utility.GetDecimalFromRow("AmountReturn", item) + Utility.GetDecimalFromRow("Gratuity", item));
+                        Utility.GetDecimalFromRow("AmountReturn", item) + Utility.GetDecimalFromRow("Gratuity", item) +
+                        Utility.GetDecimalFromRow("SVCFeeAmount", item) - Utility.GetDecimalFromRow("CashDiscountAmount", item));
                     paymentDetailView.lblTerminalValue.Text = Utility.GetStringFromRow("CreditCardTransactionMerchantID", item);
-                    paymentDetailView.numericTextBox1.Value = Utility.GetDecimalFromRow("Gratuity", item);
+                    paymentDetailView.txtGratuity.Value = Utility.GetDecimalFromRow("Gratuity", item);
+                    paymentDetailView.OldGratuity = Utility.GetDecimalFromRow("Gratuity", item);
                     DataRow[] drs = dtTransactionDetail.Select($"ID = '{item["CreditCardTransactionID"]}'", "");
                     if (drs.Length > 0)
                     {
@@ -104,13 +109,46 @@ namespace ThirdPartyTool.SaleReceipt
             {
                 BLogicLogger.Exception("BtnSearch_Click", ex, new System.Collections.Generic.List<object>() { txtSearch.Text });
                 ErrorDialogForm errorDialog = new ErrorDialogForm($"Something went wrong while searching for the ticket.{Environment.NewLine}Please try again or contact TruongDS.");
-                FormHelper.ShowPopUpFormWithDIMBackground(errorDialog);
+                errorDialog.ShowDialog();
             }
         }
 
         private void BtnUpdate_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            try
+            {
+                PaymentDetailView paymentDetailView = (sender as Control).Parent.Parent.Parent as PaymentDetailView;
+                if (paymentDetailView != null)
+                {
+                    ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to update ${paymentDetailView.txtGratuity.Value:N2} for this payment detail?");
+                    var result = confirmFirmDialog.ShowDialog();
+                    if (result == DialogResult.No)
+                        return;
+
+                    ProcessForm processForm = new ProcessForm();
+                    processForm.InitAddTipForPaymentDetail(paymentDetailView.SaleReceiptID, paymentDetailView.SaleReceiptPaymentDetailID, Utility.GetDecimalFromObject(paymentDetailView.txtGratuity.Text));
+                    processForm.ShowDialog();
+
+                    if (processForm.IsSuccess)
+                    {
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Update ${paymentDetailView.txtGratuity.Value} to this payment detail Done. Refresh now.");
+                        informationDialogForm.ShowDialog();
+
+                        txtSearch.Text = MainSaleReceiptNumber;
+                        BtnSearch_Click(sender, e);
+                    }
+                    else
+                    {
+                        ErrorDialogForm errorDialogForm = new ErrorDialogForm($"Update ${paymentDetailView.txtGratuity.Value} to this payment detail Fail. Please contact TruongDS");
+                        errorDialogForm.ShowDialog();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("BtnUpdate_Click In AddTipForPaymentDetailView", ex);
+            }
         }
 
         private void TxtSearch_KeyUp(object sender, KeyEventArgs e)

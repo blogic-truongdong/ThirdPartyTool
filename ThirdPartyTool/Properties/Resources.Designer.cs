@@ -91,6 +91,16 @@ namespace ThirdPartyTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Icon_BLogic_Tool {
+            get {
+                object obj = ResourceManager.GetObject("Icon_BLogic_Tool", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Icon_Employee {
@@ -136,6 +146,16 @@ namespace ThirdPartyTool.Properties {
         internal static System.Drawing.Bitmap Icon_Search {
             get {
                 object obj = ResourceManager.GetObject("Icon_Search", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_Tool {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Tool", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

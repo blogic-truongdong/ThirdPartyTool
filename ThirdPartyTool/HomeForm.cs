@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ThirdPartyTool.Transactions;
 
 namespace ThirdPartyTool
 {
@@ -86,10 +85,14 @@ namespace ThirdPartyTool
         {
             try
             {
-
+                this.Icon = new Icon("Resources/Icon_BLogic_Tool.ico");
                 EnterDatabaseForm enterDatabaseForm = new EnterDatabaseForm();
-                enterDatabaseForm.ShowDialog();
-
+                var result = enterDatabaseForm.ShowDialog();
+                if (result != DialogResult.OK)
+                {
+                    this.Close();
+                    return;
+                }
                 StartForm connectDatabaseForm = new StartForm(enterDatabaseForm.txtBLogicPOS7.Text.Trim(), enterDatabaseForm.txtMerchant.Text.Trim());
                 connectDatabaseForm.ShowDialog();
 
@@ -104,9 +107,9 @@ namespace ThirdPartyTool
                 BLogicLogger.Exception("HomeForm_Load in HomeForm", ex);
             }
 
-            SettleBatchOfflineForm form = new SettleBatchOfflineForm();
-            form.ShowDialog();
-            Application.Exit();
+            //SettleBatchOfflineForm form = new SettleBatchOfflineForm();
+            //form.ShowDialog();
+            //Application.Exit();
         }
 
         private void ResetTabColor()
