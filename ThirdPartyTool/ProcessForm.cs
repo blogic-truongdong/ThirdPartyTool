@@ -23,7 +23,8 @@ namespace ThirdPartyTool
         GetReceiptTemplateByTicketNumber = 1,
         AddTipByTokenReceipt = 2,
         AddTipForPaymentDetail = 3,
-        SettleBatchOffline = 4
+        SettleBatchOffline = 4,
+        EmployeeView_GetEmployees = 5
     }
     public partial class ProcessForm : Form
     {

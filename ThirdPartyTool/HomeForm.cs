@@ -73,12 +73,16 @@ namespace ThirdPartyTool
             if (CurrentTab == HomeTab.Employee)
                 return;
 
+            receiptView.txtFocus.Focus();
+
             CurrentTab = HomeTab.Employee;
 
             ResetTabColor();
 
-            btnEmployee.BackColor = Tab_BackColorSelected;
-            btnEmployee.ForeColor = Tab_FoceColorSelected;
+            btnReceipt.BackColor = Tab_BackColorSelected;
+            btnReceipt.ForeColor = Tab_FoceColorSelected;
+
+            employeeView.BringToFront();
         }
 
         private void HomeForm_Load(object sender, EventArgs e)

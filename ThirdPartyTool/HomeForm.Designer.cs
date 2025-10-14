@@ -30,8 +30,6 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlContainer = new System.Windows.Forms.Panel();
-            this.welcomeView = new ThirdPartyTool.WelcomeView();
-            this.receiptView = new ThirdPartyTool.ReceiptView();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.btnEmployee = new System.Windows.Forms.Label();
@@ -43,6 +41,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.welcomeView = new ThirdPartyTool.WelcomeView();
+            this.receiptView = new ThirdPartyTool.ReceiptView();
+            this.employeeView = new ThirdPartyTool.Employee.EmployeeView();
             this.panel1.SuspendLayout();
             this.pnlContainer.SuspendLayout();
             this.pnlLeft.SuspendLayout();
@@ -67,29 +68,12 @@
             // 
             this.pnlContainer.Controls.Add(this.welcomeView);
             this.pnlContainer.Controls.Add(this.receiptView);
+            this.pnlContainer.Controls.Add(this.employeeView);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
             this.pnlContainer.Size = new System.Drawing.Size(798, 698);
             this.pnlContainer.TabIndex = 2;
-            // 
-            // welcomeView
-            // 
-            this.welcomeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.welcomeView.Location = new System.Drawing.Point(0, 0);
-            this.welcomeView.Name = "welcomeView";
-            this.welcomeView.Size = new System.Drawing.Size(798, 698);
-            this.welcomeView.TabIndex = 1;
-            // 
-            // receiptView
-            // 
-            this.receiptView.BackColor = System.Drawing.Color.White;
-            this.receiptView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.receiptView.Location = new System.Drawing.Point(0, 0);
-            this.receiptView.Name = "receiptView";
-            this.receiptView.Padding = new System.Windows.Forms.Padding(10);
-            this.receiptView.Size = new System.Drawing.Size(798, 698);
-            this.receiptView.TabIndex = 0;
             // 
             // pnlLeft
             // 
@@ -230,6 +214,34 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // welcomeView
+            // 
+            this.welcomeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.welcomeView.Location = new System.Drawing.Point(0, 0);
+            this.welcomeView.Name = "welcomeView";
+            this.welcomeView.Size = new System.Drawing.Size(798, 698);
+            this.welcomeView.TabIndex = 1;
+            // 
+            // receiptView
+            // 
+            this.receiptView.BackColor = System.Drawing.Color.White;
+            this.receiptView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.receiptView.Location = new System.Drawing.Point(0, 0);
+            this.receiptView.Name = "receiptView";
+            this.receiptView.Padding = new System.Windows.Forms.Padding(10);
+            this.receiptView.Size = new System.Drawing.Size(798, 698);
+            this.receiptView.TabIndex = 0;
+            // 
+            // employeeView1
+            // 
+            this.employeeView.BackColor = System.Drawing.Color.White;
+            this.employeeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.employeeView.Location = new System.Drawing.Point(0, 0);
+            this.employeeView.Name = "employeeView1";
+            this.employeeView.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
+            this.employeeView.Size = new System.Drawing.Size(798, 698);
+            this.employeeView.TabIndex = 2;
+            // 
             // HomeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,5 +279,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label btnHome;
+        private Employee.EmployeeView employeeView;
     }
 }
