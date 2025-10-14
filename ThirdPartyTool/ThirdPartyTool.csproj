@@ -674,9 +674,12 @@
     <Content Include="Lib\log4net.dll" />
     <Content Include="Lib\System.Printing.dll" />
     <Content Include="Lib\zxing.dll" />
+    <None Include="Resources\Icon_Arrow_Down.png" />
     <Content Include="Resources\Icon_BLogic_Tool.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Icon_Refresh.png" />
+    <None Include="Resources\Icon_Delete.png" />
     <None Include="Resources\Icon_Tool.png" />
     <None Include="Resources\Icon_Exit.png" />
     <None Include="Resources\Icon_Home.png" />

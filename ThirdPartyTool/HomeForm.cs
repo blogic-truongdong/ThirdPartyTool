@@ -79,8 +79,8 @@ namespace ThirdPartyTool
 
             ResetTabColor();
 
-            btnReceipt.BackColor = Tab_BackColorSelected;
-            btnReceipt.ForeColor = Tab_FoceColorSelected;
+            btnEmployee.BackColor = Tab_BackColorSelected;
+            btnEmployee.ForeColor = Tab_FoceColorSelected;
 
             employeeView.BringToFront();
         }

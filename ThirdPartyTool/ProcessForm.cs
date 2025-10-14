@@ -24,17 +24,19 @@ namespace ThirdPartyTool
         AddTipByTokenReceipt = 2,
         AddTipForPaymentDetail = 3,
         SettleBatchOffline = 4,
-        EmployeeView_GetEmployees = 5
+        EmployeeView_GetEmployeeInfos = 5
     }
     public partial class ProcessForm : Form
     {
+        public DataTable DataTableReturn = null;
+        public DataSet DataSetReturn = null;
         BatchStatus batch = new BatchStatus();
         public string GetReceiptTemplateByTicketNumber_SaleReceiptNumber = string.Empty;
         public string GetReceiptTemplateByTicketNumber_SaleReceiptID = string.Empty;
         public decimal GetReceiptTemplateByTicketNumber_TotalAmount = 0;
         public XtraReport ReceiptTemplate = null;
         private BackgroundWorker backgroundWorker;
-        private ProcessNameEnum CurrentProcessName = ProcessNameEnum.None;
+        public ProcessNameEnum CurrentProcessName = ProcessNameEnum.None;
         public bool IsSuccess = false;
         public string ErrorMessage = string.Empty;
 
@@ -47,6 +49,12 @@ namespace ThirdPartyTool
         private string AddTipForPaymentDetail_SaleReceiptID = string.Empty;
         private string AddTipForPaymentDetail_SaleReceiptPaymentDetailID = string.Empty;
         private decimal AddTipForPaymentDetail_Gratuity = 0;
+
+        private DateTime EmployeeView_StartDate;
+        private DateTime EmployeeView_EndDate;
+        private int EmployeeView_EmployeeID;
+        private int EmployeeView_RolesID;
+
 
         public ProcessForm()
         {
@@ -110,6 +118,9 @@ namespace ThirdPartyTool
                     case ProcessNameEnum.SettleBatchOffline:
                         ProcessSettleBatchOffline();
                         break;
+                    case ProcessNameEnum.EmployeeView_GetEmployeeInfos:
+                        GetEmployeeInfos();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -151,10 +162,188 @@ namespace ThirdPartyTool
             }
             catch (Exception ex)
             {
-                // log exception
                 BLogicLogger.Exception("BackgroundWorker_RunWorkerCompleted", ex, new System.Collections.Generic.List<object>() { CurrentProcessName });
             }
         }
+
+        public void SyncRoleForEmployee()
+        {
+            try
+            {
+                DataTable dtEmployee = new DataTable("Employees");
+                DataTable dtRoles = new DataTable("Roles");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    int employeeID = EmployeeView_EmployeeID;
+                    int roleID = EmployeeView_RolesID;
+                    DateTime startDate = EmployeeView_StartDate;
+                    DateTime endDate = EmployeeView_EndDate;
+
+                    sqlCommand.CommandText = $"Select * from Employees where EmployeeID = '{employeeID}'";
+                    var reader = sqlCommand.ExecuteReader();
+                    dtEmployee.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = $"Select * from Roles where EmployeeID = '{roleID}'";
+                    reader = sqlCommand.ExecuteReader();
+                    dtRoles.Load(reader);
+                    reader.Close();
+
+                    bool IsUsingRoleWage = Utility.GetBoolFromRow("IsUsingRoleWage", dtEmployee.Rows[0]);
+                    bool IsHourlyWage = Utility.GetBoolFromRow("IsHourlyWage", dtEmployee.Rows[0]);
+                    bool IsDailyOverTime = Utility.GetBoolFromRow("IsDailyOverTime", dtEmployee.Rows[0]);
+                    bool IsDailyOverTime2nd = Utility.GetBoolFromRow("IsDailyOverTime2nd", dtEmployee.Rows[0]);
+                    decimal HourlyWage = Utility.GetDecimalFromRow("HourlyWage", dtEmployee.Rows[0]);
+                    decimal HourlyWageOT = Utility.GetDecimalFromRow("HourlyWageOT", dtEmployee.Rows[0]);
+                    decimal HourlyWageOT2nd = Utility.GetDecimalFromRow("HourlyWageOT2nd", dtEmployee.Rows[0]);
+
+                    bool IsUsingRoleTipPool = Utility.GetBoolFromRow("IsUsingRoleTipPool", dtEmployee.Rows[0]);
+                    decimal TipRate = Utility.GetDecimalFromRow("TipRate", dtEmployee.Rows[0]);
+                    decimal TipRateOT = Utility.GetDecimalFromRow("TipRateOT", dtEmployee.Rows[0]);
+                    decimal MaxTipHour = Utility.GetDecimalFromRow("MaxTipHour", dtEmployee.Rows[0]);
+                    decimal MaxTipHourOT = Utility.GetDecimalFromRow("MaxTipHourOT", dtEmployee.Rows[0]);
+                    decimal ServiceChargesRate = Utility.GetDecimalFromRow("ServiceChargesRate", dtEmployee.Rows[0]);
+                    decimal ServiceChargesRateOT = Utility.GetDecimalFromRow("ServiceChargesRateOT", dtEmployee.Rows[0]);
+                    decimal ServiceChargesMaxHour = Utility.GetDecimalFromRow("ServiceChargesMaxHour", dtEmployee.Rows[0]);
+                    decimal ServiceChargesMaxHourOT = Utility.GetDecimalFromRow("ServiceChargesMaxHourOT", dtEmployee.Rows[0]);
+
+                    bool EnableTrainingMode = Utility.GetBoolFromRow("EnableTrainingMode", dtEmployee.Rows[0]);
+                    decimal TrainingTipRate = Utility.GetDecimalFromRow("TrainingTipRate", dtEmployee.Rows[0]);
+                    decimal TrainingTipRateOT = Utility.GetDecimalFromRow("TrainingTipRateOT", dtEmployee.Rows[0]);
+
+                    bool IsOverrideTipRetain = Utility.GetBoolFromRow("IsOverrideTipRetain", dtEmployee.Rows[0]);
+                    int RetainPercentOfTip = Utility.GetIntFromRow("RetainPercentOfTip", dtEmployee.Rows[0]);
+
+                    if (!IsHourlyWage)
+                        HourlyWage = HourlyWageOT = HourlyWageOT2nd = 0;
+                    else
+                    {
+                        if (!IsDailyOverTime)
+                            HourlyWageOT = 0;
+
+                        if (!IsDailyOverTime2nd)
+                            HourlyWageOT2nd = 0;
+                    }
+
+                    if (IsOverrideTipRetain)
+                        RetainPercentOfTip = Utility.GetIntFromRow("RetainPercentOfTip", dtRoles.Rows[0]);
+
+                    if (IsUsingRoleWage)
+                    {
+                        IsHourlyWage = Utility.GetBoolFromRow("IsHourlyWage", dtRoles.Rows[0]);
+                        IsDailyOverTime = Utility.GetBoolFromRow("IsDailyOverTime", dtRoles.Rows[0]);
+                        IsDailyOverTime2nd = Utility.GetBoolFromRow("IsDailyOverTime2nd", dtRoles.Rows[0]);
+                        HourlyWage = Utility.GetDecimalFromRow("HourlyWage", dtRoles.Rows[0]);
+                        HourlyWageOT = Utility.GetDecimalFromRow("HourlyWageOT", dtRoles.Rows[0]);
+                        HourlyWageOT2nd = Utility.GetDecimalFromRow("HourlyWageOT2nd", dtRoles.Rows[0]);
+
+                        if (!IsHourlyWage)
+                            HourlyWage = HourlyWageOT = HourlyWageOT2nd = 0;
+                        else
+                        {
+                            if (!IsDailyOverTime)
+                                HourlyWageOT = 0;
+
+                            if (!IsDailyOverTime2nd)
+                                HourlyWageOT2nd = 0;
+                        }
+                    }
+
+                    if (IsUsingRoleTipPool)
+                    {
+                        TipRate = Utility.GetDecimalFromRow("TipRate", dtRoles.Rows[0]);
+                        TipRateOT = Utility.GetDecimalFromRow("TipRateOT", dtRoles.Rows[0]);
+                        MaxTipHour = Utility.GetDecimalFromRow("MaxTipHour", dtRoles.Rows[0]);
+                        MaxTipHourOT = Utility.GetDecimalFromRow("MaxTipHourOT", dtRoles.Rows[0]);
+                        ServiceChargesRate = Utility.GetDecimalFromRow("ServiceChargesRate", dtRoles.Rows[0]);
+                        ServiceChargesRateOT = Utility.GetDecimalFromRow("ServiceChargesRateOT", dtRoles.Rows[0]);
+                        ServiceChargesMaxHour = Utility.GetDecimalFromRow("ServiceChargesMaxHour", dtRoles.Rows[0]);
+                        ServiceChargesMaxHourOT = Utility.GetDecimalFromRow("ServiceChargesMaxHourOT", dtRoles.Rows[0]);
+
+                        TrainingTipRate = Utility.GetDecimalFromRow("TrainingTipRate", dtEmployee.Rows[0]);
+                        TrainingTipRateOT = Utility.GetDecimalFromRow("TrainingTipRateOT", dtEmployee.Rows[0]);
+                    }
+
+                    if (EnableTrainingMode)
+                    {
+                        TipRate = TrainingTipRate;
+                        TipRateOT = TrainingTipRateOT;
+                    }
+
+                    var sql = $"update TimeClock set " +
+                        $"HourlyWage = '{HourlyWage}', HourlyWageOT = '{HourlyWageOT}', HourlyWageOT2nd = '{HourlyWageOT2nd}', " +
+                        $"TipRate = '{TipRate}', TipRateOT = '{TipRateOT}', " +
+                        $"MaxTipHour = '{MaxTipHour}', MaxTipHourOT = '{MaxTipHourOT}', " +
+                        $"ServiceChargesRate = '{ServiceChargesRate}', ServiceChargesRateOT = '{ServiceChargesRateOT}', " +
+                        $"ServiceChargesMaxHour = '{ServiceChargesMaxHour}', ServiceChargesMaxHourOT = '{ServiceChargesMaxHourOT}', " +
+                        $"RolesID = '{roleID}' " +
+                        $"where EmployeeID = '{employeeID}' and DateTimeIn >= '{startDate}' and DateTimeIn <= '{endDate}'";
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    sql = $"update PaymentRoleDetails set TipRate = '{TipRate}', TipRateOT = '{TipRateOT}', RolesID = '{roleID}' " +
+                        $"where EmployeeID = '{employeeID}' and DateCreated >= '{startDate}' and DateCreated <= '{endDate}'";
+                    RunQueryUpdate(sqlCommand, sql);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("SyncEmployeeData in TimeClock", ex);
+            }
+        }
+
+        private void GetEmployeeInfos()
+        {
+            DataTable dtEmployees = new DataTable("Employees");
+            DataTable dtRoles = new DataTable("Roles");
+            DataTable dtEmployeeRoles = new DataTable("EmployeeRoles");
+            try
+            {
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = "select EmployeeID, EmployeeCode, TRIM( EmployeeFirstName) + ' ' +  TRIM(EmployeeMiddleName) as EmployeeName from Employees where EmployeeID > 0 and Enable = 0";
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtEmployees.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = "select RolesID, RolesName from Roles where IsDeleted = '0' or IsDeleted is null";
+                    reader = sqlCommand.ExecuteReader();
+                    dtRoles.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = "select * from EmployeeRoles where IsDeleted = '0' or IsDeleted is null";
+                    reader = sqlCommand.ExecuteReader();
+                    dtEmployeeRoles.Load(reader);
+                    reader.Close();
+
+                    DataSetReturn = new DataSet();
+                    DataSetReturn.Tables.Add(dtEmployees);
+                    DataSetReturn.Tables.Add(dtRoles);
+                    DataSetReturn.Tables.Add(dtEmployeeRoles);
+                }
+
+                IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Error retrieving Employees data from Blogicpos7.";
+                BLogicLogger.Exception("GetEmployees", ex);
+            }
+        }
+
 
         private void GetReceiptTemplateByTicketNumber(string ticketNumber)
         {

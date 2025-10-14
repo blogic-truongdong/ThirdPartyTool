@@ -93,6 +93,26 @@ namespace ThirdPartyTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Icon_Arrow_Down {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Arrow_Down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_Delete {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Icon_Employee {
             get {
                 object obj = ResourceManager.GetObject("Icon_Employee", resourceCulture);
@@ -126,6 +146,16 @@ namespace ThirdPartyTool.Properties {
         internal static System.Drawing.Bitmap Icon_Receipt {
             get {
                 object obj = ResourceManager.GetObject("Icon_Receipt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_Refresh {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Refresh", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
