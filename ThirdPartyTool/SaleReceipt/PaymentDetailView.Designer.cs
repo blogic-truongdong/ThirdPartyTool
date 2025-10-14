@@ -101,7 +101,6 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblTerminalValue.Name = "lblTerminalValue";
             this.lblTerminalValue.Size = new System.Drawing.Size(78, 19);
             this.lblTerminalValue.TabIndex = 19;
-            this.lblTerminalValue.Text = "label1";
             this.lblTerminalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTerminal
@@ -125,7 +124,6 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblBatchValue.Name = "lblBatchValue";
             this.lblBatchValue.Size = new System.Drawing.Size(94, 19);
             this.lblBatchValue.TabIndex = 16;
-            this.lblBatchValue.Text = "label1";
             this.lblBatchValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblBatch
@@ -149,7 +147,6 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblApprovalValue.Name = "lblApprovalValue";
             this.lblApprovalValue.Size = new System.Drawing.Size(78, 19);
             this.lblApprovalValue.TabIndex = 14;
-            this.lblApprovalValue.Text = "label1";
             this.lblApprovalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblApproval
@@ -173,7 +170,6 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblEntryMode.Name = "lblEntryMode";
             this.lblEntryMode.Size = new System.Drawing.Size(94, 19);
             this.lblEntryMode.TabIndex = 11;
-            this.lblEntryMode.Text = "CONTACLESS";
             this.lblEntryMode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblCardType
@@ -185,7 +181,7 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblCardType.Name = "lblCardType";
             this.lblCardType.Size = new System.Drawing.Size(84, 19);
             this.lblCardType.TabIndex = 10;
-            this.lblCardType.Text = "MASTERCARD";
+            this.lblCardType.Text = "Card Type";
             this.lblCardType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblTotalValue
@@ -197,7 +193,6 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblTotalValue.Name = "lblTotalValue";
             this.lblTotalValue.Size = new System.Drawing.Size(78, 19);
             this.lblTotalValue.TabIndex = 9;
-            this.lblTotalValue.Text = "label1";
             this.lblTotalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTotal
@@ -221,7 +216,6 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblCardValue.Name = "lblCardValue";
             this.lblCardValue.Size = new System.Drawing.Size(94, 19);
             this.lblCardValue.TabIndex = 6;
-            this.lblCardValue.Text = "label1";
             this.lblCardValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblCard
@@ -261,7 +255,6 @@ namespace ThirdPartyTool.SaleReceipt
             this.lblPaymentValue.Name = "lblPaymentValue";
             this.lblPaymentValue.Size = new System.Drawing.Size(158, 19);
             this.lblPaymentValue.TabIndex = 1;
-            this.lblPaymentValue.Text = "label2";
             this.lblPaymentValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // bPanel_Rounded1

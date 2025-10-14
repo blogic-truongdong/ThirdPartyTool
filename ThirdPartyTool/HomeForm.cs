@@ -85,20 +85,6 @@ namespace ThirdPartyTool
         {
             try
             {
-                this.Icon = new Icon("Resources/Icon_BLogic_Tool.ico");
-                EnterDatabaseForm enterDatabaseForm = new EnterDatabaseForm();
-                var result = enterDatabaseForm.ShowDialog();
-                if (result != DialogResult.OK)
-                {
-                    this.Close();
-                    return;
-                }
-                StartForm connectDatabaseForm = new StartForm(enterDatabaseForm.txtBLogicPOS7.Text.Trim(), enterDatabaseForm.txtMerchant.Text.Trim());
-                connectDatabaseForm.ShowDialog();
-
-                Helper.BLOGICPOS7_Name = enterDatabaseForm.txtBLogicPOS7.Text.Trim();
-                Helper.Merchant_Name = enterDatabaseForm.txtMerchant.Text.Trim();
-
                 if (string.IsNullOrWhiteSpace(Helper.BLOGICPOS7_Connection) || string.IsNullOrWhiteSpace(Helper.Merchant_Connection))
                     this.Close();
             }

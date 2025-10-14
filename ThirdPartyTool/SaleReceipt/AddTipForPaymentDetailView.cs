@@ -77,18 +77,52 @@ namespace ThirdPartyTool.SaleReceipt
                     paymentDetailView.SaleReceiptID = Utility.GetStringFromRow("SaleReceiptID", item);
                     paymentDetailView.SaleReceiptPaymentDetailID = Utility.GetStringFromRow("SaleReceiptPaymentDetailID", item);
                     paymentDetailView.lblPaymentMethod.Text = Utility.GetStringFromRow("PaymentMethodName", item);
-                    paymentDetailView.lblPaymentValue.Text = Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("AmountTendered", item) -
-                        Utility.GetDecimalFromRow("AmountReturn", item) + Utility.GetDecimalFromRow("Gratuity", item) +
-                        Utility.GetDecimalFromRow("SVCFeeAmount", item) - Utility.GetDecimalFromRow("CashDiscountAmount", item));
+
                     paymentDetailView.lblCardValue.Text = Utility.GetStringFromRow("CreditCardTransactionCardNumber", item);
                     paymentDetailView.lblCardType.Text = Utility.GetStringFromRow("CreditCardCardType", item);
                     paymentDetailView.lblApprovalValue.Text = Utility.GetStringFromRow("CreditCardAuthCode", item);
-                    paymentDetailView.lblTotalValue.Text = Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("AmountTendered", item) -
-                        Utility.GetDecimalFromRow("AmountReturn", item) + Utility.GetDecimalFromRow("Gratuity", item) +
-                        Utility.GetDecimalFromRow("SVCFeeAmount", item) - Utility.GetDecimalFromRow("CashDiscountAmount", item));
-                    paymentDetailView.lblTerminalValue.Text = Utility.GetStringFromRow("CreditCardTransactionMerchantID", item);
+
                     paymentDetailView.txtGratuity.Value = Utility.GetDecimalFromRow("Gratuity", item);
                     paymentDetailView.OldGratuity = Utility.GetDecimalFromRow("Gratuity", item);
+
+                    paymentDetailView.lblPaymentValue.Text = Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("AmountTendered", item) -
+                            Utility.GetDecimalFromRow("AmountReturn", item) + Utility.GetDecimalFromRow("Gratuity", item) +
+                            Utility.GetDecimalFromRow("SVCFeeAmount", item) - Utility.GetDecimalFromRow("CashDiscountAmount", item) -
+                            Utility.GetDecimalFromRow("CoinDiscountAmount", item));
+
+                    int paymentMethodID = Utility.GetIntFromRow("PaymentMethodID", item);
+                    if (paymentMethodID == 1 || paymentMethodID >= 3 || paymentMethodID < -3)
+                    {
+                        paymentDetailView.lblCard.Visible = false;
+                        paymentDetailView.lblCardValue.Visible = false;
+                        paymentDetailView.lblTotal.Visible = false;
+                        paymentDetailView.lblTotalValue.Visible = false;
+                        paymentDetailView.lblCardType.Visible = false;
+                        paymentDetailView.lblEntryMode.Visible = false;
+                        paymentDetailView.lblApproval.Visible = false;
+                        paymentDetailView.lblApprovalValue.Visible = false;
+                        paymentDetailView.lblBatch.Visible = false;
+                        paymentDetailView.lblBatchValue.Visible = false;
+                        paymentDetailView.lblTerminal.Visible = false;
+                        paymentDetailView.lblTerminalValue.Visible = false;
+                    }
+                    else
+                    {
+                        paymentDetailView.lblCard.Visible = true;
+                        paymentDetailView.lblCardValue.Visible = true;
+                        paymentDetailView.lblTotal.Visible = true;
+                        paymentDetailView.lblTotalValue.Visible = true;
+                        paymentDetailView.lblCardType.Visible = true;
+                        paymentDetailView.lblEntryMode.Visible = true;
+                        paymentDetailView.lblApproval.Visible = true;
+                        paymentDetailView.lblApprovalValue.Visible = true;
+                        paymentDetailView.lblBatch.Visible = true;
+                        paymentDetailView.lblBatchValue.Visible = true;
+                        paymentDetailView.lblTerminal.Visible = true;
+                        paymentDetailView.lblTerminalValue.Visible = true;
+                    }
+                    paymentDetailView.lblTotalValue.Text = paymentDetailView.lblPaymentValue.Text;
+
                     DataRow[] drs = dtTransactionDetail.Select($"ID = '{item["CreditCardTransactionID"]}'", "");
                     if (drs.Length > 0)
                     {

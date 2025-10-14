@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace ThirdPartyTool
@@ -15,11 +13,28 @@ namespace ThirdPartyTool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.OpenForms
-    .OfType<Form>()
-    .ToList()
-    .ForEach(f => f.Icon = new Icon("Resources/Icon_BLogic_Tool.ico"));
-            Application.Run(new HomeForm());
+
+            //Icon appIcon = new Icon(Application.StartupPath + @"\Resources\Icon_BLogic_Tool.ico");
+
+            EnterDatabaseForm enterDatabaseForm = new EnterDatabaseForm();
+            //enterDatabaseForm.Icon = appIcon;
+            var result = enterDatabaseForm.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                Application.Exit();
+                return;
+            }
+
+            StartForm connectDatabaseForm = new StartForm(enterDatabaseForm.txtBLogicPOS7.Text.Trim(), enterDatabaseForm.txtMerchant.Text.Trim());
+            //connectDatabaseForm.Icon = appIcon;
+            connectDatabaseForm.ShowDialog();
+
+            Helper.BLOGICPOS7_Name = enterDatabaseForm.txtBLogicPOS7.Text.Trim();
+            Helper.Merchant_Name = enterDatabaseForm.txtMerchant.Text.Trim();
+
+            HomeForm homeForm = new HomeForm();
+            //homeForm.Icon = appIcon;
+            Application.Run(homeForm);
         }
     }
 }

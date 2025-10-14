@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
 
 namespace ThirdPartyTool
@@ -25,7 +24,6 @@ namespace ThirdPartyTool
 
         private void EnterDatabaseForm_Load(object sender, System.EventArgs e)
         {
-            this.Icon = new Icon("Resources/Icon_BLogic_Tool.ico");
             txtFocus.Focus();
         }
 

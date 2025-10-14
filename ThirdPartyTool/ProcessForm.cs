@@ -583,18 +583,35 @@ namespace ThirdPartyTool
 
                         foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
                         {
-                            scriptUpdate = $"update TransactionDetail set Amount = 0, Gratuity = '{item["Gratuity"]}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0', TicketNumber = '{AddTipByTokenReceipt_MainSaleReceiptNumber}', SVCFee = '0',SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}',MerchantFee = '{item["MerchantFeeForTip"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{item["CreditCardTransactionID"]}'";
+                            if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("CreditCardTransactionID", item)))
+                                scriptUpdate += $"update TransactionDetail set Date = '{item["CreatedDate"]}', Amount = 0, Gratuity = '{item["Gratuity"]}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0', TicketNumber = '{AddTipByTokenReceipt_MainSaleReceiptNumber}', SVCFee = '0',SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}',MerchantFee = '{item["MerchantFeeForTip"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{item["CreditCardTransactionID"]}'";
                         }
 
                         RunQueryUpdate(sqlCommand, scriptUpdate);
-
-                        sql = $"select distinct BatchUnique from MERCHANT.dbo.TransactionDetail where ID = '{dtTokenSaleReceiptPaymentDetails.Rows[0]["CreditCardTransactionID"]}'";
-                        sqlCommand.CommandText = sql;
-                        batchUnique = Utility.GetStringFromObject(sqlCommand.ExecuteScalar());
                     }
 
-                    if (!string.IsNullOrWhiteSpace(batchUnique))
-                        UpdateBatchByBatchUnique(batchUnique);
+                    foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
+                    {
+                        using (SqlCommand sqlCommand = new SqlCommand())
+                        using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                        {
+                            if (conn.State == ConnectionState.Closed)
+                                conn.Open();
+
+                            sqlCommand.Connection = conn;
+                            sqlCommand.CommandType = CommandType.Text;
+
+                            if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("CreditCardTransactionID", item)))
+                            {
+                                sql = $"select distinct BatchUnique from MERCHANT.dbo.TransactionDetail where ID = '{dtTokenSaleReceiptPaymentDetails.Rows[0]["CreditCardTransactionID"]}'";
+                                sqlCommand.CommandText = sql;
+                                batchUnique = Utility.GetStringFromObject(sqlCommand.ExecuteScalar());
+                            }
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(batchUnique))
+                            UpdateBatchByBatchUnique(batchUnique);
+                    }
                 }
 
                 IsSuccess = true;
@@ -620,7 +637,6 @@ namespace ThirdPartyTool
             {
                 ErrorMessage = $"Something went wrong while run script update.{Environment.NewLine}Please try contact TruongDS.";
                 BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
-                backgroundWorker.CancelAsync();
             }
         }
 

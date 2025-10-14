@@ -102,6 +102,7 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     TokenSaleReceiptID = string.Empty;
                     TokenSaleReceiptNumber = string.Empty;
+                    TokenTotalAmount = 0;
 
                     PrintControl_TokenReceipt.PrintingSystem?.Dispose();
                     PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
