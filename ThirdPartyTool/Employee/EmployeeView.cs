@@ -135,9 +135,7 @@ namespace ThirdPartyTool.Employee
         {
             try
             {
-                startDate.Value = endDate.Value = DateTime.Now;
-                BtnRefresh_Click(sender, e);
-                txtSearch.Focus();
+
             }
             catch (Exception ex)
             {
@@ -155,7 +153,7 @@ namespace ThirdPartyTool.Employee
 
         }
 
-        private void BtnRefresh_Click(object sender, System.EventArgs e)
+        public void BtnRefresh_Click(object sender, System.EventArgs e)
         {
             try
             {
@@ -175,6 +173,8 @@ namespace ThirdPartyTool.Employee
                 cbbSyncRoles.DisplayMember = "RolesName";
                 cbbSyncRoles.SelectedIndex = dtRoles.Rows.Count - 1;
 
+                startDate.Value = endDate.Value = DateTime.Now;
+                txtSearch.Focus();
             }
             catch (Exception ex)
             {

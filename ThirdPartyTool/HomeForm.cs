@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ThirdPartyTool.Transactions;
 
 namespace ThirdPartyTool
 {
@@ -83,6 +84,8 @@ namespace ThirdPartyTool
             btnEmployee.ForeColor = Tab_FoceColorSelected;
 
             employeeView.BringToFront();
+
+            employeeView.BtnRefresh_Click(sender, e);
         }
 
         private void HomeForm_Load(object sender, EventArgs e)
@@ -97,9 +100,9 @@ namespace ThirdPartyTool
                 BLogicLogger.Exception("HomeForm_Load in HomeForm", ex);
             }
 
-            //SettleBatchOfflineForm form = new SettleBatchOfflineForm();
-            //form.ShowDialog();
-            //Application.Exit();
+            SettleBatchOfflineForm form = new SettleBatchOfflineForm();
+            form.ShowDialog();
+            Application.Exit();
         }
 
         private void ResetTabColor()
