@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ThirdPartyTool.Transactions;
 
 namespace ThirdPartyTool
 {
@@ -9,7 +8,8 @@ namespace ThirdPartyTool
     {
         Home,
         Employee,
-        Receipt
+        Receipt,
+        Merchant
     }
     public partial class HomeForm : Form
     {
@@ -30,6 +30,24 @@ namespace ThirdPartyTool
             btnReceipt.Click += BtnReceipt_Click;
             btnClose.Click += BtnClose_Click;
             btnHome.Click += BtnHome_Click;
+            btnMerchant.Click += BtnMerchant_Click;
+        }
+
+        private void BtnMerchant_Click(object sender, EventArgs e)
+        {
+            if (CurrentTab == HomeTab.Merchant)
+                return;
+
+            CurrentTab = HomeTab.Merchant;
+
+            ResetTabColor();
+
+            btnMerchant.BackColor = Tab_BackColorSelected;
+            btnMerchant.ForeColor = Tab_FoceColorSelected;
+
+            settleBatchOfflineView.BringToFront();
+
+            settleBatchOfflineView.BtnRefresh_Click(sender, e);
         }
 
         private void BtnHome_Click(object sender, EventArgs e)
@@ -100,9 +118,9 @@ namespace ThirdPartyTool
                 BLogicLogger.Exception("HomeForm_Load in HomeForm", ex);
             }
 
-            SettleBatchOfflineForm form = new SettleBatchOfflineForm();
-            form.ShowDialog();
-            Application.Exit();
+            //SettleBatchOfflineForm form = new SettleBatchOfflineForm();
+            //form.ShowDialog();
+            //Application.Exit();
         }
 
         private void ResetTabColor()
@@ -113,6 +131,8 @@ namespace ThirdPartyTool
             btnEmployee.ForeColor = Tab_FoceColorDefault;
             btnReceipt.BackColor = Tab_BackColorDefault;
             btnReceipt.ForeColor = Tab_FoceColorDefault;
+            btnMerchant.BackColor = Tab_BackColorDefault;
+            btnMerchant.ForeColor = Tab_FoceColorDefault;
         }
     }
 }

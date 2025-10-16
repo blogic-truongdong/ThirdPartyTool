@@ -32,6 +32,7 @@
             this.pnlContainer = new System.Windows.Forms.Panel();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.btnMerchant = new System.Windows.Forms.Label();
             this.btnEmployee = new System.Windows.Forms.Label();
             this.btnReceipt = new System.Windows.Forms.Label();
             this.btnHome = new System.Windows.Forms.Label();
@@ -44,6 +45,7 @@
             this.welcomeView = new ThirdPartyTool.WelcomeView();
             this.receiptView = new ThirdPartyTool.ReceiptView();
             this.employeeView = new ThirdPartyTool.Employee.EmployeeView();
+            this.settleBatchOfflineView = new ThirdPartyTool.Transactions.SettleBatchOfflineView();
             this.panel1.SuspendLayout();
             this.pnlContainer.SuspendLayout();
             this.pnlLeft.SuspendLayout();
@@ -69,6 +71,7 @@
             this.pnlContainer.Controls.Add(this.welcomeView);
             this.pnlContainer.Controls.Add(this.receiptView);
             this.pnlContainer.Controls.Add(this.employeeView);
+            this.pnlContainer.Controls.Add(this.settleBatchOfflineView);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
@@ -89,6 +92,7 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.btnMerchant);
             this.panel6.Controls.Add(this.btnEmployee);
             this.panel6.Controls.Add(this.btnReceipt);
             this.panel6.Controls.Add(this.btnHome);
@@ -97,6 +101,21 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(200, 463);
             this.panel6.TabIndex = 2;
+            // 
+            // btnMerchant
+            // 
+            this.btnMerchant.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMerchant.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnMerchant.ForeColor = System.Drawing.Color.White;
+            this.btnMerchant.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMerchant.Location = new System.Drawing.Point(0, 150);
+            this.btnMerchant.Margin = new System.Windows.Forms.Padding(0);
+            this.btnMerchant.Name = "btnMerchant";
+            this.btnMerchant.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnMerchant.Size = new System.Drawing.Size(200, 50);
+            this.btnMerchant.TabIndex = 4;
+            this.btnMerchant.Text = "         Merchant";
+            this.btnMerchant.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnEmployee
             // 
@@ -232,15 +251,23 @@
             this.receiptView.Size = new System.Drawing.Size(798, 698);
             this.receiptView.TabIndex = 0;
             // 
-            // employeeView1
+            // employeeView
             // 
             this.employeeView.BackColor = System.Drawing.Color.White;
             this.employeeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.employeeView.Location = new System.Drawing.Point(0, 0);
-            this.employeeView.Name = "employeeView1";
+            this.employeeView.Name = "employeeView";
             this.employeeView.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
             this.employeeView.Size = new System.Drawing.Size(798, 698);
             this.employeeView.TabIndex = 2;
+            // 
+            // settleBatchOfflineView
+            // 
+            this.settleBatchOfflineView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settleBatchOfflineView.Location = new System.Drawing.Point(0, 0);
+            this.settleBatchOfflineView.Name = "settleBatchOfflineView";
+            this.settleBatchOfflineView.Size = new System.Drawing.Size(798, 698);
+            this.settleBatchOfflineView.TabIndex = 3;
             // 
             // HomeForm
             // 
@@ -280,5 +307,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label btnHome;
         private Employee.EmployeeView employeeView;
+        private System.Windows.Forms.Label btnMerchant;
+        private Transactions.SettleBatchOfflineView settleBatchOfflineView;
     }
 }

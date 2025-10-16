@@ -28,110 +28,91 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.lblRemainingBatch = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnUpdate = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnBack = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.txtFocus = new ThirdPartyTool.CustomControl.BTextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnRefresh = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnSettle = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
+            // lblRemainingBatch
+            // 
+            this.lblRemainingBatch.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblRemainingBatch.BackColor = System.Drawing.Color.Transparent;
+            this.lblRemainingBatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRemainingBatch.ForeColor = System.Drawing.Color.Red;
+            this.lblRemainingBatch.Location = new System.Drawing.Point(95, 310);
+            this.lblRemainingBatch.Name = "lblRemainingBatch";
+            this.lblRemainingBatch.Size = new System.Drawing.Size(620, 50);
+            this.lblRemainingBatch.TabIndex = 3;
+            this.lblRemainingBatch.Text = "There are still 0 batches that haven’t been settled yet.";
+            this.lblRemainingBatch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.btnUpdate);
-            this.panel1.Controls.Add(this.btnBack);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 453);
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btnRefresh);
+            this.panel1.Controls.Add(this.lblRemainingBatch);
+            this.panel1.Controls.Add(this.btnSettle);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 50);
-            this.panel1.TabIndex = 38;
+            this.panel1.Size = new System.Drawing.Size(800, 510);
+            this.panel1.TabIndex = 1;
             // 
-            // btnUpdate
+            // btnRefresh
             // 
-            this.btnUpdate.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnUpdate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(26)))), ((int)(((byte)(98)))));
-            this.btnUpdate.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(26)))), ((int)(((byte)(98)))));
-            this.btnUpdate.BorderColor = System.Drawing.Color.Gray;
-            this.btnUpdate.BorderRadius = 5;
-            this.btnUpdate.BorderSize = 1;
-            this.btnUpdate.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnUpdate.ForeColor = System.Drawing.Color.White;
-            this.btnUpdate.Location = new System.Drawing.Point(410, 0);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(200, 50);
-            this.btnUpdate.TabIndex = 1;
-            this.btnUpdate.Text = "Settle Batch Offline";
-            this.btnUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnUpdate.TextColor = System.Drawing.Color.White;
+            this.btnRefresh.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnRefresh.BackColor = System.Drawing.Color.White;
+            this.btnRefresh.BackgroundColor = System.Drawing.Color.White;
+            this.btnRefresh.BorderColor = System.Drawing.Color.Gray;
+            this.btnRefresh.BorderRadius = 5;
+            this.btnRefresh.BorderSize = 1;
+            this.btnRefresh.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRefresh.ForeColor = System.Drawing.Color.Black;
+            this.btnRefresh.Location = new System.Drawing.Point(325, 440);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(150, 50);
+            this.btnRefresh.TabIndex = 4;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnRefresh.TextColor = System.Drawing.Color.Black;
             // 
-            // btnBack
+            // btnSettle
             // 
-            this.btnBack.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnBack.BackColor = System.Drawing.Color.White;
-            this.btnBack.BackgroundColor = System.Drawing.Color.White;
-            this.btnBack.BorderColor = System.Drawing.Color.Gray;
-            this.btnBack.BorderRadius = 5;
-            this.btnBack.BorderSize = 1;
-            this.btnBack.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnBack.ForeColor = System.Drawing.Color.Black;
-            this.btnBack.Location = new System.Drawing.Point(190, 0);
-            this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(200, 50);
-            this.btnBack.TabIndex = 2;
-            this.btnBack.Text = "Back";
-            this.btnBack.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnBack.TextColor = System.Drawing.Color.Black;
-            // 
-            // txtFocus
-            // 
-            this.txtFocus.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtFocus.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtFocus.ForeColor = System.Drawing.Color.Gray;
-            this.txtFocus.Location = new System.Drawing.Point(93, -50);
-            this.txtFocus.Name = "txtFocus";
-            this.txtFocus.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtFocus.PlaceholderText = "Search by Ticket #";
-            this.txtFocus.Size = new System.Drawing.Size(247, 20);
-            this.txtFocus.TabIndex = 36;
-            this.txtFocus.Text = "Search by Ticket #";
-            // 
-            // panel2
-            // 
-            this.panel2.Location = new System.Drawing.Point(364, 118);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 100);
-            this.panel2.TabIndex = 39;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(423, 272);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(200, 100);
-            this.flowLayoutPanel1.TabIndex = 40;
+            this.btnSettle.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnSettle.BackColor = System.Drawing.Color.White;
+            this.btnSettle.BackgroundColor = System.Drawing.Color.White;
+            this.btnSettle.BorderColor = System.Drawing.Color.Gray;
+            this.btnSettle.BorderRadius = 5;
+            this.btnSettle.BorderSize = 1;
+            this.btnSettle.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSettle.ForeColor = System.Drawing.Color.Black;
+            this.btnSettle.Location = new System.Drawing.Point(250, 150);
+            this.btnSettle.Name = "btnSettle";
+            this.btnSettle.Size = new System.Drawing.Size(300, 150);
+            this.btnSettle.TabIndex = 2;
+            this.btnSettle.Text = "Settle Batch Offline Now";
+            this.btnSettle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnSettle.TextColor = System.Drawing.Color.Black;
             // 
             // SettleBatchOfflineView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.txtFocus);
             this.Name = "SettleBatchOfflineView";
-            this.Size = new System.Drawing.Size(800, 503);
+            this.Size = new System.Drawing.Size(800, 510);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        public System.Windows.Forms.Panel panel1;
-        private CustomControl.BLabel_Rounded btnUpdate;
-        public CustomControl.BLabel_Rounded btnBack;
-        private CustomControl.BTextBox txtFocus;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+
+        private System.Windows.Forms.Label lblRemainingBatch;
+        private System.Windows.Forms.Panel panel1;
+        private CustomControl.BLabel_Rounded btnSettle;
+        private CustomControl.BLabel_Rounded btnRefresh;
     }
 }

@@ -24,7 +24,8 @@ namespace ThirdPartyTool
         AddTipByTokenReceipt = 2,
         AddTipForPaymentDetail = 3,
         SettleBatchOffline = 4,
-        EmployeeView_GetEmployeeInfos = 5
+        EmployeeView_GetEmployeeInfos = 5,
+        GetRemainingBatch = 6,
     }
     public partial class ProcessForm : Form
     {
@@ -82,6 +83,11 @@ namespace ThirdPartyTool
             this.AddTipByTokenReceipt_TokenSaleReceiptNumber = tokenSaleReceiptNumber;
         }
 
+        public void InitGetRemainingBatch()
+        {
+            CurrentProcessName = ProcessNameEnum.GetRemainingBatch;
+        }
+
         public void InitSettleBatchOffline()
         {
             CurrentProcessName = ProcessNameEnum.SettleBatchOffline;
@@ -120,6 +126,9 @@ namespace ThirdPartyTool
                         break;
                     case ProcessNameEnum.EmployeeView_GetEmployeeInfos:
                         GetEmployeeInfos();
+                        break;
+                    case ProcessNameEnum.GetRemainingBatch:
+                        GetRemainingBatch();
                         break;
                 }
             }
@@ -1358,6 +1367,39 @@ namespace ThirdPartyTool
             BusinessServiceClientModel.Helper.Parameters.SetAction(BusinessServiceClientModel.Helper.Actions.UPDATE_MERCHANT_FEE_FOR_TRANSACTIONDETAIL_BY_TRANS_ID, dsParams);
             dsResult = CFacade.DoAction(dsParams);
             return dsResult;
+        }
+
+        public void GetRemainingBatch()
+        {
+            try
+            {
+                IsSuccess = false;
+                DataTable dtGroupSettleBatch = new DataTable("TransactionDetail");
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    string sql = "select distinct MerchantID, BatchID,WorkstationID from TransactionDetail where ISNULL(BatchUnique,'') = '';";
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = sql;
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtGroupSettleBatch.Load(reader);
+                    reader.Close();
+                }
+
+                DataTableReturn = dtGroupSettleBatch;
+
+                IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetRemainingBatch in SettleBatchOfflineForm", ex);
+            }
         }
     }
 }
