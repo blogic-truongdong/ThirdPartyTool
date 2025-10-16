@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BLogicSystems.XPos.Utilites;
+using System;
 using System.Data;
 using System.Windows.Forms;
+using ThirdPartyTool.Dialog;
 
 namespace ThirdPartyTool.Employee
 {
@@ -9,6 +11,9 @@ namespace ThirdPartyTool.Employee
         private DataTable dtEmployees = null;
         private DataTable dtRoles = null;
         private DataTable dtEmployeeRoles = null;
+        private int CurrentEmployeeID = -1;
+        private string CurrentEmployeeName = "";
+
         public EmployeeView()
         {
             InitializeComponent();
@@ -32,6 +37,49 @@ namespace ThirdPartyTool.Employee
             lblStartDate.Click += LblStartDate_Click;
             lblEndDate.Click += LblEndDate_Click;
             lblSyncRoles.Click += LblSyncRoles_Click;
+
+            btnSyncRoles.Click += BtnSyncRoles_Click;
+        }
+
+        private void BtnSyncRoles_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cbbSyncRoles.SelectedIndex <= 0)
+                {
+                    InformationDialogForm informationDialog = new InformationDialogForm("Please select Role before process sync role.");
+                    informationDialog.ShowDialog();
+                    return;
+                }
+
+                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to sync the ‘{cbbSyncRoles.Text}’ role for employee {CurrentEmployeeName}?");
+                var result = confirmFirmDialog.ShowDialog();
+                if (result == DialogResult.No)
+                    return;
+
+                ProcessForm processForm = new ProcessForm();
+                processForm.CurrentProcessName = ProcessNameEnum.ProcessSyncRoleForEmployee;
+                processForm.EmployeeView_EmployeeID = CurrentEmployeeID;
+                processForm.EmployeeView_RolesID = Utility.GetIntFromObject(cbbSyncRoles.SelectedValue);
+                processForm.EmployeeView_StartDate = new DateTime(startDate.Value.Year, startDate.Value.Month, startDate.Value.Day, 0, 0, 0);
+                processForm.EmployeeView_EndDate = new DateTime(endDate.Value.Year, endDate.Value.Month, endDate.Value.Day, 23, 59, 59, 999);
+                processForm.ShowDialog();
+
+                if (processForm.IsSuccess)
+                {
+                    InformationDialogForm informationDialog = new InformationDialogForm("Sync role for employee successfully.");
+                    informationDialog.ShowDialog();
+                }
+                else
+                {
+                    InformationDialogForm informationDialog = new InformationDialogForm("Sync role for employee failed. Please contact TruongDS.");
+                    informationDialog.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("BtnSyncRoles_Click in EmployeeView", ex);
+            }
         }
 
         private void LblSyncRoles_Click(object sender, EventArgs e)
@@ -81,7 +129,12 @@ namespace ThirdPartyTool.Employee
         {
             try
             {
-                cbbSyncRoles.SelectedIndex = dtRoles.Rows.Count - 1;
+                cbbSyncRoles.SelectedIndex = 0;
+
+                var currentRow = dgvEmployees.CurrentRow;
+                CurrentEmployeeID = Utility.GetIntFromObject(currentRow.Cells["EmployeeID"].Value);
+                CurrentEmployeeName = Utility.GetStringFromObject(currentRow.Cells["EmployeeName"].Value);
+                startDate.Value = endDate.Value = DateTime.Now;
             }
             catch (Exception ex)
             {
@@ -167,11 +220,15 @@ namespace ThirdPartyTool.Employee
 
                 dgvEmployees.DataSource = dtEmployees;
 
-                dtRoles.Rows.Add("999999", "N/A");
+                DataRow dataRow = dtRoles.NewRow();
+                dataRow["RolesID"] = "-1";
+                dataRow["RolesName"] = "N/A";
+                dtRoles.Rows.InsertAt(dataRow, 0);
+
                 cbbSyncRoles.DataSource = dtRoles;
                 cbbSyncRoles.ValueMember = "RolesID";
                 cbbSyncRoles.DisplayMember = "RolesName";
-                cbbSyncRoles.SelectedIndex = dtRoles.Rows.Count - 1;
+                cbbSyncRoles.SelectedIndex = 0;
 
                 startDate.Value = endDate.Value = DateTime.Now;
                 txtSearch.Focus();
@@ -179,24 +236,6 @@ namespace ThirdPartyTool.Employee
             catch (Exception ex)
             {
                 BLogicLogger.Exception("BtnRefresh_Click in EmployeeView", ex);
-            }
-        }
-
-        private void BindingEmployeeData()
-        {
-            try
-            {
-                if (dgvEmployees.SelectedRows.Count > 0)
-                {
-                    var row = dgvEmployees.SelectedRows[0];
-                }
-                else
-                {
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("BindingEmployeeData in EmployeeView", ex);
             }
         }
     }

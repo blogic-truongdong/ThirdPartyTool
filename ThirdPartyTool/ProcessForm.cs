@@ -26,6 +26,7 @@ namespace ThirdPartyTool
         SettleBatchOffline = 4,
         EmployeeView_GetEmployeeInfos = 5,
         GetRemainingBatch = 6,
+        ProcessSyncRoleForEmployee = 7
     }
     public partial class ProcessForm : Form
     {
@@ -51,10 +52,10 @@ namespace ThirdPartyTool
         private string AddTipForPaymentDetail_SaleReceiptPaymentDetailID = string.Empty;
         private decimal AddTipForPaymentDetail_Gratuity = 0;
 
-        private DateTime EmployeeView_StartDate;
-        private DateTime EmployeeView_EndDate;
-        private int EmployeeView_EmployeeID;
-        private int EmployeeView_RolesID;
+        public DateTime EmployeeView_StartDate;
+        public DateTime EmployeeView_EndDate;
+        public int EmployeeView_EmployeeID;
+        public int EmployeeView_RolesID;
 
 
         public ProcessForm()
@@ -130,6 +131,9 @@ namespace ThirdPartyTool
                     case ProcessNameEnum.GetRemainingBatch:
                         GetRemainingBatch();
                         break;
+                    case ProcessNameEnum.ProcessSyncRoleForEmployee:
+                        ProcessSyncRoleForEmployee();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -175,7 +179,7 @@ namespace ThirdPartyTool
             }
         }
 
-        public void SyncRoleForEmployee()
+        public void ProcessSyncRoleForEmployee()
         {
             try
             {
@@ -200,105 +204,95 @@ namespace ThirdPartyTool
                     dtEmployee.Load(reader);
                     reader.Close();
 
-                    sqlCommand.CommandText = $"Select * from Roles where EmployeeID = '{roleID}'";
+                    sqlCommand.CommandText = $"Select * from Roles where RolesID = '{roleID}'";
                     reader = sqlCommand.ExecuteReader();
                     dtRoles.Load(reader);
                     reader.Close();
 
-                    bool IsUsingRoleWage = Utility.GetBoolFromRow("IsUsingRoleWage", dtEmployee.Rows[0]);
-                    bool IsHourlyWage = Utility.GetBoolFromRow("IsHourlyWage", dtEmployee.Rows[0]);
-                    bool IsDailyOverTime = Utility.GetBoolFromRow("IsDailyOverTime", dtEmployee.Rows[0]);
-                    bool IsDailyOverTime2nd = Utility.GetBoolFromRow("IsDailyOverTime2nd", dtEmployee.Rows[0]);
-                    decimal HourlyWage = Utility.GetDecimalFromRow("HourlyWage", dtEmployee.Rows[0]);
-                    decimal HourlyWageOT = Utility.GetDecimalFromRow("HourlyWageOT", dtEmployee.Rows[0]);
-                    decimal HourlyWageOT2nd = Utility.GetDecimalFromRow("HourlyWageOT2nd", dtEmployee.Rows[0]);
+                    DataRow employeeRow = dtEmployee.Rows[0];
 
-                    bool IsUsingRoleTipPool = Utility.GetBoolFromRow("IsUsingRoleTipPool", dtEmployee.Rows[0]);
-                    decimal TipRate = Utility.GetDecimalFromRow("TipRate", dtEmployee.Rows[0]);
-                    decimal TipRateOT = Utility.GetDecimalFromRow("TipRateOT", dtEmployee.Rows[0]);
-                    decimal MaxTipHour = Utility.GetDecimalFromRow("MaxTipHour", dtEmployee.Rows[0]);
-                    decimal MaxTipHourOT = Utility.GetDecimalFromRow("MaxTipHourOT", dtEmployee.Rows[0]);
-                    decimal ServiceChargesRate = Utility.GetDecimalFromRow("ServiceChargesRate", dtEmployee.Rows[0]);
-                    decimal ServiceChargesRateOT = Utility.GetDecimalFromRow("ServiceChargesRateOT", dtEmployee.Rows[0]);
-                    decimal ServiceChargesMaxHour = Utility.GetDecimalFromRow("ServiceChargesMaxHour", dtEmployee.Rows[0]);
-                    decimal ServiceChargesMaxHourOT = Utility.GetDecimalFromRow("ServiceChargesMaxHourOT", dtEmployee.Rows[0]);
+                    bool IsHourlyWage = Utility.GetBoolFromObject(employeeRow["IsHourlyWage"]);
+                    decimal dHourlyWage = Utility.GetDecimalFromObject(employeeRow["HourlyWage"]);
+                    decimal dHourlyWageOT = Utility.GetDecimalFromObject(employeeRow["HourlyWageOT"]);
+                    bool bIsDailyOverTime = Utility.GetBoolFromObject(employeeRow["IsDailyOverTime"]);
+                    bool isUsingRoleWage = Utility.GetBoolFromObject(employeeRow["IsUsingRoleWage"]);
 
-                    bool EnableTrainingMode = Utility.GetBoolFromRow("EnableTrainingMode", dtEmployee.Rows[0]);
-                    decimal TrainingTipRate = Utility.GetDecimalFromRow("TrainingTipRate", dtEmployee.Rows[0]);
-                    decimal TrainingTipRateOT = Utility.GetDecimalFromRow("TrainingTipRateOT", dtEmployee.Rows[0]);
+                    bool isUsingRoleTipPool = Utility.GetBoolFromObject(employeeRow["IsUsingRoleTipPool"]);
+                    decimal dTipRate = Utility.GetDecimalFromObject(employeeRow["TipRate"]);
+                    decimal dTipRateOT = Utility.GetDecimalFromObject(employeeRow["TipRateOT"]);
+                    decimal dTrainingTipRate = Utility.GetDecimalFromObject(employeeRow["TrainingTipRate"]);
+                    decimal dTrainingTipRateOT = Utility.GetDecimalFromObject(employeeRow["TrainingTipRateOT"]);
+                    decimal dMaxTipHour = Utility.GetDecimalFromObject(employeeRow["MaxTipHour"]);
+                    decimal dMaxTipHourOT = Utility.GetDecimalFromObject(employeeRow["MaxTipHourOT"]);
+                    decimal dHourlyWageOT2nd = Utility.GetDecimalFromObject(employeeRow["HourlyWageOT2nd"]);
+                    bool bIsDailyOverTime2nd = Utility.GetBoolFromObject(employeeRow["IsDailyOverTime2nd"]);
 
-                    bool IsOverrideTipRetain = Utility.GetBoolFromRow("IsOverrideTipRetain", dtEmployee.Rows[0]);
-                    int RetainPercentOfTip = Utility.GetIntFromRow("RetainPercentOfTip", dtEmployee.Rows[0]);
+                    decimal dServiceChargesRate = Utility.GetDecimalFromObject(employeeRow["ServiceChargesRate"]);
+                    decimal dServiceChargesRateOT = Utility.GetDecimalFromObject(employeeRow["ServiceChargesRateOT"]);
+                    decimal dServiceChargesMaxHour = Utility.GetDecimalFromObject(employeeRow["ServiceChargesMaxHour"]);
+                    decimal dServiceChargesMaxHourOT = Utility.GetDecimalFromObject(employeeRow["ServiceChargesMaxHourOT"]);
+                    bool dEnableTrainingMode = Utility.GetBoolFromObject(employeeRow["EnableTrainingMode"]);
+                    if (dEnableTrainingMode)
+                    {
+                        dTipRate = dTrainingTipRate;
+                        dTipRateOT = dTrainingTipRateOT;
+                    }
 
                     if (!IsHourlyWage)
-                        HourlyWage = HourlyWageOT = HourlyWageOT2nd = 0;
-                    else
+                        dHourlyWage = 0;
+
+                    DataRow drRole = dtRoles.Rows[0];
+                    if (isUsingRoleWage)
                     {
-                        if (!IsDailyOverTime)
-                            HourlyWageOT = 0;
-
-                        if (!IsDailyOverTime2nd)
-                            HourlyWageOT2nd = 0;
-                    }
-
-                    if (IsOverrideTipRetain)
-                        RetainPercentOfTip = Utility.GetIntFromRow("RetainPercentOfTip", dtRoles.Rows[0]);
-
-                    if (IsUsingRoleWage)
-                    {
-                        IsHourlyWage = Utility.GetBoolFromRow("IsHourlyWage", dtRoles.Rows[0]);
-                        IsDailyOverTime = Utility.GetBoolFromRow("IsDailyOverTime", dtRoles.Rows[0]);
-                        IsDailyOverTime2nd = Utility.GetBoolFromRow("IsDailyOverTime2nd", dtRoles.Rows[0]);
-                        HourlyWage = Utility.GetDecimalFromRow("HourlyWage", dtRoles.Rows[0]);
-                        HourlyWageOT = Utility.GetDecimalFromRow("HourlyWageOT", dtRoles.Rows[0]);
-                        HourlyWageOT2nd = Utility.GetDecimalFromRow("HourlyWageOT2nd", dtRoles.Rows[0]);
+                        IsHourlyWage = Utility.GetBoolFromObject(drRole["IsHourlyWage"]);
+                        dHourlyWage = Utility.GetDecimalFromObject(drRole["HourlyWage"]);
+                        dHourlyWageOT = Utility.GetDecimalFromObject(drRole["HourlyWageOT"]);
+                        bIsDailyOverTime = Utility.GetBoolFromObject(drRole["IsDailyOverTime"]);
+                        bIsDailyOverTime2nd = Utility.GetBoolFromObject(drRole["IsDailyOverTime2nd"]);
+                        dHourlyWageOT2nd = Utility.GetDecimalFromObject(drRole["HourlyWageOT2nd"]);
 
                         if (!IsHourlyWage)
-                            HourlyWage = HourlyWageOT = HourlyWageOT2nd = 0;
+                            dHourlyWage = 0;
+                    }
+
+                    if (isUsingRoleTipPool)
+                    {
+                        if (dEnableTrainingMode)
+                        {
+                            dTipRate = Utility.GetDecimalFromObject(drRole["TrainingTipRate"]);
+                            dTipRateOT = Utility.GetDecimalFromObject(drRole["TrainingTipRateOT"]);
+                        }
                         else
                         {
-                            if (!IsDailyOverTime)
-                                HourlyWageOT = 0;
-
-                            if (!IsDailyOverTime2nd)
-                                HourlyWageOT2nd = 0;
+                            dTipRate = Utility.GetDecimalFromObject(drRole["TipRate"]);
+                            dTipRateOT = Utility.GetDecimalFromObject(drRole["TipRateOT"]);
                         }
-                    }
 
-                    if (IsUsingRoleTipPool)
-                    {
-                        TipRate = Utility.GetDecimalFromRow("TipRate", dtRoles.Rows[0]);
-                        TipRateOT = Utility.GetDecimalFromRow("TipRateOT", dtRoles.Rows[0]);
-                        MaxTipHour = Utility.GetDecimalFromRow("MaxTipHour", dtRoles.Rows[0]);
-                        MaxTipHourOT = Utility.GetDecimalFromRow("MaxTipHourOT", dtRoles.Rows[0]);
-                        ServiceChargesRate = Utility.GetDecimalFromRow("ServiceChargesRate", dtRoles.Rows[0]);
-                        ServiceChargesRateOT = Utility.GetDecimalFromRow("ServiceChargesRateOT", dtRoles.Rows[0]);
-                        ServiceChargesMaxHour = Utility.GetDecimalFromRow("ServiceChargesMaxHour", dtRoles.Rows[0]);
-                        ServiceChargesMaxHourOT = Utility.GetDecimalFromRow("ServiceChargesMaxHourOT", dtRoles.Rows[0]);
+                        dMaxTipHour = Utility.GetDecimalFromObject(drRole["MaxTipHour"]);
+                        dMaxTipHourOT = Utility.GetDecimalFromObject(drRole["MaxTipHourOT"]);
 
-                        TrainingTipRate = Utility.GetDecimalFromRow("TrainingTipRate", dtEmployee.Rows[0]);
-                        TrainingTipRateOT = Utility.GetDecimalFromRow("TrainingTipRateOT", dtEmployee.Rows[0]);
-                    }
-
-                    if (EnableTrainingMode)
-                    {
-                        TipRate = TrainingTipRate;
-                        TipRateOT = TrainingTipRateOT;
+                        dServiceChargesRate = Utility.GetDecimalFromObject(drRole["ServiceChargesRate"]);
+                        dServiceChargesRateOT = Utility.GetDecimalFromObject(drRole["ServiceChargesRateOT"]);
+                        dServiceChargesMaxHour = Utility.GetDecimalFromObject(drRole["ServiceChargesMaxHour"]);
+                        dServiceChargesMaxHourOT = Utility.GetDecimalFromObject(drRole["ServiceChargesMaxHourOT"]);
                     }
 
                     var sql = $"update TimeClock set " +
-                        $"HourlyWage = '{HourlyWage}', HourlyWageOT = '{HourlyWageOT}', HourlyWageOT2nd = '{HourlyWageOT2nd}', " +
-                        $"TipRate = '{TipRate}', TipRateOT = '{TipRateOT}', " +
-                        $"MaxTipHour = '{MaxTipHour}', MaxTipHourOT = '{MaxTipHourOT}', " +
-                        $"ServiceChargesRate = '{ServiceChargesRate}', ServiceChargesRateOT = '{ServiceChargesRateOT}', " +
-                        $"ServiceChargesMaxHour = '{ServiceChargesMaxHour}', ServiceChargesMaxHourOT = '{ServiceChargesMaxHourOT}', " +
+                        $"HourlyWage = '{dHourlyWage}', HourlyWageOT = '{dHourlyWageOT}', HourlyWageOT2nd = '{dHourlyWageOT2nd}', " +
+                        $"IsDailyOverTime = '{bIsDailyOverTime}', IsDailyOverTime2nd = '{bIsDailyOverTime2nd}', " +
+                        $"TipRate = '{dTipRate}', TipRateOT = '{dTipRateOT}', " +
+                        $"MaxTipHour = '{dMaxTipHour}', MaxTipHourOT = '{dMaxTipHourOT}', " +
+                        $"ServiceChargesRate = '{dServiceChargesRate}', ServiceChargesRateOT = '{dServiceChargesRateOT}', " +
+                        $"ServiceChargesMaxHour = '{dServiceChargesMaxHour}', ServiceChargesMaxHourOT = '{dServiceChargesMaxHourOT}', " +
                         $"RolesID = '{roleID}' " +
                         $"where EmployeeID = '{employeeID}' and DateTimeIn >= '{startDate}' and DateTimeIn <= '{endDate}'";
                     RunQueryUpdate(sqlCommand, sql);
 
-                    sql = $"update PaymentRoleDetails set TipRate = '{TipRate}', TipRateOT = '{TipRateOT}', RolesID = '{roleID}' " +
+                    sql = $"update PaymentRoleDetails set TipRate = '{dTipRate}', TipRateOT = '{dTipRateOT}', RolesID = '{roleID}' " +
                         $"where EmployeeID = '{employeeID}' and DateCreated >= '{startDate}' and DateCreated <= '{endDate}'";
                     RunQueryUpdate(sqlCommand, sql);
+
+                    IsSuccess = true;
                 }
 
             }
@@ -831,7 +825,7 @@ namespace ThirdPartyTool
             BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
             sqlCommand.CommandText = scriptUpdate;
             var resultQueryUpdate = sqlCommand.ExecuteNonQuery();
-            if (resultQueryUpdate <= 0)
+            if (resultQueryUpdate < 0)
             {
                 ErrorMessage = $"Something went wrong while run script update.{Environment.NewLine}Please try contact TruongDS.";
                 BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
@@ -1401,5 +1395,6 @@ namespace ThirdPartyTool
                 BLogicLogger.Exception("GetRemainingBatch in SettleBatchOfflineForm", ex);
             }
         }
+
     }
 }
