@@ -107,6 +107,7 @@
             this.btnMerchant.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnMerchant.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnMerchant.ForeColor = System.Drawing.Color.White;
+            this.btnMerchant.Image = global::ThirdPartyTool.Properties.Resources.Icon_Employee;
             this.btnMerchant.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMerchant.Location = new System.Drawing.Point(0, 150);
             this.btnMerchant.Margin = new System.Windows.Forms.Padding(0);
