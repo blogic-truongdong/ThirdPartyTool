@@ -30,6 +30,10 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlContainer = new System.Windows.Forms.Panel();
+            this.welcomeView = new ThirdPartyTool.WelcomeView();
+            this.receiptView = new ThirdPartyTool.ReceiptView();
+            this.employeeView = new ThirdPartyTool.Employee.EmployeeView();
+            this.settleBatchOfflineView = new ThirdPartyTool.Transactions.SettleBatchOfflineView();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.btnMerchant = new System.Windows.Forms.Label();
@@ -42,10 +46,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.welcomeView = new ThirdPartyTool.WelcomeView();
-            this.receiptView = new ThirdPartyTool.ReceiptView();
-            this.employeeView = new ThirdPartyTool.Employee.EmployeeView();
-            this.settleBatchOfflineView = new ThirdPartyTool.Transactions.SettleBatchOfflineView();
             this.panel1.SuspendLayout();
             this.pnlContainer.SuspendLayout();
             this.pnlLeft.SuspendLayout();
@@ -78,6 +78,42 @@
             this.pnlContainer.Size = new System.Drawing.Size(798, 698);
             this.pnlContainer.TabIndex = 2;
             // 
+            // welcomeView
+            // 
+            this.welcomeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.welcomeView.Location = new System.Drawing.Point(0, 0);
+            this.welcomeView.Name = "welcomeView";
+            this.welcomeView.Size = new System.Drawing.Size(798, 698);
+            this.welcomeView.TabIndex = 1;
+            // 
+            // receiptView
+            // 
+            this.receiptView.BackColor = System.Drawing.Color.White;
+            this.receiptView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.receiptView.Location = new System.Drawing.Point(0, 0);
+            this.receiptView.Name = "receiptView";
+            this.receiptView.Padding = new System.Windows.Forms.Padding(10);
+            this.receiptView.Size = new System.Drawing.Size(798, 698);
+            this.receiptView.TabIndex = 0;
+            // 
+            // employeeView
+            // 
+            this.employeeView.BackColor = System.Drawing.Color.White;
+            this.employeeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.employeeView.Location = new System.Drawing.Point(0, 0);
+            this.employeeView.Name = "employeeView";
+            this.employeeView.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
+            this.employeeView.Size = new System.Drawing.Size(798, 698);
+            this.employeeView.TabIndex = 2;
+            // 
+            // settleBatchOfflineView
+            // 
+            this.settleBatchOfflineView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settleBatchOfflineView.Location = new System.Drawing.Point(0, 0);
+            this.settleBatchOfflineView.Name = "settleBatchOfflineView";
+            this.settleBatchOfflineView.Size = new System.Drawing.Size(798, 698);
+            this.settleBatchOfflineView.TabIndex = 3;
+            // 
             // pnlLeft
             // 
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(63)))), ((int)(((byte)(84)))));
@@ -107,7 +143,7 @@
             this.btnMerchant.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnMerchant.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnMerchant.ForeColor = System.Drawing.Color.White;
-            this.btnMerchant.Image = global::ThirdPartyTool.Properties.Resources.Icon_Employee;
+            this.btnMerchant.Image = global::ThirdPartyTool.Properties.Resources.Icon_CreditCard;
             this.btnMerchant.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMerchant.Location = new System.Drawing.Point(0, 150);
             this.btnMerchant.Margin = new System.Windows.Forms.Padding(0);
@@ -233,42 +269,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            // 
-            // welcomeView
-            // 
-            this.welcomeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.welcomeView.Location = new System.Drawing.Point(0, 0);
-            this.welcomeView.Name = "welcomeView";
-            this.welcomeView.Size = new System.Drawing.Size(798, 698);
-            this.welcomeView.TabIndex = 1;
-            // 
-            // receiptView
-            // 
-            this.receiptView.BackColor = System.Drawing.Color.White;
-            this.receiptView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.receiptView.Location = new System.Drawing.Point(0, 0);
-            this.receiptView.Name = "receiptView";
-            this.receiptView.Padding = new System.Windows.Forms.Padding(10);
-            this.receiptView.Size = new System.Drawing.Size(798, 698);
-            this.receiptView.TabIndex = 0;
-            // 
-            // employeeView
-            // 
-            this.employeeView.BackColor = System.Drawing.Color.White;
-            this.employeeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.employeeView.Location = new System.Drawing.Point(0, 0);
-            this.employeeView.Name = "employeeView";
-            this.employeeView.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
-            this.employeeView.Size = new System.Drawing.Size(798, 698);
-            this.employeeView.TabIndex = 2;
-            // 
-            // settleBatchOfflineView
-            // 
-            this.settleBatchOfflineView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settleBatchOfflineView.Location = new System.Drawing.Point(0, 0);
-            this.settleBatchOfflineView.Name = "settleBatchOfflineView";
-            this.settleBatchOfflineView.Size = new System.Drawing.Size(798, 698);
-            this.settleBatchOfflineView.TabIndex = 3;
             // 
             // HomeForm
             // 

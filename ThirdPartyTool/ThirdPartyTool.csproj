@@ -674,6 +674,7 @@
     <Content Include="Lib\log4net.dll" />
     <Content Include="Lib\System.Printing.dll" />
     <Content Include="Lib\zxing.dll" />
+    <None Include="Resources\Icon_CreditCard.png" />
     <None Include="Resources\Icon_Arrow_Down.png" />
     <Content Include="Resources\Icon_BLogic_Tool.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
