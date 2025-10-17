@@ -739,9 +739,13 @@ namespace ThirdPartyTool
 
                             if (Utility.GetDecimalFromRow("SVCFeeAmount", item) != 0)
                                 item["SVCFeeForGratuity"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
+                            else
+                                item["SVCFeeForGratuity"] = 0;
 
                             if (Utility.GetDecimalFromRow("MerchantFee", item) != 0)
                                 item["MerchantFeeForTip"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+                            else
+                                item["MerchantFeeForTip"] = 0;
 
                             item["SVCFeeAmount"] = 0;
 
@@ -955,13 +959,19 @@ namespace ThirdPartyTool
 
                     if (paymentDetailEntity.SVCFeeAmount != 0)
                         paymentDetailEntity.SVCFeeForGratuity = Math.Round(paymentDetailEntity.Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
+                    else
+                        paymentDetailEntity.SVCFeeForGratuity = 0;
 
                     if (paymentDetailEntity.MerchantFee != 0)
+                    {
                         paymentDetailEntity.MerchantFee = Math.Round((paymentDetailEntity.AmountTendered - paymentDetailEntity.AmountReturn + paymentDetailEntity.Gratuity) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
-
-                    if (paymentDetailEntity.MerchantFee != 0)
                         paymentDetailEntity.MerchantFeeForTip = Math.Round(paymentDetailEntity.Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
-
+                    }
+                    else
+                    {
+                        paymentDetailEntity.MerchantFee = 0;
+                        paymentDetailEntity.MerchantFeeForTip = 0;
+                    }
 
                     #endregion
 
@@ -1022,6 +1032,7 @@ namespace ThirdPartyTool
                         scriptUpdate = $"update TransactionDetail set Gratuity = '{paymentDetailEntity.Gratuity}'," +
                             $" SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}'," +
                             $" MerchantFee = '{paymentDetailEntity.MerchantFee}'," +
+                            $" Total = Amount + {paymentDetailEntity.Gratuity}," +
                             $" MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' " +
                             $" where ID = '{paymentDetailEntity.CreditCardTransactionID}'";
 
