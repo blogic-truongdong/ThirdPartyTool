@@ -36,6 +36,8 @@
             this.settleBatchOfflineView = new ThirdPartyTool.Transactions.SettleBatchOfflineView();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.btnMerchant = new System.Windows.Forms.Label();
             this.btnEmployee = new System.Windows.Forms.Label();
             this.btnReceipt = new System.Windows.Forms.Label();
@@ -128,6 +130,8 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.label4);
+            this.panel6.Controls.Add(this.label3);
             this.panel6.Controls.Add(this.btnMerchant);
             this.panel6.Controls.Add(this.btnEmployee);
             this.panel6.Controls.Add(this.btnReceipt);
@@ -137,6 +141,34 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(200, 463);
             this.panel6.TabIndex = 2;
+            // 
+            // label4
+            // 
+            this.label4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Lime;
+            this.label4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label4.Location = new System.Drawing.Point(0, 423);
+            this.label4.Margin = new System.Windows.Forms.Padding(0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(200, 20);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Version 1.00";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label3.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Lime;
+            this.label3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label3.Location = new System.Drawing.Point(0, 443);
+            this.label3.Margin = new System.Windows.Forms.Padding(0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(200, 20);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Release 17-10-2025";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnMerchant
             // 
@@ -216,7 +248,7 @@
             // 
             this.btnClose.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnClose.Font = new System.Drawing.Font("Roboto", 14.25F);
-            this.btnClose.ForeColor = System.Drawing.Color.White;
+            this.btnClose.ForeColor = System.Drawing.Color.Red;
             this.btnClose.Image = global::ThirdPartyTool.Properties.Resources.Icon_Exit;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnClose.Location = new System.Drawing.Point(0, 0);
@@ -279,7 +311,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "HomeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "HomeForm";
+            this.Text = "BLogic Systems";
             this.panel1.ResumeLayout(false);
             this.pnlContainer.ResumeLayout(false);
             this.pnlLeft.ResumeLayout(false);
@@ -310,5 +342,7 @@
         private Employee.EmployeeView employeeView;
         private System.Windows.Forms.Label btnMerchant;
         private Transactions.SettleBatchOfflineView settleBatchOfflineView;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }

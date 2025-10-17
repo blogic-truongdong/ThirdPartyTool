@@ -30,19 +30,21 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.bPanel_Rounded3 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.bPanel_Rounded5 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.endDate = new System.Windows.Forms.DateTimePicker();
             this.lblEndDate = new System.Windows.Forms.Label();
+            this.endDate = new System.Windows.Forms.DateTimePicker();
             this.bPanel_Rounded4 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.startDate = new System.Windows.Forms.DateTimePicker();
             this.lblStartDate = new System.Windows.Forms.Label();
+            this.startDate = new System.Windows.Forms.DateTimePicker();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.lblCurrentEmployeeName = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.btnSyncRoles = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.bPanel_Rounded2 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
@@ -50,11 +52,13 @@
             this.cbbSyncRoles = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.bPanel_Rounded1 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Label();
             this.dgvEmployees = new System.Windows.Forms.DataGridView();
             this.EmployeeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EmployeeCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EmployeeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RoleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -86,10 +90,10 @@
             // 
             this.panel2.Controls.Add(this.bPanel_Rounded3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(310, 60);
+            this.panel2.Location = new System.Drawing.Point(480, 60);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.panel2.Size = new System.Drawing.Size(529, 454);
+            this.panel2.Size = new System.Drawing.Size(359, 454);
             this.panel2.TabIndex = 5;
             // 
             // dataGridViewImageColumn1
@@ -113,6 +117,7 @@
             this.bPanel_Rounded3.Controls.Add(this.label6);
             this.bPanel_Rounded3.Controls.Add(this.label7);
             this.bPanel_Rounded3.Controls.Add(this.label5);
+            this.bPanel_Rounded3.Controls.Add(this.lblCurrentEmployeeName);
             this.bPanel_Rounded3.Controls.Add(this.label4);
             this.bPanel_Rounded3.Controls.Add(this.btnSyncRoles);
             this.bPanel_Rounded3.Controls.Add(this.bPanel_Rounded2);
@@ -120,7 +125,7 @@
             this.bPanel_Rounded3.Dock = System.Windows.Forms.DockStyle.Top;
             this.bPanel_Rounded3.Location = new System.Drawing.Point(10, 0);
             this.bPanel_Rounded3.Name = "bPanel_Rounded3";
-            this.bPanel_Rounded3.Size = new System.Drawing.Size(519, 339);
+            this.bPanel_Rounded3.Size = new System.Drawing.Size(349, 390);
             this.bPanel_Rounded3.TabIndex = 1;
             // 
             // bPanel_Rounded5
@@ -131,21 +136,11 @@
             this.bPanel_Rounded5.BorderSize = 1;
             this.bPanel_Rounded5.Controls.Add(this.lblEndDate);
             this.bPanel_Rounded5.Controls.Add(this.endDate);
-            this.bPanel_Rounded5.Location = new System.Drawing.Point(30, 234);
+            this.bPanel_Rounded5.Location = new System.Drawing.Point(30, 268);
             this.bPanel_Rounded5.Margin = new System.Windows.Forms.Padding(5);
             this.bPanel_Rounded5.Name = "bPanel_Rounded5";
             this.bPanel_Rounded5.Size = new System.Drawing.Size(250, 40);
             this.bPanel_Rounded5.TabIndex = 675;
-            // 
-            // endDate
-            // 
-            this.endDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.endDate.Font = new System.Drawing.Font("Roboto", 12F);
-            this.endDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.endDate.Location = new System.Drawing.Point(5, 7);
-            this.endDate.Name = "endDate";
-            this.endDate.Size = new System.Drawing.Size(240, 27);
-            this.endDate.TabIndex = 673;
             // 
             // lblEndDate
             // 
@@ -159,6 +154,16 @@
             this.lblEndDate.TabIndex = 674;
             this.lblEndDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // endDate
+            // 
+            this.endDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.endDate.Font = new System.Drawing.Font("Roboto", 12F);
+            this.endDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.endDate.Location = new System.Drawing.Point(5, 7);
+            this.endDate.Name = "endDate";
+            this.endDate.Size = new System.Drawing.Size(240, 27);
+            this.endDate.TabIndex = 673;
+            // 
             // bPanel_Rounded4
             // 
             this.bPanel_Rounded4.BackgroundColor = System.Drawing.Color.Transparent;
@@ -167,21 +172,11 @@
             this.bPanel_Rounded4.BorderSize = 1;
             this.bPanel_Rounded4.Controls.Add(this.lblStartDate);
             this.bPanel_Rounded4.Controls.Add(this.startDate);
-            this.bPanel_Rounded4.Location = new System.Drawing.Point(30, 150);
+            this.bPanel_Rounded4.Location = new System.Drawing.Point(30, 184);
             this.bPanel_Rounded4.Margin = new System.Windows.Forms.Padding(5);
             this.bPanel_Rounded4.Name = "bPanel_Rounded4";
             this.bPanel_Rounded4.Size = new System.Drawing.Size(250, 40);
             this.bPanel_Rounded4.TabIndex = 675;
-            // 
-            // startDate
-            // 
-            this.startDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.startDate.Font = new System.Drawing.Font("Roboto", 12F);
-            this.startDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.startDate.Location = new System.Drawing.Point(5, 7);
-            this.startDate.Name = "startDate";
-            this.startDate.Size = new System.Drawing.Size(240, 27);
-            this.startDate.TabIndex = 673;
             // 
             // lblStartDate
             // 
@@ -195,12 +190,22 @@
             this.lblStartDate.TabIndex = 4;
             this.lblStartDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // startDate
+            // 
+            this.startDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.startDate.Font = new System.Drawing.Font("Roboto", 12F);
+            this.startDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.startDate.Location = new System.Drawing.Point(5, 7);
+            this.startDate.Name = "startDate";
+            this.startDate.Size = new System.Drawing.Size(240, 27);
+            this.startDate.TabIndex = 673;
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 11F);
             this.label6.ForeColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(232, 39);
+            this.label6.Location = new System.Drawing.Point(232, 73);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(14, 17);
             this.label6.TabIndex = 672;
@@ -210,7 +215,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(30, 205);
+            this.label7.Location = new System.Drawing.Point(30, 239);
             this.label7.Margin = new System.Windows.Forms.Padding(5);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(83, 19);
@@ -222,7 +227,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(30, 121);
+            this.label5.Location = new System.Drawing.Point(30, 155);
             this.label5.Margin = new System.Windows.Forms.Padding(5);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(83, 19);
@@ -230,11 +235,22 @@
             this.label5.Text = "From Date";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // lblCurrentEmployeeName
+            // 
+            this.lblCurrentEmployeeName.AutoSize = true;
+            this.lblCurrentEmployeeName.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentEmployeeName.Location = new System.Drawing.Point(30, 39);
+            this.lblCurrentEmployeeName.Margin = new System.Windows.Forms.Padding(5);
+            this.lblCurrentEmployeeName.Name = "lblCurrentEmployeeName";
+            this.lblCurrentEmployeeName.Size = new System.Drawing.Size(127, 19);
+            this.lblCurrentEmployeeName.TabIndex = 671;
+            this.lblCurrentEmployeeName.Text = "Employee Name";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(30, 39);
+            this.label4.Location = new System.Drawing.Point(30, 73);
             this.label4.Margin = new System.Windows.Forms.Padding(5);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(202, 19);
@@ -250,7 +266,7 @@
             this.btnSyncRoles.BorderSize = 1;
             this.btnSyncRoles.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.btnSyncRoles.ForeColor = System.Drawing.Color.White;
-            this.btnSyncRoles.Location = new System.Drawing.Point(30, 289);
+            this.btnSyncRoles.Location = new System.Drawing.Point(30, 323);
             this.btnSyncRoles.Name = "btnSyncRoles";
             this.btnSyncRoles.Size = new System.Drawing.Size(250, 40);
             this.btnSyncRoles.TabIndex = 4;
@@ -266,7 +282,7 @@
             this.bPanel_Rounded2.BorderSize = 1;
             this.bPanel_Rounded2.Controls.Add(this.lblSyncRoles);
             this.bPanel_Rounded2.Controls.Add(this.cbbSyncRoles);
-            this.bPanel_Rounded2.Location = new System.Drawing.Point(30, 66);
+            this.bPanel_Rounded2.Location = new System.Drawing.Point(30, 100);
             this.bPanel_Rounded2.Margin = new System.Windows.Forms.Padding(5);
             this.bPanel_Rounded2.Name = "bPanel_Rounded2";
             this.bPanel_Rounded2.Size = new System.Drawing.Size(250, 40);
@@ -314,6 +330,7 @@
             this.bPanel_Rounded1.BorderColor = System.Drawing.Color.Gray;
             this.bPanel_Rounded1.BorderRadius = 5;
             this.bPanel_Rounded1.BorderSize = 1;
+            this.bPanel_Rounded1.Controls.Add(this.label8);
             this.bPanel_Rounded1.Controls.Add(this.btnRefresh);
             this.bPanel_Rounded1.Controls.Add(this.dgvEmployees);
             this.bPanel_Rounded1.Controls.Add(this.label3);
@@ -323,14 +340,24 @@
             this.bPanel_Rounded1.Location = new System.Drawing.Point(10, 60);
             this.bPanel_Rounded1.Name = "bPanel_Rounded1";
             this.bPanel_Rounded1.Padding = new System.Windows.Forms.Padding(3, 43, 3, 3);
-            this.bPanel_Rounded1.Size = new System.Drawing.Size(300, 454);
+            this.bPanel_Rounded1.Size = new System.Drawing.Size(470, 454);
             this.bPanel_Rounded1.TabIndex = 0;
+            // 
+            // label8
+            // 
+            this.label8.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label8.Location = new System.Drawing.Point(300, 3);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(78, 40);
+            this.label8.TabIndex = 5;
+            this.label8.Text = "Roles";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnRefresh
             // 
             this.btnRefresh.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.btnRefresh.Image = global::ThirdPartyTool.Properties.Resources.Icon_Refresh;
-            this.btnRefresh.Location = new System.Drawing.Point(237, 3);
+            this.btnRefresh.Location = new System.Drawing.Point(407, 3);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(60, 40);
             this.btnRefresh.TabIndex = 3;
@@ -351,6 +378,7 @@
             this.EmployeeID,
             this.EmployeeCode,
             this.EmployeeName,
+            this.RoleName,
             this.Delete});
             this.dgvEmployees.Cursor = System.Windows.Forms.Cursors.Default;
             this.dgvEmployees.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -363,7 +391,7 @@
             this.dgvEmployees.RowTemplate.Height = 40;
             this.dgvEmployees.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvEmployees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEmployees.Size = new System.Drawing.Size(294, 408);
+            this.dgvEmployees.Size = new System.Drawing.Size(464, 408);
             this.dgvEmployees.TabIndex = 3;
             // 
             // EmployeeID
@@ -405,6 +433,22 @@
             this.EmployeeName.ReadOnly = true;
             this.EmployeeName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
+            // RoleName
+            // 
+            this.RoleName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.RoleName.DataPropertyName = "RoleName";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Roboto", 12F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            this.RoleName.DefaultCellStyle = dataGridViewCellStyle3;
+            this.RoleName.HeaderText = "Roles";
+            this.RoleName.Name = "RoleName";
+            this.RoleName.ReadOnly = true;
+            this.RoleName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.RoleName.Width = 150;
+            // 
             // Delete
             // 
             this.Delete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -414,6 +458,7 @@
             this.Delete.ReadOnly = true;
             this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Delete.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Delete.Visible = false;
             this.Delete.Width = 50;
             // 
             // label3
@@ -451,6 +496,7 @@
             // 
             // pnlSearch
             // 
+            this.pnlSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlSearch.BackgroundColor = System.Drawing.Color.Transparent;
             this.pnlSearch.BorderColor = System.Drawing.Color.Gray;
             this.pnlSearch.BorderRadius = 5;
@@ -459,7 +505,7 @@
             this.pnlSearch.Controls.Add(this.btnSearch);
             this.pnlSearch.Location = new System.Drawing.Point(0, 10);
             this.pnlSearch.Name = "pnlSearch";
-            this.pnlSearch.Size = new System.Drawing.Size(300, 40);
+            this.pnlSearch.Size = new System.Drawing.Size(826, 40);
             this.pnlSearch.TabIndex = 2;
             // 
             // txtSearch
@@ -472,7 +518,7 @@
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtSearch.PlaceholderText = "Search";
-            this.txtSearch.Size = new System.Drawing.Size(247, 20);
+            this.txtSearch.Size = new System.Drawing.Size(773, 20);
             this.txtSearch.TabIndex = 2;
             this.txtSearch.Text = "Search";
             // 
@@ -480,7 +526,7 @@
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSearch.Image = global::ThirdPartyTool.Properties.Resources.Icon_Search;
-            this.btnSearch.Location = new System.Drawing.Point(263, 3);
+            this.btnSearch.Location = new System.Drawing.Point(789, 3);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(34, 34);
             this.btnSearch.TabIndex = 1;
@@ -524,14 +570,9 @@
         private System.Windows.Forms.Label btnSearch;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label btnRefresh;
-        private CustomControl.BTextBox txtFocus;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridView dgvEmployees;
         private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeName;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
         private System.Windows.Forms.ComboBox cbbSyncRoles;
         private System.Windows.Forms.Label label2;
         private CustomControl.BPanel_Rounded bPanel_Rounded2;
@@ -547,5 +588,13 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblEndDate;
         private System.Windows.Forms.Label lblStartDate;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblCurrentEmployeeName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RoleName;
+        private System.Windows.Forms.DataGridViewImageColumn Delete;
+        public CustomControl.BTextBox txtFocus;
     }
 }

@@ -104,6 +104,8 @@ namespace ThirdPartyTool
             employeeView.BringToFront();
 
             employeeView.BtnRefresh_Click(sender, e);
+
+            employeeView.txtFocus.Focus();
         }
 
         private void HomeForm_Load(object sender, EventArgs e)

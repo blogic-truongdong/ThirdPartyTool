@@ -316,7 +316,7 @@ namespace ThirdPartyTool
                         conn.Open();
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = "select EmployeeID, EmployeeCode, TRIM( EmployeeFirstName) + ' ' +  TRIM(EmployeeMiddleName) as EmployeeName from Employees where EmployeeID > 0 and Enable = 0";
+                    sqlCommand.CommandText = "select EmployeeID, EmployeeCode, TRIM( EmployeeFirstName) + ' ' +  TRIM(EmployeeLastName) as EmployeeName from Employees where EmployeeID > 0 and Enable = 0";
 
                     SqlDataReader reader = sqlCommand.ExecuteReader();
                     dtEmployees.Load(reader);
@@ -331,6 +331,26 @@ namespace ThirdPartyTool
                     reader = sqlCommand.ExecuteReader();
                     dtEmployeeRoles.Load(reader);
                     reader.Close();
+
+                    dtEmployees.Columns.Add("RoleName", typeof(string));
+                    foreach (DataRow item in dtEmployees.Rows)
+                    {
+                        DataRow[] drs = dtEmployeeRoles.Select($"EmployeeID = '{Utility.GetIntFromRow("EmployeeID", item)}'", "");
+                        if (drs.Length > 0)
+                        {
+                            List<string> roleNames = new List<string>();
+                            foreach (DataRow dr in drs)
+                            {
+                                int roleID = Utility.GetIntFromRow("RolesID", dr);
+                                DataRow[] roleRows = dtRoles.Select($"RolesID = '{roleID}'", "");
+                                if (roleRows.Length > 0)
+                                {
+                                    roleNames.Add(Utility.GetStringFromRow("RolesName", roleRows[0]));
+                                }
+                            }
+                            item["RoleName"] = string.Join(", ", roleNames);
+                        }
+                    }
 
                     DataSetReturn = new DataSet();
                     DataSetReturn.Tables.Add(dtEmployees);

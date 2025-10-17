@@ -134,6 +134,7 @@ namespace ThirdPartyTool.Employee
                 var currentRow = dgvEmployees.CurrentRow;
                 CurrentEmployeeID = Utility.GetIntFromObject(currentRow.Cells["EmployeeID"].Value);
                 CurrentEmployeeName = Utility.GetStringFromObject(currentRow.Cells["EmployeeName"].Value);
+                lblCurrentEmployeeName.Text = $"Employee: {CurrentEmployeeName}";
                 startDate.Value = endDate.Value = DateTime.Now;
             }
             catch (Exception ex)
