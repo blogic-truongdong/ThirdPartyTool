@@ -32,12 +32,14 @@ namespace ThirdPartyTool
         {
             this.pnlContainer = new System.Windows.Forms.Panel();
             this.pnlTop = new System.Windows.Forms.Panel();
-            this.pnlLoading = new System.Windows.Forms.PictureBox();
+            this.btnUpdateStatusReceipt = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.btnAddTipForPaymentDetail = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.btnAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.txtFocus = new ThirdPartyTool.CustomControl.BTextBox();
             this.addTipBySaleTokenView = new ThirdPartyTool.SaleReceipt.AddTipBySaleTokenView();
             this.addTipForPaymentDetailView = new ThirdPartyTool.SaleReceipt.AddTipForPaymentDetailView();
+            this.updateStatusReceiptView = new ThirdPartyTool.SaleReceipt.UpdateStatusReceiptView();
+            this.pnlLoading = new System.Windows.Forms.PictureBox();
             this.pnlContainer.SuspendLayout();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlLoading)).BeginInit();
@@ -48,6 +50,7 @@ namespace ThirdPartyTool
             this.pnlContainer.Controls.Add(this.pnlTop);
             this.pnlContainer.Controls.Add(this.addTipBySaleTokenView);
             this.pnlContainer.Controls.Add(this.addTipForPaymentDetailView);
+            this.pnlContainer.Controls.Add(this.updateStatusReceiptView);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(10, 10);
             this.pnlContainer.Name = "pnlContainer";
@@ -56,6 +59,7 @@ namespace ThirdPartyTool
             // 
             // pnlTop
             // 
+            this.pnlTop.Controls.Add(this.btnUpdateStatusReceipt);
             this.pnlTop.Controls.Add(this.btnAddTipForPaymentDetail);
             this.pnlTop.Controls.Add(this.btnAddTipBySaleToken);
             this.pnlTop.Controls.Add(this.txtFocus);
@@ -65,17 +69,24 @@ namespace ThirdPartyTool
             this.pnlTop.Size = new System.Drawing.Size(880, 580);
             this.pnlTop.TabIndex = 2;
             // 
-            // pnlLoading
+            // btnUpdateStatusReceipt
             // 
-            this.pnlLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pnlLoading.Image = global::ThirdPartyTool.Properties.Resources.Loading;
-            this.pnlLoading.Location = new System.Drawing.Point(300, 250);
-            this.pnlLoading.Name = "pnlLoading";
-            this.pnlLoading.Size = new System.Drawing.Size(100, 100);
-            this.pnlLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pnlLoading.TabIndex = 3;
-            this.pnlLoading.TabStop = false;
-            this.pnlLoading.Visible = false;
+            this.btnUpdateStatusReceipt.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnUpdateStatusReceipt.BackColor = System.Drawing.Color.White;
+            this.btnUpdateStatusReceipt.BackgroundColor = System.Drawing.Color.White;
+            this.btnUpdateStatusReceipt.BorderColor = System.Drawing.Color.Gray;
+            this.btnUpdateStatusReceipt.BorderRadius = 5;
+            this.btnUpdateStatusReceipt.BorderSize = 1;
+            this.btnUpdateStatusReceipt.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnUpdateStatusReceipt.ForeColor = System.Drawing.Color.Black;
+            this.btnUpdateStatusReceipt.Location = new System.Drawing.Point(130, 300);
+            this.btnUpdateStatusReceipt.Margin = new System.Windows.Forms.Padding(10);
+            this.btnUpdateStatusReceipt.Name = "btnUpdateStatusReceipt";
+            this.btnUpdateStatusReceipt.Size = new System.Drawing.Size(300, 150);
+            this.btnUpdateStatusReceipt.TabIndex = 6;
+            this.btnUpdateStatusReceipt.Text = "Close Ticket";
+            this.btnUpdateStatusReceipt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnUpdateStatusReceipt.TextColor = System.Drawing.Color.Black;
             // 
             // btnAddTipForPaymentDetail
             // 
@@ -87,7 +98,8 @@ namespace ThirdPartyTool
             this.btnAddTipForPaymentDetail.BorderSize = 1;
             this.btnAddTipForPaymentDetail.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
             this.btnAddTipForPaymentDetail.ForeColor = System.Drawing.Color.Black;
-            this.btnAddTipForPaymentDetail.Location = new System.Drawing.Point(450, 215);
+            this.btnAddTipForPaymentDetail.Location = new System.Drawing.Point(450, 130);
+            this.btnAddTipForPaymentDetail.Margin = new System.Windows.Forms.Padding(10);
             this.btnAddTipForPaymentDetail.Name = "btnAddTipForPaymentDetail";
             this.btnAddTipForPaymentDetail.Size = new System.Drawing.Size(300, 150);
             this.btnAddTipForPaymentDetail.TabIndex = 5;
@@ -105,7 +117,8 @@ namespace ThirdPartyTool
             this.btnAddTipBySaleToken.BorderSize = 1;
             this.btnAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
             this.btnAddTipBySaleToken.ForeColor = System.Drawing.Color.Black;
-            this.btnAddTipBySaleToken.Location = new System.Drawing.Point(130, 215);
+            this.btnAddTipBySaleToken.Location = new System.Drawing.Point(130, 130);
+            this.btnAddTipBySaleToken.Margin = new System.Windows.Forms.Padding(10);
             this.btnAddTipBySaleToken.Name = "btnAddTipBySaleToken";
             this.btnAddTipBySaleToken.Size = new System.Drawing.Size(300, 150);
             this.btnAddTipBySaleToken.TabIndex = 4;
@@ -142,8 +155,30 @@ namespace ThirdPartyTool
             this.addTipForPaymentDetailView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.addTipForPaymentDetailView.Location = new System.Drawing.Point(0, 0);
             this.addTipForPaymentDetailView.Name = "addTipForPaymentDetailView";
+            this.addTipForPaymentDetailView.Padding = new System.Windows.Forms.Padding(10);
             this.addTipForPaymentDetailView.Size = new System.Drawing.Size(880, 580);
             this.addTipForPaymentDetailView.TabIndex = 7;
+            // 
+            // updateStatusReceiptView
+            // 
+            this.updateStatusReceiptView.BackColor = System.Drawing.Color.White;
+            this.updateStatusReceiptView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.updateStatusReceiptView.Location = new System.Drawing.Point(0, 0);
+            this.updateStatusReceiptView.Name = "updateStatusReceiptView";
+            this.updateStatusReceiptView.Size = new System.Drawing.Size(880, 580);
+            this.updateStatusReceiptView.TabIndex = 8;
+            // 
+            // pnlLoading
+            // 
+            this.pnlLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pnlLoading.Image = global::ThirdPartyTool.Properties.Resources.Loading;
+            this.pnlLoading.Location = new System.Drawing.Point(300, 250);
+            this.pnlLoading.Name = "pnlLoading";
+            this.pnlLoading.Size = new System.Drawing.Size(100, 100);
+            this.pnlLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pnlLoading.TabIndex = 3;
+            this.pnlLoading.TabStop = false;
+            this.pnlLoading.Visible = false;
             // 
             // ReceiptView
             // 
@@ -173,5 +208,7 @@ namespace ThirdPartyTool
         private BLabel_Rounded btnAddTipBySaleToken;
         private BLabel_Rounded btnAddTipForPaymentDetail;
         private SaleReceipt.AddTipForPaymentDetailView addTipForPaymentDetailView;
+        private BLabel_Rounded btnUpdateStatusReceipt;
+        private SaleReceipt.UpdateStatusReceiptView updateStatusReceiptView;
     }
 }

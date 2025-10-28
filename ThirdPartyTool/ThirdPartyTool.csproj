@@ -452,17 +452,17 @@
     <Compile Include="SaleReceipt\PaymentDetailView.Designer.cs">
       <DependentUpon>PaymentDetailView.cs</DependentUpon>
     </Compile>
-    <Compile Include="SaleReceipt\SelectReceiptView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SaleReceipt\SelectReceiptView.Designer.cs">
-      <DependentUpon>SelectReceiptView.cs</DependentUpon>
-    </Compile>
     <Compile Include="SaleReceipt\SelectSaleReceiptForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SaleReceipt\SelectSaleReceiptForm.Designer.cs">
       <DependentUpon>SelectSaleReceiptForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\UpdateStatusReceiptView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\UpdateStatusReceiptView.Designer.cs">
+      <DependentUpon>UpdateStatusReceiptView.cs</DependentUpon>
     </Compile>
     <Compile Include="SettleBatchByMerchantIDForm.cs">
       <SubType>Form</SubType>
@@ -565,11 +565,11 @@
     <EmbeddedResource Include="SaleReceipt\PaymentDetailView.resx">
       <DependentUpon>PaymentDetailView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SaleReceipt\SelectReceiptView.resx">
-      <DependentUpon>SelectReceiptView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\SelectSaleReceiptForm.resx">
       <DependentUpon>SelectSaleReceiptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\UpdateStatusReceiptView.resx">
+      <DependentUpon>UpdateStatusReceiptView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettleBatchByMerchantIDForm.resx">
       <DependentUpon>SettleBatchByMerchantIDForm.cs</DependentUpon>

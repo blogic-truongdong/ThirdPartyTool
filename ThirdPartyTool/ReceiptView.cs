@@ -11,8 +11,6 @@ namespace ThirdPartyTool
             InitializeComponent();
 
             RegisterEvent();
-
-
         }
 
         private void RegisterEvent()
@@ -20,18 +18,25 @@ namespace ThirdPartyTool
             this.Load += ReceiptView_Load;
 
             btnAddTipBySaleToken.Click += BtnAddTipBySaleToken_Click;
-
             btnAddTipForPaymentDetail.Click += BtnAddTipForPaymentDetail_Click;
+            btnUpdateStatusReceipt.Click += BtnUpdateStatusReceipt_Click;
 
             addTipBySaleTokenView.btnBack.Click += BtnBack_Click;
-            addTipForPaymentDetailView.btnBack.Click += AddTipForPaymentDetailView_BtnBack_Click1;
+            addTipForPaymentDetailView.btnBack.Click += BtnBack_Click;
+            updateStatusReceiptView.btnBack.Click += BtnBack_Click;
 
         }
 
-        private void AddTipForPaymentDetailView_BtnBack_Click1(object sender, EventArgs e)
+        private void BtnUpdateStatusReceipt_Click(object sender, EventArgs e)
         {
-            CurrentOption = string.Empty;
-            addTipForPaymentDetailView.Visible = false;
+            if (CurrentOption == "UpdateStatusReceipt")
+            {
+                return;
+            }
+            CurrentOption = "UpdateStatusReceipt";
+
+            updateStatusReceiptView.Visible = true;
+            updateStatusReceiptView.BringToFront();
         }
 
         private void BtnAddTipForPaymentDetail_Click(object sender, EventArgs e)
@@ -43,7 +48,6 @@ namespace ThirdPartyTool
             CurrentOption = "AddTipForPaymentDetailView";
 
             addTipForPaymentDetailView.Visible = true;
-
             addTipForPaymentDetailView.BringToFront();
         }
 
@@ -51,6 +55,8 @@ namespace ThirdPartyTool
         {
             CurrentOption = string.Empty;
             addTipBySaleTokenView.Visible = false;
+            addTipForPaymentDetailView.Visible = false;
+            updateStatusReceiptView.Visible = false;
         }
 
         private void BtnAddTipBySaleToken_Click(object sender, EventArgs e)
@@ -62,7 +68,6 @@ namespace ThirdPartyTool
             CurrentOption = "AddTipBySaleToken";
 
             addTipBySaleTokenView.Visible = true;
-
             addTipBySaleTokenView.BringToFront();
         }
 

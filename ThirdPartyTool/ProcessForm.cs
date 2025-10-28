@@ -26,7 +26,8 @@ namespace ThirdPartyTool
         SettleBatchOffline = 4,
         EmployeeView_GetEmployeeInfos = 5,
         GetRemainingBatch = 6,
-        ProcessSyncRoleForEmployee = 7
+        ProcessSyncRoleForEmployee = 7,
+        CloseReceipt = 8
     }
     public partial class ProcessForm : Form
     {
@@ -36,6 +37,7 @@ namespace ThirdPartyTool
         public string GetReceiptTemplateByTicketNumber_SaleReceiptNumber = string.Empty;
         public string GetReceiptTemplateByTicketNumber_SaleReceiptID = string.Empty;
         public decimal GetReceiptTemplateByTicketNumber_TotalAmount = 0;
+        public bool GetReceiptTemplateByTicketNumber_Include_VOID_CLOSE_REFUND_OPER = false;
         public XtraReport ReceiptTemplate = null;
         private BackgroundWorker backgroundWorker;
         public ProcessNameEnum CurrentProcessName = ProcessNameEnum.None;
@@ -57,6 +59,7 @@ namespace ThirdPartyTool
         public int EmployeeView_EmployeeID;
         public int EmployeeView_RolesID;
 
+        public string CloseReceipt_SaleReceiptID = string.Empty;
 
         public ProcessForm()
         {
@@ -134,6 +137,9 @@ namespace ThirdPartyTool
                     case ProcessNameEnum.ProcessSyncRoleForEmployee:
                         ProcessSyncRoleForEmployee();
                         break;
+                    case ProcessNameEnum.CloseReceipt:
+                        CloseReceipt();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -147,6 +153,8 @@ namespace ThirdPartyTool
         {
             try
             {
+                GetReceiptTemplateByTicketNumber_Include_VOID_CLOSE_REFUND_OPER = false;
+
                 if (!IsSuccess)
                 {
                     InformationDialogForm errorDialog = new InformationDialogForm(ErrorMessage);
@@ -419,6 +427,9 @@ namespace ThirdPartyTool
                     reader.Close();
 
                     sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptNumber like '{ticketNumber}' and TransactionStatusID = 'FIN'";
+                    if (GetReceiptTemplateByTicketNumber_Include_VOID_CLOSE_REFUND_OPER)
+                        sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptNumber like '{ticketNumber}' and TransactionStatusID in ('OPER','FIN','RET','VOID')";
+
                     reader = sqlCommand.ExecuteReader();
                     saleReceiptDTO.SaleReceipts.Load(reader);
                     reader.Close();
@@ -463,7 +474,11 @@ namespace ThirdPartyTool
                         case "FIN":
                             break;
                         default:
-                            ErrorMessage = "Ticket not found.";
+                            if (GetReceiptTemplateByTicketNumber_Include_VOID_CLOSE_REFUND_OPER &&
+                                (TransactionStatusID == "OPER" || TransactionStatusID == "VOID" || TransactionStatusID == "CLO" || TransactionStatusID == "RET"))
+                                ErrorMessage = string.Empty;
+                            else
+                                ErrorMessage = "Ticket not found.";
                             break;
 
                     }
@@ -735,21 +750,28 @@ namespace ThirdPartyTool
                         foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
                         {
                             item["CreatedDate"] = DateCreated;
-                            item["Gratuity"] = Utility.GetDecimalFromObject(item["AmountTendered"]) - Utility.GetDecimalFromObject(item["AmountReturn"]) + Utility.GetDecimalFromObject(item["Gratuity"]);
+                            item["Gratuity"] = Utility.GetDecimalFromObject(item["AmountTendered"]) - Utility.GetDecimalFromObject(item["AmountReturn"]) + Utility.GetDecimalFromObject(item["Gratuity"]) + Utility.GetDecimalFromObject(item["SVCFeeAmount"]) - Utility.GetDecimalFromObject(item["CashDiscountAmount"]);
 
                             if (Utility.GetDecimalFromRow("SVCFeeAmount", item) != 0)
                                 item["SVCFeeForGratuity"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
                             else
                                 item["SVCFeeForGratuity"] = 0;
 
-                            if (Utility.GetDecimalFromRow("MerchantFee", item) != 0)
-                                item["MerchantFeeForTip"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
-                            else
-                                item["MerchantFeeForTip"] = 0;
-
                             item["SVCFeeAmount"] = 0;
 
-                            scriptUpdate += $"    update SaleReceiptPaymentDetails set CreatedDate = '{DateCreated}', AmountTendered = '0', SaleReceiptID = '{AddTipByTokenReceipt_MainSaleReceiptID}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', Gratuity = '{item["Gratuity"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}';";
+                            if (Utility.GetDecimalFromRow("MerchantFee", item) != 0)
+                            {
+                                item["MerchantFee"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+                                item["MerchantFeeForTip"] = item["MerchantFee"];
+                            }
+                            else
+                            {
+                                item["MerchantFee"] = 0;
+                                item["MerchantFeeForTip"] = 0;
+                            }
+
+
+                            scriptUpdate += $"    update SaleReceiptPaymentDetails set CreatedDate = '{DateCreated}', AmountTendered = '0', SaleReceiptID = '{AddTipByTokenReceipt_MainSaleReceiptID}', SVCFeeAmount = '{item["SVCFeeAmount"]}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', Gratuity = '{item["Gratuity"]}', MerchantFee = '{item["MerchantFee"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}';";
                         }
 
                         RunQueryUpdate(sqlCommand, scriptUpdate);
@@ -853,6 +875,7 @@ namespace ThirdPartyTool
             {
                 ErrorMessage = $"Something went wrong while run script update.{Environment.NewLine}Please try contact TruongDS.";
                 BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
+                throw new Exception();
             }
         }
 
@@ -1427,5 +1450,62 @@ namespace ThirdPartyTool
             }
         }
 
+        public void CloseReceipt()
+        {
+            try
+            {
+                DataTable dtEmployee = new DataTable("Employees");
+                DataTable dtRoles = new DataTable("Roles");
+
+                DataTable dtBatch = new DataTable("TransactionDetail");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    var sql = $"update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{CloseReceipt_SaleReceiptID}'; ";
+
+                    RunQueryUpdate(sqlCommand, sql);
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    var sql = $"select distinct BatchUnique from TransactionDetail where ISNULL(BatchUnique, '') <> '' and " +
+                        $" ID in (select CreditCardTransactionID from {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails a where a.SaleReceiptID = '{CloseReceipt_SaleReceiptID}' and ISNULL(CreditCardTransactionID, '') <> '')";
+                    sqlCommand.CommandText = sql;
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtBatch.Load(reader);
+                    reader.Close();
+
+                    sql = $"update TransactionDetail set BatchStatus = 'Closed', BatchUnique = '{Guid.Empty}' " +
+                        $"where ID in (select CreditCardTransactionID from {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails a where a.SaleReceiptID = '{CloseReceipt_SaleReceiptID}' and ISNULL(CreditCardTransactionID, '') <> '')";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                }
+
+                foreach (DataRow item in dtBatch.Rows)
+                {
+                    UpdateBatchByBatchUnique(item["BatchUnique"]);
+                }
+                IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
+            }
+        }
     }
 }
