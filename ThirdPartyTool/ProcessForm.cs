@@ -920,6 +920,12 @@ namespace ThirdPartyTool
 
                     RunQueryUpdate(sqlCommand, sql);
 
+                    sql = $"update TransactionDetail set " +
+                        $" BatchTotal = '{dtCalculateBatch.Rows[0]["Total"]}'" +
+                        $" where BatchUnique = '{batchUnique}';";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
                 }
             }
         }
