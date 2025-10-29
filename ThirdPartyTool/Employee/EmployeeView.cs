@@ -215,6 +215,13 @@ namespace ThirdPartyTool.Employee
                 processForm.CurrentProcessName = ProcessNameEnum.EmployeeView_GetEmployeeInfos;
                 processForm.ShowDialog(this.ParentForm);
 
+                if (!processForm.IsSuccess)
+                {
+                    InformationDialogForm errorDialog = new InformationDialogForm("Get Employees info error. Please contact TruongDS");
+                    errorDialog.ShowDialog();
+                    return;
+                }
+
                 dtEmployees = processForm.DataSetReturn.Tables["Employees"];
                 dtRoles = processForm.DataSetReturn.Tables["Roles"];
                 dtEmployeeRoles = processForm.DataSetReturn.Tables["EmployeeRoles"];

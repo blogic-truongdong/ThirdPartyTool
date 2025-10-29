@@ -9,7 +9,8 @@ namespace ThirdPartyTool
         Home,
         Employee,
         Receipt,
-        Merchant
+        Merchant,
+        HotFix
     }
     public partial class HomeForm : Form
     {
@@ -31,6 +32,19 @@ namespace ThirdPartyTool
             btnClose.Click += BtnClose_Click;
             btnHome.Click += BtnHome_Click;
             btnMerchant.Click += BtnMerchant_Click;
+            btnHotFix.Click += BtnHotFix_Click;
+        }
+
+        private void BtnHotFix_Click(object sender, EventArgs e)
+        {
+            if (CurrentTab == HomeTab.HotFix)
+                return;
+
+            CurrentTab = HomeTab.HotFix;
+
+            ResetTabColor();
+
+            hotFixView.BringToFront();
         }
 
         private void BtnMerchant_Click(object sender, EventArgs e)

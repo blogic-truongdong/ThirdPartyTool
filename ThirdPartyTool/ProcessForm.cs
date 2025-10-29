@@ -27,10 +27,13 @@ namespace ThirdPartyTool
         EmployeeView_GetEmployeeInfos = 5,
         GetRemainingBatch = 6,
         ProcessSyncRoleForEmployee = 7,
-        CloseReceipt = 8
+        CloseReceipt = 8,
+        HotFix_UpgradeTaxForTicket = 9,
+        HotFix_UpdownTaxForTicket = 10,
     }
     public partial class ProcessForm : Form
     {
+        private DataTable CurrentTableInDatabaseBLogicPOS7 = null;
         public DataTable DataTableReturn = null;
         public DataSet DataSetReturn = null;
         BatchStatus batch = new BatchStatus();
@@ -60,6 +63,8 @@ namespace ThirdPartyTool
         public int EmployeeView_RolesID;
 
         public string CloseReceipt_SaleReceiptID = string.Empty;
+
+        public decimal HotFix_UpdateTaxForTicket_PercentValue = 0;
 
         public ProcessForm()
         {
@@ -114,6 +119,9 @@ namespace ThirdPartyTool
         {
             try
             {
+
+                GetListTableInDatabaseBLogicPOS7();
+
                 switch (CurrentProcessName)
                 {
                     case ProcessNameEnum.GetReceiptTemplateByTicketNumber:
@@ -140,6 +148,12 @@ namespace ThirdPartyTool
                     case ProcessNameEnum.CloseReceipt:
                         CloseReceipt();
                         break;
+                    case ProcessNameEnum.HotFix_UpgradeTaxForTicket:
+                        HotFix_UpgradeTaxForTicket_v2();
+                        break;
+                    case ProcessNameEnum.HotFix_UpdownTaxForTicket:
+                        HotFix_UpdownTaxForTicket();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -157,8 +171,6 @@ namespace ThirdPartyTool
 
                 if (!IsSuccess)
                 {
-                    InformationDialogForm errorDialog = new InformationDialogForm(ErrorMessage);
-                    errorDialog.ShowDialog();
                     this.Close();
                     return;
                 }
@@ -1511,6 +1523,496 @@ namespace ThirdPartyTool
             catch (Exception ex)
             {
                 BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
+            }
+        }
+
+        public void HotFix_UpgradeTaxForTicket()
+        {
+            try
+            {
+                string sql = string.Empty;
+                decimal oldTax = 7.75m;
+                decimal newTax = 10.5m;
+                DateTime startDate = new DateTime(2025, 10, 23, 0, 0, 0);
+                DateTime endDate = new DateTime(2025, 10, 24, 23, 59, 59);
+                DataRow[] drs = null;
+                DataTable dtSaleReceiptUpdates = new DataTable("SaleReceipts");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
+                    if (drs.Length > 0)
+                    {
+                        sql = $"select a.SaleReceiptID" +
+                       $" from SaleReceipts a left join SaleReceiptDetailTaxDetails b on a.SaleReceiptID = b.SaleReceiptID " +
+                       $" where b.TaxRate = {oldTax} and a.TransactionStatusID in ('FIN','CANR','VOID') " +
+                       $" group by a.SaleReceiptID";
+                    }
+                    else
+                    {
+                        sql = $"select a.SaleReceiptID" +
+                       $" from SaleReceipts a left join SaleReceiptDetails b on a.SaleReceiptID = b.SaleReceiptID " +
+                       $" where b.TaxRate = {oldTax} and a.TransactionStatusID in ('FIN','CANR','VOID') " +
+                       $" group by a.SaleReceiptID";
+                    }
+
+                    sqlCommand.CommandText = sql;
+                    var reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptUpdates.Load(reader);
+
+                    reader.Close();
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    foreach (DataRow item in dtSaleReceiptUpdates.Rows)
+                    {
+                        DataTable dtSaleReceipts = new DataTable("SaleReceipts");
+                        DataTable dtOLDSaleReceiptDetails = new DataTable("SaleReceiptDetails");
+                        DataTable dtOLDSaleReceiptDetailTaxDetails = new DataTable("SaleReceiptDetailTaxDetails");
+                        DataTable dtSaleReceiptDetails = new DataTable("SaleReceiptDetails");
+                        DataTable dtSaleReceiptDetailTaxDetails = new DataTable("SaleReceiptDetailTaxDetails");
+
+                        if (conn.State == ConnectionState.Closed)
+                            conn.Open();
+                        sqlCommand.Connection = conn;
+                        sqlCommand.CommandType = CommandType.Text;
+
+                        sql = $"select * " +
+                            $" from SaleReceipts " +
+                            $" where SaleReceiptID = '{item["SaleReceiptID"]}' ";
+
+                        sqlCommand.CommandText = sql;
+                        var reader = sqlCommand.ExecuteReader();
+                        dtSaleReceipts.Load(reader);
+                        reader.Close();
+
+                        sql = $"select * " +
+                            $" from SaleReceiptDetails " +
+                            $" where SaleReceiptID = '{item["SaleReceiptID"]}' ";
+
+                        sqlCommand.CommandText = sql;
+                        reader = sqlCommand.ExecuteReader();
+                        dtOLDSaleReceiptDetails.Load(reader);
+                        reader.Close();
+
+                        if (Utility.GetDecimalFromRow("TaxAmount", dtSaleReceipts.Rows[0]) == 0)
+                        {
+                            sql = $"update SaleReceiptDetails set TaxRate = '{newTax}' where TaxRate = '{oldTax}' and SaleReceiptID = '{item["SaleReceiptID"]}';";
+                            RunQueryUpdate(sqlCommand, sql);
+
+                            drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
+                            if (drs.Length > 0)
+                            {
+                                sql = $"update SaleReceiptDetailTaxDetails set TaxRate = '{newTax}' where TaxRate = '{oldTax}' and SaleReceiptID = '{item["SaleReceiptID"]}';";
+                                RunQueryUpdate(sqlCommand, sql);
+                            }
+                            continue;
+                        }
+
+                        sql = $"update SaleReceiptDetails set TaxRate = '{newTax}', TaxAmount = ROUND(CAST(ExtendedPrice AS decimal(19,4)) * {newTax} / 100, 2) where TaxRate = '{oldTax}' and SaleReceiptID = '{item["SaleReceiptID"]}';";
+                        RunQueryUpdate(sqlCommand, sql);
+
+                        sql = $"select * " +
+                                $" from SaleReceiptDetails " +
+                                $" where SaleReceiptID = '{item["SaleReceiptID"]}' and TaxAmount <> 0 and (Status = 0 or Status = 98) and IsCompItem = 0";
+
+                        sqlCommand.CommandText = sql;
+                        reader = sqlCommand.ExecuteReader();
+                        dtSaleReceiptDetails.Load(reader);
+                        reader.Close();
+
+                        drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
+                        if (drs.Length > 0)
+                        {
+                            sql = $"select * " +
+                                $" from SaleReceiptDetailTaxDetails " +
+                                $" where SaleReceiptID = '{item["SaleReceiptID"]}' ";
+
+                            sqlCommand.CommandText = sql;
+                            reader = sqlCommand.ExecuteReader();
+                            dtOLDSaleReceiptDetailTaxDetails.Load(reader);
+                            reader.Close();
+
+                            sql = $"update SaleReceiptDetailTaxDetails set TaxRate = '{newTax}', TaxAmount = ROUND(CAST(ExtendedPrice AS decimal(19,4)) * {newTax} / 100, 2) where TaxRate = '{oldTax}' and SaleReceiptID = '{item["SaleReceiptID"]}';";
+                            RunQueryUpdate(sqlCommand, sql);
+
+                            sql = $"select * " +
+                                $" from SaleReceiptDetailTaxDetails " +
+                                $" where SaleReceiptID = '{item["SaleReceiptID"]}' and TaxAmount <> 0 and (Status = 0 or Status = 98) and IsCompItem = 0";
+
+                            sqlCommand.CommandText = sql;
+                            reader = sqlCommand.ExecuteReader();
+                            dtSaleReceiptDetailTaxDetails.Load(reader);
+                            reader.Close();
+
+                            if (dtSaleReceiptDetailTaxDetails?.Rows.Count > 0)
+                            {
+                                decimal subTotal = Utility.GetDecimalFromObject(dtSaleReceiptDetailTaxDetails.Compute("SUM(ExtendedPrice)", ""));
+                                decimal oldTotalTax = Utility.GetDecimalFromObject(dtSaleReceiptDetailTaxDetails.Compute("SUM(TaxAmount)", ""));
+                                decimal newTotalTax = Math.Round(subTotal * newTax / 100, 2);
+
+                                var balance = newTotalTax - oldTotalTax;
+                                if (balance != 0)
+                                {
+                                    foreach (DataRow row in dtSaleReceiptDetailTaxDetails.Rows)
+                                    {
+                                        decimal taxAmount = Utility.GetDecimalFromObject(row["TaxAmount"]);
+                                        if (taxAmount > balance)
+                                        {
+                                            row["TaxAmount"] = taxAmount + balance;
+
+                                            sql = $"Update SaleReceiptDetailTaxDetails set TaxAmount = '{row["TaxAmount"]}' where SaleReceiptDetailTaxDetailID = '{row["SaleReceiptDetailTaxDetailID"]}';";
+
+                                            RunQueryUpdate(sqlCommand, sql);
+
+                                            break;
+
+                                        }
+                                    }
+                                }
+
+                                sql = string.Empty;
+                                foreach (DataRow row in dtOLDSaleReceiptDetails.Rows)
+                                {
+                                    decimal oldItemTax = Utility.GetDecimalFromObject(row["TaxAmount"]);
+                                    decimal oldExtendedPrice = Utility.GetDecimalFromObject(row["ExtendedPrice"]);
+                                    decimal newItemTax = Utility.GetDecimalFromObject(dtSaleReceiptDetailTaxDetails.Compute("SUM(TaxAmount)", $"SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}'"));
+
+                                    balance = Math.Abs(oldItemTax - newItemTax);
+                                    if (balance != 0)
+                                    {
+                                        row["ExtendedPrice"] = Utility.GetDecimalFromObject(row["ExtendedPrice"]) - balance;
+                                        row["TaxAmount"] = newItemTax;
+                                        row["DiscountCode"] = 1;
+                                        row["ItemDiscountValue"] = Utility.GetDecimalFromObject(row["ItemDiscountValue"]) + balance;
+                                        row["ItemDiscountType"] = 2;
+                                        row["ItemdiscountRate"] = Math.Round(balance / (Utility.GetDecimalFromObject(row["Quantity"]) * Utility.GetDecimalFromObject(row["Price"])) * 100, 13);
+
+                                        sql += $"Update SaleReceiptDetails set " +
+                                            $" ExtendedPrice = {row["ExtendedPrice"]}, " +
+                                            $" TaxAmount = '{row["TaxAmount"]}', " +
+                                            $" DiscountCode = '{row["DiscountCode"]}', " +
+                                            $" ItemDiscountType = '{row["ItemDiscountType"]}', " +
+                                            $" ReasonCodeDiscountItem = '-105', " +
+                                            $" ItemDiscountValue = '{row["ItemDiscountValue"]}', " +
+                                            $" ItemdiscountRate = '{row["ItemdiscountRate"]}' " +
+                                            $" where SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}';";
+
+                                        sql += $"Update SaleReceiptDetailTaxDetails set ExtendedPrice = {row["ExtendedPrice"]} where SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}';";
+                                    }
+
+                                }
+                                RunQueryUpdate(sqlCommand, sql);
+
+                                var newDiscount = Utility.GetDecimalFromObject(dtOLDSaleReceiptDetails.Compute("SUM(ItemDiscountValue)", ""));
+                                var oldDiscount = Utility.GetDecimalFromObject(dtSaleReceipts.Rows[0]["TotalDiscountAmount"]);
+                                sql = $"update SaleReceipts set TaxAmount = '{newTotalTax}', ReturnCode = '-105', GlobalDiscountAmount = '{oldDiscount + newDiscount}', TotalDiscountAmount = '{oldDiscount + newDiscount}' where SaleReceiptID = '{dtSaleReceipts.Rows[0]["SaleReceiptID"]}';";
+                                RunQueryUpdate(sqlCommand, sql);
+                            }
+                        }
+                        else
+                        {
+                            if (dtSaleReceiptDetails?.Rows.Count > 0)
+                            {
+                                decimal subTotal = Utility.GetDecimalFromObject(dtSaleReceiptDetails.Compute("SUM(ExtendedPrice)", ""));
+                                decimal oldTotalTax = Utility.GetDecimalFromObject(dtSaleReceiptDetails.Compute("SUM(TaxAmount)", ""));
+                                decimal newTotalTax = Math.Round(subTotal * newTax / 100, 2);
+
+                                var balance = newTotalTax - oldTotalTax;
+                                if (balance != 0)
+                                {
+                                    foreach (DataRow row in dtSaleReceiptDetails.Rows)
+                                    {
+                                        decimal taxAmount = Utility.GetDecimalFromObject(row["TaxAmount"]);
+                                        if (taxAmount > balance)
+                                        {
+                                            row["TaxAmount"] = taxAmount + balance;
+
+                                            sql = $"Update SaleReceiptDetails set TaxAmount = '{row["TaxAmount"]}' where SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}';";
+
+                                            RunQueryUpdate(sqlCommand, sql);
+
+                                            break;
+
+                                        }
+                                    }
+                                }
+
+                                sql = string.Empty;
+                                foreach (DataRow row in dtOLDSaleReceiptDetails.Rows)
+                                {
+                                    decimal oldItemTax = Utility.GetDecimalFromObject(row["TaxAmount"]);
+                                    decimal oldExtendedPrice = Utility.GetDecimalFromObject(row["ExtendedPrice"]);
+                                    decimal newItemTax = Utility.GetDecimalFromObject(dtSaleReceiptDetails.Compute("SUM(TaxAmount)", $"SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}'"));
+
+                                    balance = Math.Abs(oldItemTax - newItemTax);
+                                    if (balance != 0)
+                                    {
+                                        row["ExtendedPrice"] = Utility.GetDecimalFromObject(row["ExtendedPrice"]) - balance;
+                                        row["TaxAmount"] = newItemTax;
+                                        row["DiscountCode"] = 1;
+                                        row["ItemDiscountValue"] = Utility.GetDecimalFromObject(row["ItemDiscountValue"]) + balance;
+                                        row["ItemDiscountType"] = 2;
+                                        row["ItemdiscountRate"] = Math.Round(balance / (Utility.GetDecimalFromObject(row["Quantity"]) * Utility.GetDecimalFromObject(row["Price"])) * 100, 13);
+
+                                        sql += $"Update SaleReceiptDetails set " +
+                                            $" ExtendedPrice = {row["ExtendedPrice"]}, " +
+                                            $" TaxAmount = '{row["TaxAmount"]}', " +
+                                            $" DiscountCode = '{row["DiscountCode"]}', " +
+                                            $" ItemDiscountType = '{row["ItemDiscountType"]}', " +
+                                            $" ReasonCodeDiscountItem = '-105', " +
+                                            $" ItemDiscountValue = '{row["ItemDiscountValue"]}', " +
+                                            $" ItemdiscountRate = '{row["ItemdiscountRate"]}' " +
+                                            $" where SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}';";
+                                    }
+
+                                }
+                                RunQueryUpdate(sqlCommand, sql);
+
+                                var newDiscount = Utility.GetDecimalFromObject(dtOLDSaleReceiptDetails.Compute("SUM(ItemDiscountValue)", ""));
+                                var oldDiscount = Utility.GetDecimalFromObject(dtSaleReceipts.Rows[0]["TotalDiscountAmount"]);
+                                sql = $"update SaleReceipts set TaxAmount = '{newTotalTax}', ReturnCode = '-105', GlobalDiscountAmount = '{oldDiscount + newDiscount}', TotalDiscountAmount = '{oldDiscount + newDiscount}' where SaleReceiptID = '{dtSaleReceipts.Rows[0]["SaleReceiptID"]}';";
+                                RunQueryUpdate(sqlCommand, sql);
+                            }
+                        }
+                    }
+
+                    IsSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("HotFix_UpgradeTaxForTicket in ProcessForm", ex);
+            }
+        }
+
+        public void HotFix_UpgradeTaxForTicket_v2()
+        {
+            try
+            {
+                string sql = string.Empty;
+                decimal oldTax = 7.75m;
+                decimal newTax = 10.5m;
+                DateTime startDate = new DateTime(2025, 10, 23, 0, 0, 0);
+                DateTime endDate = new DateTime(2025, 10, 24, 23, 59, 59);
+                DataRow[] drs = null;
+                DataTable dtSaleReceiptUpdates = new DataTable("SaleReceipts");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
+                    if (drs.Length > 0)
+                    {
+                        sql = $"select a.SaleReceiptID" +
+                       $" from SaleReceipts a left join SaleReceiptDetailTaxDetails b on a.SaleReceiptID = b.SaleReceiptID " +
+                       $" where b.TaxRate = {oldTax} and a.TransactionStatusID in ('FIN','CANR','VOID') " +
+                       $" group by a.SaleReceiptID";
+                    }
+                    else
+                    {
+                        sql = $"select a.SaleReceiptID" +
+                       $" from SaleReceipts a left join SaleReceiptDetails b on a.SaleReceiptID = b.SaleReceiptID " +
+                       $" where b.TaxRate = {oldTax} and a.TransactionStatusID in ('FIN','CANR','VOID') " +
+                       $" group by a.SaleReceiptID";
+                    }
+
+                    sqlCommand.CommandText = sql;
+                    var reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptUpdates.Load(reader);
+
+                    reader.Close();
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    foreach (DataRow item in dtSaleReceiptUpdates.Rows)
+                    {
+                        DataTable dtSaleReceipts = new DataTable("SaleReceipts");
+                        DataTable dtOLDSaleReceiptDetails = new DataTable("SaleReceiptDetails");
+                        DataTable dtOLDSaleReceiptDetailTaxDetails = new DataTable("SaleReceiptDetailTaxDetails");
+                        DataTable dtSaleReceiptDetails = new DataTable("SaleReceiptDetails");
+                        DataTable dtSaleReceiptDetailTaxDetails = new DataTable("SaleReceiptDetailTaxDetails");
+
+                        if (conn.State == ConnectionState.Closed)
+                            conn.Open();
+                        sqlCommand.Connection = conn;
+                        sqlCommand.CommandType = CommandType.Text;
+
+                        sql = $"select * " +
+                            $" from SaleReceipts " +
+                            $" where SaleReceiptID = '{item["SaleReceiptID"]}' ";
+
+                        sqlCommand.CommandText = sql;
+                        var reader = sqlCommand.ExecuteReader();
+                        dtSaleReceipts.Load(reader);
+                        reader.Close();
+
+                        sql = $"select * " +
+                            $" from SaleReceiptDetails " +
+                            $" where SaleReceiptID = '{item["SaleReceiptID"]}' ";
+
+                        sqlCommand.CommandText = sql;
+                        reader = sqlCommand.ExecuteReader();
+                        dtOLDSaleReceiptDetails.Load(reader);
+                        reader.Close();
+
+                        sql = $"select * " +
+                                $" from SaleReceiptDetailTaxDetails " +
+                                $" where SaleReceiptID = '{item["SaleReceiptID"]}' ";
+
+                        sqlCommand.CommandText = sql;
+                        reader = sqlCommand.ExecuteReader();
+                        dtOLDSaleReceiptDetailTaxDetails.Load(reader);
+                        reader.Close();
+
+                        if (Utility.GetDecimalFromRow("TaxAmount", dtSaleReceipts.Rows[0]) == 0)
+                        {
+                            sql = $"update SaleReceiptDetails set TaxRate = '{newTax}' where TaxRate = '{oldTax}' and SaleReceiptID = '{item["SaleReceiptID"]}';";
+                            RunQueryUpdate(sqlCommand, sql);
+
+                            drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
+                            if (drs.Length > 0)
+                            {
+                                sql = $"update SaleReceiptDetailTaxDetails set TaxRate = '{newTax}' where TaxRate = '{oldTax}' and SaleReceiptID = '{item["SaleReceiptID"]}';";
+                                RunQueryUpdate(sqlCommand, sql);
+                            }
+                            continue;
+                        }
+
+                        drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
+                        if (drs.Length > 0)
+                        {
+                            sql = string.Empty;
+                            foreach (DataRow row in dtOLDSaleReceiptDetailTaxDetails.Rows)
+                            {
+                                decimal extendedPrice = Utility.GetDecimalFromObject(row["ExtendedPrice"]);
+                                decimal taxAmount = Utility.GetDecimalFromObject(row["TaxAmount"]);
+                                decimal newExtendedPrice = Math.Round((extendedPrice + taxAmount) / 1.105m, 2);
+                                decimal newTaxAmount = (extendedPrice + taxAmount) - newExtendedPrice;
+                                decimal taxRate = Utility.GetDecimalFromObject(row["TaxRate"]);
+                                decimal quantity = Utility.GetDecimalFromObject(row["Quantity"]);
+                                decimal price = Utility.GetDecimalFromObject(row["Price"]);
+                                decimal newPrice = price - ((newTaxAmount - taxAmount) / quantity);
+
+                                if (taxRate == newTax)
+                                    continue;
+
+                                if (taxAmount == 0)
+                                {
+                                    sql += $"update SaleReceiptDetailTaxDetails set TaxRate = '{newTax}' where SaleReceiptDetailTaxDetailID = '{row["SaleReceiptDetailTaxDetailID"]}'";
+                                    continue;
+                                }
+
+                                row["ExtendedPrice"] = newExtendedPrice;
+                                row["TaxAmount"] = newTaxAmount;
+
+                                sql += $"update SaleReceiptDetailTaxDetails set Price = '{newPrice}', ExtendedPrice = '{newExtendedPrice}', TaxAmount = '{newTaxAmount}', TaxRate = '{newTax}' where SaleReceiptDetailTaxDetailID = '{row["SaleReceiptDetailTaxDetailID"]}'";
+                            }
+                            RunQueryUpdate(sqlCommand, sql);
+
+                            sql = string.Empty;
+                            foreach (DataRow row in dtOLDSaleReceiptDetails.Rows)
+                            {
+
+                                decimal extendedPrice = Utility.GetDecimalFromObject(row["ExtendedPrice"]);
+                                decimal taxAmount = Utility.GetDecimalFromObject(row["TaxAmount"]);
+                                decimal newTaxAmount = Utility.GetDecimalFromObject(dtOLDSaleReceiptDetailTaxDetails.Compute("SUM(TaxAmount)", $"SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}'"));
+                                decimal newExtendedPrice = (extendedPrice + taxAmount) - newTaxAmount;
+                                decimal quantity = Utility.GetDecimalFromObject(row["Quantity"]);
+                                decimal price = Utility.GetDecimalFromObject(row["Price"]);
+                                decimal newPrice = price - ((newTaxAmount - taxAmount) / quantity);
+
+                                if (taxAmount == 0)
+                                {
+                                    sql += $"update SaleReceiptDetails set TaxRate = '{newTax}' where SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}'";
+                                    continue;
+                                }
+
+                                row["ExtendedPrice"] = newExtendedPrice;
+                                row["TaxAmount"] = newTaxAmount;
+
+                                sql += $"update SaleReceiptDetails set Price = '{newPrice}', RegularPrice = '{newPrice}', DualPrice = '{newPrice}', PriceCash = '{newPrice}', PriceCC = '{newPrice}', ExtendedPrice = '{newExtendedPrice}', TaxAmount = '{newTaxAmount}', TaxRate = '{newTax}' where SaleReceiptDetailID = '{row["SaleReceiptDetailID"]}'";
+                            }
+                            RunQueryUpdate(sqlCommand, sql);
+
+                            object newTotalTax = dtOLDSaleReceiptDetailTaxDetails.Compute("SUM(TaxAmount)", "");
+                            sql = $"update SaleReceipts set TaxAmount = '{newTotalTax}' where SaleReceiptID = '{item["SaleReceiptID"]}';";
+                            RunQueryUpdate(sqlCommand, sql);
+                        }
+                        else
+                        {
+                            IsSuccess = false;
+                            return;
+                        }
+                    }
+
+                    IsSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("HotFix_UpgradeTaxForTicket in ProcessForm", ex);
+            }
+        }
+
+        public void HotFix_UpdownTaxForTicket()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("HotFix_UpdownTaxForTicket in ProcessForm", ex);
+            }
+        }
+
+
+        private void GetListTableInDatabaseBLogicPOS7()
+        {
+            try
+            {
+                CurrentTableInDatabaseBLogicPOS7 = new DataTable("Tables");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sqlCommand.CommandText = $"SELECT TABLE_NAME " +
+                        $"FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_NAME in (" +
+                        $"'SaleReceiptDetailTaxDetails'," +
+                        $"'SaleReceiptServiceChargeTaxDetails'," +
+                        $"'DeliveryDetails', " +
+                        $"'PaymentRoleDetails') ";
+                    var reader = sqlCommand.ExecuteReader();
+                    CurrentTableInDatabaseBLogicPOS7.Load(reader);
+                    reader.Close();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetListTableInDatabaseBLogicPOS7", ex);
             }
         }
     }

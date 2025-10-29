@@ -65,6 +65,7 @@
             this.lblMessage.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblMessage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblMessage.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMessage.ForeColor = System.Drawing.Color.Red;
             this.lblMessage.Location = new System.Drawing.Point(0, 50);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
@@ -77,6 +78,7 @@
             // 
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblTitle.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.Red;
             this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
@@ -87,11 +89,11 @@
             // 
             // btnYes
             // 
-            this.btnYes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(87)))), ((int)(((byte)(183)))));
-            this.btnYes.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(87)))), ((int)(((byte)(183)))));
+            this.btnYes.BackColor = System.Drawing.Color.Red;
+            this.btnYes.BackgroundColor = System.Drawing.Color.Red;
             this.btnYes.BorderColor = System.Drawing.Color.Gray;
             this.btnYes.BorderRadius = 5;
-            this.btnYes.BorderSize = 1;
+            this.btnYes.BorderSize = 0;
             this.btnYes.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.btnYes.ForeColor = System.Drawing.Color.White;
             this.btnYes.Location = new System.Drawing.Point(125, 140);

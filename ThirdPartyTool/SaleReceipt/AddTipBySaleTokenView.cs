@@ -62,6 +62,11 @@ namespace ThirdPartyTool.SaleReceipt
 
                 BtnSearch_Click(sender, e);
             }
+            else
+            {
+                InformationDialogForm errorDialog = new InformationDialogForm("Add Tip Fail. Please contact TruongDS");
+                errorDialog.ShowDialog();
+            }
         }
 
         private void AddTipBySaleTokenView_Load(object sender, EventArgs e)
@@ -96,6 +101,13 @@ namespace ThirdPartyTool.SaleReceipt
                 ProcessForm processForm = new ProcessForm();
                 processForm.InitGetReceiptTemplate(txtSearchTokenReceipt.Text.Trim());
                 processForm.ShowDialog();
+
+                if (!processForm.IsSuccess)
+                {
+                    InformationDialogForm errorDialog = new InformationDialogForm("Receipt Not Found");
+                    errorDialog.ShowDialog();
+                    return;
+                }
 
                 XtraReport xReport = processForm.ReceiptTemplate;
                 if (xReport == null)
@@ -140,6 +152,13 @@ namespace ThirdPartyTool.SaleReceipt
                 ProcessForm processForm = new ProcessForm();
                 processForm.InitGetReceiptTemplate(txtSearch.Text.Trim());
                 processForm.ShowDialog();
+
+                if (!processForm.IsSuccess)
+                {
+                    InformationDialogForm errorDialog = new InformationDialogForm("Receipt Not Found");
+                    errorDialog.ShowDialog();
+                    return;
+                }
 
                 XtraReport xReport = processForm.ReceiptTemplate;
                 if (xReport == null)

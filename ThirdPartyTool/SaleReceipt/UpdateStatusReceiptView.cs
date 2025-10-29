@@ -34,6 +34,13 @@ namespace ThirdPartyTool.SaleReceipt
                 processForm.GetReceiptTemplateByTicketNumber_Include_VOID_CLOSE_REFUND_OPER = true;
                 processForm.ShowDialog();
 
+                if (!processForm.IsSuccess)
+                {
+                    InformationDialogForm errorDialog = new InformationDialogForm("Receipt Not Found");
+                    errorDialog.ShowDialog();
+                    return;
+                }
+
                 XtraReport xReport = processForm.ReceiptTemplate;
                 if (xReport == null)
                 {

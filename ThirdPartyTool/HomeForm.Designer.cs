@@ -34,20 +34,22 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnHotFix = new System.Windows.Forms.Label();
             this.btnMerchant = new System.Windows.Forms.Label();
             this.btnEmployee = new System.Windows.Forms.Label();
             this.btnReceipt = new System.Windows.Forms.Label();
             this.btnHome = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.welcomeView = new ThirdPartyTool.WelcomeView();
             this.receiptView = new ThirdPartyTool.ReceiptView();
             this.employeeView = new ThirdPartyTool.Employee.EmployeeView();
             this.settleBatchOfflineView = new ThirdPartyTool.Transactions.SettleBatchOfflineView();
+            this.hotFixView = new ThirdPartyTool.HotFixView();
             this.panel1.SuspendLayout();
             this.pnlContainer.SuspendLayout();
             this.pnlLeft.SuspendLayout();
@@ -74,6 +76,7 @@
             this.pnlContainer.Controls.Add(this.receiptView);
             this.pnlContainer.Controls.Add(this.employeeView);
             this.pnlContainer.Controls.Add(this.settleBatchOfflineView);
+            this.pnlContainer.Controls.Add(this.hotFixView);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
@@ -94,6 +97,7 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.btnHotFix);
             this.panel6.Controls.Add(this.label4);
             this.panel6.Controls.Add(this.label3);
             this.panel6.Controls.Add(this.btnMerchant);
@@ -133,6 +137,62 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "Release 10-28-2025";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.btnClose);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel5.Location = new System.Drawing.Point(0, 633);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(200, 65);
+            this.panel5.TabIndex = 1;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.label2);
+            this.panel4.Controls.Add(this.label1);
+            this.panel4.Controls.Add(this.pictureBox1);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(200, 170);
+            this.panel4.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(25, 136);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(150, 23);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Administrator";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(25, 113);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(150, 23);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Admin";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnHotFix
+            // 
+            this.btnHotFix.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnHotFix.Font = new System.Drawing.Font("Roboto", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHotFix.ForeColor = System.Drawing.Color.Red;
+            this.btnHotFix.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHotFix.Location = new System.Drawing.Point(0, 373);
+            this.btnHotFix.Margin = new System.Windows.Forms.Padding(0);
+            this.btnHotFix.Name = "btnHotFix";
+            this.btnHotFix.Size = new System.Drawing.Size(200, 50);
+            this.btnHotFix.TabIndex = 7;
+            this.btnHotFix.Text = "Hot Fix";
+            this.btnHotFix.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnMerchant
             // 
@@ -199,15 +259,6 @@
             this.btnHome.Text = "         Home";
             this.btnHome.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.btnClose);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 633);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(200, 65);
-            this.panel5.TabIndex = 1;
-            // 
             // btnClose
             // 
             this.btnClose.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -222,39 +273,6 @@
             this.btnClose.TabIndex = 0;
             this.btnClose.Text = "        Close";
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.label2);
-            this.panel4.Controls.Add(this.label1);
-            this.panel4.Controls.Add(this.pictureBox1);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(200, 170);
-            this.panel4.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(25, 136);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(150, 23);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Administrator";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(25, 113);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(150, 23);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Admin";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
             // 
@@ -302,6 +320,14 @@
             this.settleBatchOfflineView.Size = new System.Drawing.Size(798, 698);
             this.settleBatchOfflineView.TabIndex = 3;
             // 
+            // hotFixView
+            // 
+            this.hotFixView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hotFixView.Location = new System.Drawing.Point(0, 0);
+            this.hotFixView.Name = "hotFixView";
+            this.hotFixView.Size = new System.Drawing.Size(798, 698);
+            this.hotFixView.TabIndex = 4;
+            // 
             // HomeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,5 +370,7 @@
         private Transactions.SettleBatchOfflineView settleBatchOfflineView;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label btnHotFix;
+        private HotFixView hotFixView;
     }
 }

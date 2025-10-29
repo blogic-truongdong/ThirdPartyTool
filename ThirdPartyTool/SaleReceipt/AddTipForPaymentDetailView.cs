@@ -37,6 +37,13 @@ namespace ThirdPartyTool.SaleReceipt
                 processForm.InitGetReceiptTemplate(txtSearch.Text.Trim());
                 processForm.ShowDialog();
 
+                if (!processForm.IsSuccess)
+                {
+                    InformationDialogForm errorDialog = new InformationDialogForm("Receipt Not Found");
+                    errorDialog.ShowDialog();
+                    return;
+                }
+
                 XtraReport xReport = processForm.ReceiptTemplate;
                 if (xReport == null)
                     return;
