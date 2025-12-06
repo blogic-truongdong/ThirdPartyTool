@@ -10,7 +10,9 @@ namespace ThirdPartyTool
         Employee,
         Receipt,
         Merchant,
-        HotFix
+        HotFix,
+        Item,
+        EmployeePaycor
     }
     public partial class HomeForm : Form
     {
@@ -33,6 +35,42 @@ namespace ThirdPartyTool
             btnHome.Click += BtnHome_Click;
             btnMerchant.Click += BtnMerchant_Click;
             btnHotFix.Click += BtnHotFix_Click;
+            btnItem.Click += BtnItem_Click;
+            btnEmployeePaycor.Click += BtnEmployeePaycor_Click;
+        }
+
+        private void BtnEmployeePaycor_Click(object sender, EventArgs e)
+        {
+            if (CurrentTab == HomeTab.EmployeePaycor)
+                return;
+
+            CurrentTab = HomeTab.EmployeePaycor;
+
+            ResetTabColor();
+
+            btnEmployeePaycor.BackColor = Tab_BackColorSelected;
+            btnEmployeePaycor.ForeColor = Tab_FoceColorSelected;
+
+            employeeLinkPaycorView21.BringToFront();
+
+            employeeLinkPaycorView21.BtnRefresh_Click(sender, e);
+
+            employeeLinkPaycorView21.txtFocus.Focus();
+        }
+
+        private void BtnItem_Click(object sender, EventArgs e)
+        {
+            if (CurrentTab == HomeTab.Item)
+                return;
+
+            CurrentTab = HomeTab.Item;
+
+            ResetTabColor();
+
+            btnItem.BackColor = Tab_BackColorSelected;
+            btnItem.ForeColor = Tab_FoceColorSelected;
+
+            itemView1.BringToFront();
         }
 
         private void BtnHotFix_Click(object sender, EventArgs e)
@@ -149,6 +187,11 @@ namespace ThirdPartyTool
             btnReceipt.ForeColor = Tab_FoceColorDefault;
             btnMerchant.BackColor = Tab_BackColorDefault;
             btnMerchant.ForeColor = Tab_FoceColorDefault;
+            btnEmployeePaycor.BackColor = Tab_BackColorDefault;
+            btnEmployeePaycor.ForeColor = Tab_FoceColorDefault;
+            btnItem.BackColor = Tab_BackColorDefault;
+            btnItem.ForeColor = Tab_FoceColorDefault;
+
         }
     }
 }

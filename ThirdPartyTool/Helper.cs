@@ -20,6 +20,15 @@ namespace ThirdPartyTool
 
     public class Helper
     {
+        public static string PaycorAPImSubscriptionKey = string.Empty;
+        public static string PaycorRefreshToken = string.Empty;
+        public static string PaycorClientID = string.Empty;
+        public static string PaycorClientSecret = string.Empty;
+        public static string PaycorAccessToken = string.Empty;
+        public static string PaycorLegalEntityID = string.Empty;
+        public static string PaycorAuthorization = string.Empty;
+        public static string PaycorUrlProduction = "https://apis.paycor.com";
+
         public static string LicenseBaseUrl = string.Empty;
         public static string HOST_NAME = string.Empty;
         public static string KIOSK_REG = @"HKEY_LOCAL_MACHINE\SOFTWARE\BLogic Systems\BLogic Kiosk";

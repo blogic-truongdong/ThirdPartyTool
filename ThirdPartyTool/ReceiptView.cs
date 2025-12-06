@@ -11,6 +11,7 @@ namespace ThirdPartyTool
             InitializeComponent();
 
             RegisterEvent();
+
         }
 
         private void RegisterEvent()
@@ -20,11 +21,25 @@ namespace ThirdPartyTool
             btnAddTipBySaleToken.Click += BtnAddTipBySaleToken_Click;
             btnAddTipForPaymentDetail.Click += BtnAddTipForPaymentDetail_Click;
             btnUpdateStatusReceipt.Click += BtnUpdateStatusReceipt_Click;
+            btnRefund.Click += BtnRefund_Click;
 
             addTipBySaleTokenView.btnBack.Click += BtnBack_Click;
             addTipForPaymentDetailView.btnBack.Click += BtnBack_Click;
             updateStatusReceiptView.btnBack.Click += BtnBack_Click;
+            refundTicketView.btnBack.Click += BtnBack_Click;
 
+        }
+
+        private void BtnRefund_Click(object sender, EventArgs e)
+        {
+            if (CurrentOption == "RefundTicketView")
+            {
+                return;
+            }
+            CurrentOption = "RefundTicketView";
+
+            refundTicketView.Visible = true;
+            refundTicketView.BringToFront();
         }
 
         private void BtnUpdateStatusReceipt_Click(object sender, EventArgs e)
@@ -57,6 +72,7 @@ namespace ThirdPartyTool
             addTipBySaleTokenView.Visible = false;
             addTipForPaymentDetailView.Visible = false;
             updateStatusReceiptView.Visible = false;
+            refundTicketView.Visible = false;
         }
 
         private void BtnAddTipBySaleToken_Click(object sender, EventArgs e)

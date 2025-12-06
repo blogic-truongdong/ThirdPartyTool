@@ -35,8 +35,12 @@
             this.employeeView = new ThirdPartyTool.Employee.EmployeeView();
             this.settleBatchOfflineView = new ThirdPartyTool.Transactions.SettleBatchOfflineView();
             this.hotFixView = new ThirdPartyTool.HotFixView();
+            this.itemView1 = new ThirdPartyTool.Item.ItemView();
+            this.employeeLinkPaycorView21 = new ThirdPartyTool.Employee.EmployeeLinkPaycorView2();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.btnEmployeePaycor = new System.Windows.Forms.Label();
+            this.btnItem = new System.Windows.Forms.Label();
             this.btnHotFix = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -77,6 +81,8 @@
             this.pnlContainer.Controls.Add(this.employeeView);
             this.pnlContainer.Controls.Add(this.settleBatchOfflineView);
             this.pnlContainer.Controls.Add(this.hotFixView);
+            this.pnlContainer.Controls.Add(this.itemView1);
+            this.pnlContainer.Controls.Add(this.employeeLinkPaycorView21);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
@@ -127,6 +133,23 @@
             this.hotFixView.Size = new System.Drawing.Size(798, 698);
             this.hotFixView.TabIndex = 4;
             // 
+            // itemView1
+            // 
+            this.itemView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemView1.Location = new System.Drawing.Point(0, 0);
+            this.itemView1.Name = "itemView1";
+            this.itemView1.Size = new System.Drawing.Size(798, 698);
+            this.itemView1.TabIndex = 5;
+            // 
+            // employeeLinkPaycorView21
+            // 
+            this.employeeLinkPaycorView21.BackColor = System.Drawing.Color.White;
+            this.employeeLinkPaycorView21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.employeeLinkPaycorView21.Location = new System.Drawing.Point(0, 0);
+            this.employeeLinkPaycorView21.Name = "employeeLinkPaycorView21";
+            this.employeeLinkPaycorView21.Size = new System.Drawing.Size(798, 698);
+            this.employeeLinkPaycorView21.TabIndex = 6;
+            // 
             // pnlLeft
             // 
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(63)))), ((int)(((byte)(84)))));
@@ -141,6 +164,8 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.btnEmployeePaycor);
+            this.panel6.Controls.Add(this.btnItem);
             this.panel6.Controls.Add(this.btnHotFix);
             this.panel6.Controls.Add(this.label4);
             this.panel6.Controls.Add(this.label3);
@@ -153,6 +178,37 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(200, 463);
             this.panel6.TabIndex = 2;
+            // 
+            // btnEmployeePaycor
+            // 
+            this.btnEmployeePaycor.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnEmployeePaycor.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnEmployeePaycor.ForeColor = System.Drawing.Color.White;
+            this.btnEmployeePaycor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEmployeePaycor.Location = new System.Drawing.Point(0, 250);
+            this.btnEmployeePaycor.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEmployeePaycor.Name = "btnEmployeePaycor";
+            this.btnEmployeePaycor.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnEmployeePaycor.Size = new System.Drawing.Size(200, 50);
+            this.btnEmployeePaycor.TabIndex = 9;
+            this.btnEmployeePaycor.Text = "Employee - Paycor";
+            this.btnEmployeePaycor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnItem
+            // 
+            this.btnItem.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnItem.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnItem.ForeColor = System.Drawing.Color.White;
+            this.btnItem.Image = global::ThirdPartyTool.Properties.Resources.Icon_CreditCard;
+            this.btnItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnItem.Location = new System.Drawing.Point(0, 200);
+            this.btnItem.Margin = new System.Windows.Forms.Padding(0);
+            this.btnItem.Name = "btnItem";
+            this.btnItem.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnItem.Size = new System.Drawing.Size(200, 50);
+            this.btnItem.TabIndex = 8;
+            this.btnItem.Text = "         Items";
+            this.btnItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnHotFix
             // 
@@ -179,7 +235,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(200, 20);
             this.label4.TabIndex = 6;
-            this.label4.Text = "Version 1.03";
+            this.label4.Text = "Version 2.02";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
@@ -193,7 +249,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(200, 20);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Release 10-30-2025";
+            this.label3.Text = "Release 11-19-2025";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnMerchant
@@ -372,5 +428,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label btnHotFix;
         private HotFixView hotFixView;
+        private System.Windows.Forms.Label btnItem;
+        private Item.ItemView itemView1;
+        private System.Windows.Forms.Label btnEmployeePaycor;
+        private Employee.EmployeeLinkPaycorView2 employeeLinkPaycorView21;
     }
 }

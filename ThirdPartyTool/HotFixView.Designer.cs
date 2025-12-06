@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.btnUpgradeTaxPercentForTickets = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnUpdataTax775Percent = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnSyncRole = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.SuspendLayout();
             // 
             // btnUpgradeTaxPercentForTickets
@@ -52,33 +52,31 @@
             this.btnUpgradeTaxPercentForTickets.TextColor = System.Drawing.Color.Black;
             this.btnUpgradeTaxPercentForTickets.UseMnemonic = false;
             // 
-            // btnUpdataTax775Percent
+            // btnSyncRole
             // 
-            this.btnUpdataTax775Percent.BackColor = System.Drawing.Color.White;
-            this.btnUpdataTax775Percent.BackgroundColor = System.Drawing.Color.White;
-            this.btnUpdataTax775Percent.BorderColor = System.Drawing.Color.Gray;
-            this.btnUpdataTax775Percent.BorderRadius = 5;
-            this.btnUpdataTax775Percent.BorderSize = 1;
-            this.btnUpdataTax775Percent.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnUpdataTax775Percent.ForeColor = System.Drawing.Color.Black;
-            this.btnUpdataTax775Percent.Location = new System.Drawing.Point(329, 180);
-            this.btnUpdataTax775Percent.Margin = new System.Windows.Forms.Padding(10);
-            this.btnUpdataTax775Percent.Name = "btnUpdataTax775Percent";
-            this.btnUpdataTax775Percent.Size = new System.Drawing.Size(300, 150);
-            this.btnUpdataTax775Percent.TabIndex = 5;
-            this.btnUpdataTax775Percent.Text = "Update Tax 7.75% for all ticket of Paradise Dynasty - South Coast (20201374) in 2" +
-    "3 & 24/10/2025";
-            this.btnUpdataTax775Percent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnUpdataTax775Percent.TextColor = System.Drawing.Color.Black;
-            this.btnUpdataTax775Percent.UseMnemonic = false;
-            this.btnUpdataTax775Percent.Visible = false;
+            this.btnSyncRole.BackColor = System.Drawing.Color.White;
+            this.btnSyncRole.BackgroundColor = System.Drawing.Color.White;
+            this.btnSyncRole.BorderColor = System.Drawing.Color.Gray;
+            this.btnSyncRole.BorderRadius = 5;
+            this.btnSyncRole.BorderSize = 1;
+            this.btnSyncRole.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnSyncRole.ForeColor = System.Drawing.Color.Black;
+            this.btnSyncRole.Location = new System.Drawing.Point(340, 20);
+            this.btnSyncRole.Margin = new System.Windows.Forms.Padding(10);
+            this.btnSyncRole.Name = "btnSyncRole";
+            this.btnSyncRole.Size = new System.Drawing.Size(300, 150);
+            this.btnSyncRole.TabIndex = 5;
+            this.btnSyncRole.Text = "Sync Employee Role for All Employee";
+            this.btnSyncRole.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnSyncRole.TextColor = System.Drawing.Color.Black;
+            this.btnSyncRole.UseMnemonic = false;
             // 
             // HotFixView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnSyncRole);
             this.Controls.Add(this.btnUpgradeTaxPercentForTickets);
-            this.Controls.Add(this.btnUpdataTax775Percent);
             this.Name = "HotFixView";
             this.Size = new System.Drawing.Size(723, 365);
             this.ResumeLayout(false);
@@ -86,8 +84,7 @@
         }
 
         #endregion
-
-        private CustomControl.BLabel_Rounded btnUpdataTax775Percent;
         private CustomControl.BLabel_Rounded btnUpgradeTaxPercentForTickets;
+        private CustomControl.BLabel_Rounded btnSyncRole;
     }
 }

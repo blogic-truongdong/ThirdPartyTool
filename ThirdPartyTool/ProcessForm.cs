@@ -30,6 +30,10 @@ namespace ThirdPartyTool
         CloseReceipt = 8,
         HotFix_UpgradeTaxForTicket = 9,
         HotFix_UpdownTaxForTicket = 10,
+        ReSyncItemType,
+        EmployeePaycor_GetEmployees,
+        EmployeePaycor_GetEmployeesFromPaycor,
+        SaleReceipt_RefundFullAmount
     }
     public partial class ProcessForm : Form
     {
@@ -62,7 +66,11 @@ namespace ThirdPartyTool
         public int EmployeeView_EmployeeID;
         public int EmployeeView_RolesID;
 
+        public DateTime Item_StartDate;
+        public DateTime Item_EndDate;
+
         public string CloseReceipt_SaleReceiptID = string.Empty;
+        public string SaleReceiptID = string.Empty;
 
         public decimal HotFix_UpdateTaxForTicket_PercentValue = 0;
 
@@ -124,6 +132,9 @@ namespace ThirdPartyTool
 
                 switch (CurrentProcessName)
                 {
+                    case ProcessNameEnum.SaleReceipt_RefundFullAmount:
+                        RefundFullAmount();
+                        break;
                     case ProcessNameEnum.GetReceiptTemplateByTicketNumber:
                         GetReceiptTemplateByTicketNumber(GetReceiptTemplateByTicketNumber_SaleReceiptNumber);
                         break;
@@ -153,6 +164,15 @@ namespace ThirdPartyTool
                         break;
                     case ProcessNameEnum.HotFix_UpdownTaxForTicket:
                         HotFix_UpdownTaxForTicket();
+                        break;
+                    case ProcessNameEnum.ReSyncItemType:
+                        ReSyncItemType();
+                        break;
+                    case ProcessNameEnum.EmployeePaycor_GetEmployees:
+                        EmployeePaycor_GetEmployees();
+                        break;
+                    case ProcessNameEnum.EmployeePaycor_GetEmployeesFromPaycor:
+                        EmployeePaycor_GetEmployeesFromPaycor();
                         break;
                 }
             }
@@ -894,6 +914,7 @@ namespace ThirdPartyTool
         private void UpdateBatchByBatchUnique(object batchUnique)
         {
             DataTable dtCalculateBatch = new DataTable("Batch");
+            DataTable dtTransactionDetail = new DataTable("TransactionDetail");
 
             using (SqlCommand sqlCommand = new SqlCommand())
             using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
@@ -904,41 +925,57 @@ namespace ThirdPartyTool
                 sqlCommand.Connection = conn;
                 sqlCommand.CommandType = CommandType.Text;
 
-                var sql = $"select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as Total," +
-                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end ) as TotalSVCFeeForTip, " +
-                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end ) as TotalSales, " +
-                    $" sum(case when TranType = 'Return' then Amount - SVCFee else 0 end ) as TotalReturns, " +
-                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end ) as TotalTips, " +
-                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end ) - sum(case when TranType = 'Return' then SVCFee else 0 end ) as TotalSVCFeeAmount," +
-                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as DepositAmount, " +
-                    $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount " +
-                    $" from TransactionDetail where BatchUnique = '{batchUnique}'";
+                var sql = $"select * from TransactionDetail where BatchUnique = '{batchUnique}'";
                 sqlCommand.CommandText = sql;
                 SqlDataReader reader = sqlCommand.ExecuteReader();
-                dtCalculateBatch.Load(reader);
+                dtTransactionDetail.Load(reader);
                 reader.Close();
 
-                if (dtCalculateBatch?.Rows.Count > 0)
+                if (dtTransactionDetail?.Rows.Count > 0)
                 {
-                    sql = $"update Batch set " +
-                        $" Total = '{dtCalculateBatch.Rows[0]["Total"]}'," +
-                        $" TotalSVCFeeForTip = {dtCalculateBatch.Rows[0]["TotalSVCFeeForTip"]} ," +
-                        $" TotalSales = {dtCalculateBatch.Rows[0]["TotalSales"]} ," +
-                        $" TotalTips = '{dtCalculateBatch.Rows[0]["TotalTips"]}', " +
-                        $" TotalSVCFeeAmount = {dtCalculateBatch.Rows[0]["TotalSVCFeeAmount"]}," +
-                        $" DepositAmount = {dtCalculateBatch.Rows[0]["DepositAmount"]}," +
-                        $" MerchantFeeAmount = {dtCalculateBatch.Rows[0]["MerchantFeeAmount"]}" +
-                        $" where BatchUnique = '{batchUnique}';";
+                    sql = $"select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as Total," +
+                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end ) as TotalSVCFeeForTip, " +
+                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end ) as TotalSales, " +
+                       $" sum(case when TranType = 'Return' then Amount - SVCFee else 0 end ) as TotalReturns, " +
+                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end ) as TotalTips, " +
+                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end ) - sum(case when TranType = 'Return' then SVCFee else 0 end ) as TotalSVCFeeAmount," +
+                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as DepositAmount, " +
+                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount " +
+                       $" from TransactionDetail where BatchUnique = '{batchUnique}'";
+                    sqlCommand.CommandText = sql;
+                    reader = sqlCommand.ExecuteReader();
+                    dtCalculateBatch.Load(reader);
+                    reader.Close();
 
-                    RunQueryUpdate(sqlCommand, sql);
+                    if (dtCalculateBatch?.Rows.Count > 0)
+                    {
+                        sql = $"update Batch set " +
+                            $" Total = '{dtCalculateBatch.Rows[0]["Total"]}'," +
+                            $" TotalSVCFeeForTip = {dtCalculateBatch.Rows[0]["TotalSVCFeeForTip"]} ," +
+                            $" TotalSales = {dtCalculateBatch.Rows[0]["TotalSales"]} ," +
+                            $" TotalTips = '{dtCalculateBatch.Rows[0]["TotalTips"]}', " +
+                            $" TotalSVCFeeAmount = {dtCalculateBatch.Rows[0]["TotalSVCFeeAmount"]}," +
+                            $" DepositAmount = {dtCalculateBatch.Rows[0]["DepositAmount"]}," +
+                            $" MerchantFeeAmount = {dtCalculateBatch.Rows[0]["MerchantFeeAmount"]}" +
+                            $" where BatchUnique = '{batchUnique}';";
 
-                    sql = $"update TransactionDetail set " +
-                        $" BatchTotal = '{dtCalculateBatch.Rows[0]["Total"]}'" +
-                        $" where BatchUnique = '{batchUnique}';";
+                        RunQueryUpdate(sqlCommand, sql);
 
-                    RunQueryUpdate(sqlCommand, sql);
+                        sql = $"update TransactionDetail set " +
+                            $" BatchTotal = '{dtCalculateBatch.Rows[0]["Total"]}'" +
+                            $" where BatchUnique = '{batchUnique}';";
 
+                        RunQueryUpdate(sqlCommand, sql);
+
+                    }
                 }
+                else
+                {
+                    sql = $"delete from Batch where BatchUnique = '{batchUnique}';";
+
+                    RunQueryUpdate(sqlCommand, sql);
+                }
+
             }
         }
 
@@ -1486,6 +1523,10 @@ namespace ThirdPartyTool
                     sqlCommand.CommandType = CommandType.Text;
 
                     var sql = $"update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{CloseReceipt_SaleReceiptID}'; ";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    sql = $"delete from PaymentRoleDetails SaleReceiptID = '{CloseReceipt_SaleReceiptID}'; ";
 
                     RunQueryUpdate(sqlCommand, sql);
                 }
@@ -2189,7 +2230,8 @@ namespace ThirdPartyTool
                         $"'SaleReceiptDetailTaxDetails'," +
                         $"'SaleReceiptServiceChargeTaxDetails'," +
                         $"'DeliveryDetails', " +
-                        $"'PaymentRoleDetails') ";
+                        $"'PaymentRoleDetails'," +
+                        $"'PaycorEmployees') ";
                     var reader = sqlCommand.ExecuteReader();
                     CurrentTableInDatabaseBLogicPOS7.Load(reader);
                     reader.Close();
@@ -2199,6 +2241,345 @@ namespace ThirdPartyTool
             catch (Exception ex)
             {
                 BLogicLogger.Exception("GetListTableInDatabaseBLogicPOS7", ex);
+            }
+        }
+
+        private void ReSyncItemType()
+        {
+            try
+            {
+                DataTable dtItems = new DataTable("Tables");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sqlCommand.CommandText = $"select distinct a.GroupID, c.ItemGroupID from SaleReceiptDetails a left join SaleReceipts b on a.SaleReceiptID = b.SaleReceiptID left join Items c on a.ItemID = c.ItemID" +
+                        $" where(a.PriceInitial is null or a.PriceInitial = 'P') and a.ItemGroupID = '0' and b.StartDate >= '{Item_StartDate}' and b.StartDate <= '{Item_EndDate}' ";
+                    var reader = sqlCommand.ExecuteReader();
+                    dtItems.Load(reader);
+                    reader.Close();
+
+                    foreach (DataRow item in dtItems.Rows)
+                    {
+                        RunQueryUpdate(sqlCommand, $"update SaleReceiptDetails set ItemGroupID = '{item["ItemGroupID"]}' where GroupID = '{item["GroupID"]}'");
+                    }
+
+                    IsSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetListTableInDatabaseBLogicPOS7", ex);
+            }
+        }
+
+        private void EmployeePaycor_GetEmployees()
+        {
+            DataRow[] drs = null;
+            DataTable dtEmployees = new DataTable("Employees");
+            DataTable dtRoles = new DataTable("Roles");
+            DataTable dtEmployeeRoles = new DataTable("EmployeeRoles");
+            try
+            {
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = "select EmployeeID, EmployeeCode, TRIM( EmployeeFirstName) + ' ' +  TRIM(EmployeeLastName) as EmployeeName, PaycorEmployeeID from Employees where EmployeeID > 0 and Enable = 0 order by EmployeeFirstName";
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtEmployees.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = "select RolesID, RolesName from Roles where IsDeleted = '0' or IsDeleted is null";
+                    reader = sqlCommand.ExecuteReader();
+                    dtRoles.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = "select * from EmployeeRoles where IsDeleted = '0' or IsDeleted is null";
+                    reader = sqlCommand.ExecuteReader();
+                    dtEmployeeRoles.Load(reader);
+                    reader.Close();
+
+                    dtEmployees.Columns.Add("RoleName", typeof(string));
+                    foreach (DataRow item in dtEmployees.Rows)
+                    {
+                        drs = dtEmployeeRoles.Select($"EmployeeID = '{Utility.GetIntFromRow("EmployeeID", item)}'", "");
+                        if (drs.Length > 0)
+                        {
+                            List<string> roleNames = new List<string>();
+                            foreach (DataRow dr in drs)
+                            {
+                                int roleID = Utility.GetIntFromRow("RolesID", dr);
+                                DataRow[] roleRows = dtRoles.Select($"RolesID = '{roleID}'", "");
+                                if (roleRows.Length > 0)
+                                {
+                                    roleNames.Add(Utility.GetStringFromRow("RolesName", roleRows[0]));
+                                }
+                            }
+                            item["RoleName"] = string.Join(", ", roleNames);
+                        }
+                    }
+
+                    DataSetReturn = new DataSet();
+                    DataSetReturn.Tables.Add(dtEmployees);
+                    DataSetReturn.Tables.Add(dtRoles);
+                    DataSetReturn.Tables.Add(dtEmployeeRoles);
+
+                    drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaycorEmployees'", "");
+                    if (drs.Length > 0)
+                    {
+                        DataTable dtPaycorEmployees = new DataTable("PaycorEmployees");
+                        sqlCommand.CommandText = "select * , FirstName + ' ' + LastName as EmployeeName from PaycorEmployees";
+                        reader = sqlCommand.ExecuteReader();
+                        dtPaycorEmployees.Load(reader);
+                        reader.Close();
+                        DataSetReturn.Tables.Add(dtPaycorEmployees);
+                    }
+
+                    IsSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Error retrieving Employees data from Blogicpos7.";
+                BLogicLogger.Exception("EmployeePaycor_GetEmployees", ex);
+            }
+        }
+
+        private void EmployeePaycor_GetEmployeesFromPaycor()
+        {
+            try
+            {
+                DataTable dtEmployees = new DataTable("Employees");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sqlCommand.CommandText = "select * from Employees where EmployeeID > 0 and Enable = 0 order by EmployeeFirstName desc";
+                    var reader = sqlCommand.ExecuteReader();
+                    dtEmployees.Load(reader);
+                    reader.Close();
+
+                    RunQueryUpdate(sqlCommand, "delete from PaycorEmployees");
+                    RunQueryUpdate(sqlCommand, "update Employees set PaycorEmployeeID = ''");
+
+                    string sql = $"select * from Configurations where ConfigurationName in (" +
+                    $"'SystemConfigValue.PaycorRefreshToken'," +
+                    $"'SystemConfigValue.PaycorClientID'," +
+                    $"'SystemConfigValue.PaycorClientSecret'," +
+                    $"'SystemConfigValue.PaycorAPImSubscriptionKey'," +
+                    $"'SystemConfigValue.PaycorLegalEntityID'," +
+                    $"'SystemConfigValue.EnableStream'," +
+                    $"'SystemConfigValue.SevenShiftAccessToken'" +
+                    $")";
+
+                    sqlCommand.CommandText = sql;
+                    reader = sqlCommand.ExecuteReader();
+                    DataTable dtConfigurations = new DataTable("Configurations");
+                    dtConfigurations.Load(reader);
+                    reader.Close();
+
+                    foreach (DataRow dr in dtConfigurations.Rows)
+                    {
+                        string name = Utility.GetStringFromRow("ConfigurationName", dr);
+                        switch (name)
+                        {
+                            case "SystemConfigValue.PaycorRefreshToken":
+                                Helper.PaycorRefreshToken = Utility.GetStringFromRow("ConfigurationValue", dr);
+                                break;
+                            case "SystemConfigValue.PaycorClientID":
+                                Helper.PaycorClientID = Utility.GetStringFromRow("ConfigurationValue", dr);
+                                break;
+                            case "SystemConfigValue.PaycorClientSecret":
+                                Helper.PaycorClientSecret = Utility.GetStringFromRow("ConfigurationValue", dr);
+                                break;
+                            case "SystemConfigValue.PaycorAPImSubscriptionKey":
+                                Helper.PaycorAPImSubscriptionKey = Utility.GetStringFromRow("ConfigurationValue", dr);
+                                break;
+                            case "SystemConfigValue.PaycorLegalEntityID":
+                                Helper.PaycorLegalEntityID = Utility.GetStringFromRow("ConfigurationValue", dr);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    HttpClientFactory factory = new HttpClientFactory();
+                    bool resultGenerateAccessToken = factory.GeneratePaycorAccessToken().Result;
+
+                    if (!resultGenerateAccessToken || string.IsNullOrWhiteSpace(Helper.PaycorAccessToken))
+                    {
+                        BLogicLogger.Error("=> Generate Access Token from Paycor Error -> Close Application ");
+                        return;
+                    }
+
+                    try
+                    {
+                        BLogicLogger.Debug("=> Get Employee info from Paycor & Update to local parameter");
+
+                        var urlParam = $"/v1/legalEntities/{Helper.PaycorLegalEntityID}/employees?include=Position";
+
+                    RetryGetEmployee:
+                        var paycorEmployees = factory.GetPaycorEmployees(urlParam).Result;
+
+                        if (paycorEmployees?.records.Count > 0)
+                        {
+                            foreach (var employee in paycorEmployees.records)
+                            {
+                                DataRow[] drs = dtEmployees.Select($"EmployeeCode = '{employee.employeeNumber}' and isnull(PaycorEmployeeID,'') = ''", "");
+                                if (drs.Length > 0)
+                                {
+                                    drs[0]["PaycorEmployeeID"] = employee.id;
+
+                                    RunQueryUpdate(sqlCommand, $"Update Employees set PaycorEmployeeID = '{employee.id}' where EmployeeID = '{drs[0]["EmployeeID"]}'");
+                                }
+
+                                RunQueryUpdate(sqlCommand, $"insert into PaycorEmployees (PaycorEmployeeID,EmployeeNumber,AlternateEmployeeNumber,BadgeNumber,FirstName,LastName, JobTitle) " +
+                                    $"values ('{employee.id}', '{employee.employeeNumber}', '{employee.alternateEmployeeNumber}', '{employee.badgeNumber}', '{employee.firstName}', '{employee.lastName}', '{employee.positionData?.jobTitle}' );");
+                            }
+
+                            if (paycorEmployees.hasMoreResults && !string.IsNullOrWhiteSpace(paycorEmployees.additionalResultsUrl))
+                            {
+                                urlParam = paycorEmployees.additionalResultsUrl;
+                                goto RetryGetEmployee;
+                            }
+                        }
+                        else
+                        {
+                            BLogicLogger.Error("=> Get Employees info from Paycor -> Return NULL or Empty data");
+                            BLogicLogger.Error($"   URL Params: {urlParam}");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        BLogicLogger.Error("Get EmployeeInfo From Paycor in FormMain", ex);
+                    }
+
+                    try
+                    {
+                        BLogicLogger.Debug("=> Get Employee info from Paycor & Update to local parameter");
+
+                        var urlParam = $"/v1/legalEntities/{Helper.PaycorLegalEntityID}/employees?include=Position";
+
+                    RetryGetEmployee2:
+                        var paycorEmployees = factory.GetPaycorEmployees(urlParam).Result;
+
+                        if (paycorEmployees?.records.Count > 0)
+                        {
+                            foreach (var employee in paycorEmployees.records)
+                            {
+                                DataRow[] drs = dtEmployees.Select($"EmployeeCode = '{employee.alternateEmployeeNumber}' and isnull(PaycorEmployeeID,'') = ''", "");
+                                if (drs.Length > 0)
+                                {
+                                    drs[0]["PaycorEmployeeID"] = employee.id;
+
+                                    RunQueryUpdate(sqlCommand, $"Update Employees set PaycorEmployeeID = '{employee.id}' where EmployeeID = '{drs[0]["EmployeeID"]}'");
+                                }
+                            }
+
+                            if (paycorEmployees.hasMoreResults && !string.IsNullOrWhiteSpace(paycorEmployees.additionalResultsUrl))
+                            {
+                                urlParam = paycorEmployees.additionalResultsUrl;
+                                goto RetryGetEmployee2;
+                            }
+                        }
+                        else
+                        {
+                            BLogicLogger.Error("=> Get Employees info from Paycor -> Return NULL or Empty data");
+                            BLogicLogger.Error($"   URL Params: {urlParam}");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        BLogicLogger.Error("Get EmployeeInfo From Paycor in FormMain", ex);
+                    }
+                }
+
+                IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetListTableInDatabaseBLogicPOS7", ex);
+            }
+        }
+
+        public void RefundFullAmount()
+        {
+            try
+            {
+                DataTable dtEmployee = new DataTable("Employees");
+                DataTable dtRoles = new DataTable("Roles");
+
+                DataTable dtBatch = new DataTable("TransactionDetail");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    var sql = $"update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{CloseReceipt_SaleReceiptID}'; ";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    sql = $"delete from PaymentRoleDetails SaleReceiptID = '{CloseReceipt_SaleReceiptID}'; ";
+
+                    RunQueryUpdate(sqlCommand, sql);
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    var sql = $"select distinct BatchUnique from TransactionDetail where ISNULL(BatchUnique, '') <> '' and " +
+                        $" ID in (select CreditCardTransactionID from {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails a where a.SaleReceiptID = '{CloseReceipt_SaleReceiptID}' and ISNULL(CreditCardTransactionID, '') <> '')";
+                    sqlCommand.CommandText = sql;
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtBatch.Load(reader);
+                    reader.Close();
+
+                    sql = $"update TransactionDetail set BatchStatus = 'Closed', BatchUnique = '{Guid.Empty}' " +
+                        $"where ID in (select CreditCardTransactionID from {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails a where a.SaleReceiptID = '{CloseReceipt_SaleReceiptID}' and ISNULL(CreditCardTransactionID, '') <> '')";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                }
+
+                foreach (DataRow item in dtBatch.Rows)
+                {
+                    UpdateBatchByBatchUnique(item["BatchUnique"]);
+                }
+                IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
             }
         }
     }

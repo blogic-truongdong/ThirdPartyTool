@@ -381,6 +381,30 @@
     <Compile Include="EmployeeInfo.Designer.cs">
       <DependentUpon>EmployeeInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Employee\EmployeeLinkPaycorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Employee\EmployeeLinkPaycorForm.Designer.cs">
+      <DependentUpon>EmployeeLinkPaycorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Employee\EmployeeLinkPaycorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Employee\EmployeeLinkPaycorView.Designer.cs">
+      <DependentUpon>EmployeeLinkPaycorView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Employee\EmployeeLinkPaycorView2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Employee\EmployeeLinkPaycorView2.Designer.cs">
+      <DependentUpon>EmployeeLinkPaycorView2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Employee\EmployeeLinkRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Employee\EmployeeLinkRow.Designer.cs">
+      <DependentUpon>EmployeeLinkRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Employee\EmployeeView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -406,6 +430,19 @@
     <Compile Include="HotFixView.Designer.cs">
       <DependentUpon>HotFixView.cs</DependentUpon>
     </Compile>
+    <Compile Include="HttpClientFactory.cs" />
+    <Compile Include="Item\ItemView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Item\ItemView.Designer.cs">
+      <DependentUpon>ItemView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Item\ReSyncItemTypeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Item\ReSyncItemTypeView.Designer.cs">
+      <DependentUpon>ReSyncItemTypeView.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -418,6 +455,9 @@
     <Compile Include="Models\EmployeeClockInInfoEntity.cs" />
     <Compile Include="Models\EmployeeEntity.cs" />
     <Compile Include="Models\EmployeeRoleEntity.cs" />
+    <Compile Include="Models\GeneratePaycorAccessTokenResponse.cs" />
+    <Compile Include="Models\GetEmployeesByLegalEntityIDResponse.cs" />
+    <Compile Include="Models\GetEmployeeTimeCardPunchesResponse.cs" />
     <Compile Include="Models\PaymentRoleDetailEntity.cs" />
     <Compile Include="Models\RoleEntity.cs" />
     <Compile Include="Models\SaleReceiptDetailEntity.cs" />
@@ -457,6 +497,12 @@
     </Compile>
     <Compile Include="SaleReceipt\PaymentDetailView.Designer.cs">
       <DependentUpon>PaymentDetailView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\RefundTicketView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\RefundTicketView.Designer.cs">
+      <DependentUpon>RefundTicketView.cs</DependentUpon>
     </Compile>
     <Compile Include="SaleReceipt\SelectSaleReceiptForm.cs">
       <SubType>Form</SubType>
@@ -534,6 +580,18 @@
     <EmbeddedResource Include="EmployeeInfo.resx">
       <DependentUpon>EmployeeInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Employee\EmployeeLinkPaycorForm.resx">
+      <DependentUpon>EmployeeLinkPaycorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Employee\EmployeeLinkPaycorView.resx">
+      <DependentUpon>EmployeeLinkPaycorView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Employee\EmployeeLinkPaycorView2.resx">
+      <DependentUpon>EmployeeLinkPaycorView2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Employee\EmployeeLinkRow.resx">
+      <DependentUpon>EmployeeLinkRow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Employee\EmployeeView.resx">
       <DependentUpon>EmployeeView.cs</DependentUpon>
     </EmbeddedResource>
@@ -545,6 +603,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HotFixView.resx">
       <DependentUpon>HotFixView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Item\ItemView.resx">
+      <DependentUpon>ItemView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Item\ReSyncItemTypeView.resx">
+      <DependentUpon>ReSyncItemTypeView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -573,6 +637,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\PaymentDetailView.resx">
       <DependentUpon>PaymentDetailView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\RefundTicketView.resx">
+      <DependentUpon>RefundTicketView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\SelectSaleReceiptForm.resx">
       <DependentUpon>SelectSaleReceiptForm.cs</DependentUpon>

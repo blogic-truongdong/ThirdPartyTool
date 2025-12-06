@@ -32,6 +32,7 @@ namespace ThirdPartyTool
         {
             this.pnlContainer = new System.Windows.Forms.Panel();
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.btnRefund = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.btnUpdateStatusReceipt = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.btnAddTipForPaymentDetail = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.btnAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
@@ -40,6 +41,7 @@ namespace ThirdPartyTool
             this.addTipForPaymentDetailView = new ThirdPartyTool.SaleReceipt.AddTipForPaymentDetailView();
             this.updateStatusReceiptView = new ThirdPartyTool.SaleReceipt.UpdateStatusReceiptView();
             this.pnlLoading = new System.Windows.Forms.PictureBox();
+            this.refundTicketView = new ThirdPartyTool.SaleReceipt.RefundTicketView();
             this.pnlContainer.SuspendLayout();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlLoading)).BeginInit();
@@ -51,6 +53,7 @@ namespace ThirdPartyTool
             this.pnlContainer.Controls.Add(this.addTipBySaleTokenView);
             this.pnlContainer.Controls.Add(this.addTipForPaymentDetailView);
             this.pnlContainer.Controls.Add(this.updateStatusReceiptView);
+            this.pnlContainer.Controls.Add(this.refundTicketView);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(10, 10);
             this.pnlContainer.Name = "pnlContainer";
@@ -59,6 +62,7 @@ namespace ThirdPartyTool
             // 
             // pnlTop
             // 
+            this.pnlTop.Controls.Add(this.btnRefund);
             this.pnlTop.Controls.Add(this.btnUpdateStatusReceipt);
             this.pnlTop.Controls.Add(this.btnAddTipForPaymentDetail);
             this.pnlTop.Controls.Add(this.btnAddTipBySaleToken);
@@ -68,6 +72,25 @@ namespace ThirdPartyTool
             this.pnlTop.Name = "pnlTop";
             this.pnlTop.Size = new System.Drawing.Size(880, 580);
             this.pnlTop.TabIndex = 2;
+            // 
+            // btnRefund
+            // 
+            this.btnRefund.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnRefund.BackColor = System.Drawing.Color.White;
+            this.btnRefund.BackgroundColor = System.Drawing.Color.White;
+            this.btnRefund.BorderColor = System.Drawing.Color.Gray;
+            this.btnRefund.BorderRadius = 5;
+            this.btnRefund.BorderSize = 1;
+            this.btnRefund.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnRefund.ForeColor = System.Drawing.Color.Black;
+            this.btnRefund.Location = new System.Drawing.Point(450, 300);
+            this.btnRefund.Margin = new System.Windows.Forms.Padding(10);
+            this.btnRefund.Name = "btnRefund";
+            this.btnRefund.Size = new System.Drawing.Size(300, 150);
+            this.btnRefund.TabIndex = 7;
+            this.btnRefund.Text = "Refund Ticket";
+            this.btnRefund.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnRefund.TextColor = System.Drawing.Color.Black;
             // 
             // btnUpdateStatusReceipt
             // 
@@ -180,6 +203,15 @@ namespace ThirdPartyTool
             this.pnlLoading.TabStop = false;
             this.pnlLoading.Visible = false;
             // 
+            // refundTicketView
+            // 
+            this.refundTicketView.BackColor = System.Drawing.Color.White;
+            this.refundTicketView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.refundTicketView.Location = new System.Drawing.Point(0, 0);
+            this.refundTicketView.Name = "refundTicketView1";
+            this.refundTicketView.Size = new System.Drawing.Size(880, 580);
+            this.refundTicketView.TabIndex = 9;
+            // 
             // ReceiptView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -210,5 +242,7 @@ namespace ThirdPartyTool
         private SaleReceipt.AddTipForPaymentDetailView addTipForPaymentDetailView;
         private BLabel_Rounded btnUpdateStatusReceipt;
         private SaleReceipt.UpdateStatusReceiptView updateStatusReceiptView;
+        private BLabel_Rounded btnRefund;
+        private SaleReceipt.RefundTicketView refundTicketView;
     }
 }

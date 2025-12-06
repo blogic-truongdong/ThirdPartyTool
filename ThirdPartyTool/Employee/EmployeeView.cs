@@ -129,7 +129,8 @@ namespace ThirdPartyTool.Employee
         {
             try
             {
-                cbbSyncRoles.SelectedIndex = 0;
+                if (cbbSyncRoles.DataSource != null)
+                    cbbSyncRoles.SelectedIndex = 0;
 
                 var currentRow = dgvEmployees.CurrentRow;
                 CurrentEmployeeID = Utility.GetIntFromObject(currentRow.Cells["EmployeeID"].Value);
