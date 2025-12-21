@@ -33,7 +33,11 @@ namespace ThirdPartyTool
         ReSyncItemType,
         EmployeePaycor_GetEmployees,
         EmployeePaycor_GetEmployeesFromPaycor,
-        SaleReceipt_RefundFullAmount
+        SaleReceipt_RefundFullAmount,
+        GetReceiptTemplateBySaleReceiptID,
+        VoidReceipt,
+        CancelReceipt,
+        RefundTicket
     }
     public partial class ProcessForm : Form
     {
@@ -85,7 +89,13 @@ namespace ThirdPartyTool
             this.Load += ProcessForm_Load;
         }
 
-        public void InitGetReceiptTemplate(string ticketNumber)
+        public void InitGetReceiptTemplateBySaleReceiptID(string _saleID)
+        {
+            CurrentProcessName = ProcessNameEnum.GetReceiptTemplateBySaleReceiptID;
+            this.SaleReceiptID = _saleID;
+        }
+
+        public void InitGetReceiptTemplate(string ticketNumber, bool allStatus = false)
         {
             CurrentProcessName = ProcessNameEnum.GetReceiptTemplateByTicketNumber;
             this.GetReceiptTemplateByTicketNumber_SaleReceiptNumber = ticketNumber;
@@ -132,6 +142,15 @@ namespace ThirdPartyTool
 
                 switch (CurrentProcessName)
                 {
+                    case ProcessNameEnum.CancelReceipt:
+                        CancelReceipt(SaleReceiptID);
+                        break;
+                    case ProcessNameEnum.VoidReceipt:
+                        VoidReceipt(SaleReceiptID);
+                        break;
+                    case ProcessNameEnum.GetReceiptTemplateBySaleReceiptID:
+                        GetReceiptTemplateBySaleReceiptID(SaleReceiptID);
+                        break;
                     case ProcessNameEnum.SaleReceipt_RefundFullAmount:
                         RefundFullAmount();
                         break;
@@ -433,7 +452,7 @@ namespace ThirdPartyTool
                 int employeePaidID = 0;
                 int cashierID = 0;
                 string tableID = string.Empty;
-                object saleID = null;
+                string saleID = null;
                 string EmployeeName = "";
                 string EmployeePaidName = string.Empty;
                 DataTable dtConfigurations = new DataTable("Configurations");
@@ -514,6 +533,111 @@ namespace ThirdPartyTool
                             break;
 
                     }
+
+                    if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                    {
+                        return;
+                    }
+                }
+
+                GetReceiptTemplateBySaleReceiptID(saleID);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Something went wrong while searching for the ticket.{Environment.NewLine}Please try again or contact TruongDS.";
+                BLogicLogger.Exception("GetReceiptTemplateByTicketNumber", ex, new System.Collections.Generic.List<object>() { ticketNumber });
+            }
+        }
+
+        private void GetReceiptTemplateBySaleReceiptID(string _saleReceiptID)
+        {
+            try
+            {
+                DataRow[] drs = null;
+
+                SaleReceiptDTO saleReceiptDTO = new SaleReceiptDTO();
+                StoreDTO storeDTO = new StoreDTO();
+
+                DataTable dtTaxCodes = new DataTable("TaxCodes");
+                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+                DataTable dtCustomer = new DataTable("Customers");
+                DataTable dtCashierID = new DataTable("CashierID");
+                DataTable dtDeliveryDetails = new DataTable("DeliveryDetails");
+                DataTable dtEmployeePaidID = new DataTable("EmployeePaidID");
+                DataTable dtTables = new DataTable("Tables");
+                DataTable dtTablesInDatabase = new DataTable("Tables");
+
+                string TransactionStatusID = string.Empty;
+                string currentCustomerName = string.Empty;
+                string currentCustomerPhone = string.Empty;
+                string customerID = string.Empty;
+                int employeePaidID = 0;
+                int cashierID = 0;
+                string tableID = string.Empty;
+                object saleID = null;
+                string EmployeeName = "";
+                string EmployeePaidName = string.Empty;
+                DataTable dtConfigurations = new DataTable("Configurations");
+                DataTable dtStores = new DataTable("Stores");
+                SaleReceiptEntity saleReceiptEntity = null;
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = "select * from Configurations";
+                    var reader = sqlCommand.ExecuteReader();
+
+                    dtConfigurations.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = "select * from Stores";
+                    reader = sqlCommand.ExecuteReader();
+                    dtStores.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptID = '{_saleReceiptID}' ";
+                    if (GetReceiptTemplateByTicketNumber_Include_VOID_CLOSE_REFUND_OPER)
+                        sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptNumber = '{_saleReceiptID}' ";
+
+                    reader = sqlCommand.ExecuteReader();
+                    saleReceiptDTO.SaleReceipts.Load(reader);
+                    reader.Close();
+
+                    sqlCommand.CommandText = $"SELECT TABLE_NAME " +
+                        $"FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_NAME in ('SaleReceiptDetailTaxDetails'," +
+                        $"'SaleReceiptServiceChargeTaxDetails'," +
+                        $"'DeliveryDetails', 'PaymentRoleDetails') ";
+                    reader = sqlCommand.ExecuteReader();
+                    dtTablesInDatabase.Load(reader);
+                    reader.Close();
+
+                    if (saleReceiptDTO.SaleReceipts?.Count == 1)
+                    {
+
+                    }
+                    else if (saleReceiptDTO.SaleReceipts?.Count > 1)
+                    {
+                        SelectSaleReceiptForm selectSaleReceiptForm = new SelectSaleReceiptForm();
+
+                    }
+                    else
+                    {
+                        ErrorMessage = "Ticket not found.";
+                        return;
+                    }
+
+                    saleID = Utility.GetStringFromRow("SaleReceiptID", saleReceiptDTO.SaleReceipts.Rows[0]);
+                    customerID = Utility.GetStringFromRow("CustomerID", saleReceiptDTO.SaleReceipts.Rows[0]);
+                    employeePaidID = Utility.GetIntFromRow("EmployeePaidID", saleReceiptDTO.SaleReceipts.Rows[0]);
+                    cashierID = Utility.GetIntFromRow("CashierID", saleReceiptDTO.SaleReceipts.Rows[0]);
+                    currentCustomerPhone = Utility.GetStringFromRow("CurrentCustomerPhone", saleReceiptDTO.SaleReceipts.Rows[0]);
+                    currentCustomerName = Utility.GetStringFromRow("CurrentCustomerName", saleReceiptDTO.SaleReceipts.Rows[0]);
+                    tableID = Utility.GetStringFromRow("TableID", saleReceiptDTO.SaleReceipts.Rows[0]);
+                    TransactionStatusID = Utility.GetStringFromRow("TransactionStatusID", saleReceiptDTO.SaleReceipts.Rows[0]);
 
                     if (!string.IsNullOrWhiteSpace(ErrorMessage))
                     {
@@ -697,9 +821,10 @@ namespace ThirdPartyTool
             catch (Exception ex)
             {
                 ErrorMessage = $"Something went wrong while searching for the ticket.{Environment.NewLine}Please try again or contact TruongDS.";
-                BLogicLogger.Exception("GetReceiptTemplateByTicketNumber", ex, new System.Collections.Generic.List<object>() { ticketNumber });
+                BLogicLogger.Exception("GetReceiptTemplateBySaleReceiptID", ex, new System.Collections.Generic.List<object>() { _saleReceiptID });
             }
         }
+
 
         private void UpdateTipByTokenReceipt()
         {
@@ -898,10 +1023,20 @@ namespace ThirdPartyTool
             }
         }
 
-        private void RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate)
+        private void RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate, SqlParameter[] cmdParams = null)
         {
             BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
             sqlCommand.CommandText = scriptUpdate;
+
+            if (cmdParams != null)
+            {
+                for (int i = 0; i < cmdParams.Length; i++)
+                {
+                    SqlParameter parm = cmdParams[i];
+                    sqlCommand.Parameters.Add(parm);
+                }
+            }
+
             var resultQueryUpdate = sqlCommand.ExecuteNonQuery();
             if (resultQueryUpdate < 0)
             {
@@ -940,7 +1075,8 @@ namespace ThirdPartyTool
                        $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end ) as TotalTips, " +
                        $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end ) - sum(case when TranType = 'Return' then SVCFee else 0 end ) as TotalSVCFeeAmount," +
                        $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as DepositAmount, " +
-                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount " +
+                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount," +
+                       $" count(ID) as TicketCount " +
                        $" from TransactionDetail where BatchUnique = '{batchUnique}'";
                     sqlCommand.CommandText = sql;
                     reader = sqlCommand.ExecuteReader();
@@ -956,7 +1092,8 @@ namespace ThirdPartyTool
                             $" TotalTips = '{dtCalculateBatch.Rows[0]["TotalTips"]}', " +
                             $" TotalSVCFeeAmount = {dtCalculateBatch.Rows[0]["TotalSVCFeeAmount"]}," +
                             $" DepositAmount = {dtCalculateBatch.Rows[0]["DepositAmount"]}," +
-                            $" MerchantFeeAmount = {dtCalculateBatch.Rows[0]["MerchantFeeAmount"]}" +
+                            $" MerchantFeeAmount = {dtCalculateBatch.Rows[0]["MerchantFeeAmount"]}," +
+                            $" Quantity = '{dtCalculateBatch.Rows[0]["TicketCount"]}'" +
                             $" where BatchUnique = '{batchUnique}';";
 
                         RunQueryUpdate(sqlCommand, sql);
@@ -1526,9 +1663,13 @@ namespace ThirdPartyTool
 
                     RunQueryUpdate(sqlCommand, sql);
 
-                    sql = $"delete from PaymentRoleDetails SaleReceiptID = '{CloseReceipt_SaleReceiptID}'; ";
+                    DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
+                    if (drs.Length > 0)
+                    {
+                        sql = $"delete from PaymentRoleDetails where SaleReceiptID = '{CloseReceipt_SaleReceiptID}'; ";
 
-                    RunQueryUpdate(sqlCommand, sql);
+                        RunQueryUpdate(sqlCommand, sql);
+                    }
                 }
 
                 using (SqlCommand sqlCommand = new SqlCommand())
@@ -2580,6 +2721,375 @@ namespace ThirdPartyTool
             catch (Exception ex)
             {
                 BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
+            }
+        }
+
+        public void RefundReceipt(string _saleReceiptID)
+        {
+            try
+            {
+                string sql = string.Empty;
+                DataTable dtSaleReceiptPaymentDetails = new DataTable("Employees");
+                DataTable dtRoles = new DataTable("Roles");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sql = $" update SaleReceipts set TransactionStatusID = 'VOID', ReturnCode = '-115' where SaleReceiptID = '{_saleReceiptID}'; ";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
+                    if (drs.Length > 0)
+                    {
+                        sql = $"delete from PaymentRoleDetails where SaleReceiptID = '{_saleReceiptID}'; ";
+
+                        RunQueryUpdate(sqlCommand, sql);
+                    }
+
+                    sqlCommand.CommandText = $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{_saleReceiptID}'";
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptPaymentDetails.Load(reader);
+                    reader.Close();
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
+                    {
+                        if (Utility.GetIntFromRow("PaymentMethodID", item) == 2 &&
+                            Utility.GetStringFromRow("CreditCardTransactionType", item).Contains("Sale"))
+                        {
+                            DataTable dtTransactionDetail = new DataTable("TransactionDetail");
+                            sqlCommand.CommandText = $"select * from TransactionDetail where ID = '{item["CreditCardTransactionID"]}'";
+                            var readerMerchant = sqlCommand.ExecuteReader();
+                            dtTransactionDetail.Load(readerMerchant);
+                            readerMerchant.Close();
+
+                            if (dtTransactionDetail?.Rows.Count > 0)
+                            {
+                                sql = $"update MERCHANT.dbo.TransactionDetail set TranStatus = 'VOIDED' where ID = '{dtTransactionDetail.Rows[0]["ID"]}'";
+                                RunQueryUpdate(sqlCommand, sql);
+
+                                sql = GetSqlInsert(dtTransactionDetail);
+                                SqlParameter[] parparms = GetCreateParameters(dtTransactionDetail);
+
+                                int colCount = dtTransactionDetail.Columns.Count;
+
+                                for (int i = 0; i < colCount; i++)
+                                {
+                                    if (i == 0)
+                                        parparms[i].Value = Guid.NewGuid().ToString();
+                                    else if (dtTransactionDetail.Columns[i].ColumnName == "TranType")
+                                        parparms[i].Value = "VoidSale";
+                                    else
+                                        parparms[i].Value = dtTransactionDetail.Rows[0][i];
+                                }
+
+                                RunQueryUpdate(sqlCommand, sql, parparms);
+
+                                if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", dtTransactionDetail.Rows[0])))
+                                    UpdateBatchByBatchUnique(dtTransactionDetail.Rows[0]["BatchUnique"]);
+                            }
+                        }
+                    }
+                }
+
+                IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
+            }
+        }
+
+        public void VoidReceipt(string _saleReceiptID)
+        {
+            try
+            {
+                string sql = string.Empty;
+                DataTable dtSaleReceiptPaymentDetails = new DataTable("Employees");
+                DataTable dtRoles = new DataTable("Roles");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sql = $" update SaleReceipts set TransactionStatusID = 'VOID', ReturnCode = '-115' where SaleReceiptID = '{_saleReceiptID}'; ";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
+                    if (drs.Length > 0)
+                    {
+                        sql = $"delete from PaymentRoleDetails where SaleReceiptID = '{_saleReceiptID}'; ";
+
+                        RunQueryUpdate(sqlCommand, sql);
+                    }
+
+                    sqlCommand.CommandText = $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{_saleReceiptID}'";
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptPaymentDetails.Load(reader);
+                    reader.Close();
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
+                    {
+                        if (Utility.GetIntFromRow("PaymentMethodID", item) == 2 &&
+                            Utility.GetStringFromRow("CreditCardTransactionType", item).Contains("Sale"))
+                        {
+                            DataTable dtTransactionDetail = new DataTable("TransactionDetail");
+                            sqlCommand.CommandText = $"select * from TransactionDetail where ID = '{item["CreditCardTransactionID"]}'";
+                            var readerMerchant = sqlCommand.ExecuteReader();
+                            dtTransactionDetail.Load(readerMerchant);
+                            readerMerchant.Close();
+
+                            if (dtTransactionDetail?.Rows.Count > 0)
+                            {
+                                sql = $"update MERCHANT.dbo.TransactionDetail set TranStatus = 'VOIDED' where ID = '{dtTransactionDetail.Rows[0]["ID"]}'";
+                                RunQueryUpdate(sqlCommand, sql);
+
+                                sql = GetSqlInsert(dtTransactionDetail);
+                                SqlParameter[] parparms = GetCreateParameters(dtTransactionDetail);
+
+                                int colCount = dtTransactionDetail.Columns.Count;
+
+                                for (int i = 0; i < colCount; i++)
+                                {
+                                    if (i == 0)
+                                        parparms[i].Value = Guid.NewGuid().ToString();
+                                    else if (dtTransactionDetail.Columns[i].ColumnName == "TranType")
+                                        parparms[i].Value = "VoidSale";
+                                    else
+                                        parparms[i].Value = dtTransactionDetail.Rows[0][i];
+                                }
+
+                                RunQueryUpdate(sqlCommand, sql, parparms);
+
+                                if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", dtTransactionDetail.Rows[0])))
+                                    UpdateBatchByBatchUnique(dtTransactionDetail.Rows[0]["BatchUnique"]);
+                            }
+                        }
+                    }
+                }
+
+                IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
+            }
+        }
+
+        public void CancelReceipt(string _saleReceiptID)
+        {
+            try
+            {
+                string sql = string.Empty;
+                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sql = $" update SaleReceipts set TransactionStatusID = 'CANR', ReturnCode = '-106' where SaleReceiptID = '{_saleReceiptID}'; ";
+
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
+                    if (drs.Length > 0)
+                    {
+                        sql = $"delete from PaymentRoleDetails where SaleReceiptID = '{_saleReceiptID}'; ";
+
+                        RunQueryUpdate(sqlCommand, sql);
+                    }
+
+                    sqlCommand.CommandText = $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{_saleReceiptID}'";
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptPaymentDetails.Load(reader);
+                    reader.Close();
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
+                    {
+                        if (Utility.GetIntFromRow("PaymentMethodID", item) == 2 &&
+                            Utility.GetStringFromRow("CreditCardTransactionType", item).Contains("Sale"))
+                        {
+                            DataTable dtTransactionDetail = new DataTable("TransactionDetail");
+                            sqlCommand.CommandText = $"select * from TransactionDetail where ID = '{item["CreditCardTransactionID"]}'";
+                            var readerMerchant = sqlCommand.ExecuteReader();
+                            dtTransactionDetail.Load(readerMerchant);
+                            readerMerchant.Close();
+
+                            if (dtTransactionDetail?.Rows.Count > 0)
+                            {
+                                sql = $"update MERCHANT.dbo.TransactionDetail set TranStatus = 'VOIDED' where ID = '{dtTransactionDetail.Rows[0]["ID"]}'";
+                                RunQueryUpdate(sqlCommand, sql);
+
+                                sql = GetSqlInsert(dtTransactionDetail);
+                                SqlParameter[] parparms = GetCreateParameters(dtTransactionDetail);
+
+                                int colCount = dtTransactionDetail.Columns.Count;
+
+                                for (int i = 0; i < colCount; i++)
+                                {
+                                    if (i == 0)
+                                        parparms[i].Value = Guid.NewGuid().ToString();
+                                    else if (dtTransactionDetail.Columns[i].ColumnName == "TranType")
+                                        parparms[i].Value = "VoidSale";
+                                    else
+                                        parparms[i].Value = dtTransactionDetail.Rows[0][i];
+                                }
+
+                                RunQueryUpdate(sqlCommand, sql, parparms);
+
+                                if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", dtTransactionDetail.Rows[0])))
+                                    UpdateBatchByBatchUnique(dtTransactionDetail.Rows[0]["BatchUnique"]);
+                            }
+                        }
+                    }
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
+                    {
+                        sql = $"delete from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}'";
+                        RunQueryUpdate(sqlCommand, sql);
+                    }
+                }
+
+                IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
+            }
+        }
+
+        private string GetSqlInsert(DataTable dt)
+        {
+            string strInsert = string.Empty;
+            try
+            {
+                strInsert = "INSERT INTO dbo." + dt.TableName + " (";
+
+                int colCount = dt.Columns.Count;
+                for (int i = 0; i < colCount; i++)
+                {
+                    strInsert += "[" + dt.Columns[i].ColumnName.ToUpper() + "]";
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += ") VALUES (";
+                for (int i = 0; i < colCount; i++)
+                {
+                    strInsert += "@" + dt.Columns[i].ColumnName.ToUpper();
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += "); ";
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetSqlInsert", ex);
+            }
+            return strInsert;
+        }
+
+        private SqlParameter[] GetCreateParameters(DataTable dt)
+        {
+            SqlParameter[] parms = null;
+            try
+            {
+                int colCount = dt.Columns.Count;
+                parms = new SqlParameter[colCount];
+                for (int i = 0; i < colCount; i++)
+                {
+                    parms[i] = new SqlParameter("@" + dt.Columns[i].ColumnName.ToUpper(), ToDbType(dt.Columns[i].DataType));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetCreateParameters", ex);
+            }
+            return parms;
+        }
+
+        public static SqlDbType ToDbType(System.Type type)
+        {
+            switch (type.Name)
+            {
+                case "String":
+                    return SqlDbType.NVarChar;
+                case "Int":
+                    return SqlDbType.Int;
+                case "Int32":
+                    return SqlDbType.Int;
+                case "Boolean":
+                    return SqlDbType.Bit;
+                case "Decimal":
+                    return SqlDbType.Decimal;
+                case "Double":
+                    return SqlDbType.Money;
+                case "DateTime":
+                    return SqlDbType.DateTime;
+                case "Byte":
+                    return SqlDbType.TinyInt;
+                case "Short":
+                    return SqlDbType.SmallInt;
+                case "Long":
+                    return SqlDbType.BigInt;
+                default:
+                    throw new Exception("Can't convert to " + type.Name);
             }
         }
     }

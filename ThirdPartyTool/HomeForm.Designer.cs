@@ -37,8 +37,10 @@
             this.hotFixView = new ThirdPartyTool.HotFixView();
             this.itemView1 = new ThirdPartyTool.Item.ItemView();
             this.employeeLinkPaycorView21 = new ThirdPartyTool.Employee.EmployeeLinkPaycorView2();
+            this.receiptView_v2 = new ThirdPartyTool.SaleReceipt.ReceiptView_v2();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.btnReceipt_V2 = new System.Windows.Forms.Label();
             this.btnEmployeePaycor = new System.Windows.Forms.Label();
             this.btnItem = new System.Windows.Forms.Label();
             this.btnHotFix = new System.Windows.Forms.Label();
@@ -83,6 +85,7 @@
             this.pnlContainer.Controls.Add(this.hotFixView);
             this.pnlContainer.Controls.Add(this.itemView1);
             this.pnlContainer.Controls.Add(this.employeeLinkPaycorView21);
+            this.pnlContainer.Controls.Add(this.receiptView_v2);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
@@ -150,6 +153,14 @@
             this.employeeLinkPaycorView21.Size = new System.Drawing.Size(798, 698);
             this.employeeLinkPaycorView21.TabIndex = 6;
             // 
+            // receiptView_v2
+            // 
+            this.receiptView_v2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.receiptView_v2.Location = new System.Drawing.Point(0, 0);
+            this.receiptView_v2.Name = "receiptView_v2";
+            this.receiptView_v2.Size = new System.Drawing.Size(798, 698);
+            this.receiptView_v2.TabIndex = 7;
+            // 
             // pnlLeft
             // 
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(63)))), ((int)(((byte)(84)))));
@@ -164,6 +175,7 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.btnReceipt_V2);
             this.panel6.Controls.Add(this.btnEmployeePaycor);
             this.panel6.Controls.Add(this.btnItem);
             this.panel6.Controls.Add(this.btnHotFix);
@@ -179,6 +191,22 @@
             this.panel6.Size = new System.Drawing.Size(200, 463);
             this.panel6.TabIndex = 2;
             // 
+            // btnReceipt_V2
+            // 
+            this.btnReceipt_V2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReceipt_V2.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnReceipt_V2.ForeColor = System.Drawing.Color.White;
+            this.btnReceipt_V2.Image = global::ThirdPartyTool.Properties.Resources.Icon_Receipt;
+            this.btnReceipt_V2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReceipt_V2.Location = new System.Drawing.Point(0, 300);
+            this.btnReceipt_V2.Margin = new System.Windows.Forms.Padding(0);
+            this.btnReceipt_V2.Name = "btnReceipt_V2";
+            this.btnReceipt_V2.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnReceipt_V2.Size = new System.Drawing.Size(200, 50);
+            this.btnReceipt_V2.TabIndex = 10;
+            this.btnReceipt_V2.Text = "         Receipt";
+            this.btnReceipt_V2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // btnEmployeePaycor
             // 
             this.btnEmployeePaycor.Dock = System.Windows.Forms.DockStyle.Top;
@@ -193,6 +221,7 @@
             this.btnEmployeePaycor.TabIndex = 9;
             this.btnEmployeePaycor.Text = "Employee - Paycor";
             this.btnEmployeePaycor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnEmployeePaycor.Visible = false;
             // 
             // btnItem
             // 
@@ -432,5 +461,7 @@
         private Item.ItemView itemView1;
         private System.Windows.Forms.Label btnEmployeePaycor;
         private Employee.EmployeeLinkPaycorView2 employeeLinkPaycorView21;
+        private System.Windows.Forms.Label btnReceipt_V2;
+        private SaleReceipt.ReceiptView_v2 receiptView_v2;
     }
 }

@@ -40,8 +40,8 @@ namespace ThirdPartyTool
             this.addTipBySaleTokenView = new ThirdPartyTool.SaleReceipt.AddTipBySaleTokenView();
             this.addTipForPaymentDetailView = new ThirdPartyTool.SaleReceipt.AddTipForPaymentDetailView();
             this.updateStatusReceiptView = new ThirdPartyTool.SaleReceipt.UpdateStatusReceiptView();
-            this.pnlLoading = new System.Windows.Forms.PictureBox();
             this.refundTicketView = new ThirdPartyTool.SaleReceipt.RefundTicketView();
+            this.pnlLoading = new System.Windows.Forms.PictureBox();
             this.pnlContainer.SuspendLayout();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlLoading)).BeginInit();
@@ -49,11 +49,11 @@ namespace ThirdPartyTool
             // 
             // pnlContainer
             // 
-            this.pnlContainer.Controls.Add(this.pnlTop);
             this.pnlContainer.Controls.Add(this.addTipBySaleTokenView);
             this.pnlContainer.Controls.Add(this.addTipForPaymentDetailView);
             this.pnlContainer.Controls.Add(this.updateStatusReceiptView);
             this.pnlContainer.Controls.Add(this.refundTicketView);
+            this.pnlContainer.Controls.Add(this.pnlTop);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(10, 10);
             this.pnlContainer.Name = "pnlContainer";
@@ -191,6 +191,15 @@ namespace ThirdPartyTool
             this.updateStatusReceiptView.Size = new System.Drawing.Size(880, 580);
             this.updateStatusReceiptView.TabIndex = 8;
             // 
+            // refundTicketView
+            // 
+            this.refundTicketView.BackColor = System.Drawing.Color.White;
+            this.refundTicketView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.refundTicketView.Location = new System.Drawing.Point(0, 0);
+            this.refundTicketView.Name = "refundTicketView";
+            this.refundTicketView.Size = new System.Drawing.Size(880, 580);
+            this.refundTicketView.TabIndex = 9;
+            // 
             // pnlLoading
             // 
             this.pnlLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
@@ -202,15 +211,6 @@ namespace ThirdPartyTool
             this.pnlLoading.TabIndex = 3;
             this.pnlLoading.TabStop = false;
             this.pnlLoading.Visible = false;
-            // 
-            // refundTicketView
-            // 
-            this.refundTicketView.BackColor = System.Drawing.Color.White;
-            this.refundTicketView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.refundTicketView.Location = new System.Drawing.Point(0, 0);
-            this.refundTicketView.Name = "refundTicketView1";
-            this.refundTicketView.Size = new System.Drawing.Size(880, 580);
-            this.refundTicketView.TabIndex = 9;
             // 
             // ReceiptView
             // 

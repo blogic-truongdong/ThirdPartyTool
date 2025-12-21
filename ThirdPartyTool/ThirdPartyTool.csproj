@@ -498,6 +498,18 @@
     <Compile Include="SaleReceipt\PaymentDetailView.Designer.cs">
       <DependentUpon>PaymentDetailView.cs</DependentUpon>
     </Compile>
+    <Compile Include="SaleReceipt\ReceiptInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\ReceiptInfoControl.Designer.cs">
+      <DependentUpon>ReceiptInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\ReceiptView_v2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\ReceiptView_v2.Designer.cs">
+      <DependentUpon>ReceiptView_v2.cs</DependentUpon>
+    </Compile>
     <Compile Include="SaleReceipt\RefundTicketView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -637,6 +649,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\PaymentDetailView.resx">
       <DependentUpon>PaymentDetailView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\ReceiptInfoControl.resx">
+      <DependentUpon>ReceiptInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\ReceiptView_v2.resx">
+      <DependentUpon>ReceiptView_v2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\RefundTicketView.resx">
       <DependentUpon>RefundTicketView.cs</DependentUpon>

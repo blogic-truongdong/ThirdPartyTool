@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using ThirdPartyTool.Models;
 
@@ -503,6 +504,13 @@ namespace ThirdPartyTool
                 return myUri.Host;
             }
             return host;
+        }
+
+        public static DialogResult ShowPopUpFormWithDIMBackground(Form childForm)
+        {
+            BaseForm frmParent = new BaseForm(childForm);
+            frmParent.ShowDialog();
+            return childForm.DialogResult;
         }
 
     }

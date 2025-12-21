@@ -12,7 +12,8 @@ namespace ThirdPartyTool
         Merchant,
         HotFix,
         Item,
-        EmployeePaycor
+        EmployeePaycor,
+        Receipt_v2,
     }
     public partial class HomeForm : Form
     {
@@ -37,6 +38,22 @@ namespace ThirdPartyTool
             btnHotFix.Click += BtnHotFix_Click;
             btnItem.Click += BtnItem_Click;
             btnEmployeePaycor.Click += BtnEmployeePaycor_Click;
+            btnReceipt_V2.Click += BtnReceipt_V2_Click;
+        }
+
+        private void BtnReceipt_V2_Click(object sender, EventArgs e)
+        {
+            if (CurrentTab == HomeTab.Receipt_v2)
+                return;
+
+            CurrentTab = HomeTab.Receipt_v2;
+
+            ResetTabColor();
+
+            btnReceipt_V2.BackColor = Tab_BackColorSelected;
+            btnReceipt_V2.ForeColor = Tab_FoceColorSelected;
+
+            receiptView_v2.BringToFront();
         }
 
         private void BtnEmployeePaycor_Click(object sender, EventArgs e)
@@ -191,6 +208,8 @@ namespace ThirdPartyTool
             btnEmployeePaycor.ForeColor = Tab_FoceColorDefault;
             btnItem.BackColor = Tab_BackColorDefault;
             btnItem.ForeColor = Tab_FoceColorDefault;
+            btnReceipt_V2.BackColor = Tab_BackColorDefault;
+            btnReceipt_V2.ForeColor = Tab_FoceColorDefault;
 
         }
     }

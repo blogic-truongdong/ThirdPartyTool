@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnCancel = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.txtFocus = new System.Windows.Forms.TextBox();
             this.pnlMerchant = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.txtMerchant = new System.Windows.Forms.TextBox();
@@ -39,7 +40,6 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnYes = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.bTextBox1 = new ThirdPartyTool.CustomControl.BTextBox();
-            this.btnCancel = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.panel1.SuspendLayout();
             this.pnlMerchant.SuspendLayout();
             this.pnlBLogicPOS7.SuspendLayout();
@@ -61,6 +61,23 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(400, 250);
             this.panel1.TabIndex = 4;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.White;
+            this.btnCancel.BackgroundColor = System.Drawing.Color.White;
+            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
+            this.btnCancel.BorderRadius = 5;
+            this.btnCancel.BorderSize = 1;
+            this.btnCancel.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Location = new System.Drawing.Point(40, 190);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(150, 40);
+            this.btnCancel.TabIndex = 5;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnCancel.TextColor = System.Drawing.Color.Black;
             // 
             // txtFocus
             // 
@@ -116,7 +133,7 @@
             this.txtBLogicPOS7.Name = "txtBLogicPOS7";
             this.txtBLogicPOS7.Size = new System.Drawing.Size(180, 20);
             this.txtBLogicPOS7.TabIndex = 0;
-            this.txtBLogicPOS7.Text = "BLogicPOS7";
+            this.txtBLogicPOS7.Text = "BLogicPOS7_Testing";
             // 
             // label2
             // 
@@ -178,23 +195,6 @@
             this.bTextBox1.Size = new System.Drawing.Size(100, 20);
             this.bTextBox1.TabIndex = 3;
             this.bTextBox1.Text = "Enter text here...";
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.White;
-            this.btnCancel.BackgroundColor = System.Drawing.Color.White;
-            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
-            this.btnCancel.BorderRadius = 5;
-            this.btnCancel.BorderSize = 1;
-            this.btnCancel.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Location = new System.Drawing.Point(40, 190);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(150, 40);
-            this.btnCancel.TabIndex = 5;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnCancel.TextColor = System.Drawing.Color.Black;
             // 
             // EnterDatabaseForm
             // 
