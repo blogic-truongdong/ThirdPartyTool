@@ -196,29 +196,26 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                if (TransactionStatusID != "FIN")
+                if (TransactionStatusID != "OPER")
                 {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Refund những ticket đang ở trạng thái FINISH.");
+                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CANCEL những ticket đang ở trạng thái OPER.");
                     informationDialogForm.ShowDialog();
                     return;
                 }
 
-                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to Refund Ticket #{MainSaleReceiptNumber}?");
+                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to CANCEL Ticket #{MainSaleReceiptNumber}?");
                 var result = confirmFirmDialog.ShowDialog();
                 if (result == DialogResult.No)
                     return;
 
                 ProcessForm processForm = new ProcessForm();
                 processForm.SaleReceiptID = MainSaleReceiptID;
-                processForm.CurrentProcessName = ProcessNameEnum.RefundTicket;
+                processForm.CurrentProcessName = ProcessNameEnum.CancelReceipt;
                 processForm.ShowDialog();
 
                 if (processForm.IsSuccess)
                 {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"REFUND Ticket# {MainSaleReceiptNumber} Done. Refresh now.");
-                    informationDialogForm.ShowDialog();
-
-                    ReloadCurrentReceipt();
+                    ClearCurrentReceipt();
                 }
                 else
                 {
@@ -276,9 +273,9 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                if (TransactionStatusID != "FIN" && TransactionStatusID != "OPER")
+                if (TransactionStatusID != "FIN" && TransactionStatusID != "OPER" && TransactionStatusID != "RET")
                 {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CLOSE những ticket đang ở trạng thái FINISH hoặc OPEN.");
+                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CLOSE những ticket đang ở trạng thái FINISH hoặc OPEN hoặc REFUND.");
                     informationDialogForm.ShowDialog();
                     return;
                 }
@@ -334,9 +331,9 @@ namespace ThirdPartyTool.SaleReceipt
 
                 if (control.Name == btnShowCloseTicket.Name)
                 {
-                    if (TransactionStatusID != "FIN" && TransactionStatusID != "OPER")
+                    if (TransactionStatusID != "FIN" && TransactionStatusID != "OPER" && TransactionStatusID != "RET")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CLOSE những ticket đang ở trạng thái FINISH hoặc OPEN.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CLOSE những ticket đang ở trạng thái FINISH hoặc OPEN hoặc REFUND.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -423,7 +420,7 @@ namespace ThirdPartyTool.SaleReceipt
 
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptNumber = '{txtSearch.Text.Trim()}' and TransactionStatusID in ('OPER','VOID','FIN') order by DateCreated desc";
+                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptNumber = '{txtSearch.Text.Trim()}' and TransactionStatusID in ('OPER','VOID','FIN','RET') order by DateCreated desc";
                     var reader = sqlCommand.ExecuteReader();
                     dtSaleReceipt.Load(reader);
                     reader.Close();

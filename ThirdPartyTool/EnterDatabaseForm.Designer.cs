@@ -133,7 +133,7 @@
             this.txtBLogicPOS7.Name = "txtBLogicPOS7";
             this.txtBLogicPOS7.Size = new System.Drawing.Size(180, 20);
             this.txtBLogicPOS7.TabIndex = 0;
-            this.txtBLogicPOS7.Text = "BLogicPOS7_Testing";
+            this.txtBLogicPOS7.Text = "BLogicPOS7";
             // 
             // label2
             // 

@@ -40,7 +40,6 @@
             this.receiptView_v2 = new ThirdPartyTool.SaleReceipt.ReceiptView_v2();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.btnReceipt_V2 = new System.Windows.Forms.Label();
             this.btnEmployeePaycor = new System.Windows.Forms.Label();
             this.btnItem = new System.Windows.Forms.Label();
             this.btnHotFix = new System.Windows.Forms.Label();
@@ -49,6 +48,7 @@
             this.btnMerchant = new System.Windows.Forms.Label();
             this.btnEmployee = new System.Windows.Forms.Label();
             this.btnReceipt = new System.Windows.Forms.Label();
+            this.btnReceipt_V2 = new System.Windows.Forms.Label();
             this.btnHome = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Label();
@@ -175,7 +175,6 @@
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.btnReceipt_V2);
             this.panel6.Controls.Add(this.btnEmployeePaycor);
             this.panel6.Controls.Add(this.btnItem);
             this.panel6.Controls.Add(this.btnHotFix);
@@ -184,6 +183,7 @@
             this.panel6.Controls.Add(this.btnMerchant);
             this.panel6.Controls.Add(this.btnEmployee);
             this.panel6.Controls.Add(this.btnReceipt);
+            this.panel6.Controls.Add(this.btnReceipt_V2);
             this.panel6.Controls.Add(this.btnHome);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 170);
@@ -191,29 +191,13 @@
             this.panel6.Size = new System.Drawing.Size(200, 463);
             this.panel6.TabIndex = 2;
             // 
-            // btnReceipt_V2
-            // 
-            this.btnReceipt_V2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnReceipt_V2.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnReceipt_V2.ForeColor = System.Drawing.Color.White;
-            this.btnReceipt_V2.Image = global::ThirdPartyTool.Properties.Resources.Icon_Receipt;
-            this.btnReceipt_V2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReceipt_V2.Location = new System.Drawing.Point(0, 300);
-            this.btnReceipt_V2.Margin = new System.Windows.Forms.Padding(0);
-            this.btnReceipt_V2.Name = "btnReceipt_V2";
-            this.btnReceipt_V2.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnReceipt_V2.Size = new System.Drawing.Size(200, 50);
-            this.btnReceipt_V2.TabIndex = 10;
-            this.btnReceipt_V2.Text = "         Receipt";
-            this.btnReceipt_V2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // btnEmployeePaycor
             // 
             this.btnEmployeePaycor.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnEmployeePaycor.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnEmployeePaycor.ForeColor = System.Drawing.Color.White;
             this.btnEmployeePaycor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmployeePaycor.Location = new System.Drawing.Point(0, 250);
+            this.btnEmployeePaycor.Location = new System.Drawing.Point(0, 300);
             this.btnEmployeePaycor.Margin = new System.Windows.Forms.Padding(0);
             this.btnEmployeePaycor.Name = "btnEmployeePaycor";
             this.btnEmployeePaycor.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -230,7 +214,7 @@
             this.btnItem.ForeColor = System.Drawing.Color.White;
             this.btnItem.Image = global::ThirdPartyTool.Properties.Resources.Icon_CreditCard;
             this.btnItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnItem.Location = new System.Drawing.Point(0, 200);
+            this.btnItem.Location = new System.Drawing.Point(0, 250);
             this.btnItem.Margin = new System.Windows.Forms.Padding(0);
             this.btnItem.Name = "btnItem";
             this.btnItem.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
@@ -264,7 +248,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(200, 20);
             this.label4.TabIndex = 6;
-            this.label4.Text = "Version 2.02";
+            this.label4.Text = "Version 3.00";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
@@ -278,7 +262,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(200, 20);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Release 11-19-2025";
+            this.label3.Text = "Release 12-24-2025";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnMerchant
@@ -288,7 +272,7 @@
             this.btnMerchant.ForeColor = System.Drawing.Color.White;
             this.btnMerchant.Image = global::ThirdPartyTool.Properties.Resources.Icon_CreditCard;
             this.btnMerchant.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMerchant.Location = new System.Drawing.Point(0, 150);
+            this.btnMerchant.Location = new System.Drawing.Point(0, 200);
             this.btnMerchant.Margin = new System.Windows.Forms.Padding(0);
             this.btnMerchant.Name = "btnMerchant";
             this.btnMerchant.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
@@ -304,7 +288,7 @@
             this.btnEmployee.ForeColor = System.Drawing.Color.White;
             this.btnEmployee.Image = global::ThirdPartyTool.Properties.Resources.Icon_Employee;
             this.btnEmployee.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmployee.Location = new System.Drawing.Point(0, 100);
+            this.btnEmployee.Location = new System.Drawing.Point(0, 150);
             this.btnEmployee.Margin = new System.Windows.Forms.Padding(0);
             this.btnEmployee.Name = "btnEmployee";
             this.btnEmployee.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
@@ -320,7 +304,7 @@
             this.btnReceipt.ForeColor = System.Drawing.Color.White;
             this.btnReceipt.Image = global::ThirdPartyTool.Properties.Resources.Icon_Receipt;
             this.btnReceipt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReceipt.Location = new System.Drawing.Point(0, 50);
+            this.btnReceipt.Location = new System.Drawing.Point(0, 100);
             this.btnReceipt.Margin = new System.Windows.Forms.Padding(0);
             this.btnReceipt.Name = "btnReceipt";
             this.btnReceipt.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
@@ -328,6 +312,23 @@
             this.btnReceipt.TabIndex = 1;
             this.btnReceipt.Text = "         Receipt";
             this.btnReceipt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReceipt.Visible = false;
+            // 
+            // btnReceipt_V2
+            // 
+            this.btnReceipt_V2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReceipt_V2.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnReceipt_V2.ForeColor = System.Drawing.Color.White;
+            this.btnReceipt_V2.Image = global::ThirdPartyTool.Properties.Resources.Icon_Receipt;
+            this.btnReceipt_V2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReceipt_V2.Location = new System.Drawing.Point(0, 50);
+            this.btnReceipt_V2.Margin = new System.Windows.Forms.Padding(0);
+            this.btnReceipt_V2.Name = "btnReceipt_V2";
+            this.btnReceipt_V2.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnReceipt_V2.Size = new System.Drawing.Size(200, 50);
+            this.btnReceipt_V2.TabIndex = 10;
+            this.btnReceipt_V2.Text = "         Receipt";
+            this.btnReceipt_V2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnHome
             // 
