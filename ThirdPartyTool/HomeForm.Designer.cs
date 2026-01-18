@@ -248,7 +248,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(200, 20);
             this.label4.TabIndex = 6;
-            this.label4.Text = "Version 3.00";
+            this.label4.Text = "Version 4.00";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
@@ -262,7 +262,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(200, 20);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Release 12-24-2025";
+            this.label3.Text = "Release 15-01-2026";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnMerchant

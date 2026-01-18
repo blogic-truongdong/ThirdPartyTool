@@ -37,7 +37,9 @@ namespace ThirdPartyTool
         GetReceiptTemplateBySaleReceiptID,
         VoidReceipt,
         CancelReceipt,
-        RefundTicket
+        RefundTicket,
+        SettleBatchOfflineByMerchantID,
+        PartialRefundItems
     }
     public partial class ProcessForm : Form
     {
@@ -77,6 +79,12 @@ namespace ThirdPartyTool
         public string SaleReceiptID = string.Empty;
 
         public decimal HotFix_UpdateTaxForTicket_PercentValue = 0;
+
+        public string MerchantID = string.Empty;
+        public string BatchID = string.Empty;
+        public string WorkstationID = string.Empty;
+
+        public RequestModel requestModel = null;
 
         public ProcessForm()
         {
@@ -142,6 +150,9 @@ namespace ThirdPartyTool
 
                 switch (CurrentProcessName)
                 {
+                    case ProcessNameEnum.PartialRefundItems:
+                        PartialRefundItems();
+                        break;
                     case ProcessNameEnum.CancelReceipt:
                         CancelReceipt(SaleReceiptID);
                         break;
@@ -165,6 +176,9 @@ namespace ThirdPartyTool
                         break;
                     case ProcessNameEnum.SettleBatchOffline:
                         ProcessSettleBatchOffline();
+                        break;
+                    case ProcessNameEnum.SettleBatchOfflineByMerchantID:
+                        SettleBatchOfflineByMerchantID(MerchantID, BatchID);
                         break;
                     case ProcessNameEnum.EmployeeView_GetEmployeeInfos:
                         GetEmployeeInfos();
@@ -1282,6 +1296,43 @@ namespace ThirdPartyTool
 
             try
             {
+                DataTable dtTransactionDetail = new DataTable("TransactionDetail");
+                DataTable dtGroupSettleBatch = new DataTable("TransactionDetail");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    string sql = $"select distinct MerchantID, BatchID from TransactionDetail where ISNULL(BatchUnique,'') = '' and WorkstationID <> '00000000-0000-0000-0000-000000000000';";
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = sql;
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtGroupSettleBatch.Load(reader);
+                    reader.Close();
+                }
+
+                foreach (DataRow item in dtGroupSettleBatch.Rows)
+                {
+                    SettleBatchOfflineByMerchantID(item["MerchantID"], item["BatchID"]);
+                }
+
+                IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("ProcessSettleBatchOffline", ex);
+            }
+        }
+
+        private void SettleBatchOfflineByMerchantID(object merchantID, object batchID)
+        {
+
+            try
+            {
                 CSetting.Init();
 
                 DataTable dtTransactionDetail = new DataTable("TransactionDetail");
@@ -1293,7 +1344,7 @@ namespace ThirdPartyTool
                     if (conn.State == ConnectionState.Closed)
                         conn.Open();
 
-                    string sql = "select distinct MerchantID, BatchID,WorkstationID from TransactionDetail where ISNULL(BatchUnique,'') = '';";
+                    string sql = $"select distinct MerchantID, BatchID from TransactionDetail where ISNULL(BatchUnique,'') = '' and MerchantID = '{merchantID}' and BatchID = '{batchID}' ;";
 
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
@@ -1312,7 +1363,7 @@ namespace ThirdPartyTool
                         if (conn.State == ConnectionState.Closed)
                             conn.Open();
 
-                        string sql = $"select * from TransactionDetail where MerchantID = '{item["MerchantID"]}' and BatchID = '{item["BatchID"]}' and WorkstationID = '{item["WorkstationID"]}';";
+                        string sql = $"select * from TransactionDetail where MerchantID = '{item["MerchantID"]}' and BatchID = '{item["BatchID"]}' and ISNULL(BatchUnique,'') = '';";
 
                         sqlCommand.Connection = conn;
                         sqlCommand.CommandType = CommandType.Text;
@@ -1387,17 +1438,17 @@ namespace ThirdPartyTool
                         string result = dr["Result"].ToString();
                         string type = dr["TranType"].ToString();
                         string sMerchantID = dr["MerchantID"].ToString();
-                        decimal subTotal = Convert.ToDecimal(dr["Total"].ToString());
-                        decimal subAmount = Convert.ToDecimal(dr["Amount"].ToString());
-                        decimal subSVCFeeAmount = Convert.ToDecimal(dr["SVCFee"].ToString());
-                        decimal subSVCFeeForTip = Convert.ToDecimal(dr["SVCFeeForGratuity"].ToString());
-                        decimal subReturn = Convert.ToDecimal(dr["Amount"].ToString());
-                        decimal subTip = Convert.ToDecimal(dr["Gratuity"].ToString());
+                        decimal subTotal = Utility.GetDecimalFromRow("Total", dr);
+                        decimal subAmount = Utility.GetDecimalFromRow("Amount", dr);
+                        decimal subSVCFeeAmount = Utility.GetDecimalFromRow("SVCFee", dr);
+                        decimal subSVCFeeForTip = Utility.GetDecimalFromRow("SVCFeeForGratuity", dr);
+                        decimal subReturn = Utility.GetDecimalFromRow("Amount", dr);
+                        decimal subTip = Utility.GetDecimalFromRow("Gratuity", dr);
                         string tranStatus = dr["TranStatus"].ToString();
-                        decimal subMerchantFee = Convert.ToDecimal(dr["MerchantFee"].ToString());
+                        decimal subMerchantFee = Utility.GetDecimalFromRow("MerchantFee", dr);
 
                         string dSVCFeeType = dr["SVCFeeType"].ToString();
-                        decimal dMerchantFeePercent = Convert.ToDecimal(dr["MerchantFeePercent"].ToString());
+                        decimal dMerchantFeePercent = Utility.GetDecimalFromRow("MerchantFeePercent", dr);
 
                         //if (dr["OrderID"] != null && !string.IsNullOrEmpty(dr["OrderID"].ToString()))
                         //{
@@ -1506,7 +1557,7 @@ namespace ThirdPartyTool
                     if (lstMerchantFeePercent.Count > 1)
                         sIsReCaculateMerchantFee = true;
                     else if (lstMerchantFeePercent.Count == 1)
-                        sIsReCaculateMerchantFee = Convert.ToDecimal(lstMerchantFeePercent[0]) != POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee;
+                        sIsReCaculateMerchantFee = lstMerchantFeePercent[0] != POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee;
                 }
                 if (lstSVCFeeType != null && !sIsReCaculateMerchantFee)
                 {
@@ -1540,7 +1591,7 @@ namespace ThirdPartyTool
                         $"		BatchStatus = 'Closed'," +
                         $"		BatchTotal='{BatchTotal}'," +
                         $"		BatchUnique='{BatchUnique}'" +
-                        $"	WHERE MerchantID = '{MerchantID}' and BatchID = '{BatchID}'" +
+                        $"	WHERE MerchantID = '{MerchantID}' and BatchID = '{BatchID}' and ISNULL(BatchUnique,'') = ''" +
                         $"	AND TenderType!='GiftCard'";
 
                     sqlCommand.Connection = conn;
@@ -1621,7 +1672,41 @@ namespace ThirdPartyTool
                     if (conn.State == ConnectionState.Closed)
                         conn.Open();
 
-                    string sql = "select distinct MerchantID, BatchID,WorkstationID from TransactionDetail where ISNULL(BatchUnique,'') = '';";
+                    string sql = $@";WITH F AS (
+                                        SELECT MerchantID, BatchID,WorkstationName, TerminalIpAddress, ID
+                                        FROM TransactionDetail
+                                        WHERE ISNULL(BatchUnique, '') = ''
+                                          AND WorkstationID <> '00000000-0000-0000-0000-000000000000'
+                                    ),
+                                    Batches AS (
+                                        SELECT
+                                            MerchantID,
+                                            STRING_AGG(CONVERT(varchar(50), BatchID), ', ') AS BatchIDs
+                                        FROM (
+                                            SELECT DISTINCT MerchantID, BatchID
+                                            FROM F
+                                        ) d
+                                        GROUP BY MerchantID
+                                    ),
+                                    Agg AS (
+                                        SELECT
+                                            MerchantID,
+                                            MAX(TerminalIpAddress) AS TerminalIpAddress,
+                                            COUNT(ID) AS CountTicket,
+                                            MAX(WorkstationName) AS WorkstationName
+                                        FROM F
+                                        GROUP BY MerchantID
+                                    )
+                                    SELECT
+                                        a.MerchantID,
+                                        b.BatchIDs AS BatchID,
+                                        a.TerminalIpAddress,
+                                        a.CountTicket,
+                                        a.WorkstationName 
+                                    FROM Agg a
+                                    JOIN Batches b ON b.MerchantID = a.MerchantID
+                                    ORDER BY a.MerchantID;
+                                    ";
 
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
@@ -3090,6 +3175,92 @@ namespace ThirdPartyTool
                     return SqlDbType.BigInt;
                 default:
                     throw new Exception("Can't convert to " + type.Name);
+            }
+        }
+
+        public void PartialRefundItems()
+        {
+            try
+            {
+                string sql = string.Empty;
+                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    foreach (var item in requestModel.objectValues)
+                    {
+                        sql = $"update SaleReceiptDetails set ReturnCode = '-113',Status = '2' where SaleReceiptID = '{item.SaleReceiptDetailID}';";
+                        RunQueryUpdate(sqlCommand, sql);
+                    }
+
+                    DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
+                    if (drs.Length > 0)
+                    {
+                        foreach (var item in requestModel.objectValues)
+                        {
+                            sql = $"update SaleReceiptDetailTaxDetails set ReturnCode = '-113' where SaleReceiptDetailID = '{item.SaleReceiptDetailID}';";
+                            RunQueryUpdate(sqlCommand, sql);
+                        }
+                    }
+
+                    sql = $"update SaleReceipts set TotalAmount = TotalAmount - {requestModel.TotalAmount}, TaxAmount = TaxAmount - {requestModel.TaxAmount} where SaleReceiptID = '{requestModel.SaleReceiptID}'";
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    sql = $"update SaleReceiptPaymentDetails set AmountTendered = AmountTendered - {requestModel.TotalAmount} where SaleReceiptPaymentDetailID = '{requestModel.SaleReceiptPaymentDetailID}'";
+                    RunQueryUpdate(sqlCommand, sql);
+
+                    sql = $"select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{requestModel.SaleReceiptPaymentDetailID}' ";
+                    sqlCommand.CommandText = sql;
+                    var reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptPaymentDetails.Load(reader);
+                    reader.Close();
+                }
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
+                    {
+                        if (Utility.GetIntFromRow("PaymentMethodID", item) == 2 &&
+                            Utility.GetStringFromRow("CreditCardTransactionType", item).Contains("Sale"))
+                        {
+                            DataTable dtTransactionDetail = new DataTable("TransactionDetail");
+                            sqlCommand.CommandText = $"select * from TransactionDetail where ID = '{item["CreditCardTransactionID"]}'";
+                            var readerMerchant = sqlCommand.ExecuteReader();
+                            dtTransactionDetail.Load(readerMerchant);
+                            readerMerchant.Close();
+
+                            if (dtTransactionDetail?.Rows.Count > 0)
+                            {
+                                sql = $"update Merchant.dbo.TransactionDetail set Amount = Amount - {requestModel.TotalAmount}, Total = Total - {requestModel.TotalAmount} where ID = '{item["CreditCardTransactionID"]}';";
+                                RunQueryUpdate(sqlCommand, sql);
+
+                                if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", dtTransactionDetail.Rows[0])))
+                                    UpdateBatchByBatchUnique(dtTransactionDetail.Rows[0]["BatchUnique"]);
+                            }
+                        }
+                    }
+                }
+
+                IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
             }
         }
     }

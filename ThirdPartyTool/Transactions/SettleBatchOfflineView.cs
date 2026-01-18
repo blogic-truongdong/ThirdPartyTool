@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLogicSystems.XPos.Utilites;
+using System;
 using System.Data;
 using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
@@ -7,6 +8,7 @@ namespace ThirdPartyTool.Transactions
 {
     public partial class SettleBatchOfflineView : UserControl
     {
+        DataTable dtBatchDetail = null;
         public SettleBatchOfflineView()
         {
             InitializeComponent();
@@ -16,6 +18,68 @@ namespace ThirdPartyTool.Transactions
             this.Load += SettleBatchOfflineForm_Load;
 
             btnRefresh.Click += BtnRefresh_Click;
+
+            dgvBatch.CellClick += DgvBatch_CellClick;
+            dgvBatch.CellFormatting += DgvBatch_CellFormatting;
+        }
+
+        private void DgvBatch_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex < 0)
+                    return;
+
+                if (e.ColumnIndex == dgvBatch.Columns["SettleBatch"].Index)
+                {
+                    e.Value = "Settle Now";
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("DgvBatch_CellFormatting in SettleBatchOfflineForm", ex);
+            }
+        }
+
+        private void DgvBatch_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex < 0)
+                    return;
+
+                if (e.ColumnIndex == dgvBatch.Columns["SettleBatch"].Index)
+                {
+                    ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, "Are you sure you want to settle this batch?");
+                    var result = confirmFirmDialog.ShowDialog();
+                    if (result == DialogResult.No)
+                        return;
+
+                    ProcessForm processForm = new ProcessForm();
+                    processForm.CurrentProcessName = ProcessNameEnum.SettleBatchOfflineByMerchantID;
+                    processForm.MerchantID = Utility.GetStringFromObject(dgvBatch.Rows[e.RowIndex].Cells["MerchantID"].Value);
+                    processForm.BatchID = Utility.GetStringFromObject(dgvBatch.Rows[e.RowIndex].Cells["BatchID"].Value);
+                    processForm.WorkstationID = Utility.GetStringFromObject(dgvBatch.Rows[e.RowIndex].Cells["WorkstationID"].Value);
+                    processForm.ShowDialog();
+
+                    if (processForm.IsSuccess)
+                    {
+                        InformationDialogForm infoDialog = new InformationDialogForm("Settle batch successfully.");
+                        infoDialog.ShowDialog();
+
+                        BtnRefresh_Click(sender, e);
+                    }
+                    else
+                    {
+                        InformationDialogForm infoDialog = new InformationDialogForm("Settle batch Fail. Please contact TruongDS");
+                        infoDialog.ShowDialog();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("DgvBatch_CellClick in SettleBatchOfflineForm", ex);
+            }
         }
 
         public void BtnRefresh_Click(object sender, EventArgs e)
@@ -27,8 +91,9 @@ namespace ThirdPartyTool.Transactions
                 processForm.ShowDialog();
                 if (processForm.IsSuccess)
                 {
-                    DataTable dtGroupSettleBatch = processForm.DataTableReturn;
-                    lblRemainingBatch.Text = $"There are still {dtGroupSettleBatch.Rows.Count} batches that haven’t been settled yet.";
+                    dtBatchDetail = processForm.DataTableReturn.Copy();
+                    dtBatchDetail.Columns.Add("SettleBatch", typeof(string));
+                    dgvBatch.DataSource = dtBatchDetail;
                 }
                 else
                 {
@@ -51,27 +116,31 @@ namespace ThirdPartyTool.Transactions
         {
             try
             {
-                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, "Are you sure you want to settle all batchs?");
-                var result = confirmFirmDialog.ShowDialog();
-                if (result == DialogResult.No)
-                    return;
-
-                ProcessForm processForm = new ProcessForm();
-                processForm.InitSettleBatchOffline();
-                processForm.ShowDialog();
-
-                if (processForm.IsSuccess)
+                if (dtBatchDetail?.Rows.Count > 0)
                 {
-                    InformationDialogForm infoDialog = new InformationDialogForm("Settle batchs successfully.");
-                    infoDialog.ShowDialog();
+                    ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, "Are you sure you want to settle all batchs?");
+                    var result = confirmFirmDialog.ShowDialog();
+                    if (result == DialogResult.No)
+                        return;
 
-                    BtnRefresh_Click(sender, e);
+                    ProcessForm processForm = new ProcessForm();
+                    processForm.InitSettleBatchOffline();
+                    processForm.ShowDialog();
+
+                    if (processForm.IsSuccess)
+                    {
+                        InformationDialogForm infoDialog = new InformationDialogForm("Settle batchs successfully.");
+                        infoDialog.ShowDialog();
+
+                        BtnRefresh_Click(sender, e);
+                    }
+                    else
+                    {
+                        InformationDialogForm infoDialog = new InformationDialogForm("Settle batchs Fail. Please contact TruongDS");
+                        infoDialog.ShowDialog();
+                    }
                 }
-                else
-                {
-                    InformationDialogForm infoDialog = new InformationDialogForm("Settle batchs Fail. Please contact TruongDS");
-                    infoDialog.ShowDialog();
-                }
+
             }
             catch (Exception ex)
             {

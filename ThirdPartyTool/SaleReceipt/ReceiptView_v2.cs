@@ -1,10 +1,13 @@
 ﻿using BLogicSystems.XPos.Utilites;
 using DevExpress.XtraReports.UI;
+using Microsoft.Practices.CompositeUI.Utility;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
+using ThirdPartyTool.Models;
 
 namespace ThirdPartyTool.SaleReceipt
 {
@@ -33,10 +36,11 @@ namespace ThirdPartyTool.SaleReceipt
             btnBack3.Click += BtnBackCloseTicket_Click;
             btnBack4.Click += BtnBackCloseTicket_Click;
             btnBack5.Click += BtnBackCloseTicket_Click;
+            btnBack6.Click += BtnBackCloseTicket_Click;
 
             btnShowCloseTicket.Click += BtnShow_Click;
             btnShowVoidTicket.Click += BtnShow_Click;
-            btnShowRefundTicket.Click += BtnShow_Click;
+            btnShowPartialRefundTicket.Click += BtnShow_Click;
             btnShowAddTipBySaleToken.Click += BtnShow_Click;
             btnShowAddTipForPaymentDetail.Click += BtnShow_Click;
 
@@ -45,7 +49,122 @@ namespace ThirdPartyTool.SaleReceipt
             btnProcessCancelTicket.Click += BtnProcessCancelTicket_Click;
             btnProcessRefundTicket.Click += BtnProcessRefundTicket_Click;
             btnProcessAddTipBySaleToken.Click += BtnProcessAddTipBySaleToken_Click;
+            BtnProcessRefundPartialItem.Click += BtnProcessRefundPartialItem_Click;
+        }
 
+        private void BtnProcessRefundPartialItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                RequestModel requestModel = new RequestModel();
+                requestModel.SaleReceiptID = MainSaleReceiptID;
+
+                foreach (Control item in pnlRefundItemContainer.Controls)
+                {
+                    RefundModiferRow refundModifier = item as RefundModiferRow;
+
+                    if (refundModifier != null)
+                    {
+                        if (refundModifier.IsSelectedItem)
+                        {
+                            requestModel.objectValues.Add(new ObjectValues()
+                            {
+                                SaleReceiptDetailID = refundModifier.SaleReceiptDetailID,
+                            });
+
+                            requestModel.TotalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
+                            requestModel.TaxAmount += refundModifier.TaxAmount;
+                        }
+                    }
+
+                    RefundItemRow refundItem = item as RefundItemRow;
+
+                    if (refundItem != null)
+                    {
+                        if (refundItem.IsSelectedItem)
+                        {
+                            requestModel.objectValues.Add(new ObjectValues()
+                            {
+                                SaleReceiptDetailID = refundItem.SaleReceiptDetailID,
+                            });
+
+                            requestModel.TotalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
+                            requestModel.TaxAmount += refundItem.TaxAmount;
+                        }
+                    }
+                }
+
+                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+                string sql = "";
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sql = $"select *, b.PaymentMethodName " +
+                        $"from SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
+                        $"where SaleReceiptID = '{MainSaleReceiptID}'";
+
+                    sqlCommand.CommandText = sql;
+                    var reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptPaymentDetails.Load(reader);
+                    reader.Close();
+                }
+
+                if (dtSaleReceiptPaymentDetails?.Rows.Count > 1)
+                {
+                    SelectSaleReceiptPaymentDetailForm form = new SelectSaleReceiptPaymentDetailForm();
+                    form.BindingData(dtSaleReceiptPaymentDetails);
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                if (requestModel.objectValues.Count == 0)
+                    return;
+
+                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to Refund Items of ticket #{MainSaleReceiptNumber}?");
+                var result = confirmFirmDialog.ShowDialog();
+                if (result == DialogResult.No)
+                    return;
+
+                ProcessForm processForm = new ProcessForm();
+                processForm.CurrentProcessName = ProcessNameEnum.PartialRefundItems;
+                processForm.requestModel = requestModel;
+                processForm.ShowDialog();
+
+                if (processForm.IsSuccess)
+                {
+                    TokenSaleReceiptID = string.Empty;
+                    TokenSaleReceiptNumber = string.Empty;
+
+                    PrintControl_TokenReceipt.PrintingSystem?.Dispose();
+                    PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
+                    PrintControl_TokenReceipt.Refresh();
+
+                    txtSearch.Text = MainSaleReceiptNumber;
+
+                    ReloadCurrentReceipt();
+                }
+                else
+                {
+                    InformationDialogForm errorDialog = new InformationDialogForm("Add Tip Fail. Please contact TruongDS");
+                    errorDialog.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("BtnProcessRefundPartialItem_Click", ex);
+            }
         }
 
         private void BtnProcessAddTipBySaleToken_Click(object sender, EventArgs e)
@@ -351,7 +470,7 @@ namespace ThirdPartyTool.SaleReceipt
 
                     pnlVoidTicket.BringToFront();
                 }
-                else if (control.Name == btnShowRefundTicket.Name)
+                else if (control.Name == btnShowPartialRefundTicket.Name)
                 {
                     if (TransactionStatusID != "FIN")
                     {
@@ -360,7 +479,9 @@ namespace ThirdPartyTool.SaleReceipt
                         return;
                     }
 
-                    pnlRefund.BringToFront();
+                    BindingPartialRefundItems();
+
+                    pnlRefundItems.BringToFront();
                 }
                 else if (control.Name == btnShowAddTipBySaleToken.Name)
                 {
@@ -682,6 +803,123 @@ namespace ThirdPartyTool.SaleReceipt
             }
         }
 
+        private void BindingPartialRefundItems()
+        {
+            try
+            {
+                DataTable dtSaleReceiptDetails = new DataTable("SaleReceiptDetails");
+                string sql = "";
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sql = $"select * from SaleReceiptDetails where SaleReceiptID = '{MainSaleReceiptID}' and ISNULL(ReturnCode,'') = '' and Status <> '2' order by Range desc";
+
+                    sqlCommand.CommandText = sql;
+                    var reader = sqlCommand.ExecuteReader();
+                    dtSaleReceiptDetails.Load(reader);
+                    reader.Close();
+                }
+
+                pnlRefundItemContainer.Controls.Clear();
+
+                foreach (DataRow item in dtSaleReceiptDetails.Rows)
+                {
+                    var PriceInitial = Utility.GetStringFromRow("PriceInitial", item);
+                    if (string.IsNullOrWhiteSpace(PriceInitial) || PriceInitial == "P")
+                    {
+                        RefundItemRow refundItem = new RefundItemRow();
+                        refundItem.SelectedItemChanges += RefundItem_SelectedItemChanges;
+                        refundItem.Dock = DockStyle.Top;
+                        refundItem.BindingValue(
+                            Utility.GetStringFromRow("SaleReceiptDetailID", item),
+                            Utility.GetStringFromRow("Description", item),
+                            Utility.GetDecimalFromRow("Price", item),
+                            Utility.GetDecimalFromRow("Quantity", item),
+                            Utility.GetDecimalFromRow("ExtendedPrice", item),
+                             Utility.GetDecimalFromRow("TaxAmount", item),
+                             Utility.GetStringFromRow("GroupID", item));
+                        pnlRefundItemContainer.Controls.Add(refundItem);
+                    }
+                    else
+                    {
+                        RefundModiferRow refundModifier = new RefundModiferRow();
+                        refundModifier.SelectedItemChanges += RefundItem_SelectedItemChanges;
+                        refundModifier.Dock = DockStyle.Top;
+                        refundModifier.BindingValue(
+                            Utility.GetStringFromRow("SaleReceiptDetailID", item),
+                            Utility.GetStringFromRow("Description", item),
+                            Utility.GetDecimalFromRow("Price", item),
+                            Utility.GetDecimalFromRow("Quantity", item),
+                            Utility.GetDecimalFromRow("ExtendedPrice", item),
+                             Utility.GetDecimalFromRow("TaxAmount", item),
+                             Utility.GetStringFromRow("GroupID", item));
+                        pnlRefundItemContainer.Controls.Add(refundModifier);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("BindingPartialRefundItems", ex);
+            }
+        }
+
+        private void RefundItem_SelectedItemChanges(object sender, DataEventArgs<RequestModel> e)
+        {
+            try
+            {
+                decimal totalAmount = 0;
+
+                foreach (Control item in pnlRefundItemContainer.Controls)
+                {
+                    RefundItemRow refundItem = item as RefundItemRow;
+                    RefundModiferRow refundModifier = item as RefundModiferRow;
+
+                    if (refundItem != null)
+                    {
+                        if (refundItem.GroupID == e.Data.GroupID)
+                        {
+                            refundItem.IsSelectedItem = e.Data.IsSelectedItem;
+                            refundItem.chkCheck.Checked = e.Data.IsSelectedItem;
+                            refundItem.BackColor = e.Data.IsSelectedItem ? Color.Red : Color.White;
+                        }
+
+                        if (refundItem.IsSelectedItem)
+                        {
+                            totalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
+                        }
+                        continue;
+                    }
+
+                    if (refundModifier != null)
+                    {
+                        if (refundModifier.GroupID == e.Data.GroupID)
+                        {
+                            refundModifier.IsSelectedItem = e.Data.IsSelectedItem;
+                            refundModifier.BackColor = e.Data.IsSelectedItem ? Color.Red : Color.White;
+                        }
+
+                        if (refundModifier.IsSelectedItem)
+                        {
+                            totalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
+                        }
+                        continue;
+                    }
+                }
+
+                lblTotalRefundItemAmount.Text = $"Total Refund Amount: {Utility.ConvertDecimalToMoneyString(totalAmount)}";
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("RefundItem_SelectedItemChanges", ex);
+            }
+        }
 
     }
 }
