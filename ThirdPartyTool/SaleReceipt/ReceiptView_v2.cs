@@ -16,6 +16,7 @@ namespace ThirdPartyTool.SaleReceipt
         private string MainSaleReceiptID = string.Empty;
         private string MainSaleReceiptNumber = string.Empty;
         private string TransactionStatusID = string.Empty;
+        private string MainSaleReceiptPaymentDetailID = string.Empty;
 
         private string TokenSaleReceiptID = string.Empty;
         private string TokenSaleReceiptNumber = string.Empty;
@@ -37,12 +38,14 @@ namespace ThirdPartyTool.SaleReceipt
             btnBack4.Click += BtnBackCloseTicket_Click;
             btnBack5.Click += BtnBackCloseTicket_Click;
             btnBack6.Click += BtnBackCloseTicket_Click;
+            btnBack7.Click += BtnBackCloseTicket_Click;
 
             btnShowCloseTicket.Click += BtnShow_Click;
             btnShowVoidTicket.Click += BtnShow_Click;
             btnShowPartialRefundTicket.Click += BtnShow_Click;
             btnShowAddTipBySaleToken.Click += BtnShow_Click;
             btnShowAddTipForPaymentDetail.Click += BtnShow_Click;
+            btnShowUpdateServiceCharges.Click += BtnShow_Click;
 
             btnProcessCloseTicket.Click += BtnProcessCloseTicket_Click;
             btnProcessVoidTicket.Click += BtnProcessVoidTicket_Click;
@@ -50,6 +53,40 @@ namespace ThirdPartyTool.SaleReceipt
             btnProcessRefundTicket.Click += BtnProcessRefundTicket_Click;
             btnProcessAddTipBySaleToken.Click += BtnProcessAddTipBySaleToken_Click;
             BtnProcessRefundPartialItem.Click += BtnProcessRefundPartialItem_Click;
+            BtnProcessUpdateServiceCharges.Click += BtnProcessUpdateServiceCharges_Click;
+        }
+
+        private void BtnProcessUpdateServiceCharges_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
+
+                string sql = "";
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+
+                    sql = $"select * " +
+                        $"from SaleReceipts a where SaleReceiptID = '{MainSaleReceiptID}'";
+
+                    sqlCommand.CommandText = sql;
+                    var reader = sqlCommand.ExecuteReader();
+                    dtSaleReceipts.Load(reader);
+                    reader.Close();
+                }
+
+                txtManualServiceCharge.Value = Utility.GetDecimalFromRow("SVCFeeAmount", dtSaleReceipts.Rows[0]);
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("BtnProcessUpdateServiceCharges_Click", ex);
+            }
         }
 
         private void BtnProcessRefundPartialItem_Click(object sender, EventArgs e)
@@ -58,6 +95,7 @@ namespace ThirdPartyTool.SaleReceipt
             {
                 RequestModel requestModel = new RequestModel();
                 requestModel.SaleReceiptID = MainSaleReceiptID;
+                requestModel.SaleReceiptPaymentDetailID = MainSaleReceiptPaymentDetailID;
 
                 foreach (Control item in pnlRefundItemContainer.Controls)
                 {
@@ -114,6 +152,9 @@ namespace ThirdPartyTool.SaleReceipt
                     dtSaleReceiptPaymentDetails.Load(reader);
                     reader.Close();
                 }
+
+                if (dtSaleReceiptPaymentDetails?.Rows.Count == 1)
+                    requestModel.SaleReceiptPaymentDetailID = Utility.GetStringFromRow("SaleReceiptPaymentDetailID", dtSaleReceiptPaymentDetails.Rows[0]);
 
                 if (dtSaleReceiptPaymentDetails?.Rows.Count > 1)
                 {
@@ -505,12 +546,82 @@ namespace ThirdPartyTool.SaleReceipt
 
                     pnlAddTipForPaymentDetail.BringToFront();
                 }
+                else if (control.Name == btnShowUpdateServiceCharges.Name)
+                {
+                    if (TransactionStatusID != "FIN")
+                    {
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Update Service Charges cho những ticket đang ở trạng thái FINISH.");
+                        informationDialogForm.ShowDialog();
+                        return;
+                    }
+
+                    ProcessShowUpdateServiceCharges();
+
+                    pnlUpdateServiceCharges.BringToFront();
+                }
             }
             catch (Exception ex)
             {
                 BLogicLogger.Exception("BtnShow_Click in ReceiptView_v2", ex);
             }
 
+        }
+
+        private void ProcessShowUpdateServiceCharges()
+        {
+            try
+            {
+                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptID = '{MainSaleReceiptID}' ";
+                    var reader = sqlCommand.ExecuteReader();
+                    dtSaleReceipts.Load(reader);
+
+                    reader.Close();
+                }
+
+                decimal _ServiceFee = Utility.GetDecimalFromRow("ServiceFee", dtSaleReceipts.Rows[0]);
+                decimal _ServiceFeeTaxAmount = Utility.GetDecimalFromRow("ServiceFeeTaxAmount", dtSaleReceipts.Rows[0]);
+                decimal _AutoGratuityAmount = Utility.GetDecimalFromRow("AutoGratuityAmount", dtSaleReceipts.Rows[0]);
+                decimal _AutoGratuityTaxAmount = Utility.GetDecimalFromRow("AutoGratuityTaxAmount", dtSaleReceipts.Rows[0]);
+                decimal _AreaFeeAmount = Utility.GetDecimalFromRow("AreaFeeAmount", dtSaleReceipts.Rows[0]);
+                decimal _AreaFeeTaxAmount = Utility.GetDecimalFromRow("AreaFeeTaxAmount", dtSaleReceipts.Rows[0]);
+                decimal _PartyServiceFeeAmount = Utility.GetDecimalFromRow("PartyServiceFeeAmount", dtSaleReceipts.Rows[0]);
+                decimal _PartyServiceFeeTaxAmount = Utility.GetDecimalFromRow("PartyServiceFeeTaxAmount", dtSaleReceipts.Rows[0]);
+                decimal _SVCFeePaidAmount = Utility.GetDecimalFromRow("SVCFeePaidAmount", dtSaleReceipts.Rows[0]);
+                decimal _SVCFeeTaxPaidAmount = Utility.GetDecimalFromRow("SVCFeeTaxPaidAmount", dtSaleReceipts.Rows[0]);
+                decimal _CashDiscountPaidAmount = Utility.GetDecimalFromRow("CashDiscountPaidAmount", dtSaleReceipts.Rows[0]);
+                decimal _CashDiscountTaxPaidAmount = Utility.GetDecimalFromRow("CashDiscountTaxPaidAmount", dtSaleReceipts.Rows[0]);
+
+                txtManualServiceCharge.Text = (_ServiceFee).ToString("c2");
+                txtManualServiceChargeTax.Text = _ServiceFeeTaxAmount.ToString("c2");
+
+                txtAreaServiceCharge.Text = (_AreaFeeAmount).ToString("c2");
+                txtAreaServiceChargeTax.Text = _AreaFeeTaxAmount.ToString("c2");
+
+                txtPartyServiceCharge.Text = (_PartyServiceFeeAmount).ToString("c2");
+                txtPartyServiceChargeTax.Text = _PartyServiceFeeTaxAmount.ToString("c2");
+
+                txtAutoServiceCharge.Text = (_AutoGratuityAmount).ToString("c2");
+                txtAutoServiceChargeTax.Text = _AutoGratuityTaxAmount.ToString("c2");
+
+                txtCustomFee.Text = (_SVCFeePaidAmount - _SVCFeeTaxPaidAmount).ToString("c2");
+                txtCustomFeeTax.Text = _SVCFeeTaxPaidAmount.ToString("c2");
+
+                txtCashDiscount.Text = (_CashDiscountPaidAmount - _CashDiscountPaidAmount).ToString("c2");
+                txtCashDiscountTax.Text = _CashDiscountTaxPaidAmount.ToString("c2");
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("ProcessShowUpdateServiceCharges", ex);
+            }
         }
 
         private void BtnBackCloseTicket_Click(object sender, EventArgs e)

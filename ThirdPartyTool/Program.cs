@@ -16,6 +16,13 @@ namespace ThirdPartyTool
 
             //Icon appIcon = new Icon(Application.StartupPath + @"\Resources\Icon_BLogic_Tool.ico");
 
+            LoginForm loginForm = new LoginForm();
+            if (loginForm.ShowDialog() != DialogResult.OK)
+            {
+                Application.Exit();
+                return;
+            }
+
             EnterDatabaseForm enterDatabaseForm = new EnterDatabaseForm();
             //enterDatabaseForm.Icon = appIcon;
             var result = enterDatabaseForm.ShowDialog();

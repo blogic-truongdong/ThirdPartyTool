@@ -59,7 +59,6 @@ namespace ThirdPartyTool.Transactions
                     processForm.CurrentProcessName = ProcessNameEnum.SettleBatchOfflineByMerchantID;
                     processForm.MerchantID = Utility.GetStringFromObject(dgvBatch.Rows[e.RowIndex].Cells["MerchantID"].Value);
                     processForm.BatchID = Utility.GetStringFromObject(dgvBatch.Rows[e.RowIndex].Cells["BatchID"].Value);
-                    processForm.WorkstationID = Utility.GetStringFromObject(dgvBatch.Rows[e.RowIndex].Cells["WorkstationID"].Value);
                     processForm.ShowDialog();
 
                     if (processForm.IsSuccess)

@@ -82,7 +82,6 @@ namespace ThirdPartyTool
 
         public string MerchantID = string.Empty;
         public string BatchID = string.Empty;
-        public string WorkstationID = string.Empty;
 
         public RequestModel requestModel = null;
 
@@ -1082,16 +1081,17 @@ namespace ThirdPartyTool
 
                 if (dtTransactionDetail?.Rows.Count > 0)
                 {
-                    sql = $"select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as Total," +
-                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end ) as TotalSVCFeeForTip, " +
-                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end ) as TotalSales, " +
-                       $" sum(case when TranType = 'Return' then Amount - SVCFee else 0 end ) as TotalReturns, " +
-                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end ) as TotalTips, " +
-                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end ) - sum(case when TranType = 'Return' then SVCFee else 0 end ) as TotalSVCFeeAmount," +
-                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as DepositAmount, " +
-                       $" sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount," +
-                       $" count(ID) as TicketCount " +
-                       $" from TransactionDetail where BatchUnique = '{batchUnique}'";
+                    sql = $@"select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as Total,
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end ) as TotalSVCFeeForTip, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end ) as TotalSales, 
+                       sum(case when TranType = 'Return' then Amount - SVCFee else 0 end ) as TotalReturns, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end ) as TotalTips, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end ) - sum(case when TranType = 'Return' then SVCFee else 0 end ) as TotalSVCFeeAmount,
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as DepositAmount, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount,
+                       count(ID) as TicketCount 
+                       from TransactionDetail where BatchUnique = '{batchUnique}'";
+
                     sqlCommand.CommandText = sql;
                     reader = sqlCommand.ExecuteReader();
                     dtCalculateBatch.Load(reader);
@@ -3196,7 +3196,7 @@ namespace ThirdPartyTool
 
                     foreach (var item in requestModel.objectValues)
                     {
-                        sql = $"update SaleReceiptDetails set ReturnCode = '-113',Status = '2' where SaleReceiptID = '{item.SaleReceiptDetailID}';";
+                        sql = $"update SaleReceiptDetails set ReturnCode = '-113',Status = '2' where SaleReceiptDetailID = '{item.SaleReceiptDetailID}';";
                         RunQueryUpdate(sqlCommand, sql);
                     }
 
