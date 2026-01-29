@@ -88,7 +88,7 @@ namespace ThirdPartyTool.SaleReceipt
                     return;
 
                 ProcessForm processForm = new ProcessForm();
-                processForm.CloseReceipt_SaleReceiptID = MainSaleReceiptID;
+                processForm.SaleReceiptID = MainSaleReceiptID;
                 processForm.CurrentProcessName = ProcessNameEnum.CloseReceipt;
                 processForm.ShowDialog();
 

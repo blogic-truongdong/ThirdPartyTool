@@ -31,7 +31,6 @@ namespace ThirdPartyTool
             this.Load += HomeForm_Load;
 
             btnEmployee.Click += BtnEmployee_Click;
-            btnReceipt.Click += BtnReceipt_Click;
             btnClose.Click += BtnClose_Click;
             btnHome.Click += BtnHome_Click;
             btnMerchant.Click += BtnMerchant_Click;
@@ -139,23 +138,6 @@ namespace ThirdPartyTool
             Application.Exit();
         }
 
-        private void BtnReceipt_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.Receipt)
-                return;
-
-            receiptView.txtFocus.Focus();
-
-            CurrentTab = HomeTab.Receipt;
-
-            ResetTabColor();
-
-            btnReceipt.BackColor = Tab_BackColorSelected;
-            btnReceipt.ForeColor = Tab_FoceColorSelected;
-
-            receiptView.BringToFront();
-        }
-
         private void BtnEmployee_Click(object sender, EventArgs e)
         {
             if (CurrentTab == HomeTab.Employee)
@@ -200,8 +182,6 @@ namespace ThirdPartyTool
             btnHome.ForeColor = Tab_FoceColorDefault;
             btnEmployee.BackColor = Tab_BackColorDefault;
             btnEmployee.ForeColor = Tab_FoceColorDefault;
-            btnReceipt.BackColor = Tab_BackColorDefault;
-            btnReceipt.ForeColor = Tab_FoceColorDefault;
             btnMerchant.BackColor = Tab_BackColorDefault;
             btnMerchant.ForeColor = Tab_FoceColorDefault;
             btnEmployeePaycor.BackColor = Tab_BackColorDefault;

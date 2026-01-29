@@ -47,7 +47,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnMerchant = new System.Windows.Forms.Label();
             this.btnEmployee = new System.Windows.Forms.Label();
-            this.btnReceipt = new System.Windows.Forms.Label();
             this.btnReceipt_V2 = new System.Windows.Forms.Label();
             this.btnHome = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -56,6 +55,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.shiftView = new ThirdPartyTool.Shift.ShiftView();
+            this.btnShift = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.pnlContainer.SuspendLayout();
             this.pnlLeft.SuspendLayout();
@@ -78,14 +80,15 @@
             // 
             // pnlContainer
             // 
+            this.pnlContainer.Controls.Add(this.shiftView);
+            this.pnlContainer.Controls.Add(this.itemView1);
+            this.pnlContainer.Controls.Add(this.employeeLinkPaycorView21);
+            this.pnlContainer.Controls.Add(this.receiptView_v2);
             this.pnlContainer.Controls.Add(this.welcomeView);
             this.pnlContainer.Controls.Add(this.receiptView);
             this.pnlContainer.Controls.Add(this.employeeView);
             this.pnlContainer.Controls.Add(this.settleBatchOfflineView);
             this.pnlContainer.Controls.Add(this.hotFixView);
-            this.pnlContainer.Controls.Add(this.itemView1);
-            this.pnlContainer.Controls.Add(this.employeeLinkPaycorView21);
-            this.pnlContainer.Controls.Add(this.receiptView_v2);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
@@ -175,6 +178,8 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.label5);
+            this.panel6.Controls.Add(this.btnShift);
             this.panel6.Controls.Add(this.btnEmployeePaycor);
             this.panel6.Controls.Add(this.btnItem);
             this.panel6.Controls.Add(this.btnHotFix);
@@ -182,13 +187,12 @@
             this.panel6.Controls.Add(this.label3);
             this.panel6.Controls.Add(this.btnMerchant);
             this.panel6.Controls.Add(this.btnEmployee);
-            this.panel6.Controls.Add(this.btnReceipt);
             this.panel6.Controls.Add(this.btnReceipt_V2);
             this.panel6.Controls.Add(this.btnHome);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(0, 170);
+            this.panel6.Location = new System.Drawing.Point(0, 10);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(200, 463);
+            this.panel6.Size = new System.Drawing.Size(200, 623);
             this.panel6.TabIndex = 2;
             // 
             // btnEmployeePaycor
@@ -197,7 +201,7 @@
             this.btnEmployeePaycor.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnEmployeePaycor.ForeColor = System.Drawing.Color.White;
             this.btnEmployeePaycor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmployeePaycor.Location = new System.Drawing.Point(0, 300);
+            this.btnEmployeePaycor.Location = new System.Drawing.Point(0, 250);
             this.btnEmployeePaycor.Margin = new System.Windows.Forms.Padding(0);
             this.btnEmployeePaycor.Name = "btnEmployeePaycor";
             this.btnEmployeePaycor.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -214,7 +218,7 @@
             this.btnItem.ForeColor = System.Drawing.Color.White;
             this.btnItem.Image = global::ThirdPartyTool.Properties.Resources.Icon_CreditCard;
             this.btnItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnItem.Location = new System.Drawing.Point(0, 250);
+            this.btnItem.Location = new System.Drawing.Point(0, 200);
             this.btnItem.Margin = new System.Windows.Forms.Padding(0);
             this.btnItem.Name = "btnItem";
             this.btnItem.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
@@ -229,7 +233,7 @@
             this.btnHotFix.Font = new System.Drawing.Font("Roboto", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHotFix.ForeColor = System.Drawing.Color.Red;
             this.btnHotFix.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHotFix.Location = new System.Drawing.Point(0, 373);
+            this.btnHotFix.Location = new System.Drawing.Point(0, 533);
             this.btnHotFix.Margin = new System.Windows.Forms.Padding(0);
             this.btnHotFix.Name = "btnHotFix";
             this.btnHotFix.Size = new System.Drawing.Size(200, 50);
@@ -243,7 +247,7 @@
             this.label4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Lime;
             this.label4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label4.Location = new System.Drawing.Point(0, 423);
+            this.label4.Location = new System.Drawing.Point(0, 583);
             this.label4.Margin = new System.Windows.Forms.Padding(0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(200, 20);
@@ -257,7 +261,7 @@
             this.label3.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Lime;
             this.label3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label3.Location = new System.Drawing.Point(0, 443);
+            this.label3.Location = new System.Drawing.Point(0, 603);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(200, 20);
@@ -272,7 +276,7 @@
             this.btnMerchant.ForeColor = System.Drawing.Color.White;
             this.btnMerchant.Image = global::ThirdPartyTool.Properties.Resources.Icon_CreditCard;
             this.btnMerchant.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMerchant.Location = new System.Drawing.Point(0, 200);
+            this.btnMerchant.Location = new System.Drawing.Point(0, 150);
             this.btnMerchant.Margin = new System.Windows.Forms.Padding(0);
             this.btnMerchant.Name = "btnMerchant";
             this.btnMerchant.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
@@ -288,7 +292,7 @@
             this.btnEmployee.ForeColor = System.Drawing.Color.White;
             this.btnEmployee.Image = global::ThirdPartyTool.Properties.Resources.Icon_Employee;
             this.btnEmployee.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmployee.Location = new System.Drawing.Point(0, 150);
+            this.btnEmployee.Location = new System.Drawing.Point(0, 100);
             this.btnEmployee.Margin = new System.Windows.Forms.Padding(0);
             this.btnEmployee.Name = "btnEmployee";
             this.btnEmployee.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
@@ -296,23 +300,6 @@
             this.btnEmployee.TabIndex = 2;
             this.btnEmployee.Text = "         Employee";
             this.btnEmployee.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnReceipt
-            // 
-            this.btnReceipt.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnReceipt.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnReceipt.ForeColor = System.Drawing.Color.White;
-            this.btnReceipt.Image = global::ThirdPartyTool.Properties.Resources.Icon_Receipt;
-            this.btnReceipt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReceipt.Location = new System.Drawing.Point(0, 100);
-            this.btnReceipt.Margin = new System.Windows.Forms.Padding(0);
-            this.btnReceipt.Name = "btnReceipt";
-            this.btnReceipt.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnReceipt.Size = new System.Drawing.Size(200, 50);
-            this.btnReceipt.TabIndex = 1;
-            this.btnReceipt.Text = "         Receipt";
-            this.btnReceipt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReceipt.Visible = false;
             // 
             // btnReceipt_V2
             // 
@@ -379,8 +366,9 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(200, 170);
+            this.panel4.Size = new System.Drawing.Size(200, 10);
             this.panel4.TabIndex = 0;
+            this.panel4.Visible = false;
             // 
             // label2
             // 
@@ -414,6 +402,44 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // shiftView
+            // 
+            this.shiftView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.shiftView.Location = new System.Drawing.Point(0, 0);
+            this.shiftView.Name = "shiftView";
+            this.shiftView.Size = new System.Drawing.Size(798, 698);
+            this.shiftView.TabIndex = 9;
+            // 
+            // btnShift
+            // 
+            this.btnShift.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnShift.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnShift.ForeColor = System.Drawing.Color.White;
+            this.btnShift.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnShift.Location = new System.Drawing.Point(0, 300);
+            this.btnShift.Margin = new System.Windows.Forms.Padding(0);
+            this.btnShift.Name = "btnShift";
+            this.btnShift.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnShift.Size = new System.Drawing.Size(200, 50);
+            this.btnShift.TabIndex = 11;
+            this.btnShift.Text = "Shifts";
+            this.btnShift.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label5
+            // 
+            this.label5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label5.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label5.Location = new System.Drawing.Point(0, 350);
+            this.label5.Margin = new System.Windows.Forms.Padding(0);
+            this.label5.Name = "label5";
+            this.label5.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.label5.Size = new System.Drawing.Size(200, 50);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Tables";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // HomeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -441,7 +467,6 @@
         private System.Windows.Forms.Panel pnlLeft;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label btnEmployee;
-        private System.Windows.Forms.Label btnReceipt;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label btnClose;
         private System.Windows.Forms.Panel panel4;
@@ -464,5 +489,8 @@
         private Employee.EmployeeLinkPaycorView2 employeeLinkPaycorView21;
         private System.Windows.Forms.Label btnReceipt_V2;
         private SaleReceipt.ReceiptView_v2 receiptView_v2;
+        private Shift.ShiftView shiftView;
+        private System.Windows.Forms.Label btnShift;
+        private System.Windows.Forms.Label label5;
     }
 }

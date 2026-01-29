@@ -35,13 +35,33 @@
             this.btnSearch = new System.Windows.Forms.Label();
             this.PrintControl_Receipt = new DevExpress.XtraPrinting.Control.PrintControl();
             this.pnlContainer = new System.Windows.Forms.Panel();
-            this.pnlOption = new System.Windows.Forms.Panel();
-            this.btnShowUpdateServiceCharges = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowAddTipForPaymentDetail = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowPartialRefundTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowVoidTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowCloseTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.pnlUpdateServiceCharges = new System.Windows.Forms.Panel();
+            this.txtCashDiscountTax = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.txtCashDiscount = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.txtCustomFeeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.txtCustomFee = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.txtAutoServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.txtAutoServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.txtPartyServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.txtPartyServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txtAreaServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.txtAreaServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.txtManualServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txtManualServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.BtnProcessUpdateServiceCharges = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnBack7 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlVoidTicket = new System.Windows.Forms.Panel();
             this.btnBack2 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.btnProcessCancelTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
@@ -78,37 +98,10 @@
             this.pnlPaymentDetails = new System.Windows.Forms.Panel();
             this.btnBack5 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.label27 = new System.Windows.Forms.Label();
-            this.pnlUpdateServiceCharges = new System.Windows.Forms.Panel();
-            this.txtCashDiscountTax = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label39 = new System.Windows.Forms.Label();
-            this.txtCashDiscount = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.txtCustomFeeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label38 = new System.Windows.Forms.Label();
-            this.txtCustomFee = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.txtAutoServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.txtAutoServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.txtPartyServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label36 = new System.Windows.Forms.Label();
-            this.txtPartyServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.txtAreaServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.txtAreaServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.txtManualServiceChargeTax = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.txtManualServiceCharge = new ThirdPartyTool.CustomControl.NumericTextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.BtnProcessUpdateServiceCharges = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnBack7 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlRefundItems = new System.Windows.Forms.Panel();
             this.BtnProcessRefundPartialItem = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlRefundItemContainer = new System.Windows.Forms.Panel();
-            this.lblTotalRefundItemAmount = new System.Windows.Forms.Label();
+            this.lblTotalRefundItem_TotalAmount = new System.Windows.Forms.Label();
             this.btnBack6 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlRefund = new System.Windows.Forms.Panel();
             this.btnBack3 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
@@ -121,19 +114,28 @@
             this.label21 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
+            this.pnlOption = new System.Windows.Forms.Panel();
+            this.btnShowUpdateServiceCharges = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowAddTipForPaymentDetail = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowPartialRefundTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowVoidTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowCloseTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.lblTotalRefundItem_Tax = new System.Windows.Forms.Label();
+            this.lblTotalRefundItem_Amount = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlContainer.SuspendLayout();
-            this.pnlOption.SuspendLayout();
+            this.pnlUpdateServiceCharges.SuspendLayout();
             this.pnlVoidTicket.SuspendLayout();
             this.pnlCloseTicket.SuspendLayout();
             this.pnlAddTipBySaleToken.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.bPanel_Rounded1.SuspendLayout();
             this.pnlAddTipForPaymentDetail.SuspendLayout();
-            this.pnlUpdateServiceCharges.SuspendLayout();
             this.pnlRefundItems.SuspendLayout();
             this.pnlRefund.SuspendLayout();
+            this.pnlOption.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -224,14 +226,14 @@
             // 
             // pnlContainer
             // 
-            this.pnlContainer.Controls.Add(this.pnlOption);
+            this.pnlContainer.Controls.Add(this.pnlRefundItems);
+            this.pnlContainer.Controls.Add(this.pnlUpdateServiceCharges);
             this.pnlContainer.Controls.Add(this.pnlVoidTicket);
             this.pnlContainer.Controls.Add(this.pnlCloseTicket);
             this.pnlContainer.Controls.Add(this.pnlAddTipBySaleToken);
             this.pnlContainer.Controls.Add(this.pnlAddTipForPaymentDetail);
-            this.pnlContainer.Controls.Add(this.pnlUpdateServiceCharges);
-            this.pnlContainer.Controls.Add(this.pnlRefundItems);
             this.pnlContainer.Controls.Add(this.pnlRefund);
+            this.pnlContainer.Controls.Add(this.pnlOption);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(300, 0);
             this.pnlContainer.Margin = new System.Windows.Forms.Padding(0);
@@ -240,128 +242,461 @@
             this.pnlContainer.Size = new System.Drawing.Size(666, 553);
             this.pnlContainer.TabIndex = 29;
             // 
-            // pnlOption
+            // pnlUpdateServiceCharges
             // 
-            this.pnlOption.AutoScroll = true;
-            this.pnlOption.Controls.Add(this.btnShowUpdateServiceCharges);
-            this.pnlOption.Controls.Add(this.btnShowAddTipForPaymentDetail);
-            this.pnlOption.Controls.Add(this.btnShowAddTipBySaleToken);
-            this.pnlOption.Controls.Add(this.btnShowPartialRefundTicket);
-            this.pnlOption.Controls.Add(this.btnShowVoidTicket);
-            this.pnlOption.Controls.Add(this.btnShowCloseTicket);
-            this.pnlOption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlOption.Location = new System.Drawing.Point(0, 0);
-            this.pnlOption.Name = "pnlOption";
-            this.pnlOption.Size = new System.Drawing.Size(666, 553);
-            this.pnlOption.TabIndex = 0;
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtCashDiscountTax);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label39);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtCashDiscount);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label33);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtCustomFeeTax);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label38);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtCustomFee);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label32);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtAutoServiceChargeTax);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label37);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtAutoServiceCharge);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label31);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtPartyServiceChargeTax);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label36);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtPartyServiceCharge);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label30);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtAreaServiceChargeTax);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label35);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtAreaServiceCharge);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label29);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtManualServiceChargeTax);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label34);
+            this.pnlUpdateServiceCharges.Controls.Add(this.txtManualServiceCharge);
+            this.pnlUpdateServiceCharges.Controls.Add(this.label28);
+            this.pnlUpdateServiceCharges.Controls.Add(this.BtnProcessUpdateServiceCharges);
+            this.pnlUpdateServiceCharges.Controls.Add(this.btnBack7);
+            this.pnlUpdateServiceCharges.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlUpdateServiceCharges.Location = new System.Drawing.Point(0, 0);
+            this.pnlUpdateServiceCharges.Name = "pnlUpdateServiceCharges";
+            this.pnlUpdateServiceCharges.Padding = new System.Windows.Forms.Padding(10, 10, 10, 110);
+            this.pnlUpdateServiceCharges.Size = new System.Drawing.Size(666, 553);
+            this.pnlUpdateServiceCharges.TabIndex = 45;
             // 
-            // btnShowUpdateServiceCharges
+            // txtCashDiscountTax
             // 
-            this.btnShowUpdateServiceCharges.BackColor = System.Drawing.Color.White;
-            this.btnShowUpdateServiceCharges.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowUpdateServiceCharges.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowUpdateServiceCharges.BorderRadius = 5;
-            this.btnShowUpdateServiceCharges.BorderSize = 1;
-            this.btnShowUpdateServiceCharges.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowUpdateServiceCharges.ForeColor = System.Drawing.Color.Black;
-            this.btnShowUpdateServiceCharges.Location = new System.Drawing.Point(20, 426);
-            this.btnShowUpdateServiceCharges.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowUpdateServiceCharges.Name = "btnShowUpdateServiceCharges";
-            this.btnShowUpdateServiceCharges.Size = new System.Drawing.Size(300, 50);
-            this.btnShowUpdateServiceCharges.TabIndex = 10;
-            this.btnShowUpdateServiceCharges.Text = "Update Service Charges";
-            this.btnShowUpdateServiceCharges.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowUpdateServiceCharges.TextColor = System.Drawing.Color.Black;
+            this.txtCashDiscountTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtCashDiscountTax.FormatSpecifier = "c2";
+            this.txtCashDiscountTax.Location = new System.Drawing.Point(239, 416);
+            this.txtCashDiscountTax.Margin = new System.Windows.Forms.Padding(5);
+            this.txtCashDiscountTax.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtCashDiscountTax.Name = "txtCashDiscountTax";
+            this.txtCashDiscountTax.Size = new System.Drawing.Size(100, 25);
+            this.txtCashDiscountTax.TabIndex = 33;
+            this.txtCashDiscountTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtCashDiscountTax.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
-            // btnShowAddTipForPaymentDetail
+            // label39
             // 
-            this.btnShowAddTipForPaymentDetail.BackColor = System.Drawing.Color.White;
-            this.btnShowAddTipForPaymentDetail.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowAddTipForPaymentDetail.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowAddTipForPaymentDetail.BorderRadius = 5;
-            this.btnShowAddTipForPaymentDetail.BorderSize = 1;
-            this.btnShowAddTipForPaymentDetail.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowAddTipForPaymentDetail.ForeColor = System.Drawing.Color.Black;
-            this.btnShowAddTipForPaymentDetail.Location = new System.Drawing.Point(20, 286);
-            this.btnShowAddTipForPaymentDetail.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowAddTipForPaymentDetail.Name = "btnShowAddTipForPaymentDetail";
-            this.btnShowAddTipForPaymentDetail.Size = new System.Drawing.Size(300, 50);
-            this.btnShowAddTipForPaymentDetail.TabIndex = 9;
-            this.btnShowAddTipForPaymentDetail.Text = "Add Tip for Payment";
-            this.btnShowAddTipForPaymentDetail.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowAddTipForPaymentDetail.TextColor = System.Drawing.Color.Black;
+            this.label39.AutoSize = true;
+            this.label39.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label39.Location = new System.Drawing.Point(39, 420);
+            this.label39.Margin = new System.Windows.Forms.Padding(5);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(133, 18);
+            this.label39.TabIndex = 32;
+            this.label39.Text = "Cash Discount Tax";
             // 
-            // btnShowAddTipBySaleToken
+            // txtCashDiscount
             // 
-            this.btnShowAddTipBySaleToken.BackColor = System.Drawing.Color.White;
-            this.btnShowAddTipBySaleToken.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowAddTipBySaleToken.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowAddTipBySaleToken.BorderRadius = 5;
-            this.btnShowAddTipBySaleToken.BorderSize = 1;
-            this.btnShowAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowAddTipBySaleToken.ForeColor = System.Drawing.Color.Black;
-            this.btnShowAddTipBySaleToken.Location = new System.Drawing.Point(20, 216);
-            this.btnShowAddTipBySaleToken.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowAddTipBySaleToken.Name = "btnShowAddTipBySaleToken";
-            this.btnShowAddTipBySaleToken.Size = new System.Drawing.Size(300, 50);
-            this.btnShowAddTipBySaleToken.TabIndex = 8;
-            this.btnShowAddTipBySaleToken.Text = "Add Tip by Ticket Sale Token";
-            this.btnShowAddTipBySaleToken.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowAddTipBySaleToken.TextColor = System.Drawing.Color.Black;
+            this.txtCashDiscount.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtCashDiscount.FormatSpecifier = "c2";
+            this.txtCashDiscount.Location = new System.Drawing.Point(239, 381);
+            this.txtCashDiscount.Margin = new System.Windows.Forms.Padding(5);
+            this.txtCashDiscount.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtCashDiscount.Name = "txtCashDiscount";
+            this.txtCashDiscount.Size = new System.Drawing.Size(100, 25);
+            this.txtCashDiscount.TabIndex = 33;
+            this.txtCashDiscount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtCashDiscount.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
-            // btnShowPartialRefundTicket
+            // label33
             // 
-            this.btnShowPartialRefundTicket.BackColor = System.Drawing.Color.White;
-            this.btnShowPartialRefundTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowPartialRefundTicket.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowPartialRefundTicket.BorderRadius = 5;
-            this.btnShowPartialRefundTicket.BorderSize = 1;
-            this.btnShowPartialRefundTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowPartialRefundTicket.ForeColor = System.Drawing.Color.Black;
-            this.btnShowPartialRefundTicket.Location = new System.Drawing.Point(20, 356);
-            this.btnShowPartialRefundTicket.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowPartialRefundTicket.Name = "btnShowPartialRefundTicket";
-            this.btnShowPartialRefundTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnShowPartialRefundTicket.TabIndex = 7;
-            this.btnShowPartialRefundTicket.Text = "Refund Items";
-            this.btnShowPartialRefundTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowPartialRefundTicket.TextColor = System.Drawing.Color.Black;
+            this.label33.AutoSize = true;
+            this.label33.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label33.Location = new System.Drawing.Point(39, 385);
+            this.label33.Margin = new System.Windows.Forms.Padding(5);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(105, 18);
+            this.label33.TabIndex = 32;
+            this.label33.Text = "Cash Discount";
             // 
-            // btnShowVoidTicket
+            // txtCustomFeeTax
             // 
-            this.btnShowVoidTicket.BackColor = System.Drawing.Color.White;
-            this.btnShowVoidTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowVoidTicket.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowVoidTicket.BorderRadius = 5;
-            this.btnShowVoidTicket.BorderSize = 1;
-            this.btnShowVoidTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowVoidTicket.ForeColor = System.Drawing.Color.Black;
-            this.btnShowVoidTicket.Location = new System.Drawing.Point(20, 145);
-            this.btnShowVoidTicket.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowVoidTicket.Name = "btnShowVoidTicket";
-            this.btnShowVoidTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnShowVoidTicket.TabIndex = 7;
-            this.btnShowVoidTicket.Text = "Void / Cancel Ticket";
-            this.btnShowVoidTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowVoidTicket.TextColor = System.Drawing.Color.Black;
+            this.txtCustomFeeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtCustomFeeTax.FormatSpecifier = "c2";
+            this.txtCustomFeeTax.Location = new System.Drawing.Point(239, 346);
+            this.txtCustomFeeTax.Margin = new System.Windows.Forms.Padding(5);
+            this.txtCustomFeeTax.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtCustomFeeTax.Name = "txtCustomFeeTax";
+            this.txtCustomFeeTax.Size = new System.Drawing.Size(100, 25);
+            this.txtCustomFeeTax.TabIndex = 33;
+            this.txtCustomFeeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtCustomFeeTax.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
-            // btnShowCloseTicket
+            // label38
             // 
-            this.btnShowCloseTicket.BackColor = System.Drawing.Color.White;
-            this.btnShowCloseTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowCloseTicket.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowCloseTicket.BorderRadius = 5;
-            this.btnShowCloseTicket.BorderSize = 1;
-            this.btnShowCloseTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowCloseTicket.ForeColor = System.Drawing.Color.Black;
-            this.btnShowCloseTicket.Location = new System.Drawing.Point(20, 75);
-            this.btnShowCloseTicket.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowCloseTicket.Name = "btnShowCloseTicket";
-            this.btnShowCloseTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnShowCloseTicket.TabIndex = 7;
-            this.btnShowCloseTicket.Text = "Close Ticket";
-            this.btnShowCloseTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowCloseTicket.TextColor = System.Drawing.Color.Black;
+            this.label38.AutoSize = true;
+            this.label38.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label38.Location = new System.Drawing.Point(39, 350);
+            this.label38.Margin = new System.Windows.Forms.Padding(5);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(116, 18);
+            this.label38.TabIndex = 32;
+            this.label38.Text = "Custom Fee Tax";
+            // 
+            // txtCustomFee
+            // 
+            this.txtCustomFee.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtCustomFee.FormatSpecifier = "c2";
+            this.txtCustomFee.Location = new System.Drawing.Point(239, 311);
+            this.txtCustomFee.Margin = new System.Windows.Forms.Padding(5);
+            this.txtCustomFee.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtCustomFee.Name = "txtCustomFee";
+            this.txtCustomFee.Size = new System.Drawing.Size(100, 25);
+            this.txtCustomFee.TabIndex = 33;
+            this.txtCustomFee.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtCustomFee.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label32.Location = new System.Drawing.Point(39, 315);
+            this.label32.Margin = new System.Windows.Forms.Padding(5);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(88, 18);
+            this.label32.TabIndex = 32;
+            this.label32.Text = "Custom Fee";
+            // 
+            // txtAutoServiceChargeTax
+            // 
+            this.txtAutoServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtAutoServiceChargeTax.FormatSpecifier = "c2";
+            this.txtAutoServiceChargeTax.Location = new System.Drawing.Point(239, 276);
+            this.txtAutoServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
+            this.txtAutoServiceChargeTax.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtAutoServiceChargeTax.Name = "txtAutoServiceChargeTax";
+            this.txtAutoServiceChargeTax.Size = new System.Drawing.Size(100, 25);
+            this.txtAutoServiceChargeTax.TabIndex = 33;
+            this.txtAutoServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtAutoServiceChargeTax.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label37.Location = new System.Drawing.Point(39, 280);
+            this.label37.Margin = new System.Windows.Forms.Padding(5);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(173, 18);
+            this.label37.TabIndex = 32;
+            this.label37.Text = "Auto Service Charge Tax";
+            // 
+            // txtAutoServiceCharge
+            // 
+            this.txtAutoServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtAutoServiceCharge.FormatSpecifier = "c2";
+            this.txtAutoServiceCharge.Location = new System.Drawing.Point(239, 241);
+            this.txtAutoServiceCharge.Margin = new System.Windows.Forms.Padding(5);
+            this.txtAutoServiceCharge.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtAutoServiceCharge.Name = "txtAutoServiceCharge";
+            this.txtAutoServiceCharge.Size = new System.Drawing.Size(100, 25);
+            this.txtAutoServiceCharge.TabIndex = 33;
+            this.txtAutoServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtAutoServiceCharge.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label31.Location = new System.Drawing.Point(39, 245);
+            this.label31.Margin = new System.Windows.Forms.Padding(5);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(145, 18);
+            this.label31.TabIndex = 32;
+            this.label31.Text = "Auto Service Charge";
+            // 
+            // txtPartyServiceChargeTax
+            // 
+            this.txtPartyServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtPartyServiceChargeTax.FormatSpecifier = "c2";
+            this.txtPartyServiceChargeTax.Location = new System.Drawing.Point(239, 206);
+            this.txtPartyServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
+            this.txtPartyServiceChargeTax.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtPartyServiceChargeTax.Name = "txtPartyServiceChargeTax";
+            this.txtPartyServiceChargeTax.Size = new System.Drawing.Size(100, 25);
+            this.txtPartyServiceChargeTax.TabIndex = 33;
+            this.txtPartyServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtPartyServiceChargeTax.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label36.Location = new System.Drawing.Point(39, 210);
+            this.label36.Margin = new System.Windows.Forms.Padding(5);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(178, 18);
+            this.label36.TabIndex = 32;
+            this.label36.Text = "Party Service Charge Tax";
+            // 
+            // txtPartyServiceCharge
+            // 
+            this.txtPartyServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtPartyServiceCharge.FormatSpecifier = "c2";
+            this.txtPartyServiceCharge.Location = new System.Drawing.Point(239, 171);
+            this.txtPartyServiceCharge.Margin = new System.Windows.Forms.Padding(5);
+            this.txtPartyServiceCharge.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtPartyServiceCharge.Name = "txtPartyServiceCharge";
+            this.txtPartyServiceCharge.Size = new System.Drawing.Size(100, 25);
+            this.txtPartyServiceCharge.TabIndex = 33;
+            this.txtPartyServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtPartyServiceCharge.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label30.Location = new System.Drawing.Point(39, 175);
+            this.label30.Margin = new System.Windows.Forms.Padding(5);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(150, 18);
+            this.label30.TabIndex = 32;
+            this.label30.Text = "Party Service Charge";
+            // 
+            // txtAreaServiceChargeTax
+            // 
+            this.txtAreaServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtAreaServiceChargeTax.FormatSpecifier = "c2";
+            this.txtAreaServiceChargeTax.Location = new System.Drawing.Point(239, 136);
+            this.txtAreaServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
+            this.txtAreaServiceChargeTax.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtAreaServiceChargeTax.Name = "txtAreaServiceChargeTax";
+            this.txtAreaServiceChargeTax.Size = new System.Drawing.Size(100, 25);
+            this.txtAreaServiceChargeTax.TabIndex = 33;
+            this.txtAreaServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtAreaServiceChargeTax.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label35.Location = new System.Drawing.Point(39, 140);
+            this.label35.Margin = new System.Windows.Forms.Padding(5);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(173, 18);
+            this.label35.TabIndex = 32;
+            this.label35.Text = "Area Service Charge Tax";
+            // 
+            // txtAreaServiceCharge
+            // 
+            this.txtAreaServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtAreaServiceCharge.FormatSpecifier = "c2";
+            this.txtAreaServiceCharge.Location = new System.Drawing.Point(239, 101);
+            this.txtAreaServiceCharge.Margin = new System.Windows.Forms.Padding(5);
+            this.txtAreaServiceCharge.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtAreaServiceCharge.Name = "txtAreaServiceCharge";
+            this.txtAreaServiceCharge.Size = new System.Drawing.Size(100, 25);
+            this.txtAreaServiceCharge.TabIndex = 33;
+            this.txtAreaServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtAreaServiceCharge.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label29.Location = new System.Drawing.Point(39, 105);
+            this.label29.Margin = new System.Windows.Forms.Padding(5);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(145, 18);
+            this.label29.TabIndex = 32;
+            this.label29.Text = "Area Service Charge";
+            // 
+            // txtManualServiceChargeTax
+            // 
+            this.txtManualServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtManualServiceChargeTax.FormatSpecifier = "c2";
+            this.txtManualServiceChargeTax.Location = new System.Drawing.Point(239, 66);
+            this.txtManualServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
+            this.txtManualServiceChargeTax.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtManualServiceChargeTax.Name = "txtManualServiceChargeTax";
+            this.txtManualServiceChargeTax.Size = new System.Drawing.Size(100, 25);
+            this.txtManualServiceChargeTax.TabIndex = 33;
+            this.txtManualServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtManualServiceChargeTax.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label34.Location = new System.Drawing.Point(39, 70);
+            this.label34.Margin = new System.Windows.Forms.Padding(5);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(191, 18);
+            this.label34.TabIndex = 32;
+            this.label34.Text = "Manual Service Charge Tax";
+            // 
+            // txtManualServiceCharge
+            // 
+            this.txtManualServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.txtManualServiceCharge.FormatSpecifier = "c2";
+            this.txtManualServiceCharge.Location = new System.Drawing.Point(239, 31);
+            this.txtManualServiceCharge.Margin = new System.Windows.Forms.Padding(5);
+            this.txtManualServiceCharge.MaxValue = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.txtManualServiceCharge.Name = "txtManualServiceCharge";
+            this.txtManualServiceCharge.Size = new System.Drawing.Size(100, 25);
+            this.txtManualServiceCharge.TabIndex = 33;
+            this.txtManualServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtManualServiceCharge.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.label28.Location = new System.Drawing.Point(39, 35);
+            this.label28.Margin = new System.Windows.Forms.Padding(5);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(163, 18);
+            this.label28.TabIndex = 32;
+            this.label28.Text = "Manual Service Charge";
+            // 
+            // BtnProcessUpdateServiceCharges
+            // 
+            this.BtnProcessUpdateServiceCharges.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.BtnProcessUpdateServiceCharges.BackColor = System.Drawing.Color.Red;
+            this.BtnProcessUpdateServiceCharges.BackgroundColor = System.Drawing.Color.Red;
+            this.BtnProcessUpdateServiceCharges.BorderColor = System.Drawing.Color.Gray;
+            this.BtnProcessUpdateServiceCharges.BorderRadius = 5;
+            this.BtnProcessUpdateServiceCharges.BorderSize = 0;
+            this.BtnProcessUpdateServiceCharges.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Bold);
+            this.BtnProcessUpdateServiceCharges.ForeColor = System.Drawing.Color.White;
+            this.BtnProcessUpdateServiceCharges.Location = new System.Drawing.Point(338, 492);
+            this.BtnProcessUpdateServiceCharges.Margin = new System.Windows.Forms.Padding(5);
+            this.BtnProcessUpdateServiceCharges.Name = "BtnProcessUpdateServiceCharges";
+            this.BtnProcessUpdateServiceCharges.Size = new System.Drawing.Size(200, 50);
+            this.BtnProcessUpdateServiceCharges.TabIndex = 31;
+            this.BtnProcessUpdateServiceCharges.Text = "Update Now";
+            this.BtnProcessUpdateServiceCharges.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.BtnProcessUpdateServiceCharges.TextColor = System.Drawing.Color.White;
+            // 
+            // btnBack7
+            // 
+            this.btnBack7.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnBack7.BackColor = System.Drawing.Color.White;
+            this.btnBack7.BackgroundColor = System.Drawing.Color.White;
+            this.btnBack7.BorderColor = System.Drawing.Color.Gray;
+            this.btnBack7.BorderRadius = 5;
+            this.btnBack7.BorderSize = 1;
+            this.btnBack7.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.btnBack7.ForeColor = System.Drawing.Color.Black;
+            this.btnBack7.Location = new System.Drawing.Point(128, 492);
+            this.btnBack7.Name = "btnBack7";
+            this.btnBack7.Size = new System.Drawing.Size(200, 50);
+            this.btnBack7.TabIndex = 3;
+            this.btnBack7.Text = "Back";
+            this.btnBack7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnBack7.TextColor = System.Drawing.Color.Black;
             // 
             // pnlVoidTicket
             // 
@@ -863,472 +1198,18 @@
             this.label27.Text = "Payment Details";
             this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pnlUpdateServiceCharges
-            // 
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtCashDiscountTax);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label39);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtCashDiscount);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label33);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtCustomFeeTax);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label38);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtCustomFee);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label32);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtAutoServiceChargeTax);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label37);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtAutoServiceCharge);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label31);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtPartyServiceChargeTax);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label36);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtPartyServiceCharge);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label30);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtAreaServiceChargeTax);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label35);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtAreaServiceCharge);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label29);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtManualServiceChargeTax);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label34);
-            this.pnlUpdateServiceCharges.Controls.Add(this.txtManualServiceCharge);
-            this.pnlUpdateServiceCharges.Controls.Add(this.label28);
-            this.pnlUpdateServiceCharges.Controls.Add(this.BtnProcessUpdateServiceCharges);
-            this.pnlUpdateServiceCharges.Controls.Add(this.btnBack7);
-            this.pnlUpdateServiceCharges.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlUpdateServiceCharges.Location = new System.Drawing.Point(0, 0);
-            this.pnlUpdateServiceCharges.Name = "pnlUpdateServiceCharges";
-            this.pnlUpdateServiceCharges.Padding = new System.Windows.Forms.Padding(10, 10, 10, 110);
-            this.pnlUpdateServiceCharges.Size = new System.Drawing.Size(666, 553);
-            this.pnlUpdateServiceCharges.TabIndex = 45;
-            // 
-            // txtCashDiscountTax
-            // 
-            this.txtCashDiscountTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtCashDiscountTax.FormatSpecifier = "c2";
-            this.txtCashDiscountTax.Location = new System.Drawing.Point(239, 416);
-            this.txtCashDiscountTax.Margin = new System.Windows.Forms.Padding(5);
-            this.txtCashDiscountTax.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtCashDiscountTax.Name = "txtCashDiscountTax";
-            this.txtCashDiscountTax.Size = new System.Drawing.Size(200, 25);
-            this.txtCashDiscountTax.TabIndex = 33;
-            this.txtCashDiscountTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtCashDiscountTax.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label39.Location = new System.Drawing.Point(39, 420);
-            this.label39.Margin = new System.Windows.Forms.Padding(5);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(133, 18);
-            this.label39.TabIndex = 32;
-            this.label39.Text = "Cash Discount Tax";
-            // 
-            // txtCashDiscount
-            // 
-            this.txtCashDiscount.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtCashDiscount.FormatSpecifier = "c2";
-            this.txtCashDiscount.Location = new System.Drawing.Point(239, 381);
-            this.txtCashDiscount.Margin = new System.Windows.Forms.Padding(5);
-            this.txtCashDiscount.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtCashDiscount.Name = "txtCashDiscount";
-            this.txtCashDiscount.Size = new System.Drawing.Size(200, 25);
-            this.txtCashDiscount.TabIndex = 33;
-            this.txtCashDiscount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtCashDiscount.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label33.Location = new System.Drawing.Point(39, 385);
-            this.label33.Margin = new System.Windows.Forms.Padding(5);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(105, 18);
-            this.label33.TabIndex = 32;
-            this.label33.Text = "Cash Discount";
-            // 
-            // txtCustomFeeTax
-            // 
-            this.txtCustomFeeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtCustomFeeTax.FormatSpecifier = "c2";
-            this.txtCustomFeeTax.Location = new System.Drawing.Point(239, 346);
-            this.txtCustomFeeTax.Margin = new System.Windows.Forms.Padding(5);
-            this.txtCustomFeeTax.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtCustomFeeTax.Name = "txtCustomFeeTax";
-            this.txtCustomFeeTax.Size = new System.Drawing.Size(200, 25);
-            this.txtCustomFeeTax.TabIndex = 33;
-            this.txtCustomFeeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtCustomFeeTax.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label38.Location = new System.Drawing.Point(39, 350);
-            this.label38.Margin = new System.Windows.Forms.Padding(5);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(116, 18);
-            this.label38.TabIndex = 32;
-            this.label38.Text = "Custom Fee Tax";
-            // 
-            // txtCustomFee
-            // 
-            this.txtCustomFee.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtCustomFee.FormatSpecifier = "c2";
-            this.txtCustomFee.Location = new System.Drawing.Point(239, 311);
-            this.txtCustomFee.Margin = new System.Windows.Forms.Padding(5);
-            this.txtCustomFee.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtCustomFee.Name = "txtCustomFee";
-            this.txtCustomFee.Size = new System.Drawing.Size(200, 25);
-            this.txtCustomFee.TabIndex = 33;
-            this.txtCustomFee.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtCustomFee.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label32.Location = new System.Drawing.Point(39, 315);
-            this.label32.Margin = new System.Windows.Forms.Padding(5);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(88, 18);
-            this.label32.TabIndex = 32;
-            this.label32.Text = "Custom Fee";
-            // 
-            // txtAutoServiceChargeTax
-            // 
-            this.txtAutoServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtAutoServiceChargeTax.FormatSpecifier = "c2";
-            this.txtAutoServiceChargeTax.Location = new System.Drawing.Point(239, 276);
-            this.txtAutoServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
-            this.txtAutoServiceChargeTax.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtAutoServiceChargeTax.Name = "txtAutoServiceChargeTax";
-            this.txtAutoServiceChargeTax.Size = new System.Drawing.Size(200, 25);
-            this.txtAutoServiceChargeTax.TabIndex = 33;
-            this.txtAutoServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtAutoServiceChargeTax.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label37.Location = new System.Drawing.Point(39, 280);
-            this.label37.Margin = new System.Windows.Forms.Padding(5);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(173, 18);
-            this.label37.TabIndex = 32;
-            this.label37.Text = "Auto Service Charge Tax";
-            // 
-            // txtAutoServiceCharge
-            // 
-            this.txtAutoServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtAutoServiceCharge.FormatSpecifier = "c2";
-            this.txtAutoServiceCharge.Location = new System.Drawing.Point(239, 241);
-            this.txtAutoServiceCharge.Margin = new System.Windows.Forms.Padding(5);
-            this.txtAutoServiceCharge.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtAutoServiceCharge.Name = "txtAutoServiceCharge";
-            this.txtAutoServiceCharge.Size = new System.Drawing.Size(200, 25);
-            this.txtAutoServiceCharge.TabIndex = 33;
-            this.txtAutoServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtAutoServiceCharge.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label31.Location = new System.Drawing.Point(39, 245);
-            this.label31.Margin = new System.Windows.Forms.Padding(5);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(145, 18);
-            this.label31.TabIndex = 32;
-            this.label31.Text = "Auto Service Charge";
-            // 
-            // txtPartyServiceChargeTax
-            // 
-            this.txtPartyServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtPartyServiceChargeTax.FormatSpecifier = "c2";
-            this.txtPartyServiceChargeTax.Location = new System.Drawing.Point(239, 206);
-            this.txtPartyServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
-            this.txtPartyServiceChargeTax.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtPartyServiceChargeTax.Name = "txtPartyServiceChargeTax";
-            this.txtPartyServiceChargeTax.Size = new System.Drawing.Size(200, 25);
-            this.txtPartyServiceChargeTax.TabIndex = 33;
-            this.txtPartyServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtPartyServiceChargeTax.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label36.Location = new System.Drawing.Point(39, 210);
-            this.label36.Margin = new System.Windows.Forms.Padding(5);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(178, 18);
-            this.label36.TabIndex = 32;
-            this.label36.Text = "Party Service Charge Tax";
-            // 
-            // txtPartyServiceCharge
-            // 
-            this.txtPartyServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtPartyServiceCharge.FormatSpecifier = "c2";
-            this.txtPartyServiceCharge.Location = new System.Drawing.Point(239, 171);
-            this.txtPartyServiceCharge.Margin = new System.Windows.Forms.Padding(5);
-            this.txtPartyServiceCharge.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtPartyServiceCharge.Name = "txtPartyServiceCharge";
-            this.txtPartyServiceCharge.Size = new System.Drawing.Size(200, 25);
-            this.txtPartyServiceCharge.TabIndex = 33;
-            this.txtPartyServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtPartyServiceCharge.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label30.Location = new System.Drawing.Point(39, 175);
-            this.label30.Margin = new System.Windows.Forms.Padding(5);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(150, 18);
-            this.label30.TabIndex = 32;
-            this.label30.Text = "Party Service Charge";
-            // 
-            // txtAreaServiceChargeTax
-            // 
-            this.txtAreaServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtAreaServiceChargeTax.FormatSpecifier = "c2";
-            this.txtAreaServiceChargeTax.Location = new System.Drawing.Point(239, 136);
-            this.txtAreaServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
-            this.txtAreaServiceChargeTax.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtAreaServiceChargeTax.Name = "txtAreaServiceChargeTax";
-            this.txtAreaServiceChargeTax.Size = new System.Drawing.Size(200, 25);
-            this.txtAreaServiceChargeTax.TabIndex = 33;
-            this.txtAreaServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtAreaServiceChargeTax.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label35.Location = new System.Drawing.Point(39, 140);
-            this.label35.Margin = new System.Windows.Forms.Padding(5);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(173, 18);
-            this.label35.TabIndex = 32;
-            this.label35.Text = "Area Service Charge Tax";
-            // 
-            // txtAreaServiceCharge
-            // 
-            this.txtAreaServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtAreaServiceCharge.FormatSpecifier = "c2";
-            this.txtAreaServiceCharge.Location = new System.Drawing.Point(239, 101);
-            this.txtAreaServiceCharge.Margin = new System.Windows.Forms.Padding(5);
-            this.txtAreaServiceCharge.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtAreaServiceCharge.Name = "txtAreaServiceCharge";
-            this.txtAreaServiceCharge.Size = new System.Drawing.Size(200, 25);
-            this.txtAreaServiceCharge.TabIndex = 33;
-            this.txtAreaServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtAreaServiceCharge.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label29.Location = new System.Drawing.Point(39, 105);
-            this.label29.Margin = new System.Windows.Forms.Padding(5);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(145, 18);
-            this.label29.TabIndex = 32;
-            this.label29.Text = "Area Service Charge";
-            // 
-            // txtManualServiceChargeTax
-            // 
-            this.txtManualServiceChargeTax.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtManualServiceChargeTax.FormatSpecifier = "c2";
-            this.txtManualServiceChargeTax.Location = new System.Drawing.Point(239, 66);
-            this.txtManualServiceChargeTax.Margin = new System.Windows.Forms.Padding(5);
-            this.txtManualServiceChargeTax.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtManualServiceChargeTax.Name = "txtManualServiceChargeTax";
-            this.txtManualServiceChargeTax.Size = new System.Drawing.Size(200, 25);
-            this.txtManualServiceChargeTax.TabIndex = 33;
-            this.txtManualServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtManualServiceChargeTax.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label34.Location = new System.Drawing.Point(39, 70);
-            this.label34.Margin = new System.Windows.Forms.Padding(5);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(191, 18);
-            this.label34.TabIndex = 32;
-            this.label34.Text = "Manual Service Charge Tax";
-            // 
-            // txtManualServiceCharge
-            // 
-            this.txtManualServiceCharge.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.txtManualServiceCharge.FormatSpecifier = "c2";
-            this.txtManualServiceCharge.Location = new System.Drawing.Point(239, 31);
-            this.txtManualServiceCharge.Margin = new System.Windows.Forms.Padding(5);
-            this.txtManualServiceCharge.MaxValue = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-            this.txtManualServiceCharge.Name = "txtManualServiceCharge";
-            this.txtManualServiceCharge.Size = new System.Drawing.Size(200, 25);
-            this.txtManualServiceCharge.TabIndex = 33;
-            this.txtManualServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtManualServiceCharge.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
-            this.label28.Location = new System.Drawing.Point(39, 35);
-            this.label28.Margin = new System.Windows.Forms.Padding(5);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(163, 18);
-            this.label28.TabIndex = 32;
-            this.label28.Text = "Manual Service Charge";
-            // 
-            // BtnProcessUpdateServiceCharges
-            // 
-            this.BtnProcessUpdateServiceCharges.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.BtnProcessUpdateServiceCharges.BackColor = System.Drawing.Color.Red;
-            this.BtnProcessUpdateServiceCharges.BackgroundColor = System.Drawing.Color.Red;
-            this.BtnProcessUpdateServiceCharges.BorderColor = System.Drawing.Color.Gray;
-            this.BtnProcessUpdateServiceCharges.BorderRadius = 5;
-            this.BtnProcessUpdateServiceCharges.BorderSize = 0;
-            this.BtnProcessUpdateServiceCharges.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Bold);
-            this.BtnProcessUpdateServiceCharges.ForeColor = System.Drawing.Color.White;
-            this.BtnProcessUpdateServiceCharges.Location = new System.Drawing.Point(338, 492);
-            this.BtnProcessUpdateServiceCharges.Margin = new System.Windows.Forms.Padding(5);
-            this.BtnProcessUpdateServiceCharges.Name = "BtnProcessUpdateServiceCharges";
-            this.BtnProcessUpdateServiceCharges.Size = new System.Drawing.Size(200, 50);
-            this.BtnProcessUpdateServiceCharges.TabIndex = 31;
-            this.BtnProcessUpdateServiceCharges.Text = "Update Now";
-            this.BtnProcessUpdateServiceCharges.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.BtnProcessUpdateServiceCharges.TextColor = System.Drawing.Color.White;
-            // 
-            // btnBack7
-            // 
-            this.btnBack7.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnBack7.BackColor = System.Drawing.Color.White;
-            this.btnBack7.BackgroundColor = System.Drawing.Color.White;
-            this.btnBack7.BorderColor = System.Drawing.Color.Gray;
-            this.btnBack7.BorderRadius = 5;
-            this.btnBack7.BorderSize = 1;
-            this.btnBack7.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnBack7.ForeColor = System.Drawing.Color.Black;
-            this.btnBack7.Location = new System.Drawing.Point(128, 492);
-            this.btnBack7.Name = "btnBack7";
-            this.btnBack7.Size = new System.Drawing.Size(200, 50);
-            this.btnBack7.TabIndex = 3;
-            this.btnBack7.Text = "Back";
-            this.btnBack7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnBack7.TextColor = System.Drawing.Color.Black;
-            // 
             // pnlRefundItems
             // 
+            this.pnlRefundItems.Controls.Add(this.lblTotalRefundItem_Amount);
+            this.pnlRefundItems.Controls.Add(this.lblTotalRefundItem_Tax);
             this.pnlRefundItems.Controls.Add(this.BtnProcessRefundPartialItem);
             this.pnlRefundItems.Controls.Add(this.pnlRefundItemContainer);
-            this.pnlRefundItems.Controls.Add(this.lblTotalRefundItemAmount);
+            this.pnlRefundItems.Controls.Add(this.lblTotalRefundItem_TotalAmount);
             this.pnlRefundItems.Controls.Add(this.btnBack6);
             this.pnlRefundItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlRefundItems.Location = new System.Drawing.Point(0, 0);
             this.pnlRefundItems.Name = "pnlRefundItems";
-            this.pnlRefundItems.Padding = new System.Windows.Forms.Padding(10, 10, 10, 110);
+            this.pnlRefundItems.Padding = new System.Windows.Forms.Padding(10, 10, 10, 200);
             this.pnlRefundItems.Size = new System.Drawing.Size(666, 553);
             this.pnlRefundItems.TabIndex = 44;
             // 
@@ -1342,7 +1223,7 @@
             this.BtnProcessRefundPartialItem.BorderSize = 0;
             this.BtnProcessRefundPartialItem.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Bold);
             this.BtnProcessRefundPartialItem.ForeColor = System.Drawing.Color.White;
-            this.BtnProcessRefundPartialItem.Location = new System.Drawing.Point(338, 492);
+            this.BtnProcessRefundPartialItem.Location = new System.Drawing.Point(338, 487);
             this.BtnProcessRefundPartialItem.Margin = new System.Windows.Forms.Padding(5);
             this.BtnProcessRefundPartialItem.Name = "BtnProcessRefundPartialItem";
             this.BtnProcessRefundPartialItem.Size = new System.Drawing.Size(200, 50);
@@ -1359,20 +1240,20 @@
             this.pnlRefundItemContainer.Location = new System.Drawing.Point(10, 10);
             this.pnlRefundItemContainer.Name = "pnlRefundItemContainer";
             this.pnlRefundItemContainer.Padding = new System.Windows.Forms.Padding(0, 0, 0, 110);
-            this.pnlRefundItemContainer.Size = new System.Drawing.Size(646, 433);
+            this.pnlRefundItemContainer.Size = new System.Drawing.Size(646, 343);
             this.pnlRefundItemContainer.TabIndex = 3;
             // 
-            // lblTotalRefundItemAmount
+            // lblTotalRefundItem_TotalAmount
             // 
-            this.lblTotalRefundItemAmount.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblTotalRefundItemAmount.Font = new System.Drawing.Font("Roboto Condensed", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalRefundItemAmount.ForeColor = System.Drawing.Color.Red;
-            this.lblTotalRefundItemAmount.Location = new System.Drawing.Point(128, 447);
-            this.lblTotalRefundItemAmount.Name = "lblTotalRefundItemAmount";
-            this.lblTotalRefundItemAmount.Size = new System.Drawing.Size(410, 40);
-            this.lblTotalRefundItemAmount.TabIndex = 1;
-            this.lblTotalRefundItemAmount.Text = "Total Refund Amount:";
-            this.lblTotalRefundItemAmount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTotalRefundItem_TotalAmount.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblTotalRefundItem_TotalAmount.Font = new System.Drawing.Font("Roboto Condensed", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalRefundItem_TotalAmount.ForeColor = System.Drawing.Color.Red;
+            this.lblTotalRefundItem_TotalAmount.Location = new System.Drawing.Point(128, 442);
+            this.lblTotalRefundItem_TotalAmount.Name = "lblTotalRefundItem_TotalAmount";
+            this.lblTotalRefundItem_TotalAmount.Size = new System.Drawing.Size(410, 40);
+            this.lblTotalRefundItem_TotalAmount.TabIndex = 1;
+            this.lblTotalRefundItem_TotalAmount.Text = "Total Refund: 0";
+            this.lblTotalRefundItem_TotalAmount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnBack6
             // 
@@ -1384,7 +1265,7 @@
             this.btnBack6.BorderSize = 1;
             this.btnBack6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.btnBack6.ForeColor = System.Drawing.Color.Black;
-            this.btnBack6.Location = new System.Drawing.Point(128, 492);
+            this.btnBack6.Location = new System.Drawing.Point(128, 487);
             this.btnBack6.Name = "btnBack6";
             this.btnBack6.Size = new System.Drawing.Size(200, 50);
             this.btnBack6.TabIndex = 3;
@@ -1543,6 +1424,153 @@
             this.label23.TabIndex = 34;
             this.label23.Text = "Những lưu ý khi dùng chức năng này.";
             // 
+            // pnlOption
+            // 
+            this.pnlOption.AutoScroll = true;
+            this.pnlOption.Controls.Add(this.btnShowUpdateServiceCharges);
+            this.pnlOption.Controls.Add(this.btnShowAddTipForPaymentDetail);
+            this.pnlOption.Controls.Add(this.btnShowAddTipBySaleToken);
+            this.pnlOption.Controls.Add(this.btnShowPartialRefundTicket);
+            this.pnlOption.Controls.Add(this.btnShowVoidTicket);
+            this.pnlOption.Controls.Add(this.btnShowCloseTicket);
+            this.pnlOption.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlOption.Location = new System.Drawing.Point(0, 0);
+            this.pnlOption.Name = "pnlOption";
+            this.pnlOption.Size = new System.Drawing.Size(666, 553);
+            this.pnlOption.TabIndex = 0;
+            // 
+            // btnShowUpdateServiceCharges
+            // 
+            this.btnShowUpdateServiceCharges.BackColor = System.Drawing.Color.White;
+            this.btnShowUpdateServiceCharges.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowUpdateServiceCharges.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowUpdateServiceCharges.BorderRadius = 5;
+            this.btnShowUpdateServiceCharges.BorderSize = 1;
+            this.btnShowUpdateServiceCharges.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowUpdateServiceCharges.ForeColor = System.Drawing.Color.Black;
+            this.btnShowUpdateServiceCharges.Location = new System.Drawing.Point(20, 426);
+            this.btnShowUpdateServiceCharges.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowUpdateServiceCharges.Name = "btnShowUpdateServiceCharges";
+            this.btnShowUpdateServiceCharges.Size = new System.Drawing.Size(300, 50);
+            this.btnShowUpdateServiceCharges.TabIndex = 10;
+            this.btnShowUpdateServiceCharges.Text = "Update Service Charges";
+            this.btnShowUpdateServiceCharges.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowUpdateServiceCharges.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowAddTipForPaymentDetail
+            // 
+            this.btnShowAddTipForPaymentDetail.BackColor = System.Drawing.Color.White;
+            this.btnShowAddTipForPaymentDetail.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowAddTipForPaymentDetail.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowAddTipForPaymentDetail.BorderRadius = 5;
+            this.btnShowAddTipForPaymentDetail.BorderSize = 1;
+            this.btnShowAddTipForPaymentDetail.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowAddTipForPaymentDetail.ForeColor = System.Drawing.Color.Black;
+            this.btnShowAddTipForPaymentDetail.Location = new System.Drawing.Point(20, 286);
+            this.btnShowAddTipForPaymentDetail.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowAddTipForPaymentDetail.Name = "btnShowAddTipForPaymentDetail";
+            this.btnShowAddTipForPaymentDetail.Size = new System.Drawing.Size(300, 50);
+            this.btnShowAddTipForPaymentDetail.TabIndex = 9;
+            this.btnShowAddTipForPaymentDetail.Text = "Add Tip for Payment";
+            this.btnShowAddTipForPaymentDetail.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowAddTipForPaymentDetail.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowAddTipBySaleToken
+            // 
+            this.btnShowAddTipBySaleToken.BackColor = System.Drawing.Color.White;
+            this.btnShowAddTipBySaleToken.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowAddTipBySaleToken.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowAddTipBySaleToken.BorderRadius = 5;
+            this.btnShowAddTipBySaleToken.BorderSize = 1;
+            this.btnShowAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowAddTipBySaleToken.ForeColor = System.Drawing.Color.Black;
+            this.btnShowAddTipBySaleToken.Location = new System.Drawing.Point(20, 216);
+            this.btnShowAddTipBySaleToken.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowAddTipBySaleToken.Name = "btnShowAddTipBySaleToken";
+            this.btnShowAddTipBySaleToken.Size = new System.Drawing.Size(300, 50);
+            this.btnShowAddTipBySaleToken.TabIndex = 8;
+            this.btnShowAddTipBySaleToken.Text = "Add Tip by Ticket Sale Token";
+            this.btnShowAddTipBySaleToken.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowAddTipBySaleToken.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowPartialRefundTicket
+            // 
+            this.btnShowPartialRefundTicket.BackColor = System.Drawing.Color.White;
+            this.btnShowPartialRefundTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowPartialRefundTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowPartialRefundTicket.BorderRadius = 5;
+            this.btnShowPartialRefundTicket.BorderSize = 1;
+            this.btnShowPartialRefundTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowPartialRefundTicket.ForeColor = System.Drawing.Color.Black;
+            this.btnShowPartialRefundTicket.Location = new System.Drawing.Point(20, 356);
+            this.btnShowPartialRefundTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowPartialRefundTicket.Name = "btnShowPartialRefundTicket";
+            this.btnShowPartialRefundTicket.Size = new System.Drawing.Size(300, 50);
+            this.btnShowPartialRefundTicket.TabIndex = 7;
+            this.btnShowPartialRefundTicket.Text = "Refund Items";
+            this.btnShowPartialRefundTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowPartialRefundTicket.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowVoidTicket
+            // 
+            this.btnShowVoidTicket.BackColor = System.Drawing.Color.White;
+            this.btnShowVoidTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowVoidTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowVoidTicket.BorderRadius = 5;
+            this.btnShowVoidTicket.BorderSize = 1;
+            this.btnShowVoidTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowVoidTicket.ForeColor = System.Drawing.Color.Black;
+            this.btnShowVoidTicket.Location = new System.Drawing.Point(20, 145);
+            this.btnShowVoidTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowVoidTicket.Name = "btnShowVoidTicket";
+            this.btnShowVoidTicket.Size = new System.Drawing.Size(300, 50);
+            this.btnShowVoidTicket.TabIndex = 7;
+            this.btnShowVoidTicket.Text = "Void / Cancel Ticket";
+            this.btnShowVoidTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowVoidTicket.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowCloseTicket
+            // 
+            this.btnShowCloseTicket.BackColor = System.Drawing.Color.White;
+            this.btnShowCloseTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowCloseTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowCloseTicket.BorderRadius = 5;
+            this.btnShowCloseTicket.BorderSize = 1;
+            this.btnShowCloseTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowCloseTicket.ForeColor = System.Drawing.Color.Black;
+            this.btnShowCloseTicket.Location = new System.Drawing.Point(20, 75);
+            this.btnShowCloseTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowCloseTicket.Name = "btnShowCloseTicket";
+            this.btnShowCloseTicket.Size = new System.Drawing.Size(300, 50);
+            this.btnShowCloseTicket.TabIndex = 7;
+            this.btnShowCloseTicket.Text = "Close Ticket";
+            this.btnShowCloseTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowCloseTicket.TextColor = System.Drawing.Color.Black;
+            // 
+            // lblTotalRefundItem_Tax
+            // 
+            this.lblTotalRefundItem_Tax.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblTotalRefundItem_Tax.Font = new System.Drawing.Font("Roboto Condensed", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalRefundItem_Tax.ForeColor = System.Drawing.Color.Red;
+            this.lblTotalRefundItem_Tax.Location = new System.Drawing.Point(128, 402);
+            this.lblTotalRefundItem_Tax.Name = "lblTotalRefundItem_Tax";
+            this.lblTotalRefundItem_Tax.Size = new System.Drawing.Size(410, 40);
+            this.lblTotalRefundItem_Tax.TabIndex = 32;
+            this.lblTotalRefundItem_Tax.Text = "Sales Tax: 0";
+            this.lblTotalRefundItem_Tax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblTotalRefundItem_Amount
+            // 
+            this.lblTotalRefundItem_Amount.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblTotalRefundItem_Amount.Font = new System.Drawing.Font("Roboto Condensed", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalRefundItem_Amount.ForeColor = System.Drawing.Color.Red;
+            this.lblTotalRefundItem_Amount.Location = new System.Drawing.Point(128, 362);
+            this.lblTotalRefundItem_Amount.Name = "lblTotalRefundItem_Amount";
+            this.lblTotalRefundItem_Amount.Size = new System.Drawing.Size(410, 40);
+            this.lblTotalRefundItem_Amount.TabIndex = 33;
+            this.lblTotalRefundItem_Amount.Text = "Amount: 0";
+            this.lblTotalRefundItem_Amount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // ReceiptView_v2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1554,7 +1582,8 @@
             this.pnlSearch.ResumeLayout(false);
             this.pnlSearch.PerformLayout();
             this.pnlContainer.ResumeLayout(false);
-            this.pnlOption.ResumeLayout(false);
+            this.pnlUpdateServiceCharges.ResumeLayout(false);
+            this.pnlUpdateServiceCharges.PerformLayout();
             this.pnlVoidTicket.ResumeLayout(false);
             this.pnlVoidTicket.PerformLayout();
             this.pnlCloseTicket.ResumeLayout(false);
@@ -1564,11 +1593,10 @@
             this.bPanel_Rounded1.ResumeLayout(false);
             this.bPanel_Rounded1.PerformLayout();
             this.pnlAddTipForPaymentDetail.ResumeLayout(false);
-            this.pnlUpdateServiceCharges.ResumeLayout(false);
-            this.pnlUpdateServiceCharges.PerformLayout();
             this.pnlRefundItems.ResumeLayout(false);
             this.pnlRefund.ResumeLayout(false);
             this.pnlRefund.PerformLayout();
+            this.pnlOption.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1637,7 +1665,7 @@
         public CustomControl.BLabel_Rounded btnBack5;
         private System.Windows.Forms.Panel pnlRefundItems;
         private System.Windows.Forms.Panel pnlRefundItemContainer;
-        private System.Windows.Forms.Label lblTotalRefundItemAmount;
+        private System.Windows.Forms.Label lblTotalRefundItem_TotalAmount;
         private CustomControl.BLabel_Rounded BtnProcessRefundPartialItem;
         public CustomControl.BLabel_Rounded btnBack6;
         private CustomControl.BLabel_Rounded btnShowUpdateServiceCharges;
@@ -1668,5 +1696,7 @@
         private System.Windows.Forms.Label label38;
         private CustomControl.NumericTextBox txtAutoServiceChargeTax;
         private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label lblTotalRefundItem_Amount;
+        private System.Windows.Forms.Label lblTotalRefundItem_Tax;
     }
 }

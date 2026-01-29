@@ -60,28 +60,44 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
+                RequestModel requestModel = new RequestModel();
+                requestModel.refundValues.SaleReceiptID = MainSaleReceiptID;
+                requestModel.refundValues.ServiceFee = Utility.GetDecimalFromObject(txtManualServiceCharge.Text);
+                requestModel.refundValues.ServiceFeeTaxAmount = Utility.GetDecimalFromObject(txtManualServiceChargeTax.Text);
+                requestModel.refundValues.AreaFeeAmount = Utility.GetDecimalFromObject(txtAreaServiceCharge.Text);
+                requestModel.refundValues.AreaFeeTaxAmount = Utility.GetDecimalFromObject(txtAreaServiceChargeTax.Text);
+                requestModel.refundValues.PartyServiceFeeAmount = Utility.GetDecimalFromObject(txtPartyServiceCharge.Text);
+                requestModel.refundValues.PartyServiceFeeTaxAmount = Utility.GetDecimalFromObject(txtPartyServiceChargeTax.Text);
+                requestModel.refundValues.AutoGratuityAmount = Utility.GetDecimalFromObject(txtAutoServiceCharge.Text);
+                requestModel.refundValues.AutoGratuityTaxAmount = Utility.GetDecimalFromObject(txtAutoServiceChargeTax.Text);
+                requestModel.refundValues.SVCFeePaidAmount = Utility.GetDecimalFromObject(txtCustomFee.Text);
+                requestModel.refundValues.SVCFeeTaxPaidAmount = Utility.GetDecimalFromObject(txtCustomFeeTax.Text);
+                requestModel.refundValues.CashDiscountPaidAmount = Utility.GetDecimalFromObject(txtCashDiscount.Text);
+                requestModel.refundValues.CashDiscountTaxPaidAmount = Utility.GetDecimalFromObject(txtCashDiscountTax.Text);
 
-                string sql = "";
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                ProcessForm processForm = new ProcessForm();
+                processForm.CurrentProcessName = ProcessNameEnum.UpdateServiceChargeBySaleReceiptID;
+                processForm.requestModel = requestModel;
+                processForm.ShowDialog();
+
+                if (processForm.IsSuccess)
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
+                    TokenSaleReceiptID = string.Empty;
+                    TokenSaleReceiptNumber = string.Empty;
 
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
+                    PrintControl_TokenReceipt.PrintingSystem?.Dispose();
+                    PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
+                    PrintControl_TokenReceipt.Refresh();
 
-                    sql = $"select * " +
-                        $"from SaleReceipts a where SaleReceiptID = '{MainSaleReceiptID}'";
+                    txtSearch.Text = MainSaleReceiptNumber;
 
-                    sqlCommand.CommandText = sql;
-                    var reader = sqlCommand.ExecuteReader();
-                    dtSaleReceipts.Load(reader);
-                    reader.Close();
+                    ReloadCurrentReceipt();
                 }
-
-                txtManualServiceCharge.Value = Utility.GetDecimalFromRow("SVCFeeAmount", dtSaleReceipts.Rows[0]);
+                else
+                {
+                    InformationDialogForm errorDialog = new InformationDialogForm("Add Tip Fail. Please contact TruongDS");
+                    errorDialog.ShowDialog();
+                }
             }
             catch (Exception ex)
             {
@@ -446,7 +462,7 @@ namespace ThirdPartyTool.SaleReceipt
                     return;
 
                 ProcessForm processForm = new ProcessForm();
-                processForm.CloseReceipt_SaleReceiptID = MainSaleReceiptID;
+                processForm.SaleReceiptID = MainSaleReceiptID;
                 processForm.CurrentProcessName = ProcessNameEnum.CloseReceipt;
                 processForm.ShowDialog();
 
@@ -551,6 +567,28 @@ namespace ThirdPartyTool.SaleReceipt
                     if (TransactionStatusID != "FIN")
                     {
                         InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Update Service Charges cho những ticket đang ở trạng thái FINISH.");
+                        informationDialogForm.ShowDialog();
+                        return;
+                    }
+
+                    DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+                    using (SqlCommand sqlCommand = new SqlCommand())
+                    using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                    {
+                        if (conn.State == ConnectionState.Closed)
+                            conn.Open();
+
+                        sqlCommand.Connection = conn;
+                        sqlCommand.CommandType = CommandType.Text;
+                        sqlCommand.CommandText = $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{MainSaleReceiptID}' ";
+                        var reader = sqlCommand.ExecuteReader();
+                        dtSaleReceiptPaymentDetails.Load(reader);
+                        reader.Close();
+                    }
+
+                    if (dtSaleReceiptPaymentDetails?.Rows.Count != 1)
+                    {
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Update Service Charges cho những ticket thanh toán 1 lần duy nhất. Ko support multi payment.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -918,6 +956,10 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
+                lblTotalRefundItem_Amount.Text = $"Amount: 0";
+                lblTotalRefundItem_Tax.Text = $"Sales Tax: 0";
+                lblTotalRefundItem_TotalAmount.Text = $"Total Refund: 0";
+
                 DataTable dtSaleReceiptDetails = new DataTable("SaleReceiptDetails");
                 string sql = "";
                 using (SqlCommand sqlCommand = new SqlCommand())
@@ -986,6 +1028,8 @@ namespace ThirdPartyTool.SaleReceipt
             try
             {
                 decimal totalAmount = 0;
+                decimal amount = 0;
+                decimal tax = 0;
 
                 foreach (Control item in pnlRefundItemContainer.Controls)
                 {
@@ -1004,6 +1048,8 @@ namespace ThirdPartyTool.SaleReceipt
                         if (refundItem.IsSelectedItem)
                         {
                             totalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
+                            amount += refundItem.ExtendedPrice;
+                            tax += refundItem.TaxAmount;
                         }
                         continue;
                     }
@@ -1019,12 +1065,16 @@ namespace ThirdPartyTool.SaleReceipt
                         if (refundModifier.IsSelectedItem)
                         {
                             totalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
+                            amount += refundModifier.ExtendedPrice;
+                            tax += refundModifier.TaxAmount;
                         }
                         continue;
                     }
                 }
 
-                lblTotalRefundItemAmount.Text = $"Total Refund Amount: {Utility.ConvertDecimalToMoneyString(totalAmount)}";
+                lblTotalRefundItem_Amount.Text = $"Amount: {Utility.ConvertDecimalToMoneyString(amount)}";
+                lblTotalRefundItem_Tax.Text = $"Sales Tax: {Utility.ConvertDecimalToMoneyString(tax)}";
+                lblTotalRefundItem_TotalAmount.Text = $"Total Refund: {Utility.ConvertDecimalToMoneyString(totalAmount)}";
             }
             catch (Exception ex)
             {

@@ -660,6 +660,12 @@
     <Compile Include="SaleReceipt\SelectSaleReceiptPaymentDetailForm.Designer.cs">
       <DependentUpon>SelectSaleReceiptPaymentDetailForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SaleReceipt\ServiceChargesRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\ServiceChargesRow.Designer.cs">
+      <DependentUpon>ServiceChargesRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="SaleReceipt\UpdateStatusReceiptView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -680,6 +686,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shift\ShiftView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Shift\ShiftView.Designer.cs">
+      <DependentUpon>ShiftView.cs</DependentUpon>
+    </Compile>
     <Compile Include="StartForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -814,6 +826,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\SelectSaleReceiptPaymentDetailForm.resx">
       <DependentUpon>SelectSaleReceiptPaymentDetailForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\ServiceChargesRow.resx">
+      <DependentUpon>ServiceChargesRow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\UpdateStatusReceiptView.resx">
       <DependentUpon>UpdateStatusReceiptView.cs</DependentUpon>
