@@ -42,6 +42,7 @@
             // 
             // pnlContainer
             // 
+            this.pnlContainer.BackColor = System.Drawing.Color.White;
             this.pnlContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlContainer.Controls.Add(this.lblFinalTotalValue);
             this.pnlContainer.Controls.Add(this.lblTipValue);

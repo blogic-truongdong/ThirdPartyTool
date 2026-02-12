@@ -6,7 +6,7 @@ namespace ThirdPartyTool.Models
 {
     public class SaleReceiptPaymentDetailEntity
     {
-        public string SaleReceiptPaymentDetailID { get; set; }
+        public long SaleReceiptPaymentDetailID { get; set; }
 
         public Guid SaleReceiptID { get; set; }
 
@@ -130,6 +130,10 @@ namespace ThirdPartyTool.Models
         public int EmployeeID { get; set; }
         public int PaymentMethodType { get; set; }
 
+        public string HouseAccountTransactionID { get; set; }
+
+        public decimal PaidHouseAccount { get; set; }
+
         /// <summary>
         /// Updates the properties of this instance from a DataRow
         /// </summary>
@@ -140,7 +144,7 @@ namespace ThirdPartyTool.Models
             {
                 if (row == null) return;
 
-                SaleReceiptPaymentDetailID = Utility.GetStringFromRow("SaleReceiptPaymentDetailID", row);
+                SaleReceiptPaymentDetailID = Utility.GetLongFromRow("SaleReceiptPaymentDetailID", row);
                 SaleReceiptID = Utility.GetGuidFromObject(row["SaleReceiptID"]);
                 PaymentMethodID = Utility.GetIntFromRow("PaymentMethodID", row);
                 AmountTendered = Utility.GetDecimalFromRow("AmountTendered", row);

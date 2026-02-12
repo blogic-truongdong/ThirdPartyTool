@@ -1,4 +1,5 @@
-﻿using BLogicSystems.XPos.Utilites;
+﻿using BLogicSystems.XPos.ClientUtilities;
+using BLogicSystems.XPos.Utilites;
 using DevExpress.XtraReports.UI;
 using Microsoft.Practices.CompositeUI.Utility;
 using System;
@@ -34,7 +35,6 @@ namespace ThirdPartyTool.SaleReceipt
 
             btnBackCloseTicket.Click += BtnBackCloseTicket_Click;
             btnBack2.Click += BtnBackCloseTicket_Click;
-            btnBack3.Click += BtnBackCloseTicket_Click;
             btnBack4.Click += BtnBackCloseTicket_Click;
             btnBack5.Click += BtnBackCloseTicket_Click;
             btnBack6.Click += BtnBackCloseTicket_Click;
@@ -50,7 +50,6 @@ namespace ThirdPartyTool.SaleReceipt
             btnProcessCloseTicket.Click += BtnProcessCloseTicket_Click;
             btnProcessVoidTicket.Click += BtnProcessVoidTicket_Click;
             btnProcessCancelTicket.Click += BtnProcessCancelTicket_Click;
-            btnProcessRefundTicket.Click += BtnProcessRefundTicket_Click;
             btnProcessAddTipBySaleToken.Click += BtnProcessAddTipBySaleToken_Click;
             BtnProcessRefundPartialItem.Click += BtnProcessRefundPartialItem_Click;
             BtnProcessUpdateServiceCharges.Click += BtnProcessUpdateServiceCharges_Click;
@@ -60,6 +59,19 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
+                if (TransactionStatusID != "FIN" && TransactionStatusID != "VOID" && TransactionStatusID != "RET")
+                {
+                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Update Service Charges những ticket đang ở trạng thái Finish, VOID and Cancel.");
+                    informationDialogForm.ShowDialog();
+                    return;
+                }
+
+                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to update Service Charges for ticket #{MainSaleReceiptNumber}?");
+                var result = confirmFirmDialog.ShowDialog();
+                if (result == DialogResult.No)
+                    return;
+
+
                 RequestModel requestModel = new RequestModel();
                 requestModel.refundValues.SaleReceiptID = MainSaleReceiptID;
                 requestModel.refundValues.ServiceFee = Utility.GetDecimalFromObject(txtManualServiceCharge.Text);
@@ -176,20 +188,17 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     SelectSaleReceiptPaymentDetailForm form = new SelectSaleReceiptPaymentDetailForm();
                     form.BindingData(dtSaleReceiptPaymentDetails);
-                    if (form.ShowDialog() == DialogResult.OK)
-                    {
-
-                    }
-                    else
+                    if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(form, Helper.MainForm) != DialogResult.OK)
                     {
                         return;
                     }
+                    requestModel.SaleReceiptPaymentDetailID = form.SaleReceiptPaymentDetailID;
                 }
 
                 if (requestModel.objectValues.Count == 0)
                     return;
 
-                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to Refund Items of ticket #{MainSaleReceiptNumber}?");
+                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to Refund ${requestModel.TotalAmount} of ticket #{MainSaleReceiptNumber}?");
                 var result = confirmFirmDialog.ShowDialog();
                 if (result == DialogResult.No)
                     return;
@@ -252,6 +261,7 @@ namespace ThirdPartyTool.SaleReceipt
                 PrintControl_TokenReceipt.Refresh();
 
                 txtSearch.Text = MainSaleReceiptNumber;
+                txtSearchTokenReceipt.Text = string.Empty;
 
                 ReloadCurrentReceipt();
             }
@@ -311,8 +321,8 @@ namespace ThirdPartyTool.SaleReceipt
                     return;
                 }
 
-                TokenSaleReceiptID = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptID;
-                TokenSaleReceiptNumber = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptNumber;
+                TokenSaleReceiptID = processForm.SaleReceiptID;
+                TokenSaleReceiptNumber = processForm.SaleReceiptNumber;
                 TokenTotalAmount = processForm.GetReceiptTemplateByTicketNumber_TotalAmount;
                 xReport.PrintingSystem.SetCommandVisibility(DevExpress.XtraPrinting.PrintingSystemCommand.DocumentMap, DevExpress.XtraPrinting.CommandVisibility.All);
                 xReport.PrintingSystem.ShowMarginsWarning = false;
@@ -325,46 +335,6 @@ namespace ThirdPartyTool.SaleReceipt
                 BLogicLogger.Exception("BtnSearchTokenReceipt_Click", ex, new System.Collections.Generic.List<object>() { txtSearchTokenReceipt.Text });
                 ErrorDialogForm errorDialog = new ErrorDialogForm($"Something went wrong while searching for the token ticket.{Environment.NewLine}Please try again or contact TruongDS.");
                 errorDialog.ShowDialog();
-            }
-        }
-
-        private void BtnProcessRefundTicket_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (TransactionStatusID != "FIN")
-                {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CANCEL những ticket đang ở trạng thái OPEN.");
-                    informationDialogForm.ShowDialog();
-                    return;
-                }
-
-                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to CANCEL Ticket #{MainSaleReceiptNumber}?");
-                var result = confirmFirmDialog.ShowDialog();
-                if (result == DialogResult.No)
-                    return;
-
-                ProcessForm processForm = new ProcessForm();
-                processForm.SaleReceiptID = MainSaleReceiptID;
-                processForm.CurrentProcessName = ProcessNameEnum.CancelReceipt;
-                processForm.ShowDialog();
-
-                if (processForm.IsSuccess)
-                {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"CANCEL Ticket#{MainSaleReceiptNumber} Done.");
-                    informationDialogForm.ShowDialog();
-
-                    ClearCurrentReceipt();
-                }
-                else
-                {
-                    ErrorDialogForm errorDialogForm = new ErrorDialogForm($"CANCEL Ticket# {MainSaleReceiptNumber} Fail. Please contact TruongDS");
-                    errorDialogForm.ShowDialog();
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("BtnProcessRefundTicket_Click in ReceiptView_v2", ex);
             }
         }
 
@@ -640,21 +610,28 @@ namespace ThirdPartyTool.SaleReceipt
 
                 txtManualServiceCharge.Text = (_ServiceFee).ToString("c2");
                 txtManualServiceChargeTax.Text = _ServiceFeeTaxAmount.ToString("c2");
+                txtManualServiceChargeTax.Enabled = _ServiceFeeTaxAmount > 0;
 
                 txtAreaServiceCharge.Text = (_AreaFeeAmount).ToString("c2");
                 txtAreaServiceChargeTax.Text = _AreaFeeTaxAmount.ToString("c2");
+                txtAreaServiceChargeTax.Enabled = _AreaFeeTaxAmount > 0;
 
                 txtPartyServiceCharge.Text = (_PartyServiceFeeAmount).ToString("c2");
                 txtPartyServiceChargeTax.Text = _PartyServiceFeeTaxAmount.ToString("c2");
+                txtPartyServiceChargeTax.Enabled = _PartyServiceFeeTaxAmount > 0;
 
                 txtAutoServiceCharge.Text = (_AutoGratuityAmount).ToString("c2");
                 txtAutoServiceChargeTax.Text = _AutoGratuityTaxAmount.ToString("c2");
+                txtAutoServiceChargeTax.Enabled = _AutoGratuityTaxAmount > 0;
 
                 txtCustomFee.Text = (_SVCFeePaidAmount - _SVCFeeTaxPaidAmount).ToString("c2");
                 txtCustomFeeTax.Text = _SVCFeeTaxPaidAmount.ToString("c2");
+                txtCustomFeeTax.Enabled = _SVCFeeTaxPaidAmount > 0;
 
                 txtCashDiscount.Text = (_CashDiscountPaidAmount - _CashDiscountPaidAmount).ToString("c2");
                 txtCashDiscountTax.Text = _CashDiscountTaxPaidAmount.ToString("c2");
+                txtCashDiscountTax.Enabled = _CashDiscountTaxPaidAmount > 0;
+
             }
             catch (Exception ex)
             {
@@ -867,7 +844,8 @@ namespace ThirdPartyTool.SaleReceipt
                     return;
 
                 ProcessForm processForm = new ProcessForm();
-                processForm.InitGetReceiptTemplateBySaleReceiptID(MainSaleReceiptID);
+                processForm.CurrentProcessName = ProcessNameEnum.GetReceiptTemplateBySaleReceiptID;
+                processForm.SaleReceiptID = MainSaleReceiptID;
                 processForm.ShowDialog();
 
                 if (!processForm.IsSuccess)

@@ -143,7 +143,7 @@ namespace ThirdPartyTool
                                 return;
                             }
 
-                            if (!string.IsNullOrWhiteSpace(payment.SaleReceiptPaymentDetailID) && payment.Gratuity == 0)
+                            if (payment.SaleReceiptPaymentDetailID > 0 && payment.Gratuity == 0)
                             {
                                 sql = $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{listPayments[0].SaleReceiptID}'";
                                 var paymentRoleDetail = await conn.QuerySingleOrDefaultAsync<PaymentRoleDetailEntity>(sql, "", null, 180, System.Data.CommandType.Text);

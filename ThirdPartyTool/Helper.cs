@@ -21,6 +21,7 @@ namespace ThirdPartyTool
 
     public class Helper
     {
+        public static Form MainForm = null;
         public static string PaycorAPImSubscriptionKey = string.Empty;
         public static string PaycorRefreshToken = string.Empty;
         public static string PaycorClientID = string.Empty;

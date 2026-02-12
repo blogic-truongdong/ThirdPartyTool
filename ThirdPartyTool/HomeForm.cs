@@ -38,6 +38,7 @@ namespace ThirdPartyTool
             btnItem.Click += BtnItem_Click;
             btnEmployeePaycor.Click += BtnEmployeePaycor_Click;
             btnReceipt_V2.Click += BtnReceipt_V2_Click;
+
         }
 
         private void BtnReceipt_V2_Click(object sender, EventArgs e)

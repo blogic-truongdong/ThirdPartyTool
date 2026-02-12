@@ -61,6 +61,7 @@
             this.lblMessage.TabIndex = 2;
             this.lblMessage.Text = "Are you sure you want to update this receipt?";
             this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblMessage.UseMnemonic = false;
             // 
             // lblTitle
             // 

@@ -7,9 +7,29 @@ namespace ThirdPartyTool.SaleReceipt
 {
     public partial class SelectSaleReceiptPaymentDetailForm : Form
     {
+        public string SaleReceiptPaymentDetailID = string.Empty;
+
         public SelectSaleReceiptPaymentDetailForm()
         {
             InitializeComponent();
+
+            this.btnCancel.Click += BtnCancel_Click;
+            this.btnOK.Click += BtnOK_Click;
+        }
+
+        private void BtnOK_Click(object sender, System.EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SaleReceiptPaymentDetailID))
+                return;
+
+            DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void BtnCancel_Click(object sender, System.EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
         public void BindingData(DataTable dtSaleReceiptPaymentDetails)
@@ -46,7 +66,24 @@ namespace ThirdPartyTool.SaleReceipt
 
         private void Control_PaymentDetailSelected(object sender, DataEventArgs<string> e)
         {
+            try
+            {
+                SaleReceiptPaymentDetailControl saleReceiptPayment = sender as SaleReceiptPaymentDetailControl;
+                if (saleReceiptPayment == null)
+                    return;
 
+                SaleReceiptPaymentDetailID = saleReceiptPayment.SaleReceiptPaymentDetailID;
+
+                foreach (SaleReceiptPaymentDetailControl item in pnlListReceipt.Controls)
+                {
+                    if (item.SaleReceiptPaymentDetailID != saleReceiptPayment.SaleReceiptPaymentDetailID)
+                        item.UpdateSelectedItem(false);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                BLogicLogger.Exception("Control_PaymentDetailSelected in SelectSaleReceiptPaymentDetailForm", ex);
+            }
         }
     }
 }

@@ -53,8 +53,8 @@ namespace ThirdPartyTool.SaleReceipt
                     return;
                 }
 
-                MainSaleReceiptID = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptID;
-                MainSaleReceiptNumber = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptNumber;
+                MainSaleReceiptID = processForm.SaleReceiptID;
+                MainSaleReceiptNumber = processForm.SaleReceiptNumber;
 
                 xReport.PrintingSystem.SetCommandVisibility(DevExpress.XtraPrinting.PrintingSystemCommand.DocumentMap, DevExpress.XtraPrinting.CommandVisibility.All);
                 xReport.PrintingSystem.ShowMarginsWarning = false;

@@ -40,6 +40,7 @@ namespace ThirdPartyTool
             Helper.Merchant_Name = enterDatabaseForm.txtMerchant.Text.Trim();
 
             HomeForm homeForm = new HomeForm();
+            Helper.MainForm = homeForm;
             //homeForm.Icon = appIcon;
             Application.Run(homeForm);
         }

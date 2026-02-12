@@ -48,8 +48,8 @@ namespace ThirdPartyTool.SaleReceipt
                 if (xReport == null)
                     return;
 
-                MainSaleReceiptID = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptID;
-                MainSaleReceiptNumber = processForm.GetReceiptTemplateByTicketNumber_SaleReceiptNumber;
+                MainSaleReceiptID = processForm.SaleReceiptID;
+                MainSaleReceiptNumber = processForm.SaleReceiptNumber;
 
                 DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
                 DataTable dtTransactionDetail = new DataTable("TransactionDetail");

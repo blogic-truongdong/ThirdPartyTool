@@ -262,5 +262,7 @@ namespace ThirdPartyTool.Models
 
         public decimal CoinDiscountAmount { get; set; }
 
+        public decimal FinalGratuity { get; set; }
+
     }
 }
