@@ -25,6 +25,13 @@ namespace ThirdPartyTool
             btnLogin.Click += BtnLogin_Click;
 
             TxtInputID.KeyUp += TxtInputID_KeyUp;
+            btnCancel.Click += BtnCancel_Click;
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
         private void TxtInputID_KeyUp(object sender, KeyEventArgs e)

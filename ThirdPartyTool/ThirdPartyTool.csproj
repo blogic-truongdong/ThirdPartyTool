@@ -372,6 +372,7 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Activities" />
@@ -408,6 +409,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="zxing">
       <HintPath>Lib\zxing.dll</HintPath>
     </Reference>
@@ -571,6 +573,7 @@
     <Compile Include="Models\GeneratePaycorAccessTokenResponse.cs" />
     <Compile Include="Models\GetEmployeesByLegalEntityIDResponse.cs" />
     <Compile Include="Models\GetEmployeeTimeCardPunchesResponse.cs" />
+    <Compile Include="Models\PaymentMethodEntity.cs" />
     <Compile Include="Models\PaymentRoleDetailEntity.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Models\RoleEntity.cs" />
@@ -587,6 +590,12 @@
     </Compile>
     <Compile Include="ProcessForm.Designer.cs">
       <DependentUpon>ProcessForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProcessFormAsync.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProcessFormAsync.Designer.cs">
+      <DependentUpon>ProcessFormAsync.cs</DependentUpon>
     </Compile>
     <Compile Include="ReceiptView.cs">
       <SubType>UserControl</SubType>
@@ -648,6 +657,12 @@
     <Compile Include="SaleReceipt\SaleReceiptPaymentDetailControl.Designer.cs">
       <DependentUpon>SaleReceiptPaymentDetailControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SaleReceipt\SearchCreditCardTransactionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\SearchCreditCardTransactionForm.Designer.cs">
+      <DependentUpon>SearchCreditCardTransactionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SaleReceipt\SelectSaleReceiptForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -691,6 +706,12 @@
     </Compile>
     <Compile Include="Shift\ShiftView.Designer.cs">
       <DependentUpon>ShiftView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Shift\UpdateShiftForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Shift\UpdateShiftForm.Designer.cs">
+      <DependentUpon>UpdateShiftForm.cs</DependentUpon>
     </Compile>
     <Compile Include="StartForm.cs">
       <SubType>Form</SubType>
@@ -781,6 +802,9 @@
     <EmbeddedResource Include="ProcessForm.resx">
       <DependentUpon>ProcessForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProcessFormAsync.resx">
+      <DependentUpon>ProcessFormAsync.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -821,6 +845,9 @@
     <EmbeddedResource Include="SaleReceipt\SaleReceiptPaymentDetailControl.resx">
       <DependentUpon>SaleReceiptPaymentDetailControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\SearchCreditCardTransactionForm.resx">
+      <DependentUpon>SearchCreditCardTransactionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\SelectSaleReceiptForm.resx">
       <DependentUpon>SelectSaleReceiptForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -838,6 +865,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SevenShiftsForm.resx">
       <DependentUpon>SevenShiftsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shift\ShiftView.resx">
+      <DependentUpon>ShiftView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shift\UpdateShiftForm.resx">
+      <DependentUpon>UpdateShiftForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StartForm.resx">
       <DependentUpon>StartForm.cs</DependentUpon>
@@ -936,6 +969,7 @@
     <Content Include="Lib\log4net.dll" />
     <Content Include="Lib\System.Printing.dll" />
     <Content Include="Lib\zxing.dll" />
+    <None Include="Resources\icon_edit_2.png" />
     <None Include="Resources\Icon_CreditCard.png" />
     <None Include="Resources\Icon_Arrow_Down.png" />
     <Content Include="Resources\Icon_BLogic_Tool.ico">

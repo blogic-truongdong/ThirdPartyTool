@@ -35,13 +35,10 @@
             this.btnSearch = new System.Windows.Forms.Label();
             this.PrintControl_Receipt = new DevExpress.XtraPrinting.Control.PrintControl();
             this.pnlContainer = new System.Windows.Forms.Panel();
-            this.pnlOption = new System.Windows.Forms.Panel();
-            this.btnShowUpdateServiceCharges = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowAddTipForPaymentDetail = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowPartialRefundTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowVoidTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnShowCloseTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.pnlFinishTicket = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnScanCreditCardTransaction = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.bLabel_Rounded2 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlRefundItems = new System.Windows.Forms.Panel();
             this.lblTotalRefundItem_Amount = new System.Windows.Forms.Label();
             this.lblTotalRefundItem_Tax = new System.Windows.Forms.Label();
@@ -112,10 +109,19 @@
             this.pnlPaymentDetails = new System.Windows.Forms.Panel();
             this.btnBack5 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.label27 = new System.Windows.Forms.Label();
+            this.pnlOption = new System.Windows.Forms.Panel();
+            this.btnShowFinishTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowUpdateServiceCharges = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowAddTipForPaymentDetail = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowPartialRefundTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowVoidTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnShowCloseTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlContainer.SuspendLayout();
-            this.pnlOption.SuspendLayout();
+            this.pnlFinishTicket.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.pnlRefundItems.SuspendLayout();
             this.pnlUpdateServiceCharges.SuspendLayout();
             this.pnlVoidTicket.SuspendLayout();
@@ -124,6 +130,7 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.bPanel_Rounded1.SuspendLayout();
             this.pnlAddTipForPaymentDetail.SuspendLayout();
+            this.pnlOption.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -214,13 +221,14 @@
             // 
             // pnlContainer
             // 
+            this.pnlContainer.Controls.Add(this.pnlFinishTicket);
+            this.pnlContainer.Controls.Add(this.pnlRefundItems);
             this.pnlContainer.Controls.Add(this.pnlUpdateServiceCharges);
             this.pnlContainer.Controls.Add(this.pnlVoidTicket);
             this.pnlContainer.Controls.Add(this.pnlCloseTicket);
             this.pnlContainer.Controls.Add(this.pnlAddTipBySaleToken);
             this.pnlContainer.Controls.Add(this.pnlAddTipForPaymentDetail);
             this.pnlContainer.Controls.Add(this.pnlOption);
-            this.pnlContainer.Controls.Add(this.pnlRefundItems);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(300, 0);
             this.pnlContainer.Margin = new System.Windows.Forms.Padding(0);
@@ -229,128 +237,61 @@
             this.pnlContainer.Size = new System.Drawing.Size(666, 553);
             this.pnlContainer.TabIndex = 29;
             // 
-            // pnlOption
+            // pnlFinishTicket
             // 
-            this.pnlOption.AutoScroll = true;
-            this.pnlOption.Controls.Add(this.btnShowUpdateServiceCharges);
-            this.pnlOption.Controls.Add(this.btnShowAddTipForPaymentDetail);
-            this.pnlOption.Controls.Add(this.btnShowAddTipBySaleToken);
-            this.pnlOption.Controls.Add(this.btnShowPartialRefundTicket);
-            this.pnlOption.Controls.Add(this.btnShowVoidTicket);
-            this.pnlOption.Controls.Add(this.btnShowCloseTicket);
-            this.pnlOption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlOption.Location = new System.Drawing.Point(0, 0);
-            this.pnlOption.Name = "pnlOption";
-            this.pnlOption.Size = new System.Drawing.Size(666, 553);
-            this.pnlOption.TabIndex = 0;
+            this.pnlFinishTicket.AutoScroll = true;
+            this.pnlFinishTicket.Controls.Add(this.panel2);
+            this.pnlFinishTicket.Controls.Add(this.bLabel_Rounded2);
+            this.pnlFinishTicket.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlFinishTicket.Location = new System.Drawing.Point(0, 0);
+            this.pnlFinishTicket.Name = "pnlFinishTicket";
+            this.pnlFinishTicket.Padding = new System.Windows.Forms.Padding(10, 10, 10, 200);
+            this.pnlFinishTicket.Size = new System.Drawing.Size(666, 553);
+            this.pnlFinishTicket.TabIndex = 46;
             // 
-            // btnShowUpdateServiceCharges
+            // panel2
             // 
-            this.btnShowUpdateServiceCharges.BackColor = System.Drawing.Color.White;
-            this.btnShowUpdateServiceCharges.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowUpdateServiceCharges.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowUpdateServiceCharges.BorderRadius = 5;
-            this.btnShowUpdateServiceCharges.BorderSize = 1;
-            this.btnShowUpdateServiceCharges.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowUpdateServiceCharges.ForeColor = System.Drawing.Color.Black;
-            this.btnShowUpdateServiceCharges.Location = new System.Drawing.Point(20, 426);
-            this.btnShowUpdateServiceCharges.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowUpdateServiceCharges.Name = "btnShowUpdateServiceCharges";
-            this.btnShowUpdateServiceCharges.Size = new System.Drawing.Size(300, 50);
-            this.btnShowUpdateServiceCharges.TabIndex = 10;
-            this.btnShowUpdateServiceCharges.Text = "Update Service Charges";
-            this.btnShowUpdateServiceCharges.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowUpdateServiceCharges.TextColor = System.Drawing.Color.Black;
+            this.panel2.Controls.Add(this.btnScanCreditCardTransaction);
+            this.panel2.Location = new System.Drawing.Point(10, 10);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(646, 70);
+            this.panel2.TabIndex = 32;
             // 
-            // btnShowAddTipForPaymentDetail
+            // btnScanCreditCardTransaction
             // 
-            this.btnShowAddTipForPaymentDetail.BackColor = System.Drawing.Color.White;
-            this.btnShowAddTipForPaymentDetail.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowAddTipForPaymentDetail.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowAddTipForPaymentDetail.BorderRadius = 5;
-            this.btnShowAddTipForPaymentDetail.BorderSize = 1;
-            this.btnShowAddTipForPaymentDetail.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowAddTipForPaymentDetail.ForeColor = System.Drawing.Color.Black;
-            this.btnShowAddTipForPaymentDetail.Location = new System.Drawing.Point(20, 286);
-            this.btnShowAddTipForPaymentDetail.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowAddTipForPaymentDetail.Name = "btnShowAddTipForPaymentDetail";
-            this.btnShowAddTipForPaymentDetail.Size = new System.Drawing.Size(300, 50);
-            this.btnShowAddTipForPaymentDetail.TabIndex = 9;
-            this.btnShowAddTipForPaymentDetail.Text = "Add Tip for Payment";
-            this.btnShowAddTipForPaymentDetail.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowAddTipForPaymentDetail.TextColor = System.Drawing.Color.Black;
+            this.btnScanCreditCardTransaction.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.btnScanCreditCardTransaction.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.btnScanCreditCardTransaction.BorderColor = System.Drawing.Color.Gray;
+            this.btnScanCreditCardTransaction.BorderRadius = 5;
+            this.btnScanCreditCardTransaction.BorderSize = 0;
+            this.btnScanCreditCardTransaction.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Bold);
+            this.btnScanCreditCardTransaction.ForeColor = System.Drawing.Color.White;
+            this.btnScanCreditCardTransaction.Location = new System.Drawing.Point(10, 10);
+            this.btnScanCreditCardTransaction.Margin = new System.Windows.Forms.Padding(5);
+            this.btnScanCreditCardTransaction.Name = "btnScanCreditCardTransaction";
+            this.btnScanCreditCardTransaction.Size = new System.Drawing.Size(410, 50);
+            this.btnScanCreditCardTransaction.TabIndex = 32;
+            this.btnScanCreditCardTransaction.Text = "Scan Credit Card Transactiom";
+            this.btnScanCreditCardTransaction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnScanCreditCardTransaction.TextColor = System.Drawing.Color.White;
             // 
-            // btnShowAddTipBySaleToken
+            // bLabel_Rounded2
             // 
-            this.btnShowAddTipBySaleToken.BackColor = System.Drawing.Color.White;
-            this.btnShowAddTipBySaleToken.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowAddTipBySaleToken.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowAddTipBySaleToken.BorderRadius = 5;
-            this.btnShowAddTipBySaleToken.BorderSize = 1;
-            this.btnShowAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowAddTipBySaleToken.ForeColor = System.Drawing.Color.Black;
-            this.btnShowAddTipBySaleToken.Location = new System.Drawing.Point(20, 216);
-            this.btnShowAddTipBySaleToken.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowAddTipBySaleToken.Name = "btnShowAddTipBySaleToken";
-            this.btnShowAddTipBySaleToken.Size = new System.Drawing.Size(300, 50);
-            this.btnShowAddTipBySaleToken.TabIndex = 8;
-            this.btnShowAddTipBySaleToken.Text = "Add Tip by Ticket Sale Token";
-            this.btnShowAddTipBySaleToken.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowAddTipBySaleToken.TextColor = System.Drawing.Color.Black;
-            // 
-            // btnShowPartialRefundTicket
-            // 
-            this.btnShowPartialRefundTicket.BackColor = System.Drawing.Color.White;
-            this.btnShowPartialRefundTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowPartialRefundTicket.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowPartialRefundTicket.BorderRadius = 5;
-            this.btnShowPartialRefundTicket.BorderSize = 1;
-            this.btnShowPartialRefundTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowPartialRefundTicket.ForeColor = System.Drawing.Color.Black;
-            this.btnShowPartialRefundTicket.Location = new System.Drawing.Point(20, 356);
-            this.btnShowPartialRefundTicket.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowPartialRefundTicket.Name = "btnShowPartialRefundTicket";
-            this.btnShowPartialRefundTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnShowPartialRefundTicket.TabIndex = 7;
-            this.btnShowPartialRefundTicket.Text = "Refund Items";
-            this.btnShowPartialRefundTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowPartialRefundTicket.TextColor = System.Drawing.Color.Black;
-            // 
-            // btnShowVoidTicket
-            // 
-            this.btnShowVoidTicket.BackColor = System.Drawing.Color.White;
-            this.btnShowVoidTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowVoidTicket.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowVoidTicket.BorderRadius = 5;
-            this.btnShowVoidTicket.BorderSize = 1;
-            this.btnShowVoidTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowVoidTicket.ForeColor = System.Drawing.Color.Black;
-            this.btnShowVoidTicket.Location = new System.Drawing.Point(20, 145);
-            this.btnShowVoidTicket.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowVoidTicket.Name = "btnShowVoidTicket";
-            this.btnShowVoidTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnShowVoidTicket.TabIndex = 7;
-            this.btnShowVoidTicket.Text = "Void / Cancel Ticket";
-            this.btnShowVoidTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowVoidTicket.TextColor = System.Drawing.Color.Black;
-            // 
-            // btnShowCloseTicket
-            // 
-            this.btnShowCloseTicket.BackColor = System.Drawing.Color.White;
-            this.btnShowCloseTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnShowCloseTicket.BorderColor = System.Drawing.Color.Gray;
-            this.btnShowCloseTicket.BorderRadius = 5;
-            this.btnShowCloseTicket.BorderSize = 1;
-            this.btnShowCloseTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnShowCloseTicket.ForeColor = System.Drawing.Color.Black;
-            this.btnShowCloseTicket.Location = new System.Drawing.Point(20, 75);
-            this.btnShowCloseTicket.Margin = new System.Windows.Forms.Padding(10);
-            this.btnShowCloseTicket.Name = "btnShowCloseTicket";
-            this.btnShowCloseTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnShowCloseTicket.TabIndex = 7;
-            this.btnShowCloseTicket.Text = "Close Ticket";
-            this.btnShowCloseTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnShowCloseTicket.TextColor = System.Drawing.Color.Black;
+            this.bLabel_Rounded2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.bLabel_Rounded2.BackColor = System.Drawing.Color.White;
+            this.bLabel_Rounded2.BackgroundColor = System.Drawing.Color.White;
+            this.bLabel_Rounded2.BorderColor = System.Drawing.Color.Gray;
+            this.bLabel_Rounded2.BorderRadius = 5;
+            this.bLabel_Rounded2.BorderSize = 1;
+            this.bLabel_Rounded2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.bLabel_Rounded2.ForeColor = System.Drawing.Color.Black;
+            this.bLabel_Rounded2.Location = new System.Drawing.Point(128, 487);
+            this.bLabel_Rounded2.Name = "bLabel_Rounded2";
+            this.bLabel_Rounded2.Size = new System.Drawing.Size(410, 50);
+            this.bLabel_Rounded2.TabIndex = 3;
+            this.bLabel_Rounded2.Text = "Back";
+            this.bLabel_Rounded2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.bLabel_Rounded2.TextColor = System.Drawing.Color.Black;
             // 
             // pnlRefundItems
             // 
@@ -500,12 +441,13 @@
             this.txtCashDiscountTax.Name = "txtCashDiscountTax";
             this.txtCashDiscountTax.Size = new System.Drawing.Size(100, 25);
             this.txtCashDiscountTax.TabIndex = 33;
+            this.txtCashDiscountTax.Text = "0.00";
             this.txtCashDiscountTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtCashDiscountTax.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label39
             // 
@@ -532,12 +474,13 @@
             this.txtCashDiscount.Name = "txtCashDiscount";
             this.txtCashDiscount.Size = new System.Drawing.Size(100, 25);
             this.txtCashDiscount.TabIndex = 33;
+            this.txtCashDiscount.Text = "0.00";
             this.txtCashDiscount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtCashDiscount.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label33
             // 
@@ -564,12 +507,13 @@
             this.txtCustomFeeTax.Name = "txtCustomFeeTax";
             this.txtCustomFeeTax.Size = new System.Drawing.Size(100, 25);
             this.txtCustomFeeTax.TabIndex = 33;
+            this.txtCustomFeeTax.Text = "0.00";
             this.txtCustomFeeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtCustomFeeTax.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label38
             // 
@@ -596,12 +540,13 @@
             this.txtCustomFee.Name = "txtCustomFee";
             this.txtCustomFee.Size = new System.Drawing.Size(100, 25);
             this.txtCustomFee.TabIndex = 33;
+            this.txtCustomFee.Text = "0.00";
             this.txtCustomFee.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtCustomFee.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label32
             // 
@@ -628,12 +573,13 @@
             this.txtAutoServiceChargeTax.Name = "txtAutoServiceChargeTax";
             this.txtAutoServiceChargeTax.Size = new System.Drawing.Size(100, 25);
             this.txtAutoServiceChargeTax.TabIndex = 33;
+            this.txtAutoServiceChargeTax.Text = "0.00";
             this.txtAutoServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtAutoServiceChargeTax.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label37
             // 
@@ -660,12 +606,13 @@
             this.txtAutoServiceCharge.Name = "txtAutoServiceCharge";
             this.txtAutoServiceCharge.Size = new System.Drawing.Size(100, 25);
             this.txtAutoServiceCharge.TabIndex = 33;
+            this.txtAutoServiceCharge.Text = "0.00";
             this.txtAutoServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtAutoServiceCharge.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label31
             // 
@@ -692,12 +639,13 @@
             this.txtPartyServiceChargeTax.Name = "txtPartyServiceChargeTax";
             this.txtPartyServiceChargeTax.Size = new System.Drawing.Size(100, 25);
             this.txtPartyServiceChargeTax.TabIndex = 33;
+            this.txtPartyServiceChargeTax.Text = "0.00";
             this.txtPartyServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtPartyServiceChargeTax.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label36
             // 
@@ -724,12 +672,13 @@
             this.txtPartyServiceCharge.Name = "txtPartyServiceCharge";
             this.txtPartyServiceCharge.Size = new System.Drawing.Size(100, 25);
             this.txtPartyServiceCharge.TabIndex = 33;
+            this.txtPartyServiceCharge.Text = "0.00";
             this.txtPartyServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtPartyServiceCharge.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label30
             // 
@@ -756,12 +705,13 @@
             this.txtAreaServiceChargeTax.Name = "txtAreaServiceChargeTax";
             this.txtAreaServiceChargeTax.Size = new System.Drawing.Size(100, 25);
             this.txtAreaServiceChargeTax.TabIndex = 33;
+            this.txtAreaServiceChargeTax.Text = "0.00";
             this.txtAreaServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtAreaServiceChargeTax.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label35
             // 
@@ -788,12 +738,13 @@
             this.txtAreaServiceCharge.Name = "txtAreaServiceCharge";
             this.txtAreaServiceCharge.Size = new System.Drawing.Size(100, 25);
             this.txtAreaServiceCharge.TabIndex = 33;
+            this.txtAreaServiceCharge.Text = "0.00";
             this.txtAreaServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtAreaServiceCharge.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label29
             // 
@@ -820,12 +771,13 @@
             this.txtManualServiceChargeTax.Name = "txtManualServiceChargeTax";
             this.txtManualServiceChargeTax.Size = new System.Drawing.Size(100, 25);
             this.txtManualServiceChargeTax.TabIndex = 33;
+            this.txtManualServiceChargeTax.Text = "0.00";
             this.txtManualServiceChargeTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtManualServiceChargeTax.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label34
             // 
@@ -852,12 +804,13 @@
             this.txtManualServiceCharge.Name = "txtManualServiceCharge";
             this.txtManualServiceCharge.Size = new System.Drawing.Size(100, 25);
             this.txtManualServiceCharge.TabIndex = 33;
+            this.txtManualServiceCharge.Text = "0.00";
             this.txtManualServiceCharge.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtManualServiceCharge.Value = new decimal(new int[] {
             0,
             0,
             0,
-            0});
+            131072});
             // 
             // label28
             // 
@@ -1407,6 +1360,148 @@
             this.label27.Text = "Payment Details";
             this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // pnlOption
+            // 
+            this.pnlOption.AutoScroll = true;
+            this.pnlOption.Controls.Add(this.btnShowFinishTicket);
+            this.pnlOption.Controls.Add(this.btnShowUpdateServiceCharges);
+            this.pnlOption.Controls.Add(this.btnShowAddTipForPaymentDetail);
+            this.pnlOption.Controls.Add(this.btnShowAddTipBySaleToken);
+            this.pnlOption.Controls.Add(this.btnShowPartialRefundTicket);
+            this.pnlOption.Controls.Add(this.btnShowVoidTicket);
+            this.pnlOption.Controls.Add(this.btnShowCloseTicket);
+            this.pnlOption.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlOption.Location = new System.Drawing.Point(0, 0);
+            this.pnlOption.Name = "pnlOption";
+            this.pnlOption.Size = new System.Drawing.Size(666, 553);
+            this.pnlOption.TabIndex = 0;
+            // 
+            // btnShowFinishTicket
+            // 
+            this.btnShowFinishTicket.BackColor = System.Drawing.Color.White;
+            this.btnShowFinishTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowFinishTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowFinishTicket.BorderRadius = 5;
+            this.btnShowFinishTicket.BorderSize = 1;
+            this.btnShowFinishTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowFinishTicket.ForeColor = System.Drawing.Color.Black;
+            this.btnShowFinishTicket.Location = new System.Drawing.Point(20, 441);
+            this.btnShowFinishTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowFinishTicket.Name = "btnShowFinishTicket";
+            this.btnShowFinishTicket.Size = new System.Drawing.Size(300, 50);
+            this.btnShowFinishTicket.TabIndex = 10;
+            this.btnShowFinishTicket.Text = "Update Service Charges";
+            this.btnShowFinishTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowFinishTicket.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowUpdateServiceCharges
+            // 
+            this.btnShowUpdateServiceCharges.BackColor = System.Drawing.Color.White;
+            this.btnShowUpdateServiceCharges.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowUpdateServiceCharges.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowUpdateServiceCharges.BorderRadius = 5;
+            this.btnShowUpdateServiceCharges.BorderSize = 1;
+            this.btnShowUpdateServiceCharges.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowUpdateServiceCharges.ForeColor = System.Drawing.Color.Black;
+            this.btnShowUpdateServiceCharges.Location = new System.Drawing.Point(20, 371);
+            this.btnShowUpdateServiceCharges.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowUpdateServiceCharges.Name = "btnShowUpdateServiceCharges";
+            this.btnShowUpdateServiceCharges.Size = new System.Drawing.Size(300, 50);
+            this.btnShowUpdateServiceCharges.TabIndex = 10;
+            this.btnShowUpdateServiceCharges.Text = "Update Service Charges";
+            this.btnShowUpdateServiceCharges.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowUpdateServiceCharges.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowAddTipForPaymentDetail
+            // 
+            this.btnShowAddTipForPaymentDetail.BackColor = System.Drawing.Color.White;
+            this.btnShowAddTipForPaymentDetail.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowAddTipForPaymentDetail.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowAddTipForPaymentDetail.BorderRadius = 5;
+            this.btnShowAddTipForPaymentDetail.BorderSize = 1;
+            this.btnShowAddTipForPaymentDetail.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowAddTipForPaymentDetail.ForeColor = System.Drawing.Color.Black;
+            this.btnShowAddTipForPaymentDetail.Location = new System.Drawing.Point(20, 231);
+            this.btnShowAddTipForPaymentDetail.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowAddTipForPaymentDetail.Name = "btnShowAddTipForPaymentDetail";
+            this.btnShowAddTipForPaymentDetail.Size = new System.Drawing.Size(300, 50);
+            this.btnShowAddTipForPaymentDetail.TabIndex = 9;
+            this.btnShowAddTipForPaymentDetail.Text = "Add Tip for Payment";
+            this.btnShowAddTipForPaymentDetail.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowAddTipForPaymentDetail.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowAddTipBySaleToken
+            // 
+            this.btnShowAddTipBySaleToken.BackColor = System.Drawing.Color.White;
+            this.btnShowAddTipBySaleToken.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowAddTipBySaleToken.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowAddTipBySaleToken.BorderRadius = 5;
+            this.btnShowAddTipBySaleToken.BorderSize = 1;
+            this.btnShowAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowAddTipBySaleToken.ForeColor = System.Drawing.Color.Black;
+            this.btnShowAddTipBySaleToken.Location = new System.Drawing.Point(20, 161);
+            this.btnShowAddTipBySaleToken.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowAddTipBySaleToken.Name = "btnShowAddTipBySaleToken";
+            this.btnShowAddTipBySaleToken.Size = new System.Drawing.Size(300, 50);
+            this.btnShowAddTipBySaleToken.TabIndex = 8;
+            this.btnShowAddTipBySaleToken.Text = "Add Tip by Ticket Sale Token";
+            this.btnShowAddTipBySaleToken.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowAddTipBySaleToken.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowPartialRefundTicket
+            // 
+            this.btnShowPartialRefundTicket.BackColor = System.Drawing.Color.White;
+            this.btnShowPartialRefundTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowPartialRefundTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowPartialRefundTicket.BorderRadius = 5;
+            this.btnShowPartialRefundTicket.BorderSize = 1;
+            this.btnShowPartialRefundTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowPartialRefundTicket.ForeColor = System.Drawing.Color.Black;
+            this.btnShowPartialRefundTicket.Location = new System.Drawing.Point(20, 301);
+            this.btnShowPartialRefundTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowPartialRefundTicket.Name = "btnShowPartialRefundTicket";
+            this.btnShowPartialRefundTicket.Size = new System.Drawing.Size(300, 50);
+            this.btnShowPartialRefundTicket.TabIndex = 7;
+            this.btnShowPartialRefundTicket.Text = "Refund Items";
+            this.btnShowPartialRefundTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowPartialRefundTicket.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowVoidTicket
+            // 
+            this.btnShowVoidTicket.BackColor = System.Drawing.Color.White;
+            this.btnShowVoidTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowVoidTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowVoidTicket.BorderRadius = 5;
+            this.btnShowVoidTicket.BorderSize = 1;
+            this.btnShowVoidTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowVoidTicket.ForeColor = System.Drawing.Color.Black;
+            this.btnShowVoidTicket.Location = new System.Drawing.Point(20, 90);
+            this.btnShowVoidTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowVoidTicket.Name = "btnShowVoidTicket";
+            this.btnShowVoidTicket.Size = new System.Drawing.Size(300, 50);
+            this.btnShowVoidTicket.TabIndex = 7;
+            this.btnShowVoidTicket.Text = "Void / Cancel Ticket";
+            this.btnShowVoidTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowVoidTicket.TextColor = System.Drawing.Color.Black;
+            // 
+            // btnShowCloseTicket
+            // 
+            this.btnShowCloseTicket.BackColor = System.Drawing.Color.White;
+            this.btnShowCloseTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnShowCloseTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnShowCloseTicket.BorderRadius = 5;
+            this.btnShowCloseTicket.BorderSize = 1;
+            this.btnShowCloseTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.btnShowCloseTicket.ForeColor = System.Drawing.Color.Black;
+            this.btnShowCloseTicket.Location = new System.Drawing.Point(20, 20);
+            this.btnShowCloseTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnShowCloseTicket.Name = "btnShowCloseTicket";
+            this.btnShowCloseTicket.Size = new System.Drawing.Size(300, 50);
+            this.btnShowCloseTicket.TabIndex = 7;
+            this.btnShowCloseTicket.Text = "Close Ticket";
+            this.btnShowCloseTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnShowCloseTicket.TextColor = System.Drawing.Color.Black;
+            // 
             // ReceiptView_v2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1418,7 +1513,8 @@
             this.pnlSearch.ResumeLayout(false);
             this.pnlSearch.PerformLayout();
             this.pnlContainer.ResumeLayout(false);
-            this.pnlOption.ResumeLayout(false);
+            this.pnlFinishTicket.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.pnlRefundItems.ResumeLayout(false);
             this.pnlUpdateServiceCharges.ResumeLayout(false);
             this.pnlUpdateServiceCharges.PerformLayout();
@@ -1431,6 +1527,7 @@
             this.bPanel_Rounded1.ResumeLayout(false);
             this.bPanel_Rounded1.PerformLayout();
             this.pnlAddTipForPaymentDetail.ResumeLayout(false);
+            this.pnlOption.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1521,5 +1618,10 @@
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label lblTotalRefundItem_Amount;
         private System.Windows.Forms.Label lblTotalRefundItem_Tax;
+        private CustomControl.BLabel_Rounded btnShowFinishTicket;
+        private System.Windows.Forms.Panel pnlFinishTicket;
+        private System.Windows.Forms.Panel panel2;
+        public CustomControl.BLabel_Rounded bLabel_Rounded2;
+        private CustomControl.BLabel_Rounded btnScanCreditCardTransaction;
     }
 }

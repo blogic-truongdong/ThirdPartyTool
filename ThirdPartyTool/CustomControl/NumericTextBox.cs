@@ -48,12 +48,9 @@ namespace ThirdPartyTool.CustomControl
             }
             set
             {
-                if (this.Value != value)
-                {
-                    this.handleTextChanged = false;
-                    this.Text = value.ToString(this.formatSpecifier, this.numberFormatInfo);
-                    this.handleTextChanged = true;
-                }
+                this.handleTextChanged = false;
+                this.Text = value.ToString(this.formatSpecifier, this.numberFormatInfo);
+                this.handleTextChanged = true;
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using BLogicSystems.XPos.Utilites;
+using BLogicSystems.XPos.Utilites.Logging;
 using Dapper;
 using Newtonsoft.Json;
 using System;
@@ -512,6 +513,594 @@ namespace ThirdPartyTool
             BaseForm frmParent = new BaseForm(childForm);
             frmParent.ShowDialog();
             return childForm.DialogResult;
+        }
+
+        public static async Task<DataTable> QueryToDataTableAsync(SqlConnection conn, string sql, string tableName, object param, int timeout = 180)
+        {
+            using (var reader = await conn.ExecuteReaderAsync(sql, param, null, timeout, System.Data.CommandType.Text))
+            {
+                var dt = new DataTable(tableName);
+                dt.Load(reader);
+                return dt;
+            }
+        }
+
+        public static string GenerateQueryInsert_Merchant_TransactionDetail(DataTable dt,
+            object ID, object Date, object CardNumber, object CardType, object ExpDate, object InvoiceNo,
+            object AuthCode, object RefNo, object Amount, object Gratuity, object Total, object BatchID,
+            object BatchTotal, object BatchStatus, object MerchantID, object BankApprovalCode, object WorkstationID,
+            object WorkstationName, object SVCFeeForGratuity, object SVCFee, object TicketNumber, object BatchUnique,
+            object SubTotal, object TaxAmount, object DiscountAmount, object ServiceCharge, object TotalAmount, object PartyServiceFeeAmount,
+            object AreaFeeAmount, object ServiceFee, object MerchantFee, object MerchantFeeForTip, object AutoGratuityAmount,
+            object SVCFeeTaxAmount, object MerchantFeePercent, object CardNumberMasked)
+        {
+            string strInsert = $"INSERT INTO {Merchant_Name}.dbo.TransactionDetail (";
+
+            try
+            {
+                int colCount = dt.Columns.Count;
+                for (int i = 0; i < colCount; i++)
+                {
+                    strInsert += "[" + dt.Columns[i].ColumnName.ToUpper() + "]";
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += ") VALUES (";
+                for (int i = 0; i < colCount; i++)
+                {
+                    switch (dt.Columns[i].ColumnName)
+                    {
+                        case "ID":
+                            strInsert += $"'{ID}'";
+                            break;
+                        case "Number":
+                            strInsert += $"(select max(a.Number)+1  from Merchant.dbo.TransactionDetail a)";
+                            break;
+                        case "Date":
+                            strInsert += $"'{Date}'";
+                            break;
+                        case "TranType":
+                            strInsert += $"'Sale'";
+                            break;
+                        case "TenderType":
+                            strInsert += $"'CreditCard'";
+                            break;
+                        case "CardNumber":
+                            strInsert += $"'{CardNumber}'";
+                            break;
+                        case "CardType":
+                            strInsert += $"'{CardType}'";
+                            break;
+                        case "ExpDate":
+                            strInsert += $"'{ExpDate}'";
+                            break;
+                        case "Result":
+                            strInsert += $"'Approved'";
+                            break;
+                        case "TextResponse":
+                            strInsert += $"'OK'";
+                            break;
+                        case "CaptureStatus":
+                        case "AVSResult":
+                        case "CVVResult":
+                        case "CustomerName":
+                        case "ItemID":
+                        case "Token":
+                        case "Email":
+                        case "Address":
+                        case "ZipCode":
+                        case "AcqRefData":
+                        case "ProcessData":
+                        case "UserTraceData":
+                        case "ShiftID":
+                        case "Register":
+                        case "TrackNo":
+                        case "TableName":
+                        case "TerminalName":
+                        case "ISOCode":
+                        case "ProcessingSetName":
+                        case "SecondaryResponseCode":
+                        case "BankTransactionID":
+                        case "IsChecked":
+                        case "Returned":
+                        case "Field7":
+                        case "Field8":
+                        case "AID":
+                        case "TC":
+                        case "TicketCaptured":
+                        case "MerchantServer":
+                        case "Pin":
+                        case "CreditCardInfo":
+                        case "AdjustTipInformation":
+                            strInsert += $"''";
+                            break;
+                        case "InvoiceNo":
+                            strInsert += $"'{InvoiceNo}'";
+                            break;
+                        case "AuthCode":
+                            strInsert += $"'{AuthCode}'";
+                            break;
+                        case "RefNo":
+                            strInsert += $"'{RefNo}'";
+                            break;
+                        case "AuthorizeAmount":
+                        case "Amount":
+                        case "OriginalAmount":
+                            strInsert += $"'{Amount}'";
+                            break;
+                        case "Gratuity":
+                        case "OriginalTip":
+                            strInsert += $"'{Gratuity}'";
+                            break;
+                        case "Total":
+                            strInsert += $"'{Total}'";
+                            break;
+                        case "BatchID":
+                            strInsert += $"'{BatchID}'";
+                            break;
+                        case "BatchTotal":
+                            strInsert += $"'{BatchTotal}'";
+                            break;
+                        case "BatchStatus":
+                            strInsert += $"'{BatchStatus}'";
+                            break;
+                        case "CCEntry":
+                            strInsert += $"'CONTACTLESS'";
+                            break;
+                        case "Description":
+                            strInsert += $"'Success'";
+                            break;
+                        case "ReturnCode":
+                            strInsert += $"'000000'";
+                            break;
+                        case "MerchantID":
+                        case "RegisterID":
+                        case "MerchantAccount":
+                            strInsert += $"'{MerchantID}'";
+                            break;
+                        case "UserID":
+                        case "ServerID":
+                        case "AmountCaptured":
+                        case "TipCaptured":
+                            strInsert += $"'-1'";
+                            break;
+                        case "Cashier":
+                        case "ServerName":
+                            strInsert += $"'BLogic'";
+                            break;
+                        case "TranStatus":
+                            strInsert += $"'ACTIVE'";
+                            break;
+                        case "BankApprovalCode":
+                            strInsert += $"'{BankApprovalCode}'";
+                            break;
+                        case "WorkstationID":
+                            strInsert += $"'{WorkstationID}'";
+                            break;
+                        case "WorkstationName":
+                            strInsert += $"'{WorkstationName}'";
+                            break;
+                        case "OrderID":
+                            strInsert += $"(select max(a.OrderID)+1  from Merchant.dbo.TransactionDetail a)";
+                            break;
+                        case "SVCFeeForGratuity":
+                            strInsert += $"'{SVCFeeForGratuity}'";
+                            break;
+                        case "IsTipInLine":
+                            strInsert += $"'0'";
+                            break;
+                        case "SVCFee":
+                            strInsert += $"'{SVCFee}'";
+                            break;
+                        case "TicketNumber":
+                            strInsert += $"'{TicketNumber}'";
+                            break;
+                        case "BatchUnique":
+                            strInsert += $"'{BatchUnique}'";
+                            break;
+                        case "SubTotal":
+                            strInsert += $"'{SubTotal}'";
+                            break;
+                        case "TaxAmount":
+                            strInsert += $"'{TaxAmount}'";
+                            break;
+                        case "DiscountAmount":
+                            strInsert += $"'{DiscountAmount}'";
+                            break;
+                        case "ServiceCharge":
+                            strInsert += $"'{ServiceCharge}'";
+                            break;
+                        case "TotalAmount":
+                            strInsert += $"'{TotalAmount}'";
+                            break;
+                        case "PartyServiceFeeAmount":
+                            strInsert += $"'{PartyServiceFeeAmount}'";
+                            break;
+                        case "AreaFeeAmount":
+                            strInsert += $"'{AreaFeeAmount}'";
+                            break;
+                        case "ServiceFee":
+                            strInsert += $"'{ServiceFee}'";
+                            break;
+                        case "TerminalIpAddress":
+                            strInsert += $"''";
+                            break;
+                        case "MerchantFee":
+                            strInsert += $"'{MerchantFee}'";
+                            break;
+                        case "MerchantFeeForTip":
+                            strInsert += $"'{MerchantFeeForTip}'";
+                            break;
+                        case "IsTryVoidOpenTab":
+                        case "IsPhone":
+                            strInsert += $"'0'";
+                            break;
+                        case "AutoGratuityAmount":
+                            strInsert += $"'{AutoGratuityAmount}'";
+                            break;
+                        case "TicketOrder":
+                            strInsert += $"(select max(a.TicketOrder)+1  from Merchant.dbo.TransactionDetail a)";
+                            break;
+                        case "SVCFeeTaxAmount":
+                            strInsert += $"'{SVCFeeTaxAmount}'";
+                            break;
+                        case "SVCFeeType":
+                            strInsert += $"'1'";
+                            break;
+                        case "MerchantFeePercent":
+                            strInsert += $"'{MerchantFeePercent}'";
+                            break;
+                        case "CardNumberMasked":
+                            strInsert += $"'{CardNumberMasked}'";
+                            break;
+                        default:
+                            //strInsert += "@" + dt.Columns[i].ColumnName.ToUpper();
+                            break;
+                    }
+
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += "); ";
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetQueryInsert_Merchant_TransactionDetail", ex);
+            }
+
+            return strInsert;
+        }
+
+        public static string GenerateQueryInsert_BLogicPOS7_SaleReceiptPaymentDetails(DataTable dt,
+            object SaleReceiptID, object PaymentMethodID, object AmountTendered, object CreatedDate,
+            object Cashier,
+            object ShiftID, object Gratuity, object CreditCardTransactionID, object CreditCardTransactionNumber,
+            object CreditCardTransactionCardNumber, object CreditCardTransactionType, object PaidServiceFee,
+            object CreditCardRefNo, object CreditCardAuthCode, object SVCFeeAmount, object SVCFeeForGratuity,
+            object SVCFeeForServiceCharge, object CashDiscountAmount, object MerchantFee, object PartyServiceFeeAmount,
+            object SVCFeeForPartyServiceFeeAmount, object AreaFeeAmount, object SVCFeeForAreaFeeAmount, object ServiceFee,
+            object SVCFeeForServiceFee, object MerchantFeeForTip, object MerchantFeeForServiceFee, object MerchantFeeForAreaFeeAmount,
+            object MerchantFeeForPartyServiceFeeAmount, object AutoGratuityAmount, object SVCFeeForAutoGratuityAmount,
+            object MerchantFeeForAutoGratuityAmount, object CreditCardCardType, object SVCFeeTaxAmount, object CashDiscountTaxAmount,
+            object ServiceFeeTaxAmount, object AreaFeeTaxAmount, object PartyServiceFeeTaxAmount, object AutoGratuityTaxAmount,
+            object TaxAmountByPaymentModeTaxCustomFee, bool IsCalculateTaxCustomFee, object CreditCardTransactionMerchantID)
+        {
+            string strInsert = $"SET IDENTITY_INSERT {BLOGICPOS7_Name}.dbo.[SaleReceiptPaymentDetails] ON {Environment.NewLine}{Environment.NewLine}" +
+                $"INSERT INTO {BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails (";
+
+            try
+            {
+                int colCount = dt.Columns.Count;
+                for (int i = 0; i < colCount; i++)
+                {
+                    strInsert += "[" + dt.Columns[i].ColumnName.ToUpper() + "]";
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += ") VALUES (";
+                for (int i = 0; i < colCount; i++)
+                {
+                    switch (dt.Columns[i].ColumnName)
+                    {
+                        case "SaleReceiptPaymentDetailID":
+                            strInsert += $"(select max(a.SaleReceiptPaymentDetailID)+1 from SaleReceiptPaymentDetails a)";
+                            break;
+                        case "SaleReceiptID":
+                            strInsert += $"'{SaleReceiptID}'";
+                            break;
+                        case "PaymentMethodID":
+                            strInsert += $"'{PaymentMethodID}'";
+                            break;
+                        case "AmountTendered":
+                            strInsert += $"'{AmountTendered}'";
+                            break;
+                        case "CreatedDate":
+                            strInsert += $"'{CreatedDate}'";
+                            break;
+                        case "Cashier":
+                            strInsert += $"'{Cashier}'";
+                            break;
+                        case "ShiftID":
+                            strInsert += $"'{ShiftID}'";
+                            break;
+                        case "Gratuity":
+                            strInsert += $"'{Gratuity}'";
+                            break;
+                        case "CreditCardTransactionID":
+                            strInsert += $"'{CreditCardTransactionID}'";
+                            break;
+                        case "CreditCardTransactionNumber":
+                            strInsert += $"'{CreditCardTransactionNumber}'";
+                            break;
+                        case "CreditCardTransactionCardNumber":
+                            strInsert += $"'{CreditCardTransactionCardNumber}'";
+                            break;
+                        case "CreditCardTransactionType":
+                            strInsert += $"'{CreditCardTransactionType}'";
+                            break;
+                        case "PaidServiceFee":
+                            strInsert += $"'{PaidServiceFee}'";
+                            break;
+                        case "CreditCardRefNo":
+                            strInsert += $"'{CreditCardRefNo}'";
+                            break;
+                        case "CreditCardAuthCode":
+                            strInsert += $"'{CreditCardAuthCode}'";
+                            break;
+                        case "SVCFeeAmount":
+                            strInsert += $"'{SVCFeeAmount}'";
+                            break;
+                        case "SVCFeeForGratuity":
+                            strInsert += $"'{SVCFeeForGratuity}'";
+                            break;
+                        case "SVCFeeForServiceCharge":
+                            strInsert += $"'{SVCFeeForServiceCharge}'";
+                            break;
+                        case "CashDiscountAmount":
+                            strInsert += $"'{CashDiscountAmount}'";
+                            break;
+                        case "MerchantFee":
+                            strInsert += $"'{MerchantFee}'";
+                            break;
+                        case "PartyServiceFeeAmount":
+                            strInsert += $"'{PartyServiceFeeAmount}'";
+                            break;
+                        case "SVCFeeForPartyServiceFeeAmount":
+                            strInsert += $"'{SVCFeeForPartyServiceFeeAmount}'";
+                            break;
+                        case "AreaFeeAmount":
+                            strInsert += $"'{AreaFeeAmount}'";
+                            break;
+                        case "SVCFeeForAreaFeeAmount":
+                            strInsert += $"'{SVCFeeForAreaFeeAmount}'";
+                            break;
+                        case "ServiceFee":
+                            strInsert += $"'{ServiceFee}'";
+                            break;
+                        case "SVCFeeForServiceFee":
+                            strInsert += $"'{SVCFeeForServiceFee}'";
+                            break;
+                        case "MerchantFeeForTip":
+                            strInsert += $"'{MerchantFeeForTip}'";
+                            break;
+                        case "MerchantFeeForServiceFee":
+                            strInsert += $"'{MerchantFeeForServiceFee}'";
+                            break;
+                        case "MerchantFeeForAreaFeeAmount":
+                            strInsert += $"'{MerchantFeeForAreaFeeAmount}'";
+                            break;
+                        case "MerchantFeeForPartyServiceFeeAmount":
+                            strInsert += $"'{MerchantFeeForPartyServiceFeeAmount}'";
+                            break;
+                        case "AutoGratuityAmount":
+                            strInsert += $"'{AutoGratuityAmount}'";
+                            break;
+                        case "SVCFeeForAutoGratuityAmount":
+                            strInsert += $"'{SVCFeeForAutoGratuityAmount}'";
+                            break;
+                        case "MerchantFeeForAutoGratuityAmount":
+                            strInsert += $"'{MerchantFeeForAutoGratuityAmount}'";
+                            break;
+                        case "CreditCardCardType":
+                            strInsert += $"'{CreditCardCardType}'";
+                            break;
+                        case "SVCFeeTaxAmount":
+                            strInsert += $"'{SVCFeeTaxAmount}'";
+                            break;
+                        case "CashDiscountTaxAmount":
+                            strInsert += $"'{CashDiscountTaxAmount}'";
+                            break;
+                        case "ServiceFeeTaxAmount":
+                            strInsert += $"'{ServiceFeeTaxAmount}'";
+                            break;
+                        case "AreaFeeTaxAmount":
+                            strInsert += $"'{AreaFeeTaxAmount}'";
+                            break;
+                        case "PartyServiceFeeTaxAmount":
+                            strInsert += $"'{PartyServiceFeeTaxAmount}'";
+                            break;
+                        case "AutoGratuityTaxAmount":
+                            strInsert += $"'{AutoGratuityTaxAmount}'";
+                            break;
+                        case "TaxAmountByPaymentModeTaxCustomFee":
+                            strInsert += $"'{TaxAmountByPaymentModeTaxCustomFee}'";
+                            break;
+                        case "IsCalculateTaxCustomFee":
+                            strInsert += IsCalculateTaxCustomFee ? "'1'" : $"'0'";
+                            break;
+                        case "CreditCardTransactionMerchantID":
+                            strInsert += $"'{CreditCardTransactionMerchantID}'";
+                            break;
+                        case "AmountReturn":
+                        case "IsDeposit":
+                        case "GiftExtra":
+                        case "CurrencyAmount":
+                        case "PaymentType":
+                        case "PaidPayout":
+                        case "CardBalance":
+                        case "IsDecline":
+                        case "IsDepositPayment":
+                        case "CoinDiscountAmount":
+                        case "PaidHouseAccount":
+                            strInsert += $"'0'";
+                            break;
+                        case "CurrencyID":
+                            strInsert += $"'1'";
+                            break;
+                        case "EmployeePaidID":
+                            strInsert += $"'-1'";
+                            break;
+                        case "GiftCardCode":
+                        case "PaymentReceiptID":
+                        case "PayByAccuPoint":
+                        case "HouseAccountTransactionID":
+                            strInsert += $"null";
+                            break;
+                        case "CardHolderName":
+                        case "HouseAccountNumber":
+                        case "GiftCardTransactionID":
+                            strInsert += $"''";
+                            break;
+                        default:
+                            //strInsert += "@" + dt.Columns[i].ColumnName.ToUpper();
+                            break;
+                    }
+
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += $"); {Environment.NewLine}{Environment.NewLine}" +
+                    $"SET IDENTITY_INSERT {BLOGICPOS7_Name}.dbo.[SaleReceiptPaymentDetails] OFF";
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetQueryInsert_Merchant_TransactionDetail", ex);
+            }
+
+            return strInsert;
+        }
+
+
+
+        public static decimal CalculateSVCFee(decimal amount, decimal svcFee, int svcFeeType, int sTaxIncludeInSVCFee,
+            bool isApplyTaxCustomFee = false, decimal dSVCFeeTaxRate = 0, decimal dSVCFeeTaxAmountByPayment = 0)
+        {
+            decimal svcFeeReturn = 0;
+            try
+            {
+                if (amount == 0 || svcFee == 0)
+                    return svcFeeReturn;
+                //Configuration conf = new Configuration();
+                //entity = conf.GetConfigurationEntityByName("CreditCardConfigValue.SVCFee");
+                //if (entity != null)
+                //    svcFee = Utility.GetDecimalFromObject(entity.ConfigurationValue);
+
+                //entity = conf.GetConfigurationEntityByName("CreditCardConfigValue.SVCFeeType");
+                //if (entity != null)
+                //    svcFeeType = Utility.GetIntFromObject(entity.ConfigurationValue);
+
+
+                if (isApplyTaxCustomFee)
+                {
+                    if (svcFeeType == 1)
+                    {
+
+                        //entity = conf.GetConfigurationEntityByName("CreditCardConfigValue.TaxIncludeInSVCFee");
+                        //if (entity != null)
+                        //    sTaxIncludeInSVCFee = Utility.GetIntFromObject(entity.ConfigurationValue);
+
+                        svcFeeReturn = Utility.RoundUp(amount * (svcFee / 100));
+                        if (sTaxIncludeInSVCFee == 1 && dSVCFeeTaxAmountByPayment != 0)
+                        {
+                            decimal tempTax = dSVCFeeTaxRate <= 0 ? 0 : Utility.RoundUp((svcFeeReturn / (1 + dSVCFeeTaxRate / 100)) * dSVCFeeTaxRate / 100);
+                            svcFeeReturn -= tempTax;
+                        }
+                    }
+                    else
+                        svcFeeReturn = 0;
+                }
+                else
+                {
+                    if (svcFeeType == 1)
+                        svcFeeReturn = Utility.RoundUp(amount * (svcFee / 100));
+                    else
+                        svcFeeReturn = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicServerLogger.Error($"####=> CalculateSVCFee - Exception - ", ex);
+                svcFeeReturn = 0;
+                BLogicLogger.Error("#### CalculateSVCFee error: " + ex);
+            }
+            return svcFeeReturn;
+        }
+
+        public static decimal CalculateSVCFee(decimal amount, bool isApplyTaxCustomFee, decimal dSVCFeeTaxRate, decimal dSVCFeeTaxAmountByPayment,
+            int sTaxIncludeInSVCFee, decimal svcFee, int svcFeeType)
+        {
+            decimal svcFeeReturn = 0;
+
+            try
+            {
+                if (amount == 0)
+                    return svcFeeReturn;
+
+                if (isApplyTaxCustomFee)
+                {
+                    if (svcFeeType == 1)
+                    {
+                        svcFeeReturn = Utility.RoundUp(amount * (svcFee / 100));
+                        if (sTaxIncludeInSVCFee == 1 && dSVCFeeTaxAmountByPayment != 0)
+                        {
+                            decimal tempTax = dSVCFeeTaxRate <= 0 ? 0 : Utility.RoundUp((svcFeeReturn / (1 + dSVCFeeTaxRate / 100)) * dSVCFeeTaxRate / 100);
+                            svcFeeReturn -= tempTax;
+                        }
+                    }
+                    else
+                        svcFeeReturn = 0;
+                }
+                else
+                {
+                    if (svcFeeType == 1)
+                        svcFeeReturn = Math.Round(amount * (svcFee / 100), 2);
+                    else
+                        svcFeeReturn = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                svcFeeReturn = 0;
+                BLogicLogger.Error("#### CalculateSVCFee error: " + ex);
+            }
+            return svcFeeReturn;
+        }
+
+        public static decimal CalculateMerchantFee(decimal amount, decimal merchantFeeValue)
+        {
+            decimal merchantFeeAmount = 0;
+            //decimal merchantFeeValue = 0;
+            //ConfigurationsEntity entity = null;
+
+            //Configuration conf = new Configuration();
+            //entity = conf.GetConfigurationEntityByName("CreditCardConfigValue.MerchantFee");
+            //if (entity != null)
+            //    merchantFeeValue = Utility.GetDecimalFromObject(entity.ConfigurationValue);
+
+            try
+            {
+
+                if (merchantFeeValue == 0)
+                    return 0;
+                merchantFeeAmount = Utility.RoundUp(amount * (merchantFeeValue / 100));
+            }
+            catch (Exception ex)
+            {
+                BLogicServerLogger.Error($"####=> CalculateMerchantFee - Exception", ex);
+                merchantFeeAmount = 0;
+                BLogicLogger.Error("#### CalculateMerchantFee error: " + ex);
+            }
+            return merchantFeeAmount;
         }
 
     }

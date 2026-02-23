@@ -133,6 +133,7 @@ namespace ThirdPartyTool.Models
         public string HouseAccountTransactionID { get; set; }
 
         public decimal PaidHouseAccount { get; set; }
+        public int CashAdjust { get; set; }
 
         /// <summary>
         /// Updates the properties of this instance from a DataRow

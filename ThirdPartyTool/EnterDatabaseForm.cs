@@ -24,6 +24,10 @@ namespace ThirdPartyTool
 
         private void EnterDatabaseForm_Load(object sender, System.EventArgs e)
         {
+#if DEBUG
+            txtBLogicPOS7.Text = "BLogicPOS7_Testing";
+#endif
+
             txtFocus.Focus();
         }
 

@@ -41,9 +41,10 @@
             this.btn2 = new System.Windows.Forms.Label();
             this.btn3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.TxtInputID = new System.Windows.Forms.TextBox();
             this.lblIncorrectPassword = new System.Windows.Forms.Label();
+            this.TxtInputID = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -196,6 +197,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Controls.Add(this.lblIncorrectPassword);
             this.panel1.Controls.Add(this.TxtInputID);
             this.panel1.Controls.Add(this.btn1);
@@ -218,6 +220,18 @@
             this.panel1.Size = new System.Drawing.Size(400, 560);
             this.panel1.TabIndex = 1;
             // 
+            // lblIncorrectPassword
+            // 
+            this.lblIncorrectPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIncorrectPassword.ForeColor = System.Drawing.Color.Red;
+            this.lblIncorrectPassword.Location = new System.Drawing.Point(10, 72);
+            this.lblIncorrectPassword.Name = "lblIncorrectPassword";
+            this.lblIncorrectPassword.Size = new System.Drawing.Size(380, 30);
+            this.lblIncorrectPassword.TabIndex = 2;
+            this.lblIncorrectPassword.Text = "Incorrect Password";
+            this.lblIncorrectPassword.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblIncorrectPassword.Visible = false;
+            // 
             // TxtInputID
             // 
             this.TxtInputID.BackColor = System.Drawing.Color.White;
@@ -231,31 +245,33 @@
             this.TxtInputID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TxtInputID.UseSystemPasswordChar = true;
             // 
-            // lblIncorrectPassword
-            // 
-            this.lblIncorrectPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIncorrectPassword.ForeColor = System.Drawing.Color.Red;
-            this.lblIncorrectPassword.Location = new System.Drawing.Point(10, 72);
-            this.lblIncorrectPassword.Name = "lblIncorrectPassword";
-            this.lblIncorrectPassword.Size = new System.Drawing.Size(380, 30);
-            this.lblIncorrectPassword.TabIndex = 2;
-            this.lblIncorrectPassword.Text = "Incorrect Password";
-            this.lblIncorrectPassword.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblIncorrectPassword.Visible = false;
-            // 
             // btnLogin
             // 
             this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(166)))), ((int)(((byte)(81)))));
             this.btnLogin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnLogin.Font = new System.Drawing.Font("Arial", 25F, System.Drawing.FontStyle.Bold);
             this.btnLogin.ForeColor = System.Drawing.Color.White;
-            this.btnLogin.Location = new System.Drawing.Point(10, 470);
+            this.btnLogin.Location = new System.Drawing.Point(204, 470);
             this.btnLogin.Margin = new System.Windows.Forms.Padding(5);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(380, 80);
+            this.btnLogin.Size = new System.Drawing.Size(186, 80);
             this.btnLogin.TabIndex = 0;
-            this.btnLogin.Text = "SIGN IN";
+            this.btnLogin.Text = "Sign In";
             this.btnLogin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.Silver;
+            this.btnCancel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.btnCancel.Font = new System.Drawing.Font("Arial", 25F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.ForeColor = System.Drawing.Color.White;
+            this.btnCancel.Location = new System.Drawing.Point(10, 470);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(5);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(186, 80);
+            this.btnCancel.TabIndex = 3;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LoginForm
             // 
@@ -292,5 +308,6 @@
         private System.Windows.Forms.TextBox TxtInputID;
         private System.Windows.Forms.Label lblIncorrectPassword;
         private System.Windows.Forms.Label btnLogin;
+        private System.Windows.Forms.Label btnCancel;
     }
 }

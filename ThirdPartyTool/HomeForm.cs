@@ -14,6 +14,7 @@ namespace ThirdPartyTool
         Item,
         EmployeePaycor,
         Receipt_v2,
+        Shifts
     }
     public partial class HomeForm : Form
     {
@@ -38,7 +39,20 @@ namespace ThirdPartyTool
             btnItem.Click += BtnItem_Click;
             btnEmployeePaycor.Click += BtnEmployeePaycor_Click;
             btnReceipt_V2.Click += BtnReceipt_V2_Click;
+            btnShifts.Click += BtnShifts_Click;
+        }
 
+        private void BtnShifts_Click(object sender, EventArgs e)
+        {
+            if (CurrentTab == HomeTab.Shifts)
+                return;
+
+            CurrentTab = HomeTab.Shifts;
+
+            ResetTabColor();
+            ActiveTabColor(btnShifts);
+
+            shiftView.BringToFront();
         }
 
         private void BtnReceipt_V2_Click(object sender, EventArgs e)
@@ -49,9 +63,7 @@ namespace ThirdPartyTool
             CurrentTab = HomeTab.Receipt_v2;
 
             ResetTabColor();
-
-            btnReceipt_V2.BackColor = Tab_BackColorSelected;
-            btnReceipt_V2.ForeColor = Tab_FoceColorSelected;
+            ActiveTabColor(btnReceipt_V2);
 
             receiptView_v2.BringToFront();
         }
@@ -191,7 +203,14 @@ namespace ThirdPartyTool
             btnItem.ForeColor = Tab_FoceColorDefault;
             btnReceipt_V2.BackColor = Tab_BackColorDefault;
             btnReceipt_V2.ForeColor = Tab_FoceColorDefault;
+            btnShifts.BackColor = Tab_BackColorDefault;
+            btnShifts.ForeColor = Tab_FoceColorDefault;
+        }
 
+        private void ActiveTabColor(System.Windows.Forms.Control control)
+        {
+            control.BackColor = Tab_BackColorSelected;
+            control.ForeColor = Tab_FoceColorSelected;
         }
     }
 }

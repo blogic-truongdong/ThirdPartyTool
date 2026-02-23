@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ThirdPartyTool.Models
 {
@@ -42,7 +38,7 @@ namespace ThirdPartyTool.Models
 
         public string RefNo { get; set; }
 
-        public decimal? AuthorizeAmount { get; set; }
+        public decimal AuthorizeAmount { get; set; }
 
         public decimal Amount { get; set; }
 
@@ -52,7 +48,7 @@ namespace ThirdPartyTool.Models
 
         public string BatchID { get; set; }
 
-        public decimal? BatchTotal { get; set; }
+        public decimal BatchTotal { get; set; }
 
         public string BatchStatus { get; set; }
 
@@ -126,7 +122,7 @@ namespace ThirdPartyTool.Models
 
         public decimal SVCFeeForGratuity { get; set; }
 
-        public bool? IsTipInLine { get; set; }
+        public bool IsTipInLine { get; set; }
 
         public decimal SVCFee { get; set; }
 
@@ -146,52 +142,52 @@ namespace ThirdPartyTool.Models
 
         public string ServerName { get; set; }
 
-        public decimal? SubTotal { get; set; }
+        public decimal SubTotal { get; set; }
 
-        public decimal? TaxAmount { get; set; }
+        public decimal TaxAmount { get; set; }
 
-        public decimal? DiscountAmount { get; set; }
+        public decimal DiscountAmount { get; set; }
 
-        public decimal? ServiceCharge { get; set; }
+        public decimal ServiceCharge { get; set; }
 
-        public decimal? TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
-        public decimal? PartyServiceFeeAmount { get; set; }
+        public decimal PartyServiceFeeAmount { get; set; }
 
-        public decimal? AreaFeeAmount { get; set; }
+        public decimal AreaFeeAmount { get; set; }
 
-        public decimal? ServiceFee { get; set; }
+        public decimal ServiceFee { get; set; }
 
         public string TerminalIpAddress { get; set; }
 
         public decimal MerchantFee { get; set; }
 
-        public decimal? MerchantFeeForTip { get; set; }
+        public decimal MerchantFeeForTip { get; set; }
 
-        public bool? IsTryVoidOpenTab { get; set; }
+        public bool IsTryVoidOpenTab { get; set; }
 
         public string TicketCaptured { get; set; }
 
-        public decimal? AmountCaptured { get; set; }
+        public decimal AmountCaptured { get; set; }
 
-        public decimal? TipCaptured { get; set; }
+        public decimal TipCaptured { get; set; }
 
         public string MerchantServer { get; set; }
 
         public string Pin { get; set; }
 
-        public bool? IsPhone { get; set; }
+        public bool IsPhone { get; set; }
 
-        public decimal? AutoGratuityAmount { get; set; }
+        public decimal AutoGratuityAmount { get; set; }
 
         public string CreditCardInfo { get; set; }
 
         public string TicketOrder { get; set; }
 
-        public decimal? SVCFeeTaxAmount { get; set; }
+        public decimal SVCFeeTaxAmount { get; set; }
 
         public string SVCFeeType { get; set; }
 
-        public decimal? MerchantFeePercent { get; set; }
+        public decimal MerchantFeePercent { get; set; }
     }
 }
