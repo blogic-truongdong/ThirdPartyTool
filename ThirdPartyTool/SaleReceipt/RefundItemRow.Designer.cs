@@ -63,6 +63,7 @@
             // txtQuantity
             // 
             this.txtQuantity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQuantity.Enabled = false;
             this.txtQuantity.Font = new System.Drawing.Font("Roboto", 11.25F);
             this.txtQuantity.Location = new System.Drawing.Point(260, 8);
             this.txtQuantity.Name = "txtQuantity";

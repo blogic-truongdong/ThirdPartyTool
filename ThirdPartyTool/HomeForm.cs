@@ -14,7 +14,8 @@ namespace ThirdPartyTool
         Item,
         EmployeePaycor,
         Receipt_v2,
-        Shifts
+        Shifts,
+        AdvancedFuntion
     }
     public partial class HomeForm : Form
     {
@@ -31,145 +32,166 @@ namespace ThirdPartyTool
 
             this.Load += HomeForm_Load;
 
-            btnEmployee.Click += BtnEmployee_Click;
+            btnEmployee.Click += BtnOption_Click;
             btnClose.Click += BtnClose_Click;
-            btnHome.Click += BtnHome_Click;
-            btnMerchant.Click += BtnMerchant_Click;
-            btnHotFix.Click += BtnHotFix_Click;
-            btnItem.Click += BtnItem_Click;
-            btnEmployeePaycor.Click += BtnEmployeePaycor_Click;
-            btnReceipt_V2.Click += BtnReceipt_V2_Click;
-            btnShifts.Click += BtnShifts_Click;
+            btnHome.Click += BtnOption_Click;
+            btnMerchant.Click += BtnOption_Click;
+            btnHotFix.Click += BtnOption_Click;
+            btnItem.Click += BtnOption_Click;
+            btnEmployeePaycor.Click += BtnOption_Click;
+            btnReceipt_V2.Click += BtnOption_Click;
+            btnShifts.Click += BtnOption_Click;
+            btnAdvancedFuntion.Click += BtnOption_Click;
         }
 
-        private void BtnShifts_Click(object sender, EventArgs e)
+        private void BtnOption_Click(object sender, EventArgs e)
         {
-            if (CurrentTab == HomeTab.Shifts)
-                return;
+            try
+            {
+                System.Windows.Forms.Control control = sender as System.Windows.Forms.Control;
 
-            CurrentTab = HomeTab.Shifts;
+                if (control == null)
+                    return;
 
-            ResetTabColor();
-            ActiveTabColor(btnShifts);
+                if (control.Name == btnAdvancedFuntion.Name)
+                {
+                    if (CurrentTab == HomeTab.AdvancedFuntion)
+                        return;
 
-            shiftView.BringToFront();
-        }
+                    CurrentTab = HomeTab.AdvancedFuntion;
 
-        private void BtnReceipt_V2_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.Receipt_v2)
-                return;
+                    ResetTabColor();
+                    ActiveTabColor(btnAdvancedFuntion);
 
-            CurrentTab = HomeTab.Receipt_v2;
+                    advancedFuntionView.BringToFront();
+                }
+                else if (control.Name == btnShifts.Name)
+                {
+                    if (CurrentTab == HomeTab.Shifts)
+                        return;
 
-            ResetTabColor();
-            ActiveTabColor(btnReceipt_V2);
+                    CurrentTab = HomeTab.Shifts;
 
-            receiptView_v2.BringToFront();
-        }
+                    ResetTabColor();
+                    ActiveTabColor(btnShifts);
 
-        private void BtnEmployeePaycor_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.EmployeePaycor)
-                return;
+                    shiftView.BringToFront();
+                }
+                else if (control.Name == btnReceipt_V2.Name)
+                {
+                    if (CurrentTab == HomeTab.Receipt_v2)
+                        return;
 
-            CurrentTab = HomeTab.EmployeePaycor;
+                    CurrentTab = HomeTab.Receipt_v2;
 
-            ResetTabColor();
+                    ResetTabColor();
+                    ActiveTabColor(btnReceipt_V2);
 
-            btnEmployeePaycor.BackColor = Tab_BackColorSelected;
-            btnEmployeePaycor.ForeColor = Tab_FoceColorSelected;
+                    receiptView_v2.BringToFront();
+                }
+                else if (control.Name == btnEmployeePaycor.Name)
+                {
+                    if (CurrentTab == HomeTab.EmployeePaycor)
+                        return;
 
-            employeeLinkPaycorView21.BringToFront();
+                    CurrentTab = HomeTab.EmployeePaycor;
 
-            employeeLinkPaycorView21.BtnRefresh_Click(sender, e);
+                    ResetTabColor();
 
-            employeeLinkPaycorView21.txtFocus.Focus();
-        }
+                    btnEmployeePaycor.BackColor = Tab_BackColorSelected;
+                    btnEmployeePaycor.ForeColor = Tab_FoceColorSelected;
 
-        private void BtnItem_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.Item)
-                return;
+                    employeeLinkPaycorView21.BringToFront();
 
-            CurrentTab = HomeTab.Item;
+                    employeeLinkPaycorView21.BtnRefresh_Click(sender, e);
 
-            ResetTabColor();
+                    employeeLinkPaycorView21.txtFocus.Focus();
+                }
+                else if (control.Name == "btnItem")
+                {
+                    if (CurrentTab == HomeTab.Item)
+                        return;
 
-            btnItem.BackColor = Tab_BackColorSelected;
-            btnItem.ForeColor = Tab_FoceColorSelected;
+                    CurrentTab = HomeTab.Item;
 
-            itemView1.BringToFront();
-        }
+                    ResetTabColor();
 
-        private void BtnHotFix_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.HotFix)
-                return;
+                    btnItem.BackColor = Tab_BackColorSelected;
+                    btnItem.ForeColor = Tab_FoceColorSelected;
 
-            CurrentTab = HomeTab.HotFix;
+                    itemView1.BringToFront();
+                }
+                else if (control.Name == btnHotFix.Name)
+                {
+                    if (CurrentTab == HomeTab.HotFix)
+                        return;
 
-            ResetTabColor();
+                    CurrentTab = HomeTab.HotFix;
 
-            hotFixView.BringToFront();
-        }
+                    ResetTabColor();
 
-        private void BtnMerchant_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.Merchant)
-                return;
+                    hotFixView.BringToFront();
+                }
+                else if (control.Name == btnMerchant.Name)
+                {
+                    if (CurrentTab == HomeTab.Merchant)
+                        return;
 
-            CurrentTab = HomeTab.Merchant;
+                    CurrentTab = HomeTab.Merchant;
 
-            ResetTabColor();
+                    ResetTabColor();
 
-            btnMerchant.BackColor = Tab_BackColorSelected;
-            btnMerchant.ForeColor = Tab_FoceColorSelected;
+                    btnMerchant.BackColor = Tab_BackColorSelected;
+                    btnMerchant.ForeColor = Tab_FoceColorSelected;
 
-            settleBatchOfflineView.BringToFront();
+                    settleBatchOfflineView.BringToFront();
 
-            settleBatchOfflineView.BtnRefresh_Click(sender, e);
-        }
+                    settleBatchOfflineView.BtnRefresh_Click(sender, e);
+                }
+                else if (control.Name == btnHome.Name)
+                {
+                    if (CurrentTab == HomeTab.Home)
+                        return;
 
-        private void BtnHome_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.Home)
-                return;
+                    CurrentTab = HomeTab.Home;
 
-            CurrentTab = HomeTab.Home;
+                    ResetTabColor();
 
-            ResetTabColor();
+                    btnHome.BackColor = Tab_BackColorSelected;
+                    btnHome.ForeColor = Tab_FoceColorSelected;
 
-            btnHome.BackColor = Tab_BackColorSelected;
-            btnHome.ForeColor = Tab_FoceColorSelected;
+                    welcomeView.BringToFront();
+                }
+                else if (control.Name == btnEmployee.Name)
+                {
+                    if (CurrentTab == HomeTab.Employee)
+                        return;
 
-            welcomeView.BringToFront();
+                    receiptView.txtFocus.Focus();
+
+                    CurrentTab = HomeTab.Employee;
+
+                    ResetTabColor();
+
+                    btnEmployee.BackColor = Tab_BackColorSelected;
+                    btnEmployee.ForeColor = Tab_FoceColorSelected;
+
+                    employeeView.BringToFront();
+
+                    employeeView.BtnRefresh_Click(sender, e);
+
+                    employeeView.txtFocus.Focus();
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("BtnOption_Click in HomeForm", ex);
+            }
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void BtnEmployee_Click(object sender, EventArgs e)
-        {
-            if (CurrentTab == HomeTab.Employee)
-                return;
-
-            receiptView.txtFocus.Focus();
-
-            CurrentTab = HomeTab.Employee;
-
-            ResetTabColor();
-
-            btnEmployee.BackColor = Tab_BackColorSelected;
-            btnEmployee.ForeColor = Tab_FoceColorSelected;
-
-            employeeView.BringToFront();
-
-            employeeView.BtnRefresh_Click(sender, e);
-
-            employeeView.txtFocus.Focus();
         }
 
         private void HomeForm_Load(object sender, EventArgs e)
@@ -205,6 +227,8 @@ namespace ThirdPartyTool
             btnReceipt_V2.ForeColor = Tab_FoceColorDefault;
             btnShifts.BackColor = Tab_BackColorDefault;
             btnShifts.ForeColor = Tab_FoceColorDefault;
+            btnAdvancedFuntion.BackColor = Tab_BackColorDefault;
+            btnAdvancedFuntion.ForeColor = Tab_FoceColorDefault;
         }
 
         private void ActiveTabColor(System.Windows.Forms.Control control)

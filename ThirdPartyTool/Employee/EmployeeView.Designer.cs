@@ -32,8 +32,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlSearch = new ThirdPartyTool.CustomControl.BPanel_Rounded();
+            this.txtSearch = new ThirdPartyTool.CustomControl.BTextBox();
+            this.btnSearch = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.bPanel_Rounded3 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.bPanel_Rounded5 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.lblEndDate = new System.Windows.Forms.Label();
@@ -51,6 +53,7 @@
             this.lblSyncRoles = new System.Windows.Forms.Label();
             this.cbbSyncRoles = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.bPanel_Rounded1 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.label8 = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Label();
@@ -63,10 +66,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtFocus = new ThirdPartyTool.CustomControl.BTextBox();
-            this.pnlSearch = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.txtSearch = new ThirdPartyTool.CustomControl.BTextBox();
-            this.btnSearch = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            this.pnlSearch.SuspendLayout();
             this.panel2.SuspendLayout();
             this.bPanel_Rounded3.SuspendLayout();
             this.bPanel_Rounded5.SuspendLayout();
@@ -74,7 +75,6 @@
             this.bPanel_Rounded2.SuspendLayout();
             this.bPanel_Rounded1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployees)).BeginInit();
-            this.pnlSearch.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -86,6 +86,44 @@
             this.panel1.Size = new System.Drawing.Size(829, 60);
             this.panel1.TabIndex = 3;
             // 
+            // pnlSearch
+            // 
+            this.pnlSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlSearch.BackgroundColor = System.Drawing.Color.Transparent;
+            this.pnlSearch.BorderColor = System.Drawing.Color.Gray;
+            this.pnlSearch.BorderRadius = 5;
+            this.pnlSearch.BorderSize = 1;
+            this.pnlSearch.Controls.Add(this.txtSearch);
+            this.pnlSearch.Controls.Add(this.btnSearch);
+            this.pnlSearch.Location = new System.Drawing.Point(0, 10);
+            this.pnlSearch.Name = "pnlSearch";
+            this.pnlSearch.Size = new System.Drawing.Size(826, 40);
+            this.pnlSearch.TabIndex = 2;
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtSearch.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtSearch.ForeColor = System.Drawing.Color.Gray;
+            this.txtSearch.Location = new System.Drawing.Point(10, 12);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtSearch.PlaceholderText = "Search";
+            this.txtSearch.Size = new System.Drawing.Size(773, 20);
+            this.txtSearch.TabIndex = 2;
+            this.txtSearch.Text = "Search";
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearch.Image = global::ThirdPartyTool.Properties.Resources.Icon_Search;
+            this.btnSearch.Location = new System.Drawing.Point(789, 3);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(34, 34);
+            this.btnSearch.TabIndex = 1;
+            this.btnSearch.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.bPanel_Rounded3);
@@ -95,16 +133,6 @@
             this.panel2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.panel2.Size = new System.Drawing.Size(359, 454);
             this.panel2.TabIndex = 5;
-            // 
-            // dataGridViewImageColumn1
-            // 
-            this.dataGridViewImageColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewImageColumn1.HeaderText = "";
-            this.dataGridViewImageColumn1.Image = global::ThirdPartyTool.Properties.Resources.Icon_Delete;
-            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
-            this.dataGridViewImageColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewImageColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.dataGridViewImageColumn1.Width = 50;
             // 
             // bPanel_Rounded3
             // 
@@ -323,6 +351,16 @@
             this.label2.Text = "Job Role Synchronization Setup";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // dataGridViewImageColumn1
+            // 
+            this.dataGridViewImageColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewImageColumn1.HeaderText = "";
+            this.dataGridViewImageColumn1.Image = global::ThirdPartyTool.Properties.Resources.Icon_Delete;
+            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
+            this.dataGridViewImageColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewImageColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewImageColumn1.Width = 50;
+            // 
             // bPanel_Rounded1
             // 
             this.bPanel_Rounded1.BackColor = System.Drawing.Color.White;
@@ -494,44 +532,6 @@
             this.txtFocus.TabIndex = 4;
             this.txtFocus.Text = "Search";
             // 
-            // pnlSearch
-            // 
-            this.pnlSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlSearch.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlSearch.BorderColor = System.Drawing.Color.Gray;
-            this.pnlSearch.BorderRadius = 5;
-            this.pnlSearch.BorderSize = 1;
-            this.pnlSearch.Controls.Add(this.txtSearch);
-            this.pnlSearch.Controls.Add(this.btnSearch);
-            this.pnlSearch.Location = new System.Drawing.Point(0, 10);
-            this.pnlSearch.Name = "pnlSearch";
-            this.pnlSearch.Size = new System.Drawing.Size(826, 40);
-            this.pnlSearch.TabIndex = 2;
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSearch.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtSearch.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtSearch.ForeColor = System.Drawing.Color.Gray;
-            this.txtSearch.Location = new System.Drawing.Point(10, 12);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtSearch.PlaceholderText = "Search";
-            this.txtSearch.Size = new System.Drawing.Size(773, 20);
-            this.txtSearch.TabIndex = 2;
-            this.txtSearch.Text = "Search";
-            // 
-            // btnSearch
-            // 
-            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearch.Image = global::ThirdPartyTool.Properties.Resources.Icon_Search;
-            this.btnSearch.Location = new System.Drawing.Point(789, 3);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(34, 34);
-            this.btnSearch.TabIndex = 1;
-            this.btnSearch.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // EmployeeView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -544,6 +544,8 @@
             this.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
             this.Size = new System.Drawing.Size(849, 524);
             this.panel1.ResumeLayout(false);
+            this.pnlSearch.ResumeLayout(false);
+            this.pnlSearch.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.bPanel_Rounded3.ResumeLayout(false);
             this.bPanel_Rounded3.PerformLayout();
@@ -553,8 +555,6 @@
             this.bPanel_Rounded1.ResumeLayout(false);
             this.bPanel_Rounded1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployees)).EndInit();
-            this.pnlSearch.ResumeLayout(false);
-            this.pnlSearch.PerformLayout();
             this.ResumeLayout(false);
 
         }

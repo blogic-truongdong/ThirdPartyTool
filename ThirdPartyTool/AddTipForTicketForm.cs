@@ -101,7 +101,7 @@ namespace ThirdPartyTool
                                 "'CreditCardConfigValue.MerchantFee'," +
                                 "'CreditCardConfigValue.BaseAmountFee');";
 
-                            var configurations = await conn.QueryAsync<ConfigurationEntity>(sql, "", null, 180, System.Data.CommandType.Text);
+                            var configurations = await conn.QueryAsync<ConfigurationsEntity>(sql, "", null, 180, System.Data.CommandType.Text);
                             foreach (var item in configurations)
                             {
                                 switch (item.ConfigurationName)

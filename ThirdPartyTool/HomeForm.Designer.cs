@@ -30,6 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlContainer = new System.Windows.Forms.Panel();
+            this.receiptView_v2 = new ThirdPartyTool.SaleReceipt.ReceiptView_v2();
             this.welcomeView = new ThirdPartyTool.WelcomeView();
             this.receiptView = new ThirdPartyTool.ReceiptView();
             this.employeeView = new ThirdPartyTool.Employee.EmployeeView();
@@ -38,10 +39,9 @@
             this.shiftView = new ThirdPartyTool.Shift.ShiftView();
             this.itemView1 = new ThirdPartyTool.Item.ItemView();
             this.employeeLinkPaycorView21 = new ThirdPartyTool.Employee.EmployeeLinkPaycorView2();
-            this.receiptView_v2 = new ThirdPartyTool.SaleReceipt.ReceiptView_v2();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
+            this.btnAdvancedFuntion = new System.Windows.Forms.Label();
             this.btnShifts = new System.Windows.Forms.Label();
             this.btnEmployeePaycor = new System.Windows.Forms.Label();
             this.btnItem = new System.Windows.Forms.Label();
@@ -58,6 +58,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.advancedFuntionView = new ThirdPartyTool.AdvancedFunctions.AdvancedFuntionView();
             this.panel1.SuspendLayout();
             this.pnlContainer.SuspendLayout();
             this.pnlLeft.SuspendLayout();
@@ -80,6 +81,8 @@
             // 
             // pnlContainer
             // 
+            this.pnlContainer.Controls.Add(this.advancedFuntionView);
+            this.pnlContainer.Controls.Add(this.receiptView_v2);
             this.pnlContainer.Controls.Add(this.welcomeView);
             this.pnlContainer.Controls.Add(this.receiptView);
             this.pnlContainer.Controls.Add(this.employeeView);
@@ -88,12 +91,19 @@
             this.pnlContainer.Controls.Add(this.shiftView);
             this.pnlContainer.Controls.Add(this.itemView1);
             this.pnlContainer.Controls.Add(this.employeeLinkPaycorView21);
-            this.pnlContainer.Controls.Add(this.receiptView_v2);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(200, 0);
             this.pnlContainer.Name = "pnlContainer";
             this.pnlContainer.Size = new System.Drawing.Size(806, 698);
             this.pnlContainer.TabIndex = 2;
+            // 
+            // receiptView_v2
+            // 
+            this.receiptView_v2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.receiptView_v2.Location = new System.Drawing.Point(0, 0);
+            this.receiptView_v2.Name = "receiptView_v2";
+            this.receiptView_v2.Size = new System.Drawing.Size(806, 698);
+            this.receiptView_v2.TabIndex = 7;
             // 
             // welcomeView
             // 
@@ -164,14 +174,6 @@
             this.employeeLinkPaycorView21.Size = new System.Drawing.Size(806, 698);
             this.employeeLinkPaycorView21.TabIndex = 6;
             // 
-            // receiptView_v2
-            // 
-            this.receiptView_v2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.receiptView_v2.Location = new System.Drawing.Point(0, 0);
-            this.receiptView_v2.Name = "receiptView_v2";
-            this.receiptView_v2.Size = new System.Drawing.Size(806, 698);
-            this.receiptView_v2.TabIndex = 7;
-            // 
             // pnlLeft
             // 
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(63)))), ((int)(((byte)(84)))));
@@ -186,7 +188,7 @@
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.label5);
+            this.panel6.Controls.Add(this.btnAdvancedFuntion);
             this.panel6.Controls.Add(this.btnShifts);
             this.panel6.Controls.Add(this.btnEmployeePaycor);
             this.panel6.Controls.Add(this.btnItem);
@@ -203,20 +205,20 @@
             this.panel6.Size = new System.Drawing.Size(200, 623);
             this.panel6.TabIndex = 2;
             // 
-            // label5
+            // btnAdvancedFuntion
             // 
-            this.label5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label5.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label5.Location = new System.Drawing.Point(0, 350);
-            this.label5.Margin = new System.Windows.Forms.Padding(0);
-            this.label5.Name = "label5";
-            this.label5.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.label5.Size = new System.Drawing.Size(200, 50);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Tables";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnAdvancedFuntion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnAdvancedFuntion.Font = new System.Drawing.Font("Roboto", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnAdvancedFuntion.ForeColor = System.Drawing.Color.White;
+            this.btnAdvancedFuntion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdvancedFuntion.Location = new System.Drawing.Point(0, 350);
+            this.btnAdvancedFuntion.Margin = new System.Windows.Forms.Padding(0);
+            this.btnAdvancedFuntion.Name = "btnAdvancedFuntion";
+            this.btnAdvancedFuntion.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnAdvancedFuntion.Size = new System.Drawing.Size(200, 50);
+            this.btnAdvancedFuntion.TabIndex = 12;
+            this.btnAdvancedFuntion.Text = "Advanced Functions";
+            this.btnAdvancedFuntion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnShifts
             // 
@@ -304,7 +306,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(200, 20);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Release 15-01-2026";
+            this.label3.Text = "Release 03-03-2026";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnMerchant
@@ -440,6 +442,14 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // advancedFuntionView
+            // 
+            this.advancedFuntionView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.advancedFuntionView.Location = new System.Drawing.Point(0, 0);
+            this.advancedFuntionView.Name = "advancedFuntionView";
+            this.advancedFuntionView.Size = new System.Drawing.Size(806, 698);
+            this.advancedFuntionView.TabIndex = 10;
+            // 
             // HomeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -491,6 +501,7 @@
         private SaleReceipt.ReceiptView_v2 receiptView_v2;
         private Shift.ShiftView shiftView;
         private System.Windows.Forms.Label btnShifts;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label btnAdvancedFuntion;
+        private AdvancedFunctions.AdvancedFuntionView advancedFuntionView;
     }
 }

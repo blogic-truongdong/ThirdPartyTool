@@ -189,5 +189,10 @@ namespace ThirdPartyTool.Models
         public string SVCFeeType { get; set; }
 
         public decimal MerchantFeePercent { get; set; }
+
+        public string AdjustTipInformation { get; set; }
+
+        public string CardNumberMasked { get; set; }
+
     }
 }

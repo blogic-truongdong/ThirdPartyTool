@@ -3,6 +3,7 @@ using BLogicSystems.XPos.Utilites.Logging;
 using Dapper;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -803,7 +804,7 @@ namespace ThirdPartyTool
                     switch (dt.Columns[i].ColumnName)
                     {
                         case "SaleReceiptPaymentDetailID":
-                            strInsert += $"(select max(a.SaleReceiptPaymentDetailID)+1 from SaleReceiptPaymentDetails a)";
+                            strInsert += $"(select max(a.SaleReceiptPaymentDetailID)+1 from {BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails a)";
                             break;
                         case "SaleReceiptID":
                             strInsert += $"'{SaleReceiptID}'";
@@ -813,6 +814,9 @@ namespace ThirdPartyTool
                             break;
                         case "AmountTendered":
                             strInsert += $"'{AmountTendered}'";
+                            break;
+                        case "AmountReturn":
+                            strInsert += $"'0'";
                             break;
                         case "CreatedDate":
                             strInsert += $"'{CreatedDate}'";
@@ -931,7 +935,7 @@ namespace ThirdPartyTool
                         case "CreditCardTransactionMerchantID":
                             strInsert += $"'{CreditCardTransactionMerchantID}'";
                             break;
-                        case "AmountReturn":
+
                         case "IsDeposit":
                         case "GiftExtra":
                         case "CurrencyAmount":
@@ -1101,6 +1105,172 @@ namespace ThirdPartyTool
                 BLogicLogger.Error("#### CalculateMerchantFee error: " + ex);
             }
             return merchantFeeAmount;
+        }
+
+
+        public static async Task RunQueryUpdateAsync(SqlConnection conn, string sql, object parameters = null)
+        {
+            try
+            {
+                var result = await conn.ExecuteAsync(sql, parameters, null, 180, System.Data.CommandType.Text);
+
+                if (result < 0)
+                {
+                    BLogicLogger.Exception("RunQueryUpdateAsync in ProcessForm", null, new System.Collections.Generic.List<object>() { sql, parameters });
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("RunQueryUpdateAsync in ProcessForm", ex, new List<object>() { sql, parameters });
+            }
+
+        }
+
+        public static int RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate, SqlParameter[] cmdParams = null)
+        {
+            int result = -1;
+            BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
+            sqlCommand.CommandText = scriptUpdate;
+            sqlCommand.CommandType = CommandType.Text;
+
+            if (cmdParams != null)
+            {
+                for (int i = 0; i < cmdParams.Length; i++)
+                {
+                    SqlParameter parm = cmdParams[i];
+                    sqlCommand.Parameters.Add(parm);
+                }
+            }
+
+            result = sqlCommand.ExecuteNonQuery();
+            if (result < 0)
+            {
+                BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
+            }
+
+            return result;
+        }
+
+        public static DataTable ProcessQuery(bool isRunOnBLogicPOS7, string sql, string tableName)
+        {
+            DataTable dtReturn = new DataTable(tableName);
+
+            try
+            {
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(isRunOnBLogicPOS7 ? BLOGICPOS7_Connection : Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = sql;
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtReturn.Load(reader);
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("ProcessQuery in Helper", ex, new List<object>() { sql });
+            }
+
+            return dtReturn;
+        }
+
+        public static object CreateQuerySelectUnique(bool isRunOnBLogicPOS7, string sql)
+        {
+            object result = null;
+
+            DataTable dtReturn = new DataTable();
+
+            try
+            {
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(isRunOnBLogicPOS7 ? BLOGICPOS7_Connection : Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = sql;
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    dtReturn.Load(reader);
+                    reader.Close();
+
+                    if (dtReturn?.Rows.Count > 0)
+                    {
+                        result = dtReturn.Rows[0][0];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("ProcessQuery in Helper", ex, new List<object>() { sql });
+            }
+
+            return dtReturn;
+        }
+
+        public static IEnumerable<T> ProcessQueryEntity<T>(bool isRunOnBLogicPOS7, string sql)
+        {
+            IEnumerable<T> result = null;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(isRunOnBLogicPOS7 ? BLOGICPOS7_Connection : Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    result = conn.QueryAsync<T>(sql, null, null, 180, System.Data.CommandType.Text).Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("ProcessQueryEntity in Helper", ex, new List<object>() { sql });
+            }
+
+            return result;
+        }
+
+        public static int RunQueryUpdate(bool isRunOnBLogicPOS7, string scriptUpdate, SqlParameter[] cmdParams = null)
+        {
+            int result = -1;
+
+            try
+            {
+                BLogicLogger.Error($"Run Update Script: {scriptUpdate}");
+
+                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlConnection conn = new SqlConnection(isRunOnBLogicPOS7 ? BLOGICPOS7_Connection : Merchant_Connection))
+                {
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
+
+                    sqlCommand.Connection = conn;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = scriptUpdate;
+
+                    if (cmdParams != null)
+                    {
+                        for (int i = 0; i < cmdParams.Length; i++)
+                        {
+                            SqlParameter parm = cmdParams[i];
+                            sqlCommand.Parameters.Add(parm);
+                        }
+                    }
+
+                    result = sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("RunQueryUpdate in Helper", ex, new System.Collections.Generic.List<object>() { scriptUpdate });
+            }
+
+            return result;
         }
 
     }

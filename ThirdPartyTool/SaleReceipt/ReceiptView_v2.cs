@@ -2,11 +2,10 @@
 using BLogicSystems.XPos.Utilites;
 using Dapper;
 using DevExpress.XtraReports.UI;
-using Microsoft.Practices.CompositeUI.Utility;
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
 using ThirdPartyTool.Models;
@@ -38,7 +37,6 @@ namespace ThirdPartyTool.SaleReceipt
             btnBack2.Click += BtnBackCloseTicket_Click;
             btnBack4.Click += BtnBackCloseTicket_Click;
             btnBack5.Click += BtnBackCloseTicket_Click;
-            btnBack6.Click += BtnBackCloseTicket_Click;
             btnBack7.Click += BtnBackCloseTicket_Click;
 
             btnScanCreditCardTransaction.Click += BtnScanCreditCardTransaction_Click;
@@ -50,12 +48,12 @@ namespace ThirdPartyTool.SaleReceipt
             btnShowAddTipForPaymentDetail.Click += BtnShow_Click;
             btnShowUpdateServiceCharges.Click += BtnShow_Click;
             btnShowFinishTicket.Click += BtnShow_Click;
+            btnShowAddSpecialItem.Click += BtnShow_Click;
 
             btnProcessCloseTicket.Click += BtnProcessCloseTicket_Click;
             btnProcessVoidTicket.Click += BtnProcessVoidTicket_Click;
             btnProcessCancelTicket.Click += BtnProcessCancelTicket_Click;
             btnProcessAddTipBySaleToken.Click += BtnProcessAddTipBySaleToken_Click;
-            BtnProcessRefundPartialItem.Click += BtnProcessRefundPartialItem_Click;
             BtnProcessUpdateServiceCharges.Click += BtnProcessUpdateServiceCharges_Click;
         }
 
@@ -83,7 +81,7 @@ namespace ThirdPartyTool.SaleReceipt
                         " where ConfigurationName in ('CreditCardConfigValue.SVCFee', 'CreditCardConfigValue.SVCFeeType', 'CreditCardConfigValue.MerchantFee', 'CreditCardConfigValue.CashDiscount', " +
                         " 'CreditCardConfigValue.TaxIncludeInSVCFee','CreditCardConfigValue.ApplyCustomFeeWhenPurchaseGiftCard','CreditCardConfigValue.DualPricePercent','SystemConfigValue.EnableDualPrice')";
 
-                    var configuratios = await conn.QueryAsync<Models.ConfigurationEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                    var configuratios = await conn.QueryAsync<Models.ConfigurationsEntity>(sql, null, null, 180, System.Data.CommandType.Text);
 
                     foreach (var item in configuratios)
                     {
@@ -126,54 +124,37 @@ namespace ThirdPartyTool.SaleReceipt
                     if (saleReceiptEntity != null)
                     {
                         sql = $"select * " +
-                            $"from {Helper.Merchant_Name}.dbo.TransactionDetail where InvoiceNo = '{saleReceiptEntity.InvoiceNum}'";
+                            $"from {Helper.Merchant_Name}.dbo.TransactionDetail where InvoiceNo = '0303192703780' and ID not in (select CreditCardTransactionID from SaleReceiptPaymentDetails)";
 
                         var transactions = await conn.QueryAsync<Models.TransactionDetailEntity>(sql, null, null, 180, System.Data.CommandType.Text);
 
-                        DataTable dtTransactionDetails = await Helper.QueryToDataTableAsync(conn, sql, "TransactionDetails", null, 180);
-
-                        sql = $"select * " +
-                            $"from SaleReceiptPaymentDetails where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}'";
-
-                        DataTable dtSaleReceiptPaymentDetails = await Helper.QueryToDataTableAsync(conn, sql, "SaleReceiptPaymentDetails", null, 180);
-
-                        SearchCreditCardTransactionForm searchCreditCard = new SearchCreditCardTransactionForm();
-                        searchCreditCard.BindingData(dtTransactionDetails);
-                        if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(searchCreditCard) == DialogResult.OK)
+                        if (transactions?.Count() > 0)
                         {
-                            foreach (var item in transactions)
+                            DataTable dtTransactionDetails = await Helper.QueryToDataTableAsync(conn, sql, "TransactionDetails", null, 180);
+
+                            sql = $"select * " +
+                                $"from SaleReceiptPaymentDetails where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}'";
+
+                            DataTable dtSaleReceiptPaymentDetails = await Helper.QueryToDataTableAsync(conn, sql, "SaleReceiptPaymentDetails", null, 180);
+
+                            SearchCreditCardTransactionForm searchCreditCard = new SearchCreditCardTransactionForm();
+                            searchCreditCard.BindingData(dtTransactionDetails);
+                            if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(searchCreditCard) == DialogResult.OK)
                             {
-                                var paidServiceFee = item.ServiceCharge + (item.ServiceCharge / saleReceiptEntity.SalesOrderFee * saleReceiptEntity.ServiceChargeTaxAmount);
-                                var svcFeeForServiceCharge = Helper.CalculateSVCFee(item.ServiceCharge, saleReceiptEntity.SVCFeeTaxAmount > 0, saleReceiptEntity.SVCFeeTaxRate, saleReceiptEntity.SVCFeeTaxAmount, _dTaxIncludeInSVCFee, _svcFee, _svcFeeType);
-                                var PartyServiceFeeAmount = item.PartyServiceFeeAmount + (item.PartyServiceFeeAmount / saleReceiptEntity.PartyServiceFeeAmount * saleReceiptEntity.PartyServiceFeeTaxAmount);
-                                var SVCFeeForPartyServiceFeeAmount = Helper.CalculateSVCFee(item.PartyServiceFeeAmount, saleReceiptEntity.SVCFeeTaxAmount > 0, saleReceiptEntity.SVCFeeTaxRate, saleReceiptEntity.SVCFeeTaxAmount, _dTaxIncludeInSVCFee, _svcFee, _svcFeeType);
-                                var AreaFeeAmount = item.AreaFeeAmount + (item.AreaFeeAmount / saleReceiptEntity.AreaFeeAmount * saleReceiptEntity.AreaFeeTaxAmount);
-                                var SVCFeeForAreaFeeAmount = Helper.CalculateSVCFee(item.AreaFeeAmount, saleReceiptEntity.SVCFeeTaxAmount > 0, saleReceiptEntity.SVCFeeTaxRate, saleReceiptEntity.SVCFeeTaxAmount, _dTaxIncludeInSVCFee, _svcFee, _svcFeeType);
-                                var ServiceFee = item.ServiceFee + (item.ServiceFee / saleReceiptEntity.ServiceFee * saleReceiptEntity.ServiceChargeTaxAmount);
-                                var SVCFeeForServiceFee = Helper.CalculateSVCFee(item.ServiceFee, saleReceiptEntity.SVCFeeTaxAmount > 0, saleReceiptEntity.SVCFeeTaxRate, saleReceiptEntity.SVCFeeTaxAmount, _dTaxIncludeInSVCFee, _svcFee, _svcFeeType);
-                                var AutoGratuityAmount = item.AutoGratuityAmount + (item.AutoGratuityAmount / saleReceiptEntity.AutoGratuityAmount * saleReceiptEntity.AutoGratuityTaxAmount);
-                                var SVCFeeForAutoGratuityAmount = Helper.CalculateSVCFee(item.AutoGratuityAmount, saleReceiptEntity.SVCFeeTaxAmount > 0, saleReceiptEntity.SVCFeeTaxRate, saleReceiptEntity.SVCFeeTaxAmount, _dTaxIncludeInSVCFee, _svcFee, _svcFeeType);
-                                var SVCFeeTaxAmount = Helper.CalculateSVCFee(item.SVCFee, saleReceiptEntity.SVCFeeTaxAmount > 0, saleReceiptEntity.SVCFeeTaxRate, saleReceiptEntity.SVCFeeTaxAmount, _dTaxIncludeInSVCFee, _svcFee, _svcFeeType);
+                                foreach (var item in transactions)
+                                {
+                                    //sql = Helper.GenerateQueryInsert_BLogicPOS7_SaleReceiptPaymentDetails(dtSaleReceiptPaymentDetails, saleReceiptEntity.SaleReceiptID,
+                                    //    2, item.Amount - item.SVCFee, item.Date, item.UserID, saleReceiptEntity.ShiftID, item.Gratuity, item.ID, item.Number, item.CardNumber,
+                                    //    item.TranType, 0, item.RefNo, item.AuthCode, item.SVCFee, item.SVCFeeForGratuity, 0, 0, item.MerchantFee,
+                                    //    0, 0, 0, 0, 0, 0, item.MerchantFeeForTip,
+                                    //    0, 0, 0, 0, 0,
+                                    //    0, item.CardType, 0, 0, 0, 0, 0, 0, 0, saleReceiptEntity.SVCFeeTaxAmount > 0, item.MerchantID);
 
-                                var ServiceFeeTaxAmount = (item.ServiceFee / saleReceiptEntity.ServiceFee * saleReceiptEntity.PartyServiceFeeTaxAmount);
-                                var AreaFeeTaxAmount = (item.AreaFeeAmount / saleReceiptEntity.AreaFeeAmount * saleReceiptEntity.PartyServiceFeeTaxAmount);
-                                var PartyServiceFeeTaxAmount = (item.PartyServiceFeeAmount / saleReceiptEntity.PartyServiceFeeAmount * saleReceiptEntity.PartyServiceFeeTaxAmount);
-                                var AutoGratuityTaxAmount = (item.AutoGratuityAmount / saleReceiptEntity.AutoGratuityAmount * saleReceiptEntity.PartyServiceFeeTaxAmount);
-
-                                var MerchantFeeForServiceFee = Helper.CalculateMerchantFee(ServiceFee + SVCFeeForServiceFee, _merchantFee);
-                                var MerchantFeeForAreaFeeAmount = Helper.CalculateMerchantFee(AreaFeeAmount + SVCFeeForAreaFeeAmount, _merchantFee);
-                                var MerchantFeeForPartyServiceFeeAmount = Helper.CalculateMerchantFee(PartyServiceFeeAmount + SVCFeeForPartyServiceFeeAmount, _merchantFee);
-                                var MerchantFeeForAutoGratuityAmount = Helper.CalculateMerchantFee(AutoGratuityAmount + SVCFeeForAutoGratuityAmount, _merchantFee);
-
-                                sql = Helper.GenerateQueryInsert_BLogicPOS7_SaleReceiptPaymentDetails(dtSaleReceiptPaymentDetails, saleReceiptEntity.SaleReceiptID,
-                                    2, item.Amount - item.SVCFee, item.Date, item.UserID, saleReceiptEntity.ShiftID, item.Gratuity, item.ID, item.Number, item.CardNumber,
-                                    item.TranType, paidServiceFee, item.RefNo, item.AuthCode, item.SVCFee, item.SVCFeeForGratuity, svcFeeForServiceCharge, 0, item.MerchantFee,
-                                    PartyServiceFeeAmount, SVCFeeForPartyServiceFeeAmount, AreaFeeAmount, SVCFeeForAreaFeeAmount, ServiceFee, SVCFeeForServiceFee, item.MerchantFeeForTip,
-                                    MerchantFeeForServiceFee, MerchantFeeForAreaFeeAmount, MerchantFeeForPartyServiceFeeAmount, AutoGratuityAmount, SVCFeeForAutoGratuityAmount,
-                                    MerchantFeeForAutoGratuityAmount, item.CardType, SVCFeeTaxAmount, 0, ServiceFeeTaxAmount, AreaFeeTaxAmount, PartyServiceFeeTaxAmount, AutoGratuityTaxAmount, SVCFeeTaxAmount, SVCFeeTaxAmount > 0, item.MerchantID);
-
+                                    //await Helper.RunQueryUpdateAsync(conn, sql, null);
+                                }
                             }
                         }
+
 
                     }
                 }
@@ -243,122 +224,6 @@ namespace ThirdPartyTool.SaleReceipt
             catch (Exception ex)
             {
                 BLogicLogger.Exception("BtnProcessUpdateServiceCharges_Click", ex);
-            }
-        }
-
-        private void BtnProcessRefundPartialItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                RequestModel requestModel = new RequestModel();
-                requestModel.SaleReceiptID = MainSaleReceiptID;
-                requestModel.SaleReceiptPaymentDetailID = MainSaleReceiptPaymentDetailID;
-
-                foreach (Control item in pnlRefundItemContainer.Controls)
-                {
-                    RefundModiferRow refundModifier = item as RefundModiferRow;
-
-                    if (refundModifier != null)
-                    {
-                        if (refundModifier.IsSelectedItem)
-                        {
-                            requestModel.objectValues.Add(new ObjectValues()
-                            {
-                                SaleReceiptDetailID = refundModifier.SaleReceiptDetailID,
-                            });
-
-                            requestModel.TotalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
-                            requestModel.TaxAmount += refundModifier.TaxAmount;
-                        }
-                    }
-
-                    RefundItemRow refundItem = item as RefundItemRow;
-
-                    if (refundItem != null)
-                    {
-                        if (refundItem.IsSelectedItem)
-                        {
-                            requestModel.objectValues.Add(new ObjectValues()
-                            {
-                                SaleReceiptDetailID = refundItem.SaleReceiptDetailID,
-                            });
-
-                            requestModel.TotalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
-                            requestModel.TaxAmount += refundItem.TaxAmount;
-                        }
-                    }
-                }
-
-                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
-                string sql = "";
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    sql = $"select *, b.PaymentMethodName " +
-                        $"from SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
-                        $"where SaleReceiptID = '{MainSaleReceiptID}'";
-
-                    sqlCommand.CommandText = sql;
-                    var reader = sqlCommand.ExecuteReader();
-                    dtSaleReceiptPaymentDetails.Load(reader);
-                    reader.Close();
-                }
-
-                if (dtSaleReceiptPaymentDetails?.Rows.Count == 1)
-                    requestModel.SaleReceiptPaymentDetailID = Utility.GetStringFromRow("SaleReceiptPaymentDetailID", dtSaleReceiptPaymentDetails.Rows[0]);
-
-                if (dtSaleReceiptPaymentDetails?.Rows.Count > 1)
-                {
-                    SelectSaleReceiptPaymentDetailForm form = new SelectSaleReceiptPaymentDetailForm();
-                    form.BindingData(dtSaleReceiptPaymentDetails);
-                    if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(form, Helper.MainForm) != DialogResult.OK)
-                    {
-                        return;
-                    }
-                    requestModel.SaleReceiptPaymentDetailID = form.SaleReceiptPaymentDetailID;
-                }
-
-                if (requestModel.objectValues.Count == 0)
-                    return;
-
-                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to Refund ${requestModel.TotalAmount} of ticket #{MainSaleReceiptNumber}?");
-                var result = confirmFirmDialog.ShowDialog();
-                if (result == DialogResult.No)
-                    return;
-
-                ProcessForm processForm = new ProcessForm();
-                processForm.CurrentProcessName = ProcessNameEnum.PartialRefundItems;
-                processForm.requestModel = requestModel;
-                processForm.ShowDialog();
-
-                if (processForm.IsSuccess)
-                {
-                    TokenSaleReceiptID = string.Empty;
-                    TokenSaleReceiptNumber = string.Empty;
-
-                    PrintControl_TokenReceipt.PrintingSystem?.Dispose();
-                    PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
-                    PrintControl_TokenReceipt.Refresh();
-
-                    txtSearch.Text = MainSaleReceiptNumber;
-
-                    ReloadCurrentReceipt();
-                }
-                else
-                {
-                    InformationDialogForm errorDialog = new InformationDialogForm("Add Tip Fail. Please contact TruongDS");
-                    errorDialog.ShowDialog();
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("BtnProcessRefundPartialItem_Click", ex);
             }
         }
 
@@ -603,7 +468,23 @@ namespace ThirdPartyTool.SaleReceipt
                 }
 
                 System.Windows.Forms.Control control = sender as System.Windows.Forms.Control;
-                if (control.Name == btnShowFinishTicket.Name)
+                if (control.Name == btnShowAddSpecialItem.Name)
+                {
+                    if (TransactionStatusID != "FIN" && TransactionStatusID != "VOID")
+                    {
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Add Special Item cho những ticket đang ở trạng thái FINISH or VOID");
+                        informationDialogForm.ShowDialog();
+                        return;
+                    }
+
+                    AddSpecialItemForReceiptForm addSpecialItemForReceiptForm = new AddSpecialItemForReceiptForm();
+                    addSpecialItemForReceiptForm.SaleReceiptID = MainSaleReceiptID;
+                    if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(addSpecialItemForReceiptForm, Helper.MainForm) == DialogResult.OK)
+                    {
+                        ReloadCurrentReceipt();
+                    }
+                }
+                else if (control.Name == btnShowFinishTicket.Name)
                 {
                     if (TransactionStatusID != "OPER")
                     {
@@ -612,7 +493,11 @@ namespace ThirdPartyTool.SaleReceipt
                         return;
                     }
 
-                    pnlFinishTicket.BringToFront();
+                    FinishSaleReceiptForm form = new FinishSaleReceiptForm()
+                    {
+                        SaleReceiptID = MainSaleReceiptID
+                    };
+                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(form, Helper.MainForm);
                 }
                 else if (control.Name == btnShowCloseTicket.Name)
                 {
@@ -645,9 +530,10 @@ namespace ThirdPartyTool.SaleReceipt
                         return;
                     }
 
-                    BindingPartialRefundItems();
-
-                    pnlRefundItems.BringToFront();
+                    PartialRefundItemForm partialRefundItemForm = new PartialRefundItemForm();
+                    partialRefundItemForm.MainSaleReceiptID = MainSaleReceiptID;
+                    if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(partialRefundItemForm, Helper.MainForm) == DialogResult.OK)
+                        ReloadCurrentReceipt();
                 }
                 else if (control.Name == btnShowAddTipBySaleToken.Name)
                 {
@@ -1063,135 +949,6 @@ namespace ThirdPartyTool.SaleReceipt
             }
         }
 
-        private void BindingPartialRefundItems()
-        {
-            try
-            {
-                lblTotalRefundItem_Amount.Text = $"Amount: 0";
-                lblTotalRefundItem_Tax.Text = $"Sales Tax: 0";
-                lblTotalRefundItem_TotalAmount.Text = $"Total Refund: 0";
-
-                DataTable dtSaleReceiptDetails = new DataTable("SaleReceiptDetails");
-                string sql = "";
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    sql = $"select * from SaleReceiptDetails where SaleReceiptID = '{MainSaleReceiptID}' and ISNULL(ReturnCode,'') = '' and Status <> '2' order by Range desc";
-
-                    sqlCommand.CommandText = sql;
-                    var reader = sqlCommand.ExecuteReader();
-                    dtSaleReceiptDetails.Load(reader);
-                    reader.Close();
-                }
-
-                pnlRefundItemContainer.Controls.Clear();
-
-                foreach (DataRow item in dtSaleReceiptDetails.Rows)
-                {
-                    var PriceInitial = Utility.GetStringFromRow("PriceInitial", item);
-                    if (string.IsNullOrWhiteSpace(PriceInitial) || PriceInitial == "P")
-                    {
-                        RefundItemRow refundItem = new RefundItemRow();
-                        refundItem.SelectedItemChanges += RefundItem_SelectedItemChanges;
-                        refundItem.Dock = DockStyle.Top;
-                        refundItem.BindingValue(
-                            Utility.GetStringFromRow("SaleReceiptDetailID", item),
-                            Utility.GetStringFromRow("Description", item),
-                            Utility.GetDecimalFromRow("Price", item),
-                            Utility.GetDecimalFromRow("Quantity", item),
-                            Utility.GetDecimalFromRow("ExtendedPrice", item),
-                             Utility.GetDecimalFromRow("TaxAmount", item),
-                             Utility.GetStringFromRow("GroupID", item));
-                        pnlRefundItemContainer.Controls.Add(refundItem);
-                    }
-                    else
-                    {
-                        RefundModiferRow refundModifier = new RefundModiferRow();
-                        refundModifier.SelectedItemChanges += RefundItem_SelectedItemChanges;
-                        refundModifier.Dock = DockStyle.Top;
-                        refundModifier.BindingValue(
-                            Utility.GetStringFromRow("SaleReceiptDetailID", item),
-                            Utility.GetStringFromRow("Description", item),
-                            Utility.GetDecimalFromRow("Price", item),
-                            Utility.GetDecimalFromRow("Quantity", item),
-                            Utility.GetDecimalFromRow("ExtendedPrice", item),
-                             Utility.GetDecimalFromRow("TaxAmount", item),
-                             Utility.GetStringFromRow("GroupID", item));
-                        pnlRefundItemContainer.Controls.Add(refundModifier);
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("BindingPartialRefundItems", ex);
-            }
-        }
-
-        private void RefundItem_SelectedItemChanges(object sender, DataEventArgs<RequestModel> e)
-        {
-            try
-            {
-                decimal totalAmount = 0;
-                decimal amount = 0;
-                decimal tax = 0;
-
-                foreach (Control item in pnlRefundItemContainer.Controls)
-                {
-                    RefundItemRow refundItem = item as RefundItemRow;
-                    RefundModiferRow refundModifier = item as RefundModiferRow;
-
-                    if (refundItem != null)
-                    {
-                        if (refundItem.GroupID == e.Data.GroupID)
-                        {
-                            refundItem.IsSelectedItem = e.Data.IsSelectedItem;
-                            refundItem.chkCheck.Checked = e.Data.IsSelectedItem;
-                            refundItem.BackColor = e.Data.IsSelectedItem ? Color.Red : Color.White;
-                        }
-
-                        if (refundItem.IsSelectedItem)
-                        {
-                            totalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
-                            amount += refundItem.ExtendedPrice;
-                            tax += refundItem.TaxAmount;
-                        }
-                        continue;
-                    }
-
-                    if (refundModifier != null)
-                    {
-                        if (refundModifier.GroupID == e.Data.GroupID)
-                        {
-                            refundModifier.IsSelectedItem = e.Data.IsSelectedItem;
-                            refundModifier.BackColor = e.Data.IsSelectedItem ? Color.Red : Color.White;
-                        }
-
-                        if (refundModifier.IsSelectedItem)
-                        {
-                            totalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
-                            amount += refundModifier.ExtendedPrice;
-                            tax += refundModifier.TaxAmount;
-                        }
-                        continue;
-                    }
-                }
-
-                lblTotalRefundItem_Amount.Text = $"Amount: {Utility.ConvertDecimalToMoneyString(amount)}";
-                lblTotalRefundItem_Tax.Text = $"Sales Tax: {Utility.ConvertDecimalToMoneyString(tax)}";
-                lblTotalRefundItem_TotalAmount.Text = $"Total Refund: {Utility.ConvertDecimalToMoneyString(totalAmount)}";
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("RefundItem_SelectedItemChanges", ex);
-            }
-        }
 
         private void bLabel_Rounded1_Click(object sender, EventArgs e)
         {
@@ -1716,5 +1473,7 @@ namespace ThirdPartyTool.SaleReceipt
 
         //            }
         //        }
+
+
     }
 }

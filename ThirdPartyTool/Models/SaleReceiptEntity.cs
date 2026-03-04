@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ThirdPartyTool.Models
 {
@@ -264,5 +265,7 @@ namespace ThirdPartyTool.Models
 
         public decimal FinalGratuity { get; set; }
 
+        public List<SaleReceiptPaymentDetailEntity> SaleReceiptPaymentList { get; set; }
     }
+
 }

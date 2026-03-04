@@ -103,6 +103,16 @@ namespace ThirdPartyTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icon_close {
+            get {
+                object obj = ResourceManager.GetObject("icon_close", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Icon_CreditCard {
             get {
                 object obj = ResourceManager.GetObject("Icon_CreditCard", resourceCulture);
@@ -163,6 +173,16 @@ namespace ThirdPartyTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icon_password_2 {
+            get {
+                object obj = ResourceManager.GetObject("icon_password_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Icon_Receipt {
             get {
                 object obj = ResourceManager.GetObject("Icon_Receipt", resourceCulture);
@@ -196,6 +216,16 @@ namespace ThirdPartyTool.Properties {
         internal static System.Drawing.Bitmap Icon_User {
             get {
                 object obj = ResourceManager.GetObject("Icon_User", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_user_2 {
+            get {
+                object obj = ResourceManager.GetObject("icon_user_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

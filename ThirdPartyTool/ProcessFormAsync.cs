@@ -117,7 +117,7 @@ namespace ThirdPartyTool
             }
         }
 
-        private void RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate, SqlParameter[] cmdParams = null)
+        public void RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate, SqlParameter[] cmdParams = null)
         {
             BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
             sqlCommand.CommandText = scriptUpdate;
@@ -232,7 +232,7 @@ namespace ThirdPartyTool
                         " where ConfigurationName in ('CreditCardConfigValue.SVCFee', 'CreditCardConfigValue.SVCFeeType', 'CreditCardConfigValue.MerchantFee', 'CreditCardConfigValue.CashDiscount', " +
                         " 'CreditCardConfigValue.TaxIncludeInSVCFee','CreditCardConfigValue.ApplyCustomFeeWhenPurchaseGiftCard','CreditCardConfigValue.DualPricePercent','SystemConfigValue.EnableDualPrice')";
 
-                    var configuratios = await conn.QueryAsync<Models.ConfigurationEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                    var configuratios = await conn.QueryAsync<Models.ConfigurationsEntity>(sql, null, null, 180, System.Data.CommandType.Text);
 
                     foreach (var item in configuratios)
                     {

@@ -2,7 +2,7 @@
 
 namespace ThirdPartyTool.Models
 {
-    public class ConfigurationEntity
+    public class ConfigurationsEntity
     {
         public Guid ConfigurationID { get; set; }
 

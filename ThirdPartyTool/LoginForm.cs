@@ -1,31 +1,48 @@
-﻿using System;
+﻿using BLogicSystems.XPos.ClientUtilities;
+using System;
 using System.Windows.Forms;
+using ThirdPartyTool.Dialog;
 
 namespace ThirdPartyTool
 {
     public partial class LoginForm : Form
     {
+        string userName = "admin";
+        string password = "8559";
+
         public LoginForm()
         {
             InitializeComponent();
 
-            btn0.Click += Btn_Click;
-            btn1.Click += Btn_Click;
-            btn2.Click += Btn_Click;
-            btn3.Click += Btn_Click;
-            btn4.Click += Btn_Click;
-            btn5.Click += Btn_Click;
-            btn6.Click += Btn_Click;
-            btn7.Click += Btn_Click;
-            btn8.Click += Btn_Click;
-            btn9.Click += Btn_Click;
+            btnOK.Click += BtnLogin_Click;
 
-            btnBack.Click += BtnBack_Click;
-            btnClear.Click += BtnClear_Click;
-            btnLogin.Click += BtnLogin_Click;
-
-            TxtInputID.KeyUp += TxtInputID_KeyUp;
             btnCancel.Click += BtnCancel_Click;
+
+            this.Load += LoginForm_Load;
+
+            this.KeyPress += LoginForm_KeyPress;
+        }
+
+        private void LoginForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // check if the Enter key is pressed
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                BtnLogin_Click(sender, e);
+            }
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+#if DEBUG
+            txtUserName.Text = userName;
+            txtPassword.Text = password;
+#else
+            txtUserName.Text = "";
+            txtPassword.Text = "";
+#endif
+
+            txtUserName.Focus();
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -34,33 +51,36 @@ namespace ThirdPartyTool
             this.Close();
         }
 
-        private void TxtInputID_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                BtnLogin_Click(null, null);
-            }
-        }
-
         private void BtnLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(TxtInputID.Text))
+                if (string.IsNullOrWhiteSpace(txtUserName.Text))
                 {
-                    lblIncorrectPassword.Visible = false;
+                    InformationDialogForm form = new InformationDialogForm("Please enter your username!");
+                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(form);
+                    txtUserName.Focus();
                     return;
                 }
 
-                if (TxtInputID.Text == "8559")
+                if (string.IsNullOrWhiteSpace(txtPassword.Text))
                 {
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    InformationDialogForm form = new InformationDialogForm("Please enter your password!");
+                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(form);
+                    txtPassword.Focus();
+                    return;
                 }
-                else
+
+                if (txtPassword.Text != userName && txtPassword.Text != password)
                 {
-                    lblIncorrectPassword.Visible = true;
+                    InformationDialogForm form = new InformationDialogForm("The username or password is incorrect");
+                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(form);
+                    txtPassword.Focus();
+                    return;
                 }
+
+                DialogResult = DialogResult.OK;
+                this.Close();
             }
             catch (Exception ex)
             {
@@ -68,46 +88,5 @@ namespace ThirdPartyTool
             }
         }
 
-        private void BtnClear_Click(object sender, EventArgs e)
-        {
-            TxtInputID.Text = string.Empty;
-        }
-
-        private void BtnBack_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                int len = TxtInputID.TextLength;
-
-                if (len == 1)
-                {
-                    TxtInputID.Text = string.Empty;
-                    return;
-                }
-
-                TxtInputID.SelectionStart = len - 1;
-                TxtInputID.SelectionLength = 1;
-                TxtInputID.SelectedText = string.Empty;
-                TxtInputID.SelectionStart = TxtInputID.TextLength;
-                TxtInputID.SelectionLength = 0;
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("BtnBack_Click in LoginForm", ex);
-            }
-        }
-
-        private void Btn_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Label btn = sender as Label;
-                TxtInputID.AppendText(btn.Text);
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("Btn_Click in LoginForm", ex);
-            }
-        }
     }
 }

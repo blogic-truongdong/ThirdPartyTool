@@ -38,13 +38,11 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShiftView));
             this.pnlShifts = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.dgvShifts = new System.Windows.Forms.DataGridView();
-            this.label6 = new System.Windows.Forms.Label();
-            this.btnView = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.startDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
-            this.label2 = new System.Windows.Forms.Label();
             this.endDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
+            this.startDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dgvShifts = new System.Windows.Forms.DataGridView();
             this.ShiftID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.WorkstationName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OpeningTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +50,8 @@
             this.OpeningAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ClosingAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EditShift = new System.Windows.Forms.DataGridViewImageColumn();
+            this.label6 = new System.Windows.Forms.Label();
+            this.btnView = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlShifts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvShifts)).BeginInit();
             this.SuspendLayout();
@@ -74,6 +74,32 @@
             this.pnlShifts.TabIndex = 11;
             this.pnlShifts.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlShifts_Paint);
             // 
+            // endDate
+            // 
+            this.endDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.endDate.DateTimeValues = new System.DateTime(2015, 12, 14, 11, 10, 0, 0);
+            this.endDate.Location = new System.Drawing.Point(245, 65);
+            this.endDate.Margin = new System.Windows.Forms.Padding(4);
+            this.endDate.Name = "endDate";
+            this.endDate.ShowCheckBox = true;
+            this.endDate.ShowDate = true;
+            this.endDate.Size = new System.Drawing.Size(248, 39);
+            this.endDate.TabIndex = 683;
+            this.endDate.WrongValues = false;
+            // 
+            // startDate
+            // 
+            this.startDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.startDate.DateTimeValues = new System.DateTime(2015, 12, 14, 11, 10, 0, 0);
+            this.startDate.Location = new System.Drawing.Point(245, 20);
+            this.startDate.Margin = new System.Windows.Forms.Padding(4);
+            this.startDate.Name = "startDate";
+            this.startDate.ShowCheckBox = true;
+            this.startDate.ShowDate = true;
+            this.startDate.Size = new System.Drawing.Size(248, 39);
+            this.startDate.TabIndex = 683;
+            this.startDate.WrongValues = false;
+            // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -86,6 +112,20 @@
             this.label1.Size = new System.Drawing.Size(800, 1);
             this.label1.TabIndex = 682;
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(153, 76);
+            this.label2.Margin = new System.Windows.Forms.Padding(5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(83, 19);
+            this.label2.TabIndex = 678;
+            this.label2.Text = "From Date";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label2.Click += new System.EventHandler(this.label6_Click);
             // 
             // dgvShifts
             // 
@@ -132,78 +172,6 @@
             this.dgvShifts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvShifts.Size = new System.Drawing.Size(800, 492);
             this.dgvShifts.TabIndex = 681;
-            // 
-            // label6
-            // 
-            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(153, 31);
-            this.label6.Margin = new System.Windows.Forms.Padding(5);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(83, 19);
-            this.label6.TabIndex = 678;
-            this.label6.Text = "From Date";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Click += new System.EventHandler(this.label6_Click);
-            // 
-            // btnView
-            // 
-            this.btnView.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnView.BackColor = System.Drawing.SystemColors.Highlight;
-            this.btnView.BackgroundColor = System.Drawing.SystemColors.Highlight;
-            this.btnView.BorderColor = System.Drawing.Color.Gray;
-            this.btnView.BorderRadius = 5;
-            this.btnView.BorderSize = 1;
-            this.btnView.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnView.ForeColor = System.Drawing.Color.White;
-            this.btnView.Location = new System.Drawing.Point(500, 20);
-            this.btnView.Name = "btnView";
-            this.btnView.Size = new System.Drawing.Size(150, 80);
-            this.btnView.TabIndex = 676;
-            this.btnView.Text = "View";
-            this.btnView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnView.TextColor = System.Drawing.Color.White;
-            // 
-            // startDate
-            // 
-            this.startDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.startDate.DateTimeValues = new System.DateTime(2015, 12, 14, 11, 10, 0, 0);
-            this.startDate.Location = new System.Drawing.Point(245, 20);
-            this.startDate.Margin = new System.Windows.Forms.Padding(4);
-            this.startDate.Name = "startDate";
-            this.startDate.ShowCheckBox = true;
-            this.startDate.ShowDate = true;
-            this.startDate.Size = new System.Drawing.Size(248, 39);
-            this.startDate.TabIndex = 683;
-            this.startDate.WrongValues = false;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(153, 76);
-            this.label2.Margin = new System.Windows.Forms.Padding(5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 19);
-            this.label2.TabIndex = 678;
-            this.label2.Text = "From Date";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Click += new System.EventHandler(this.label6_Click);
-            // 
-            // endDate
-            // 
-            this.endDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.endDate.DateTimeValues = new System.DateTime(2015, 12, 14, 11, 10, 0, 0);
-            this.endDate.Location = new System.Drawing.Point(245, 65);
-            this.endDate.Margin = new System.Windows.Forms.Padding(4);
-            this.endDate.Name = "endDate";
-            this.endDate.ShowCheckBox = true;
-            this.endDate.ShowDate = true;
-            this.endDate.Size = new System.Drawing.Size(248, 39);
-            this.endDate.TabIndex = 683;
-            this.endDate.WrongValues = false;
             // 
             // ShiftID
             // 
@@ -298,6 +266,38 @@
             this.EditShift.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.EditShift.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.EditShift.Width = 80;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(153, 31);
+            this.label6.Margin = new System.Windows.Forms.Padding(5);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(83, 19);
+            this.label6.TabIndex = 678;
+            this.label6.Text = "From Date";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label6.Click += new System.EventHandler(this.label6_Click);
+            // 
+            // btnView
+            // 
+            this.btnView.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnView.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnView.BackgroundColor = System.Drawing.SystemColors.Highlight;
+            this.btnView.BorderColor = System.Drawing.Color.Gray;
+            this.btnView.BorderRadius = 5;
+            this.btnView.BorderSize = 1;
+            this.btnView.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.btnView.ForeColor = System.Drawing.Color.White;
+            this.btnView.Location = new System.Drawing.Point(500, 20);
+            this.btnView.Name = "btnView";
+            this.btnView.Size = new System.Drawing.Size(150, 80);
+            this.btnView.TabIndex = 676;
+            this.btnView.Text = "View";
+            this.btnView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnView.TextColor = System.Drawing.Color.White;
             // 
             // ShiftView
             // 

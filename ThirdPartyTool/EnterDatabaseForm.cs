@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
 
 namespace ThirdPartyTool
@@ -27,6 +28,7 @@ namespace ThirdPartyTool
 #if DEBUG
             txtBLogicPOS7.Text = "BLogicPOS7_Testing";
 #endif
+            var time = DateTime.Now.ToShortTimeString();
 
             txtFocus.Focus();
         }
