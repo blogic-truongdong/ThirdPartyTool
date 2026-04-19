@@ -1,4 +1,5 @@
-﻿using BLogicSystems.XPos.Utilites;
+﻿using BLogicSystems.XPos.SharedModule.Models;
+using BLogicSystems.XPos.Utilites;
 using BLogicSystems.XPos.Utilites.Logging;
 using Dapper;
 using Newtonsoft.Json;
@@ -1211,12 +1212,12 @@ namespace ThirdPartyTool
                 BLogicLogger.Exception("ProcessQuery in Helper", ex, new List<object>() { sql });
             }
 
-            return dtReturn;
+            return result;
         }
 
-        public static IEnumerable<T> ProcessQueryEntity<T>(bool isRunOnBLogicPOS7, string sql)
+        public static List<T> ProcessQueryEntity<T>(bool isRunOnBLogicPOS7, string sql)
         {
-            IEnumerable<T> result = null;
+            List<T> result = null;
             try
             {
                 using (SqlConnection conn = new SqlConnection(isRunOnBLogicPOS7 ? BLOGICPOS7_Connection : Merchant_Connection))
@@ -1224,7 +1225,7 @@ namespace ThirdPartyTool
                     if (conn.State == ConnectionState.Closed)
                         conn.Open();
 
-                    result = conn.QueryAsync<T>(sql, null, null, 180, System.Data.CommandType.Text).Result;
+                    result = conn.QueryAsync<T>(sql, null, null, 180, System.Data.CommandType.Text).Result?.ToList();
                 }
             }
             catch (Exception ex)
@@ -1273,5 +1274,825 @@ namespace ThirdPartyTool
             return result;
         }
 
+        public static decimal CalculateSVCFeeAmountForTip(decimal total)
+        {
+
+            if (POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFeeType == 1)
+            {
+                decimal sVCFee = POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee;
+                return total - Utility.RoundUp(total / (1m + sVCFee / 100m));
+            }
+
+            return 0m;
+        }
+
+        public static void UpdateBatchByBatchUnique(object batchUnique)
+        {
+            try
+            {
+                var sql = $"select * from TransactionDetail where BatchUnique = '{batchUnique}'";
+
+                DataTable dtTransactionDetail = ProcessQuery(false, sql, "TransactionDetail");
+
+                if (dtTransactionDetail?.Rows.Count > 0)
+                {
+                    sql = $@"select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as Total,
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end ) as TotalSVCFeeForTip, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end ) as TotalSales, 
+                       sum(case when TranType = 'Return' then Amount - SVCFee else 0 end ) as TotalReturns, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end ) as TotalTips, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end ) - sum(case when TranType = 'Return' then SVCFee else 0 end ) as TotalSVCFeeAmount,
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end ) -	sum(case when TranType = 'Return' then Total else 0 end ) as DepositAmount, 
+                       sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end ) as MerchantFeeAmount,
+                       count(ID) as TicketCount 
+                       from TransactionDetail where BatchUnique = '{batchUnique}'";
+
+                    DataTable dtCalculateBatch = ProcessQuery(false, sql, "TransactionDetail");
+
+                    if (dtCalculateBatch?.Rows.Count > 0)
+                    {
+                        sql = $"update Batch set " +
+                            $" Total = '{dtCalculateBatch.Rows[0]["Total"]}'," +
+                            $" TotalSVCFeeForTip = {dtCalculateBatch.Rows[0]["TotalSVCFeeForTip"]} ," +
+                            $" TotalSales = {dtCalculateBatch.Rows[0]["TotalSales"]} ," +
+                            $" TotalTips = '{dtCalculateBatch.Rows[0]["TotalTips"]}', " +
+                            $" TotalSVCFeeAmount = {dtCalculateBatch.Rows[0]["TotalSVCFeeAmount"]}," +
+                            $" DepositAmount = {dtCalculateBatch.Rows[0]["DepositAmount"]}," +
+                            $" MerchantFeeAmount = {dtCalculateBatch.Rows[0]["MerchantFeeAmount"]}," +
+                            $" Quantity = '{dtCalculateBatch.Rows[0]["TicketCount"]}'" +
+                            $" where BatchUnique = '{batchUnique}';";
+
+                        RunQueryUpdate(false, sql);
+
+                        sql = $"update TransactionDetail set " +
+                            $" BatchTotal = '{dtCalculateBatch.Rows[0]["Total"]}'" +
+                            $" where BatchUnique = '{batchUnique}';";
+
+                        RunQueryUpdate(false, sql);
+
+                    }
+                }
+                else
+                {
+                    sql = $"delete from Batch where BatchUnique = '{batchUnique}';";
+
+                    RunQueryUpdate(false, sql);
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("UpdateBatchByBatchUnique in Helper", ex, new List<object>() { batchUnique });
+            }
+        }
+
+        public static void ReCalculateServiceChargesInSaleReceiptPaymentDetails(object saleReceiptID)
+        {
+            try
+            {
+                DataTable dtSaleReceipts = ProcessQuery(true, $"select * from SaleReceipts where SaleReceiptID = '{saleReceiptID}'", "SaleReceipts");
+                DataTable dtSaleReceiptDetails = ProcessQuery(true, $"select * from SaleReceiptDetails where SaleReceiptID = '{saleReceiptID}'", "SaleReceiptDetails");
+                var listSaleReceipts = ProcessQueryEntity<SaleReceiptEntity>(true, $"select * from SaleReceipts where SaleReceiptID = '{saleReceiptID}'");
+                DataTable dtSaleReceiptPaymentDetails = ProcessQuery(true, $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{saleReceiptID}' order by CreatedDate", "dtSaleReceiptPaymentDetails");
+                var listSaleReceiptPaymentDetails = ProcessQueryEntity<SaleReceiptPaymentDetailEntity>(true, $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{saleReceiptID}'");
+                DataTable dtSaleReceiptServiceChargeTaxDetails = ProcessQuery(true, $"select * from SaleReceiptServiceChargeTaxDetails where SaleReceiptID = '{saleReceiptID}'", "SaleReceiptServiceChargeTaxDetails");
+                DataTable dtItems = ProcessQuery(true, $"select distinct b.* from Items a left join SaleReceiptDetails b on a.ItemID = b.ItemID where SaleReceiptID = '{saleReceiptID}'", "Items");
+
+                int _svcFeeType = 0;
+                decimal _svcFee = 0;
+                decimal _merchantFee = 0;
+                decimal _cashDiscount = 0;
+                int _dTaxIncludeInSVCFee = 0;
+                string _ApplyCustomFeeWhenPurchaseGiftCard = "1";
+                string _EnableDualPrice = "0";
+                decimal _DualPricePercent = 0;
+                string sqlEmployeePaidID = string.Empty;
+
+                string sql = "select * from Configurations " +
+                    " where ConfigurationName in ('CreditCardConfigValue.SVCFee', 'CreditCardConfigValue.SVCFeeType', 'CreditCardConfigValue.MerchantFee', 'CreditCardConfigValue.CashDiscount', " +
+                    " 'CreditCardConfigValue.TaxIncludeInSVCFee','CreditCardConfigValue.ApplyCustomFeeWhenPurchaseGiftCard','CreditCardConfigValue.DualPricePercent','SystemConfigValue.EnableDualPrice')";
+                var listConfig = ProcessQueryEntity<ConfigurationsEntity>(true, sql);
+
+                foreach (var item in listConfig)
+                {
+                    ConfigurationsEntity entity = item as ConfigurationsEntity;
+                    string _name = (item as ConfigurationsEntity).ConfigurationName;
+                    switch (entity.ConfigurationName)
+                    {
+                        case "CreditCardConfigValue.SVCFee":
+                            _svcFee = Utility.GetDecimalFromObject(entity.ConfigurationValue);
+                            break;
+                        case "CreditCardConfigValue.SVCFeeType":
+                            _svcFeeType = Utility.GetIntFromObject(entity.ConfigurationValue);
+                            break;
+                        case "CreditCardConfigValue.MerchantFee":
+                            _merchantFee = Utility.GetDecimalFromObject(entity.ConfigurationValue);
+                            break;
+                        case "CreditCardConfigValue.CashDiscount":
+                            _cashDiscount = Utility.GetDecimalFromObject(entity.ConfigurationValue);
+                            break;
+                        case "CreditCardConfigValue.TaxIncludeInSVCFee":
+                            _dTaxIncludeInSVCFee = Utility.GetIntFromObject(entity.ConfigurationValue);
+                            break;
+                        case "CreditCardConfigValue.ApplyCustomFeeWhenPurchaseGiftCard":
+                            _ApplyCustomFeeWhenPurchaseGiftCard = Utility.GetStringFromObject(entity.ConfigurationValue);
+                            break;
+                        case "SystemConfigValue.EnableDualPrice":
+                            _EnableDualPrice = Utility.GetStringFromObject(entity.ConfigurationValue);
+                            break;
+                        case "CreditCardConfigValue.DualPricePercent":
+                            _DualPricePercent = Utility.GetDecimalFromObject(entity.ConfigurationValue);
+                            break;
+                    }
+                }
+
+                if (dtSaleReceipts?.Rows.Count > 0 && listSaleReceipts?.Count() > 0)
+                {
+                    DataRow saleReceiptRow = dtSaleReceipts.Rows[0];
+                    SaleReceiptEntity oReceipt = listSaleReceipts.FirstOrDefault();
+                    oReceipt.SaleReceiptPaymentList = listSaleReceiptPaymentDetails.ToList();
+
+                    bool isApplyTaxCustomFee = false;
+                    SaleReceipts_ReceiptInfo receiptInfo = null;
+                    if (!string.IsNullOrWhiteSpace(oReceipt.ReceiptInfo))
+                    {
+                        receiptInfo = Utility.ParseJsonToReceiptInfo(oReceipt.ReceiptInfo);
+                        if (receiptInfo != null)
+                            isApplyTaxCustomFee = receiptInfo.IsApplyTaxForSVCFee;
+                    }
+
+                    if (oReceipt.SVCFeeTaxAmount != 0)
+                        isApplyTaxCustomFee = true;
+
+                    decimal SalesOrderFee = Utility.GetDecimalFromRow("SalesOrderFee", saleReceiptRow);
+                    decimal TotalAmount = Utility.GetDecimalFromRow("TotalAmount", saleReceiptRow);
+                    decimal ServiceChargeTaxAmount = Utility.GetDecimalFromRow("ServiceChargeTaxAmount", saleReceiptRow);
+                    decimal TaxAmount = Utility.GetDecimalFromRow("TaxAmount", saleReceiptRow);
+
+                    decimal taxitem = TaxAmount - ServiceChargeTaxAmount;
+                    decimal tempAmount = TotalAmount + taxitem - TaxAmount;
+                    decimal dTotalAmountExcludeServiceFee = tempAmount - SalesOrderFee;
+                    decimal dTotalPaidServiceFee = 0;
+                    decimal dPartyServiceFeeAmount = 0;
+                    bool IsPartyServiceFeeAmount = false;
+                    decimal tempTaxServiceCharge = 0;
+                    decimal dTotalAmountTender = 0;
+                    decimal dTotalServiceFee = 0;
+                    decimal dAreaFeeAmount = 0;
+                    decimal dServiceFee = 0;
+                    decimal dOpenTabAmount = 0;
+                    decimal dAutoGratuityAmount = 0;
+
+                    decimal dServiceFeeTaxAmount = 0;
+                    decimal dAreaFeeTaxAmount = 0;
+                    decimal dPartyServiceFeeTaxAmount = 0;
+                    decimal dAutoGratuityTaxAmount = 0;
+                    bool IsAutoGratuityAmount = false;
+                    bool IsAreaFeeAmount = false;
+                    bool IsServiceFee = false;
+
+                    decimal dServiceFeeNew = Utility.GetDecimalFromObject(oReceipt.ServiceFee) + oReceipt.ExtraFeeAmount;
+                    decimal sServiceChargeTaxRate = Utility.GetDecimalFromObject(oReceipt.ServiceChargeTaxRate);
+
+                    foreach (var oPaymentDetail in oReceipt.SaleReceiptPaymentList)
+                    {
+                        dTotalAmountTender += oPaymentDetail.AmountTendered;
+
+                        decimal dTempAmountTotal = TotalAmount;
+
+                        if (dTempAmountTotal > dTotalAmountTender)
+                            dTempAmountTotal = dTotalAmountTender;
+
+                        if (dTotalAmountExcludeServiceFee <= dTotalAmountTender)
+                        {
+                            decimal dCurrentServiceFee = dTempAmountTotal - dTotalAmountExcludeServiceFee - dTotalPaidServiceFee;
+
+                            oPaymentDetail.PaidServiceFee = dCurrentServiceFee;
+
+                            dTotalPaidServiceFee += dCurrentServiceFee;
+
+                            if (oReceipt.PartyServiceFeeAmount > 0 && oReceipt.PartyServiceFeeAmount + oReceipt.PartyServiceFeeTaxAmount > dPartyServiceFeeAmount && dCurrentServiceFee > 0)
+                            {
+                                decimal tempPartyFeeAmountNeeded = RoundingUtility.Rounding.RoundUp(oReceipt.PartyServiceFeeAmount - dPartyServiceFeeAmount);
+                                decimal tempPartyFeeAmount = dCurrentServiceFee > tempPartyFeeAmountNeeded ? tempPartyFeeAmountNeeded : dCurrentServiceFee;
+
+                                oPaymentDetail.PartyServiceFeeAmount = tempPartyFeeAmount;
+                                dPartyServiceFeeAmount += tempPartyFeeAmount;
+                                dCurrentServiceFee -= tempPartyFeeAmount;
+
+                                if (!IsPartyServiceFeeAmount && dCurrentServiceFee > 0)
+                                {
+                                    tempTaxServiceCharge = dCurrentServiceFee > oReceipt.PartyServiceFeeTaxAmount ? oReceipt.PartyServiceFeeTaxAmount : dCurrentServiceFee;
+                                    oPaymentDetail.PartyServiceFeeAmount += tempTaxServiceCharge;// oReceipt.PartyServiceFeeTaxAmount;
+                                    dPartyServiceFeeAmount += tempTaxServiceCharge;
+                                    dCurrentServiceFee -= tempTaxServiceCharge;
+
+                                    if (oPaymentDetail.PartyServiceFeeAmount >= oReceipt.PartyServiceFeeAmount + oReceipt.PartyServiceFeeTaxAmount)
+                                        IsPartyServiceFeeAmount = true;
+                                }
+
+                                //oPaymentDetail.PartyServiceFeeTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.PartyServiceFeeAmount, ratioSC, oReceipt.PartyServiceFeeTaxAmount);
+                                oPaymentDetail.PartyServiceFeeTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.PartyServiceFeeAmount, sServiceChargeTaxRate, oReceipt.PartyServiceFeeTaxAmount, dtSaleReceiptServiceChargeTaxDetails);
+                                dPartyServiceFeeTaxAmount += oPaymentDetail.PartyServiceFeeTaxAmount;
+                            }
+
+                            if (oReceipt.AreaFeeAmount > 0 && oReceipt.AreaFeeAmount + oReceipt.AreaFeeTaxAmount > dAreaFeeAmount && dCurrentServiceFee > 0)
+                            {
+                                decimal tempAreaFeeAmountNeeded = RoundingUtility.Rounding.RoundUp(oReceipt.AreaFeeAmount - dAreaFeeAmount);
+                                decimal tempAreaFeeAmount = dCurrentServiceFee > tempAreaFeeAmountNeeded ? tempAreaFeeAmountNeeded : dCurrentServiceFee;
+
+                                oPaymentDetail.AreaFeeAmount = tempAreaFeeAmount;
+                                dAreaFeeAmount += tempAreaFeeAmount;
+                                dCurrentServiceFee -= tempAreaFeeAmount;
+
+                                if (!IsAreaFeeAmount && dCurrentServiceFee > 0)
+                                {
+                                    tempTaxServiceCharge = dCurrentServiceFee > oReceipt.AreaFeeTaxAmount ? oReceipt.AreaFeeTaxAmount : dCurrentServiceFee;
+                                    oPaymentDetail.AreaFeeAmount += tempTaxServiceCharge;// oReceipt.AreaFeeTaxAmount;
+                                    dAreaFeeAmount += tempTaxServiceCharge;
+                                    dCurrentServiceFee -= tempTaxServiceCharge;
+
+                                    if (oPaymentDetail.AreaFeeAmount >= oReceipt.AreaFeeAmount + oReceipt.AreaFeeTaxAmount)
+                                        IsAreaFeeAmount = true;
+                                }
+
+                                //oPaymentDetail.AreaFeeTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.AreaFeeAmount, ratioSC, oReceipt.AreaFeeTaxAmount);
+                                oPaymentDetail.AreaFeeTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.AreaFeeAmount, sServiceChargeTaxRate, oReceipt.AreaFeeTaxAmount, dtSaleReceiptServiceChargeTaxDetails);
+                                dAreaFeeTaxAmount += oPaymentDetail.AreaFeeTaxAmount;
+                            }
+
+                            if (dServiceFeeNew > 0 && dServiceFeeNew + oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount > dServiceFee && dCurrentServiceFee > 0)
+                            {
+                                decimal tempServiceFeeAmountNeeded = RoundingUtility.Rounding.RoundUp((decimal)dServiceFeeNew - dServiceFee);
+                                decimal tempServiceFeeAmount = dCurrentServiceFee > tempServiceFeeAmountNeeded ? tempServiceFeeAmountNeeded : dCurrentServiceFee;
+
+                                oPaymentDetail.ServiceFee = tempServiceFeeAmount;
+                                dServiceFee += tempServiceFeeAmount;
+                                dCurrentServiceFee -= tempServiceFeeAmount;
+
+                                if (!IsServiceFee && dCurrentServiceFee > 0)
+                                {
+                                    tempTaxServiceCharge = dCurrentServiceFee > oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount ? oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount : dCurrentServiceFee;
+                                    oPaymentDetail.ServiceFee += tempTaxServiceCharge; // oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount;
+                                    dServiceFee += tempTaxServiceCharge;
+                                    dCurrentServiceFee -= tempTaxServiceCharge;
+
+                                    if (oPaymentDetail.ServiceFee >= dServiceFeeNew + oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount)
+                                        IsServiceFee = true;
+                                }
+
+                                //oPaymentDetail.ServiceFeeTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.ServiceFee, ratioSC, oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount);
+                                oPaymentDetail.ServiceFeeTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.ServiceFee, sServiceChargeTaxRate, oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount, dtSaleReceiptServiceChargeTaxDetails);
+                                dServiceFeeTaxAmount += oPaymentDetail.ServiceFeeTaxAmount;
+                            }
+
+                            if (oReceipt.AutoGratuityAmount > 0 && oReceipt.AutoGratuityAmount + oReceipt.AutoGratuityTaxAmount > dAutoGratuityAmount && dCurrentServiceFee > 0)
+                            {
+                                decimal tempAutoGratuityNeeded = RoundingUtility.Rounding.RoundUp(oReceipt.AutoGratuityAmount - dAutoGratuityAmount);
+                                decimal tempAutoGratuityAmount = dCurrentServiceFee > tempAutoGratuityNeeded ? tempAutoGratuityNeeded : dCurrentServiceFee;
+
+                                oPaymentDetail.AutoGratuityAmount = tempAutoGratuityAmount;
+
+                                dAutoGratuityAmount += tempAutoGratuityAmount;
+                                dCurrentServiceFee -= tempAutoGratuityAmount;
+
+                                if (!IsAutoGratuityAmount && dCurrentServiceFee > 0)
+                                {
+                                    tempTaxServiceCharge = dCurrentServiceFee > oReceipt.AutoGratuityTaxAmount ? oReceipt.AutoGratuityTaxAmount : dCurrentServiceFee;
+                                    oPaymentDetail.AutoGratuityAmount += tempTaxServiceCharge;// oReceipt.AutoGratuityTaxAmount;
+                                    dAutoGratuityAmount += tempTaxServiceCharge;
+                                    dCurrentServiceFee -= tempTaxServiceCharge;
+
+                                    if (oPaymentDetail.AutoGratuityAmount >= oReceipt.AutoGratuityAmount + oReceipt.AutoGratuityTaxAmount)
+                                        IsAutoGratuityAmount = true;
+                                }
+
+                                //oPaymentDetail.AutoGratuityTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.AutoGratuityAmount, ratioSC, oReceipt.AutoGratuityTaxAmount);
+                                oPaymentDetail.AutoGratuityTaxAmount = CalculateTaxServiceCharge(oPaymentDetail.AutoGratuityAmount, sServiceChargeTaxRate, oReceipt.AutoGratuityTaxAmount, dtSaleReceiptServiceChargeTaxDetails);
+                                dAutoGratuityTaxAmount += oPaymentDetail.AutoGratuityTaxAmount;
+                            }
+
+
+                        }
+
+                        UpdateTaxServiceChargeinPayment(dAutoGratuityTaxAmount, dAreaFeeTaxAmount, dPartyServiceFeeTaxAmount, dServiceFeeTaxAmount, oReceipt);
+
+                        if (oReceipt.TransactionStatusID == TransactionStatus.RETURN)
+                        {
+                            oPaymentDetail.AmountReturn *= -1;
+                            oPaymentDetail.AmountTendered *= -1;
+                        }
+
+                        if (dTotalAmountTender >= oReceipt.TotalAmount)
+                            oPaymentDetail.PaidPayout = GetPaidPayout(dtSaleReceiptDetails, dtItems);
+
+                        int cashAdjust = 1;
+                        if (_EnableDualPrice == "1" && _DualPricePercent > 0)
+                        {
+                            sql = $"select IsDualPrice from PaymentMethods where PaymentMethodID = '{oPaymentDetail.PaymentMethodID}'";
+                            var tempResult = CreateQuerySelectUnique(true, sql);
+                            cashAdjust = Utility.GetBoolFromObject(tempResult) ? 2 : 1;
+                        }
+                        else
+                        {
+                            sql = $"select CashAdjust from PaymentMethods where PaymentMethodID = '{oPaymentDetail.PaymentMethodID}'";
+                            var tempResult = CreateQuerySelectUnique(true, sql);
+                            cashAdjust = Utility.GetIntFromObject(tempResult);
+                        }
+
+                        CalculateCustomFeeForServiceCharge(oPaymentDetail, oReceipt, isApplyTaxCustomFee, cashAdjust, _svcFee, _cashDiscount, _merchantFee, _svcFeeType, _ApplyCustomFeeWhenPurchaseGiftCard, _dTaxIncludeInSVCFee);
+
+                        oPaymentDetail.TaxAmountByPaymentModeTaxCustomFee = CalculateTaxAmountByPaymentModeTaxCustomFee(oReceipt.TotalAmount, oReceipt.TaxAmount, oPaymentDetail.AmountTendered, isApplyTaxCustomFee);
+
+                        var resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set AutoGratuityAmount = '{oPaymentDetail.AutoGratuityAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set AutoGratuityTaxAmount = '{oPaymentDetail.AutoGratuityTaxAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set SVCFeeForAutoGratuityAmount = '{oPaymentDetail.SVCFeeForAutoGratuityAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set MerchantFeeForAutoGratuityAmount = '{oPaymentDetail.MerchantFeeForAutoGratuityAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set PartyServiceFeeAmount = '{oPaymentDetail.PartyServiceFeeAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set PartyServiceFeeTaxAmount = '{oPaymentDetail.PartyServiceFeeTaxAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set SVCFeeForPartyServiceFeeAmount = '{oPaymentDetail.SVCFeeForPartyServiceFeeAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set MerchantFeeForPartyServiceFeeAmount = '{oPaymentDetail.MerchantFeeForPartyServiceFeeAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set AreaFeeAmount = '{oPaymentDetail.AreaFeeAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set AreaFeeTaxAmount = '{oPaymentDetail.AreaFeeTaxAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set SVCFeeForAreaFeeAmount = '{oPaymentDetail.SVCFeeForAreaFeeAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set MerchantFeeForAreaFeeAmount = '{oPaymentDetail.MerchantFeeForAreaFeeAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set ServiceFee = '{oPaymentDetail.ServiceFee}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set ServiceFeeTaxAmount = '{oPaymentDetail.ServiceFeeTaxAmount}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set SVCFeeForServiceFee = '{oPaymentDetail.SVCFeeForServiceFee}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set MerchantFeeForServiceFee = '{oPaymentDetail.MerchantFeeForServiceFee}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set SVCFeeForServiceCharge = '{oPaymentDetail.SVCFeeForServiceCharge}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set PaidServiceFee = '{oPaymentDetail.PaidServiceFee}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set PaidPayout = '{oPaymentDetail.PaidPayout}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+                        resultUpdate = RunQueryUpdate(true, $"update SaleReceiptPaymentDetails set TaxAmountByPaymentModeTaxCustomFee = '{oPaymentDetail.TaxAmountByPaymentModeTaxCustomFee}' where SaleReceiptPaymentDetailID = '{oPaymentDetail.SaleReceiptPaymentDetailID}';");
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("ReCalculateServiceChargesInSaleReceiptPaymentDetails in Helper", ex);
+            }
+        }
+
+        public static decimal CalculateTaxServiceCharge(decimal sAmount, decimal sPercent, decimal sTotalTaxByServiceCharge, DataTable dtSaleReceiptServiceChargeTaxDetails)
+        {
+            decimal stax = 0;
+            try
+            {
+                decimal temp = 0;
+                if (dtSaleReceiptServiceChargeTaxDetails == null || dtSaleReceiptServiceChargeTaxDetails.Rows.Count == 0)
+                {
+                    if (sAmount == 0 || sTotalTaxByServiceCharge == 0 || sPercent == 0)
+                        return 0;
+                    temp = (sAmount / (1 + sPercent / 100));
+                    stax = Utility.RoundUp(temp * sPercent / 100);
+                    return stax;
+                }
+                else
+                {
+                    foreach (DataRow dataRow in dtSaleReceiptServiceChargeTaxDetails.Rows)
+                    {
+                        decimal sPercentByServiceCharge = Utility.GetDecimalFromRow("ServiceChargeTaxRate", dataRow);
+                        if (sAmount == 0 || sTotalTaxByServiceCharge == 0 || sPercentByServiceCharge == 0)
+                        {
+                            stax += 0;
+                        }
+                        else
+                        {
+                            temp = sAmount * sPercentByServiceCharge / 100;
+                            stax += Utility.RoundUp(temp / (1 + sPercent / 100));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Error("#### CalculateTaxServiceCharge with error: ", ex.Message, ex);
+            }
+            return stax;
+        }
+
+        public static void UpdateTaxServiceChargeinPayment(decimal dAutoGratuityTaxAmount, decimal dAreaFeeTaxAmount, decimal dPartyServiceFeeTaxAmount, decimal dServiceFeeTaxAmount,
+                              SaleReceiptEntity oReceipt)
+        {
+            try
+            {
+                if (oReceipt == null)
+                    return;
+
+                if (oReceipt.SalesOrderFee == 0 || oReceipt.ServiceChargeTaxRate == 0)
+                    return;
+                if (oReceipt.SaleReceiptPaymentList == null)
+                    return;
+
+                decimal tempsc = 0;
+
+                #region ServiceFee
+
+                if (dServiceFeeTaxAmount != 0 && dServiceFeeTaxAmount != oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount)
+                {
+                    tempsc = oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount - dServiceFeeTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.ServiceFeeTaxAmount != 0)
+                            {
+                                payment.ServiceFeeTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (dServiceFeeTaxAmount == 0 && dServiceFeeTaxAmount != oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount)
+                {
+                    tempsc = oReceipt.ServiceFeeTaxAmount + oReceipt.ExtraFeeTaxAmount - dServiceFeeTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.ServiceFee != 0)
+                            {
+                                payment.ServiceFeeTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                #endregion
+
+                #region PartyServiceFee
+                if (dPartyServiceFeeTaxAmount != 0 && dPartyServiceFeeTaxAmount != oReceipt.PartyServiceFeeTaxAmount)
+                {
+                    tempsc = oReceipt.PartyServiceFeeTaxAmount - dPartyServiceFeeTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.PartyServiceFeeTaxAmount != 0)
+                            {
+                                payment.PartyServiceFeeTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (dPartyServiceFeeTaxAmount == 0 && dPartyServiceFeeTaxAmount != oReceipt.PartyServiceFeeTaxAmount)
+                {
+                    tempsc = oReceipt.PartyServiceFeeTaxAmount - dPartyServiceFeeTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.PartyServiceFeeAmount != 0)
+                            {
+                                payment.PartyServiceFeeTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                #endregion
+
+                #region AreaFee
+                if (dAreaFeeTaxAmount != 0 && dAreaFeeTaxAmount != oReceipt.AreaFeeTaxAmount)
+                {
+                    tempsc = oReceipt.AreaFeeTaxAmount - dAreaFeeTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.AreaFeeTaxAmount != 0)
+                            {
+                                payment.AreaFeeTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (dAreaFeeTaxAmount == 0 && dAreaFeeTaxAmount != oReceipt.AreaFeeTaxAmount)
+                {
+                    tempsc = oReceipt.AreaFeeTaxAmount - dAreaFeeTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.AreaFeeAmount != 0)
+                            {
+                                payment.AreaFeeTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                #endregion
+
+                #region AutoGratuity
+
+                if (dAutoGratuityTaxAmount != 0 && dAutoGratuityTaxAmount != oReceipt.AutoGratuityTaxAmount)
+                {
+                    tempsc = oReceipt.AutoGratuityTaxAmount - dAutoGratuityTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.AutoGratuityTaxAmount != 0)
+                            {
+                                payment.AutoGratuityTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (dAutoGratuityTaxAmount == 0 && dAutoGratuityTaxAmount != oReceipt.AutoGratuityTaxAmount)
+                {
+                    tempsc = oReceipt.AutoGratuityTaxAmount - dAutoGratuityTaxAmount;
+                    if (tempsc != 0)
+                    {
+                        for (int i = oReceipt.SaleReceiptPaymentList.Count - 1; i >= 0; i--)
+                        {
+                            SaleReceiptPaymentDetailEntity payment = oReceipt.SaleReceiptPaymentList[i] as SaleReceiptPaymentDetailEntity;
+                            if (payment == null) continue;
+                            if (payment.AutoGratuityAmount != 0)
+                            {
+                                payment.AutoGratuityTaxAmount += tempsc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Error("#### UpdateTaxServiceChargeinPayment with error: ", ex.Message, ex);
+            }
+        }
+
+        private static decimal GetPaidPayout(DataTable dtSaleReceiptDetails, DataTable dtItem)//SaleReceiptEntity  oReceipt)
+        {
+            decimal dReturn = 0;
+            decimal dTemp = 0;
+            string sSRDname = "SaleReceiptDetails";
+            if (dtSaleReceiptDetails == null || dtSaleReceiptDetails.Rows.Count == 0)
+                return dReturn;
+
+            string itemid = string.Empty;
+            DataRow[] drs;
+            foreach (DataRow row in dtSaleReceiptDetails.Rows)
+            {
+                dTemp = Utility.GetDecimalFromRow("ExtendedPrice", row);
+                bool isPaidOut = false;
+                if (dTemp < 0)
+                {
+                    itemid = Utility.GetStringFromRow("ItemID", row);
+                    if (dtItem != null && dtItem.Rows.Count > 0)
+                    {
+                        drs = dtItem.Select("ItemID='" + itemid + "' AND (DeptDeptID='-1' OR DeptDeptID='-3')");
+                        if (drs.Length > 0)
+                            isPaidOut = true;
+                    }
+
+                    if (isPaidOut)
+                        dReturn += dTemp;
+                }
+            }
+
+            //foreach (SaleReceiptDetailEntity srde in oReceipt.SaleReceiptDetailList )
+            //{
+            //    if (srde.ExtendedPrice < 0)
+            //        dReturn += srde.ExtendedPrice;
+            //}
+            return dReturn;
+        }
+
+        public static void CalculateCustomFeeForServiceCharge(SaleReceiptPaymentDetailEntity oPaymentDetail, SaleReceiptEntity oReceipt, bool isApplyTaxCustomFee, int cashAdjust, decimal _svcFee,
+            decimal _cashDiscount, decimal _merchantFee, int _svcFeeType, string _ApplyCustomFeeWhenPurchaseGiftCard, int _dTaxIncludeInSVCFee)
+        {
+            if (oPaymentDetail.PaymentMethodID == 2 || cashAdjust == 2 || (_svcFee > 0 && _cashDiscount == 0 && oPaymentDetail.PaymentMethodID != -1 && oPaymentDetail.PaymentMethodID != -2 && oPaymentDetail.PaymentMethodID != -3))
+            {
+                if (oPaymentDetail.PaidServiceFee == 0 || oPaymentDetail.SVCFeeAmount == 0 || (oPaymentDetail.PaymentMethodID == 3 && _ApplyCustomFeeWhenPurchaseGiftCard != "1"))
+                {
+                    oPaymentDetail.SVCFeeForServiceCharge = oPaymentDetail.SVCFeeForServiceFee = oPaymentDetail.SVCFeeForPartyServiceFeeAmount = oPaymentDetail.SVCFeeForAreaFeeAmount = oPaymentDetail.SVCFeeForAutoGratuityAmount = 0;
+                }
+                else if (isApplyTaxCustomFee) // Apply tax custom fee
+                {
+                    decimal taxsc = oPaymentDetail.AutoGratuityTaxAmount + oPaymentDetail.AreaFeeTaxAmount + oPaymentDetail.PartyServiceFeeTaxAmount + oPaymentDetail.ServiceFeeTaxAmount;
+                    oPaymentDetail.SVCFeeForAutoGratuityAmount = CalculateSVCFee(oPaymentDetail.AutoGratuityAmount - oPaymentDetail.AutoGratuityTaxAmount, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee, isApplyTaxCustomFee, oReceipt.SVCFeeTaxRate, oPaymentDetail.SVCFeeTaxAmount);
+                    oPaymentDetail.SVCFeeForAreaFeeAmount = CalculateSVCFee(oPaymentDetail.AreaFeeAmount - oPaymentDetail.AreaFeeTaxAmount, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee, isApplyTaxCustomFee, oReceipt.SVCFeeTaxRate, oPaymentDetail.SVCFeeTaxAmount);
+                    oPaymentDetail.SVCFeeForPartyServiceFeeAmount = CalculateSVCFee(oPaymentDetail.PartyServiceFeeAmount - oPaymentDetail.PartyServiceFeeTaxAmount, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee, isApplyTaxCustomFee, oReceipt.SVCFeeTaxRate, oPaymentDetail.SVCFeeTaxAmount);
+                    oPaymentDetail.SVCFeeForServiceFee = CalculateSVCFee(oPaymentDetail.ServiceFee - oPaymentDetail.ServiceFeeTaxAmount, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee, isApplyTaxCustomFee, oReceipt.SVCFeeTaxRate, oPaymentDetail.SVCFeeTaxAmount);
+                    oPaymentDetail.SVCFeeForServiceCharge = CalculateSVCFee(oPaymentDetail.PaidServiceFee - taxsc, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee, isApplyTaxCustomFee, oReceipt.SVCFeeTaxRate, oPaymentDetail.SVCFeeTaxAmount);
+                }
+                else
+                {
+                    oPaymentDetail.SVCFeeForServiceCharge = CalculateSVCFee(oPaymentDetail.PaidServiceFee, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee);
+                    oPaymentDetail.SVCFeeForServiceFee = CalculateSVCFee(oPaymentDetail.ServiceFee, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee);
+                    oPaymentDetail.SVCFeeForPartyServiceFeeAmount = CalculateSVCFee(oPaymentDetail.PartyServiceFeeAmount, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee);
+                    oPaymentDetail.SVCFeeForAreaFeeAmount = CalculateSVCFee(oPaymentDetail.AreaFeeAmount, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee);
+                    oPaymentDetail.SVCFeeForAutoGratuityAmount = CalculateSVCFee(oPaymentDetail.AutoGratuityAmount, _svcFee, _svcFeeType, _dTaxIncludeInSVCFee);
+                }
+
+                #region Compare Custom Fee For Service Charge
+                decimal tempTotalSVCFee = oPaymentDetail.SVCFeeForServiceFee + oPaymentDetail.SVCFeeForPartyServiceFeeAmount +
+                    oPaymentDetail.SVCFeeForAreaFeeAmount + oPaymentDetail.SVCFeeForAutoGratuityAmount;
+
+                if (oPaymentDetail.SVCFeeForServiceCharge != tempTotalSVCFee)
+                {
+                    decimal tempVal = tempTotalSVCFee - oPaymentDetail.SVCFeeForServiceCharge;
+
+                    if (oPaymentDetail.SVCFeeForPartyServiceFeeAmount > 0 && tempVal != 0)
+                    {
+                        oPaymentDetail.SVCFeeForPartyServiceFeeAmount -= tempVal;
+                        tempVal = 0;
+                    }
+                    else if (oPaymentDetail.SVCFeeForAreaFeeAmount > 0 && tempVal != 0)
+                    {
+                        oPaymentDetail.SVCFeeForAreaFeeAmount -= tempVal;
+                        tempVal = 0;
+                    }
+                    else if (oPaymentDetail.SVCFeeForServiceFee > 0 && tempVal != 0)
+                    {
+                        oPaymentDetail.SVCFeeForServiceFee -= tempVal;
+                        tempVal = 0;
+                    }
+                    else if (oPaymentDetail.SVCFeeForAutoGratuityAmount > 0 && tempVal != 0)
+                    {
+                        oPaymentDetail.SVCFeeForAutoGratuityAmount -= tempVal;
+                        tempVal = 0;
+                    }
+                }
+
+                #endregion
+
+                if (oPaymentDetail.PaymentMethodID == 1 || (cashAdjust != 2 && _svcFee > 0 && _cashDiscount == 0)) // Cash
+                {
+                    oPaymentDetail.MerchantFeeForServiceFee = oPaymentDetail.MerchantFeeForAreaFeeAmount = oPaymentDetail.MerchantFeeForPartyServiceFeeAmount = oPaymentDetail.MerchantFeeForAutoGratuityAmount = 0;
+                }
+                else
+                {
+                    decimal tempMerchantFeeForServiceCharge = 0;
+                    if (isApplyTaxCustomFee) // Apply tax custom fee
+                    {
+                        decimal taxsc = oPaymentDetail.AutoGratuityTaxAmount + oPaymentDetail.AreaFeeTaxAmount + oPaymentDetail.PartyServiceFeeTaxAmount + oPaymentDetail.ServiceFeeTaxAmount;
+                        tempMerchantFeeForServiceCharge = CalculateMerchantFee((oPaymentDetail.PaidServiceFee - taxsc) + oPaymentDetail.SVCFeeForServiceCharge, _merchantFee);
+
+                        oPaymentDetail.MerchantFeeForServiceFee = CalculateMerchantFee((oPaymentDetail.ServiceFee - oPaymentDetail.ServiceFeeTaxAmount) + oPaymentDetail.SVCFeeForServiceFee, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAreaFeeAmount = CalculateMerchantFee((oPaymentDetail.AreaFeeAmount - oPaymentDetail.AreaFeeTaxAmount) + oPaymentDetail.SVCFeeForAreaFeeAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForPartyServiceFeeAmount = CalculateMerchantFee((oPaymentDetail.PartyServiceFeeAmount - oPaymentDetail.PartyServiceFeeTaxAmount) + oPaymentDetail.SVCFeeForPartyServiceFeeAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAutoGratuityAmount = CalculateMerchantFee((oPaymentDetail.AutoGratuityAmount - oPaymentDetail.AutoGratuityTaxAmount) + oPaymentDetail.SVCFeeForAutoGratuityAmount, _merchantFee);
+                    }
+                    else
+                    {
+                        tempMerchantFeeForServiceCharge = CalculateMerchantFee(oPaymentDetail.PaidServiceFee + oPaymentDetail.SVCFeeForServiceCharge, _merchantFee);
+
+                        oPaymentDetail.MerchantFeeForServiceFee = CalculateMerchantFee(oPaymentDetail.ServiceFee + oPaymentDetail.SVCFeeForServiceFee, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAreaFeeAmount = CalculateMerchantFee(oPaymentDetail.AreaFeeAmount + oPaymentDetail.SVCFeeForAreaFeeAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForPartyServiceFeeAmount = CalculateMerchantFee(oPaymentDetail.PartyServiceFeeAmount + oPaymentDetail.SVCFeeForPartyServiceFeeAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAutoGratuityAmount = CalculateMerchantFee(oPaymentDetail.AutoGratuityAmount + oPaymentDetail.SVCFeeForAutoGratuityAmount, _merchantFee);
+                    }
+
+                    #region Compare Merchant Fee For Service Charge
+
+                    decimal tempTotalMerchantFee = oPaymentDetail.MerchantFeeForServiceFee + oPaymentDetail.MerchantFeeForAreaFeeAmount +
+                    oPaymentDetail.MerchantFeeForPartyServiceFeeAmount + oPaymentDetail.MerchantFeeForAutoGratuityAmount;
+
+                    if (tempMerchantFeeForServiceCharge != tempTotalMerchantFee)
+                    {
+                        decimal tempVal = tempTotalMerchantFee - tempMerchantFeeForServiceCharge;
+
+                        if (oPaymentDetail.MerchantFeeForPartyServiceFeeAmount > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForPartyServiceFeeAmount -= tempVal;
+                            tempVal = 0;
+                        }
+                        else if (oPaymentDetail.MerchantFeeForAreaFeeAmount > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForAreaFeeAmount -= tempVal;
+                            tempVal = 0;
+                        }
+                        else if (oPaymentDetail.MerchantFeeForServiceFee > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForServiceFee -= tempVal;
+                            tempVal = 0;
+                        }
+                        else if (oPaymentDetail.MerchantFeeForAutoGratuityAmount > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForAutoGratuityAmount -= tempVal;
+                            tempVal = 0;
+                        }
+                    }
+
+                    #endregion
+                }
+
+                if (!string.IsNullOrWhiteSpace(oReceipt.ReceiptInfo))
+                {
+                    var tempModel = Utility.ParseJsonToReceiptInfo(oReceipt.ReceiptInfo);
+                    if (tempModel.RemoveSVCFeeAndCashDiscount)
+                    {
+                        oPaymentDetail.SVCFeeForServiceCharge = 0;
+                        oPaymentDetail.SVCFeeForServiceFee = 0;
+                        oPaymentDetail.SVCFeeForPartyServiceFeeAmount = 0;
+                        oPaymentDetail.SVCFeeForAreaFeeAmount = 0;
+                        oPaymentDetail.SVCFeeForAutoGratuityAmount = 0;
+                    }
+                }
+            }
+            else
+            {
+                if (oPaymentDetail.PaymentMethodID == -2 || oPaymentDetail.PaymentMethodID == -3)
+                {
+                    decimal tempMerchantFeeForServiceCharge = 0;
+                    if (isApplyTaxCustomFee)
+                    {
+                        decimal taxsc = oPaymentDetail.AutoGratuityTaxAmount + oPaymentDetail.AreaFeeTaxAmount + oPaymentDetail.PartyServiceFeeTaxAmount + oPaymentDetail.ServiceFeeTaxAmount;
+                        tempMerchantFeeForServiceCharge = CalculateMerchantFee(oPaymentDetail.PaidServiceFee - taxsc, _merchantFee);
+                        oPaymentDetail.MerchantFeeForServiceFee = CalculateMerchantFee(oPaymentDetail.ServiceFee - oPaymentDetail.ServiceFeeTaxAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAreaFeeAmount = CalculateMerchantFee(oPaymentDetail.AreaFeeAmount - oPaymentDetail.AreaFeeTaxAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForPartyServiceFeeAmount = CalculateMerchantFee(oPaymentDetail.PartyServiceFeeAmount - oPaymentDetail.PartyServiceFeeTaxAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAutoGratuityAmount = CalculateMerchantFee(oPaymentDetail.AutoGratuityAmount - oPaymentDetail.AutoGratuityTaxAmount, _merchantFee);
+                    }
+                    else
+                    {
+                        tempMerchantFeeForServiceCharge = CalculateMerchantFee(oPaymentDetail.PaidServiceFee, _merchantFee);
+                        oPaymentDetail.MerchantFeeForServiceFee = CalculateMerchantFee(oPaymentDetail.ServiceFee, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAreaFeeAmount = CalculateMerchantFee(oPaymentDetail.AreaFeeAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForPartyServiceFeeAmount = CalculateMerchantFee(oPaymentDetail.PartyServiceFeeAmount, _merchantFee);
+                        oPaymentDetail.MerchantFeeForAutoGratuityAmount = CalculateMerchantFee(oPaymentDetail.AutoGratuityAmount, _merchantFee);
+                    }
+
+                    #region Compare Merchant Fee For Service Charge
+
+                    decimal tempTotalMerchantFee = oPaymentDetail.MerchantFeeForServiceFee + oPaymentDetail.MerchantFeeForAreaFeeAmount +
+                    oPaymentDetail.MerchantFeeForPartyServiceFeeAmount + oPaymentDetail.MerchantFeeForAutoGratuityAmount;
+
+                    if (tempMerchantFeeForServiceCharge != tempTotalMerchantFee)
+                    {
+                        decimal tempVal = tempTotalMerchantFee - tempMerchantFeeForServiceCharge;
+                        if (oPaymentDetail.MerchantFeeForPartyServiceFeeAmount > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForPartyServiceFeeAmount -= tempVal;
+                            tempVal = 0;
+                        }
+                        else if (oPaymentDetail.MerchantFeeForAreaFeeAmount > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForAreaFeeAmount -= tempVal;
+                            tempVal = 0;
+                        }
+                        else if (oPaymentDetail.MerchantFeeForServiceFee > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForServiceFee -= tempVal;
+                            tempVal = 0;
+                        }
+                        else if (oPaymentDetail.MerchantFeeForAutoGratuityAmount > 0 && tempVal != 0)
+                        {
+                            oPaymentDetail.MerchantFeeForAutoGratuityAmount -= tempVal;
+                            tempVal = 0;
+                        }
+                    }
+
+                    #endregion
+                }
+                else
+                {
+                    oPaymentDetail.MerchantFeeForServiceFee = 0;
+                    oPaymentDetail.MerchantFeeForAreaFeeAmount = 0;
+                    oPaymentDetail.MerchantFeeForPartyServiceFeeAmount = 0;
+                    oPaymentDetail.MerchantFeeForAutoGratuityAmount = 0;
+                }
+            }
+        }
+
+        public static decimal CalculateTaxAmountByPaymentModeTaxCustomFee(decimal totalamount, decimal dTaxAmount, decimal amountbypayment, bool isApplyTaxCustomFee)
+        {
+            decimal dTaxAmountByPaymentModeTaxCustomFee = 0;
+            try
+            {
+                if (!isApplyTaxCustomFee || totalamount <= 0 || dTaxAmount == 0)
+                    return 0;
+                decimal dratio = dTaxAmount / totalamount;
+                dTaxAmountByPaymentModeTaxCustomFee = Utility.RoundUp(dratio * amountbypayment);
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Error("#### CalculateTaxAmountByPaymentModeTaxCustomFee error: " + ex.Message, ex.InnerException);
+                return 0;
+            }
+            return dTaxAmountByPaymentModeTaxCustomFee;
+        }
     }
 }

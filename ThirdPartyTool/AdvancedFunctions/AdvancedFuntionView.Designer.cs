@@ -39,7 +39,7 @@
             this.btnCloseUnPaidTicket.Location = new System.Drawing.Point(20, 20);
             this.btnCloseUnPaidTicket.Margin = new System.Windows.Forms.Padding(5);
             this.btnCloseUnPaidTicket.Name = "btnCloseUnPaidTicket";
-            this.btnCloseUnPaidTicket.Size = new System.Drawing.Size(200, 50);
+            this.btnCloseUnPaidTicket.Size = new System.Drawing.Size(200, 75);
             this.btnCloseUnPaidTicket.TabIndex = 0;
             this.btnCloseUnPaidTicket.Text = "Close UnPaid Ticket by Date Range";
             this.btnCloseUnPaidTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -48,10 +48,10 @@
             // 
             this.btnClearTableStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnClearTableStatus.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearTableStatus.Location = new System.Drawing.Point(230, 20);
+            this.btnClearTableStatus.Location = new System.Drawing.Point(20, 105);
             this.btnClearTableStatus.Margin = new System.Windows.Forms.Padding(5);
             this.btnClearTableStatus.Name = "btnClearTableStatus";
-            this.btnClearTableStatus.Size = new System.Drawing.Size(200, 50);
+            this.btnClearTableStatus.Size = new System.Drawing.Size(200, 75);
             this.btnClearTableStatus.TabIndex = 1;
             this.btnClearTableStatus.Text = "Clear Table Status";
             this.btnClearTableStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

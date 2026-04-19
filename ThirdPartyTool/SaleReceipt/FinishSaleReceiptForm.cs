@@ -60,6 +60,7 @@ namespace ThirdPartyTool.SaleReceipt
                 }
                 else
                 {
+                    return;
                     InformationDialogForm form = new InformationDialogForm("Credit Card Transaction not found.");
                     BLogicMessageBox.ShowPopUpFormWithDIMBackground(form, this);
 

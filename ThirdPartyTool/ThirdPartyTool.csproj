@@ -495,6 +495,42 @@
     <Compile Include="CustomControl\CommonLabel.Designer.cs">
       <DependentUpon>CommonLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomControl\CustomCalendar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomCalendar.Designer.cs">
+      <DependentUpon>CustomCalendar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomDateTimePicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomDateTimePicker.Designer.cs">
+      <DependentUpon>CustomDateTimePicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomDayCalendar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomDayCalendar.Designer.cs">
+      <DependentUpon>CustomDayCalendar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomMonthCalendar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomMonthCalendar.Designer.cs">
+      <DependentUpon>CustomMonthCalendar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomYearCalendar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomYearCalendar.Designer.cs">
+      <DependentUpon>CustomYearCalendar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\IntergeTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControl\IntergeTextBox.Designer.cs">
+      <DependentUpon>IntergeTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControl\NumericTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -567,6 +603,12 @@
     </Compile>
     <Compile Include="EnterDatabaseForm.Designer.cs">
       <DependentUpon>EnterDatabaseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="HomeForm.cs">
@@ -864,6 +906,21 @@
     <EmbeddedResource Include="ConnectDatabaseForm.resx">
       <DependentUpon>ConnectDatabaseForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomCalendar.resx">
+      <DependentUpon>CustomCalendar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomDateTimePicker.resx">
+      <DependentUpon>CustomDateTimePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomDayCalendar.resx">
+      <DependentUpon>CustomDayCalendar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomMonthCalendar.resx">
+      <DependentUpon>CustomMonthCalendar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomYearCalendar.resx">
+      <DependentUpon>CustomYearCalendar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialog\ConfirmDialogForm.resx">
       <DependentUpon>ConfirmDialogForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -893,6 +950,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EnterDatabaseForm.resx">
       <DependentUpon>EnterDatabaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HomeForm.resx">
       <DependentUpon>HomeForm.cs</DependentUpon>
@@ -1106,6 +1166,15 @@
     <Content Include="Lib\log4net.dll" />
     <Content Include="Lib\System.Printing.dll" />
     <Content Include="Lib\zxing.dll" />
+    <None Include="Resources\icon_calendar_16x16.png" />
+    <None Include="Resources\icon_previous_16x16.png" />
+    <None Include="Resources\icon_next_16x16.png" />
+    <None Include="Resources\icon_next_24x24.png" />
+    <None Include="Resources\icon_previous_24x24.png" />
+    <None Include="Resources\icon_user_24x24.png" />
+    <None Include="Resources\icon_technology.png" />
+    <None Include="Resources\icon_shifts.png" />
+    <None Include="Resources\icon_item.png" />
     <None Include="Resources\icon_user_2.png" />
     <None Include="Resources\icon_password_2.png" />
     <None Include="Resources\icon_close.png" />

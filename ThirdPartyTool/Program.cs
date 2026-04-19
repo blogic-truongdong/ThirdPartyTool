@@ -14,6 +14,9 @@ namespace ThirdPartyTool
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            Application.Run(new Form1());
+            return;
+
             //Icon appIcon = new Icon(Application.StartupPath + @"\Resources\Icon_BLogic_Tool.ico");
 
             LoginForm loginForm = new LoginForm();

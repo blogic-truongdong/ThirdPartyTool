@@ -59,7 +59,7 @@ namespace ThirdPartyTool.AdvancedFunctions
 
                     sqlCommand.Connection = conn;
 
-                    var sql = $"update BLOGICPOS7.dbo.SaleReceipts set TransactionStatusID = 'CLO' where TransactionStatusID = 'OPER' and DateCreated between '{startDate}' and '{endDate}'";
+                    var sql = $"update BLOGICPOS7.dbo.SaleReceipts set TransactionStatusID = 'CLO' where TransactionStatusID = 'OPER' and DateCreated between '{startDate}' and '{endDate}' and PaidAmount = '0'";
 
                     Helper.RunQueryUpdate(sqlCommand, sql);
                 }

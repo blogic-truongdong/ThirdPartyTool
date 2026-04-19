@@ -7,6 +7,8 @@ namespace ThirdPartyTool
 {
     public partial class LoginForm : Form
     {
+
+
         string userName = "admin";
         string password = "8559";
 
@@ -21,6 +23,13 @@ namespace ThirdPartyTool
             this.Load += LoginForm_Load;
 
             this.KeyPress += LoginForm_KeyPress;
+
+            this.Shown += LoginForm_Shown;
+        }
+
+        private void LoginForm_Shown(object sender, EventArgs e)
+        {
+            label3.Focus();
         }
 
         private void LoginForm_KeyPress(object sender, KeyPressEventArgs e)
@@ -42,7 +51,7 @@ namespace ThirdPartyTool
             txtPassword.Text = "";
 #endif
 
-            txtUserName.Focus();
+            label3.Focus();
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)

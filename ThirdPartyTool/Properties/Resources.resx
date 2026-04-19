@@ -121,11 +121,23 @@
   <data name="BlogicSystems_White" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BlogicSystems_White.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icon_next_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_next_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_next_24x24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_next_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_Arrow_Down" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon_Arrow_Down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Loading.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_previous_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_previous_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_user_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_user_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_item" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_item.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_close" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,8 +154,11 @@
   <data name="Icon_User" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon_User.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_Employee" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icon_Employee.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="BlogicSystems_Black" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BlogicSystems_Black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Loading.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_Receipt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon_Receipt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -151,17 +166,17 @@
   <data name="Icon_Search" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon_Search.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icon_user_24x24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_user_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_technology" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_technology.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_shifts" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_shifts.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="icon_edit_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_edit_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="BlogicSystems_Black" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BlogicSystems_Black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Icon_Home" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icon_Home.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="BLogic_Start_Loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BLogic_Start_Loading.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon_Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -169,7 +184,19 @@
   <data name="icon_password_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_password_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_user_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_user_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Icon_Home" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Home.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_previous_24x24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_previous_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BLogic_Start_Loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BLogic_Start_Loading.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Employee" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Employee.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_calendar_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_calendar_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

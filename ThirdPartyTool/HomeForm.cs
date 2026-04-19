@@ -6,6 +6,7 @@ namespace ThirdPartyTool
 {
     public enum HomeTab
     {
+        Default,
         Home,
         Employee,
         Receipt,
@@ -20,11 +21,11 @@ namespace ThirdPartyTool
     public partial class HomeForm : Form
     {
         private Color DefaultBackColor = Color.White;
-        private Color Tab_BackColorDefault = Color.FromArgb(41, 63, 84);
-        private Color Tab_FoceColorDefault = Color.White;
-        private Color Tab_BackColorSelected = Color.Blue;
+        private Color Tab_BackColorDefault = Color.White;
+        private Color Tab_FoceColorDefault = Color.Black;
+        private Color Tab_BackColorSelected = ColorTranslator.FromHtml("#2A6CE40");
         private Color Tab_FoceColorSelected = Color.White;
-        private HomeTab CurrentTab = HomeTab.Home;
+        private HomeTab CurrentTab = HomeTab.Default;
 
         public HomeForm()
         {
@@ -33,7 +34,6 @@ namespace ThirdPartyTool
             this.Load += HomeForm_Load;
 
             btnEmployee.Click += BtnOption_Click;
-            btnClose.Click += BtnClose_Click;
             btnHome.Click += BtnOption_Click;
             btnMerchant.Click += BtnOption_Click;
             btnHotFix.Click += BtnOption_Click;
@@ -97,9 +97,7 @@ namespace ThirdPartyTool
                     CurrentTab = HomeTab.EmployeePaycor;
 
                     ResetTabColor();
-
-                    btnEmployeePaycor.BackColor = Tab_BackColorSelected;
-                    btnEmployeePaycor.ForeColor = Tab_FoceColorSelected;
+                    ActiveTabColor(btnEmployeePaycor);
 
                     employeeLinkPaycorView21.BringToFront();
 
@@ -107,7 +105,7 @@ namespace ThirdPartyTool
 
                     employeeLinkPaycorView21.txtFocus.Focus();
                 }
-                else if (control.Name == "btnItem")
+                else if (control.Name == btnItem.Name)
                 {
                     if (CurrentTab == HomeTab.Item)
                         return;
@@ -115,9 +113,7 @@ namespace ThirdPartyTool
                     CurrentTab = HomeTab.Item;
 
                     ResetTabColor();
-
-                    btnItem.BackColor = Tab_BackColorSelected;
-                    btnItem.ForeColor = Tab_FoceColorSelected;
+                    ActiveTabColor(btnItem);
 
                     itemView1.BringToFront();
                 }
@@ -129,6 +125,7 @@ namespace ThirdPartyTool
                     CurrentTab = HomeTab.HotFix;
 
                     ResetTabColor();
+                    ActiveTabColor(btnHotFix);
 
                     hotFixView.BringToFront();
                 }
@@ -140,9 +137,7 @@ namespace ThirdPartyTool
                     CurrentTab = HomeTab.Merchant;
 
                     ResetTabColor();
-
-                    btnMerchant.BackColor = Tab_BackColorSelected;
-                    btnMerchant.ForeColor = Tab_FoceColorSelected;
+                    ActiveTabColor(btnMerchant);
 
                     settleBatchOfflineView.BringToFront();
 
@@ -156,9 +151,7 @@ namespace ThirdPartyTool
                     CurrentTab = HomeTab.Home;
 
                     ResetTabColor();
-
-                    btnHome.BackColor = Tab_BackColorSelected;
-                    btnHome.ForeColor = Tab_FoceColorSelected;
+                    ActiveTabColor(btnHome);
 
                     welcomeView.BringToFront();
                 }
@@ -172,9 +165,7 @@ namespace ThirdPartyTool
                     CurrentTab = HomeTab.Employee;
 
                     ResetTabColor();
-
-                    btnEmployee.BackColor = Tab_BackColorSelected;
-                    btnEmployee.ForeColor = Tab_FoceColorSelected;
+                    ActiveTabColor(btnEmployee);
 
                     employeeView.BringToFront();
 
@@ -200,6 +191,8 @@ namespace ThirdPartyTool
             {
                 if (string.IsNullOrWhiteSpace(Helper.BLOGICPOS7_Connection) || string.IsNullOrWhiteSpace(Helper.Merchant_Connection))
                     this.Close();
+
+                btnHome.PerformClick();
             }
             catch (Exception ex)
             {
@@ -213,27 +206,16 @@ namespace ThirdPartyTool
 
         private void ResetTabColor()
         {
-            btnHome.BackColor = Tab_BackColorDefault;
-            btnHome.ForeColor = Tab_FoceColorDefault;
-            btnEmployee.BackColor = Tab_BackColorDefault;
-            btnEmployee.ForeColor = Tab_FoceColorDefault;
-            btnMerchant.BackColor = Tab_BackColorDefault;
-            btnMerchant.ForeColor = Tab_FoceColorDefault;
-            btnEmployeePaycor.BackColor = Tab_BackColorDefault;
-            btnEmployeePaycor.ForeColor = Tab_FoceColorDefault;
-            btnItem.BackColor = Tab_BackColorDefault;
-            btnItem.ForeColor = Tab_FoceColorDefault;
-            btnReceipt_V2.BackColor = Tab_BackColorDefault;
-            btnReceipt_V2.ForeColor = Tab_FoceColorDefault;
-            btnShifts.BackColor = Tab_BackColorDefault;
-            btnShifts.ForeColor = Tab_FoceColorDefault;
-            btnAdvancedFuntion.BackColor = Tab_BackColorDefault;
-            btnAdvancedFuntion.ForeColor = Tab_FoceColorDefault;
+            foreach (Control item in pnlLeft.Controls)
+            {
+                item.BackColor = Tab_BackColorDefault;
+                item.ForeColor = Tab_FoceColorDefault;
+            }
         }
 
         private void ActiveTabColor(System.Windows.Forms.Control control)
         {
-            control.BackColor = Tab_BackColorSelected;
+            control.BackColor = ColorTranslator.FromHtml("#2A6CE4");
             control.ForeColor = Tab_FoceColorSelected;
         }
     }

@@ -28,24 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnCancel = new RJCodeAdvance.RJControls.RJButton();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.dgvBatchs = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.endDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
             this.startDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
             this.label2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.btnView = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnSearch = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnCancel = new RJCodeAdvance.RJControls.RJButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.BatchUnique = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WorkStationName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MerchantID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SelectColumn = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBatchs)).BeginInit();
             this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.dgvBatchs);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.label1);
@@ -55,57 +75,60 @@
             this.panel1.Size = new System.Drawing.Size(800, 450);
             this.panel1.TabIndex = 0;
             // 
-            // label1
+            // dgvBatchs
             // 
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Roboto", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(798, 50);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Search Batch Settled";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnCancel.BackColor = System.Drawing.Color.White;
-            this.btnCancel.BackgroundColor = System.Drawing.Color.White;
-            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
-            this.btnCancel.BorderRadius = 8;
-            this.btnCancel.BorderSize = 1;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Location = new System.Drawing.Point(299, 10);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(0);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(200, 50);
-            this.btnCancel.TabIndex = 21;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextColor = System.Drawing.Color.Black;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.btnCancel);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 378);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(798, 70);
-            this.panel2.TabIndex = 22;
+            this.dgvBatchs.AllowUserToAddRows = false;
+            this.dgvBatchs.AllowUserToDeleteRows = false;
+            this.dgvBatchs.AllowUserToResizeColumns = false;
+            this.dgvBatchs.AllowUserToResizeRows = false;
+            this.dgvBatchs.BackgroundColor = System.Drawing.Color.White;
+            this.dgvBatchs.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.dgvBatchs.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvBatchs.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvBatchs.ColumnHeadersHeight = 40;
+            this.dgvBatchs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvBatchs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.BatchUnique,
+            this.DateCreated,
+            this.WorkStationName,
+            this.MerchantID,
+            this.ID,
+            this.Quantity,
+            this.Total,
+            this.SelectColumn});
+            this.dgvBatchs.Cursor = System.Windows.Forms.Cursors.Default;
+            this.dgvBatchs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvBatchs.EnableHeadersVisualStyles = false;
+            this.dgvBatchs.Location = new System.Drawing.Point(0, 150);
+            this.dgvBatchs.MultiSelect = false;
+            this.dgvBatchs.Name = "dgvBatchs";
+            this.dgvBatchs.ReadOnly = true;
+            this.dgvBatchs.RowHeadersVisible = false;
+            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgvBatchs.RowsDefaultCellStyle = dataGridViewCellStyle9;
+            this.dgvBatchs.RowTemplate.Height = 40;
+            this.dgvBatchs.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvBatchs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvBatchs.Size = new System.Drawing.Size(798, 228);
+            this.dgvBatchs.TabIndex = 682;
             // 
             // panel3
             // 
+            this.panel3.BackColor = System.Drawing.Color.White;
             this.panel3.Controls.Add(this.endDate);
             this.panel3.Controls.Add(this.startDate);
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.label6);
-            this.panel3.Controls.Add(this.btnView);
+            this.panel3.Controls.Add(this.btnSearch);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 50);
             this.panel3.Name = "panel3";
@@ -164,23 +187,167 @@
             this.label6.Text = "From Date";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnView
+            // btnSearch
             // 
-            this.btnView.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnView.BackColor = System.Drawing.SystemColors.Highlight;
-            this.btnView.BackgroundColor = System.Drawing.SystemColors.Highlight;
-            this.btnView.BorderColor = System.Drawing.Color.Gray;
-            this.btnView.BorderRadius = 5;
-            this.btnView.BorderSize = 1;
-            this.btnView.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnView.ForeColor = System.Drawing.Color.White;
-            this.btnView.Location = new System.Drawing.Point(498, 8);
-            this.btnView.Name = "btnView";
-            this.btnView.Size = new System.Drawing.Size(150, 80);
-            this.btnView.TabIndex = 684;
-            this.btnView.Text = "View";
-            this.btnView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnView.TextColor = System.Drawing.Color.White;
+            this.btnSearch.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnSearch.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnSearch.BackgroundColor = System.Drawing.SystemColors.Highlight;
+            this.btnSearch.BorderColor = System.Drawing.Color.Gray;
+            this.btnSearch.BorderRadius = 5;
+            this.btnSearch.BorderSize = 1;
+            this.btnSearch.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.btnSearch.ForeColor = System.Drawing.Color.White;
+            this.btnSearch.Location = new System.Drawing.Point(498, 8);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(150, 80);
+            this.btnSearch.TabIndex = 684;
+            this.btnSearch.Text = "Search";
+            this.btnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnSearch.TextColor = System.Drawing.Color.White;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.btnCancel);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 378);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(798, 70);
+            this.panel2.TabIndex = 22;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnCancel.BackColor = System.Drawing.Color.White;
+            this.btnCancel.BackgroundColor = System.Drawing.Color.White;
+            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
+            this.btnCancel.BorderRadius = 8;
+            this.btnCancel.BorderSize = 1;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Location = new System.Drawing.Point(299, 10);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(0);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(200, 50);
+            this.btnCancel.TabIndex = 21;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextColor = System.Drawing.Color.Black;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("Roboto", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(798, 50);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Search Batch Settled";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // BatchUnique
+            // 
+            this.BatchUnique.DataPropertyName = "BatchUnique";
+            this.BatchUnique.HeaderText = "BatchUnique";
+            this.BatchUnique.Name = "BatchUnique";
+            this.BatchUnique.ReadOnly = true;
+            this.BatchUnique.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.BatchUnique.Visible = false;
+            // 
+            // DateCreated
+            // 
+            this.DateCreated.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.DateCreated.DataPropertyName = "DateCreated";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Roboto", 10F);
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle2;
+            this.DateCreated.HeaderText = "Settled Date";
+            this.DateCreated.Name = "DateCreated";
+            this.DateCreated.ReadOnly = true;
+            this.DateCreated.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // WorkStationName
+            // 
+            this.WorkStationName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.WorkStationName.DataPropertyName = "WorkStationName";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Roboto", 10F);
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.WorkStationName.DefaultCellStyle = dataGridViewCellStyle3;
+            this.WorkStationName.HeaderText = "Workstation";
+            this.WorkStationName.Name = "WorkStationName";
+            this.WorkStationName.ReadOnly = true;
+            this.WorkStationName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // MerchantID
+            // 
+            this.MerchantID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.MerchantID.DataPropertyName = "MerchantID";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Roboto", 10F);
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.MerchantID.DefaultCellStyle = dataGridViewCellStyle4;
+            this.MerchantID.HeaderText = "Terminal #";
+            this.MerchantID.Name = "MerchantID";
+            this.MerchantID.ReadOnly = true;
+            this.MerchantID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.MerchantID.Width = 110;
+            // 
+            // ID
+            // 
+            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ID.DataPropertyName = "ID";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Roboto", 10F);
+            dataGridViewCellStyle5.Format = "C0";
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle5;
+            this.ID.HeaderText = "Batch #";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            this.ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // Quantity
+            // 
+            this.Quantity.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Quantity.DataPropertyName = "Quantity";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Roboto", 10F);
+            dataGridViewCellStyle6.Format = "c0";
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Quantity.DefaultCellStyle = dataGridViewCellStyle6;
+            this.Quantity.HeaderText = "# Trans";
+            this.Quantity.Name = "Quantity";
+            this.Quantity.ReadOnly = true;
+            this.Quantity.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // Total
+            // 
+            this.Total.DataPropertyName = "Total";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.Format = "C2";
+            this.Total.DefaultCellStyle = dataGridViewCellStyle7;
+            this.Total.HeaderText = "Total";
+            this.Total.Name = "Total";
+            this.Total.ReadOnly = true;
+            // 
+            // SelectColumn
+            // 
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SelectColumn.DefaultCellStyle = dataGridViewCellStyle8;
+            this.SelectColumn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SelectColumn.HeaderText = "";
+            this.SelectColumn.Name = "SelectColumn";
+            this.SelectColumn.ReadOnly = true;
+            this.SelectColumn.Text = "Select";
             // 
             // SearchBatchSettledForm
             // 
@@ -192,9 +359,10 @@
             this.Name = "SearchBatchSettledForm";
             this.Text = "SearchBatchSettledForm";
             this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBatchs)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -210,6 +378,15 @@
         public BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom startDate;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label6;
-        public CustomControl.BLabel_Rounded btnView;
+        public CustomControl.BLabel_Rounded btnSearch;
+        private System.Windows.Forms.DataGridView dgvBatchs;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BatchUnique;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WorkStationName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MerchantID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Total;
+        private System.Windows.Forms.DataGridViewButtonColumn SelectColumn;
     }
 }

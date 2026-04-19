@@ -493,11 +493,9 @@ namespace ThirdPartyTool.SaleReceipt
                         return;
                     }
 
-                    FinishSaleReceiptForm form = new FinishSaleReceiptForm()
-                    {
-                        SaleReceiptID = MainSaleReceiptID
-                    };
-                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(form, Helper.MainForm);
+                    FinishTicketWithPaymentDetailForm finishTicketWithPaymentDetailForm = new FinishTicketWithPaymentDetailForm();
+                    finishTicketWithPaymentDetailForm.SaleReceiptID = MainSaleReceiptID;
+                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(finishTicketWithPaymentDetailForm, Helper.MainForm);
                 }
                 else if (control.Name == btnShowCloseTicket.Name)
                 {

@@ -1,4 +1,7 @@
-﻿namespace ThirdPartyTool.SaleReceipt
+﻿using System.Windows.Forms;
+using ThirdPartyTool.CustomControl;
+
+namespace ThirdPartyTool.SaleReceipt
 {
     partial class FinishTicketWithPaymentDetailForm
     {
@@ -30,26 +33,31 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.txtNote = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtNote = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.txtMerchantID = new RJCodeAdvance.RJControls.RJTextBox();
-            this.txtCardNumber = new RJCodeAdvance.RJControls.RJTextBox();
-            this.txtAutoCode = new RJCodeAdvance.RJControls.RJTextBox();
-            this.txtCardType = new RJCodeAdvance.RJControls.RJTextBox();
-            this.label16 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label24 = new System.Windows.Forms.Label();
+            this.paymentTime = new System.Windows.Forms.DateTimePicker();
+            this.paymentDate = new System.Windows.Forms.DateTimePicker();
+            this.txtCardNumber = new System.Windows.Forms.TextBox();
+            this.txtAuthCode = new System.Windows.Forms.TextBox();
+            this.txtCardType = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.txtExpiryDate = new RJCodeAdvance.RJControls.RJTextBox();
-            this.txtCardName = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtReferenceNumber = new ThirdPartyTool.CustomControl.IntergeTextBox();
+            this.txtExpiryDate = new ThirdPartyTool.CustomControl.IntergeTextBox();
+            this.txtCardName = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.pnlBatchID = new System.Windows.Forms.Panel();
             this.btnBrowseBatch = new RJCodeAdvance.RJControls.RJButton();
-            this.txtBatchID = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtBatchID = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.pnlPaymentMethod = new System.Windows.Forms.Panel();
@@ -57,16 +65,20 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.txtTotalAmount_Base = new System.Windows.Forms.RadioButton();
+            this.txtTotalAmount_Include_SVCFee = new System.Windows.Forms.RadioButton();
+            this.txtTotalAmount_NoneTax_Base = new System.Windows.Forms.RadioButton();
+            this.txtTotalAmount_Include_CashDiscount = new System.Windows.Forms.RadioButton();
+            this.txtTotalAmount_NoneTax_Include_SVCFee = new System.Windows.Forms.RadioButton();
+            this.label22 = new System.Windows.Forms.Label();
+            this.txtTotalAmount_NoneTax_Include_CashDiscount = new System.Windows.Forms.RadioButton();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.txtGratuity = new ThirdPartyTool.CustomControl.NumericTextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.txtTotalAmount_NoneTax_Include_CashDiscount = new System.Windows.Forms.RadioButton();
-            this.txtTotalAmount_Include_CashDiscount = new System.Windows.Forms.RadioButton();
-            this.txtTotalAmount_NoneTax_Include_SVCFee = new System.Windows.Forms.RadioButton();
-            this.txtTotalAmount_Include_SVCFee = new System.Windows.Forms.RadioButton();
-            this.txtTotalAmount_NoneTax_Base = new System.Windows.Forms.RadioButton();
-            this.txtTotalAmount_Base = new System.Windows.Forms.RadioButton();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -74,25 +86,14 @@
             this.btnOK = new RJCodeAdvance.RJControls.RJButton();
             this.btnCancel = new RJCodeAdvance.RJControls.RJButton();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.label23 = new System.Windows.Forms.Label();
-            this.paymentDate = new System.Windows.Forms.DateTimePicker();
-            this.paymentTime = new System.Windows.Forms.DateTimePicker();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.txtReferenceNumber = new RJCodeAdvance.RJControls.RJTextBox();
             this.panel1.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel5.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.pnlBatchID.SuspendLayout();
             this.pnlPaymentMethod.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -112,7 +113,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(686, 768);
+            this.panel1.Size = new System.Drawing.Size(686, 733);
             this.panel1.TabIndex = 0;
             // 
             // panel7
@@ -120,7 +121,7 @@
             this.panel7.Controls.Add(this.txtNote);
             this.panel7.Controls.Add(this.label19);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(0, 626);
+            this.panel7.Location = new System.Drawing.Point(0, 596);
             this.panel7.Margin = new System.Windows.Forms.Padding(0);
             this.panel7.Name = "panel7";
             this.panel7.Padding = new System.Windows.Forms.Padding(25, 0, 25, 0);
@@ -130,24 +131,14 @@
             // txtNote
             // 
             this.txtNote.BackColor = System.Drawing.SystemColors.Window;
-            this.txtNote.BorderColor = System.Drawing.Color.Gray;
-            this.txtNote.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtNote.BorderRadius = 4;
-            this.txtNote.BorderSize = 1;
             this.txtNote.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtNote.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txtNote.Location = new System.Drawing.Point(74, 10);
             this.txtNote.Margin = new System.Windows.Forms.Padding(0);
             this.txtNote.Multiline = true;
             this.txtNote.Name = "txtNote";
-            this.txtNote.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
-            this.txtNote.PasswordChar = false;
-            this.txtNote.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtNote.PlaceholderText = "";
             this.txtNote.Size = new System.Drawing.Size(590, 50);
             this.txtNote.TabIndex = 19;
-            this.txtNote.Texts = "";
-            this.txtNote.UnderlinedStyle = false;
             // 
             // label19
             // 
@@ -165,11 +156,9 @@
             this.panel5.Controls.Add(this.panel6);
             this.panel5.Controls.Add(this.paymentTime);
             this.panel5.Controls.Add(this.paymentDate);
-            this.panel5.Controls.Add(this.txtMerchantID);
             this.panel5.Controls.Add(this.txtCardNumber);
-            this.panel5.Controls.Add(this.txtAutoCode);
+            this.panel5.Controls.Add(this.txtAuthCode);
             this.panel5.Controls.Add(this.txtCardType);
-            this.panel5.Controls.Add(this.label16);
             this.panel5.Controls.Add(this.label13);
             this.panel5.Controls.Add(this.txtReferenceNumber);
             this.panel5.Controls.Add(this.txtExpiryDate);
@@ -187,107 +176,80 @@
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
             this.panel5.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
-            this.panel5.Size = new System.Drawing.Size(684, 267);
+            this.panel5.Size = new System.Drawing.Size(684, 237);
             this.panel5.TabIndex = 15;
             // 
-            // txtMerchantID
+            // panel6
             // 
-            this.txtMerchantID.BackColor = System.Drawing.SystemColors.Window;
-            this.txtMerchantID.BorderColor = System.Drawing.Color.Gray;
-            this.txtMerchantID.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtMerchantID.BorderRadius = 4;
-            this.txtMerchantID.BorderSize = 1;
-            this.txtMerchantID.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtMerchantID.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtMerchantID.Location = new System.Drawing.Point(464, 144);
-            this.txtMerchantID.Margin = new System.Windows.Forms.Padding(0);
-            this.txtMerchantID.Multiline = false;
-            this.txtMerchantID.Name = "txtMerchantID";
-            this.txtMerchantID.Padding = new System.Windows.Forms.Padding(10, 9, 10, 7);
-            this.txtMerchantID.PasswordChar = false;
-            this.txtMerchantID.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtMerchantID.PlaceholderText = "";
-            this.txtMerchantID.Size = new System.Drawing.Size(200, 34);
-            this.txtMerchantID.TabIndex = 18;
-            this.txtMerchantID.Texts = "";
-            this.txtMerchantID.UnderlinedStyle = false;
+            this.panel6.Controls.Add(this.label24);
+            this.panel6.Location = new System.Drawing.Point(473, 201);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(46, 27);
+            this.panel6.TabIndex = 21;
+            // 
+            // label24
+            // 
+            this.label24.BackColor = System.Drawing.Color.DimGray;
+            this.label24.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label24.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label24.Location = new System.Drawing.Point(0, 0);
+            this.label24.Margin = new System.Windows.Forms.Padding(0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(1, 27);
+            this.label24.TabIndex = 12;
+            this.label24.Text = "Auth Code";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // paymentTime
+            // 
+            this.paymentTime.Font = new System.Drawing.Font("Roboto", 12F);
+            this.paymentTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.paymentTime.Location = new System.Drawing.Point(377, 201);
+            this.paymentTime.Name = "paymentTime";
+            this.paymentTime.Size = new System.Drawing.Size(133, 27);
+            this.paymentTime.TabIndex = 20;
+            // 
+            // paymentDate
+            // 
+            this.paymentDate.Font = new System.Drawing.Font("Roboto", 12F);
+            this.paymentDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.paymentDate.Location = new System.Drawing.Point(244, 201);
+            this.paymentDate.Name = "paymentDate";
+            this.paymentDate.Size = new System.Drawing.Size(127, 27);
+            this.paymentDate.TabIndex = 19;
             // 
             // txtCardNumber
             // 
             this.txtCardNumber.BackColor = System.Drawing.SystemColors.Window;
-            this.txtCardNumber.BorderColor = System.Drawing.Color.Gray;
-            this.txtCardNumber.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtCardNumber.BorderRadius = 4;
-            this.txtCardNumber.BorderSize = 1;
             this.txtCardNumber.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtCardNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txtCardNumber.Location = new System.Drawing.Point(464, 70);
             this.txtCardNumber.Margin = new System.Windows.Forms.Padding(0);
-            this.txtCardNumber.Multiline = false;
             this.txtCardNumber.Name = "txtCardNumber";
-            this.txtCardNumber.Padding = new System.Windows.Forms.Padding(10, 9, 10, 7);
-            this.txtCardNumber.PasswordChar = false;
-            this.txtCardNumber.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtCardNumber.PlaceholderText = "";
-            this.txtCardNumber.Size = new System.Drawing.Size(200, 34);
+            this.txtCardNumber.Size = new System.Drawing.Size(200, 27);
             this.txtCardNumber.TabIndex = 15;
-            this.txtCardNumber.Texts = "";
-            this.txtCardNumber.UnderlinedStyle = false;
             // 
-            // txtAutoCode
+            // txtAuthCode
             // 
-            this.txtAutoCode.BackColor = System.Drawing.SystemColors.Window;
-            this.txtAutoCode.BorderColor = System.Drawing.Color.Gray;
-            this.txtAutoCode.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtAutoCode.BorderRadius = 4;
-            this.txtAutoCode.BorderSize = 1;
-            this.txtAutoCode.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtAutoCode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtAutoCode.Location = new System.Drawing.Point(244, 144);
-            this.txtAutoCode.Margin = new System.Windows.Forms.Padding(0);
-            this.txtAutoCode.Multiline = false;
-            this.txtAutoCode.Name = "txtAutoCode";
-            this.txtAutoCode.Padding = new System.Windows.Forms.Padding(10, 9, 10, 7);
-            this.txtAutoCode.PasswordChar = false;
-            this.txtAutoCode.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtAutoCode.PlaceholderText = "";
-            this.txtAutoCode.Size = new System.Drawing.Size(200, 34);
-            this.txtAutoCode.TabIndex = 17;
-            this.txtAutoCode.Texts = "";
-            this.txtAutoCode.UnderlinedStyle = false;
+            this.txtAuthCode.BackColor = System.Drawing.SystemColors.Window;
+            this.txtAuthCode.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtAuthCode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtAuthCode.Location = new System.Drawing.Point(244, 134);
+            this.txtAuthCode.Margin = new System.Windows.Forms.Padding(0);
+            this.txtAuthCode.Name = "txtAuthCode";
+            this.txtAuthCode.Size = new System.Drawing.Size(200, 27);
+            this.txtAuthCode.TabIndex = 17;
             // 
             // txtCardType
             // 
             this.txtCardType.BackColor = System.Drawing.SystemColors.Window;
-            this.txtCardType.BorderColor = System.Drawing.Color.Gray;
-            this.txtCardType.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtCardType.BorderRadius = 4;
-            this.txtCardType.BorderSize = 1;
             this.txtCardType.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtCardType.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txtCardType.Location = new System.Drawing.Point(244, 70);
             this.txtCardType.Margin = new System.Windows.Forms.Padding(0);
-            this.txtCardType.Multiline = false;
             this.txtCardType.Name = "txtCardType";
-            this.txtCardType.Padding = new System.Windows.Forms.Padding(10, 9, 10, 7);
-            this.txtCardType.PasswordChar = false;
-            this.txtCardType.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtCardType.PlaceholderText = "";
-            this.txtCardType.Size = new System.Drawing.Size(200, 34);
+            this.txtCardType.Size = new System.Drawing.Size(200, 27);
             this.txtCardType.TabIndex = 14;
-            this.txtCardType.Texts = "";
-            this.txtCardType.UnderlinedStyle = false;
-            // 
-            // label16
-            // 
-            this.label16.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label16.Location = new System.Drawing.Point(460, 114);
-            this.label16.Margin = new System.Windows.Forms.Padding(0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(150, 30);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "Merchant ID";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label13
             // 
@@ -300,54 +262,47 @@
             this.label13.Text = "Card Number";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // txtReferenceNumber
+            // 
+            this.txtReferenceNumber.BackColor = System.Drawing.SystemColors.Window;
+            this.txtReferenceNumber.DefaultValue = "";
+            this.txtReferenceNumber.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtReferenceNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtReferenceNumber.Location = new System.Drawing.Point(24, 198);
+            this.txtReferenceNumber.Margin = new System.Windows.Forms.Padding(0);
+            this.txtReferenceNumber.Name = "txtReferenceNumber";
+            this.txtReferenceNumber.Size = new System.Drawing.Size(200, 27);
+            this.txtReferenceNumber.TabIndex = 16;
+            this.txtReferenceNumber.Value = 0;
+            // 
             // txtExpiryDate
             // 
             this.txtExpiryDate.BackColor = System.Drawing.SystemColors.Window;
-            this.txtExpiryDate.BorderColor = System.Drawing.Color.Gray;
-            this.txtExpiryDate.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtExpiryDate.BorderRadius = 4;
-            this.txtExpiryDate.BorderSize = 1;
+            this.txtExpiryDate.DefaultValue = "";
             this.txtExpiryDate.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtExpiryDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtExpiryDate.Location = new System.Drawing.Point(24, 144);
+            this.txtExpiryDate.Location = new System.Drawing.Point(24, 134);
             this.txtExpiryDate.Margin = new System.Windows.Forms.Padding(0);
-            this.txtExpiryDate.Multiline = false;
             this.txtExpiryDate.Name = "txtExpiryDate";
-            this.txtExpiryDate.Padding = new System.Windows.Forms.Padding(10, 9, 10, 7);
-            this.txtExpiryDate.PasswordChar = false;
-            this.txtExpiryDate.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtExpiryDate.PlaceholderText = "";
-            this.txtExpiryDate.Size = new System.Drawing.Size(200, 34);
+            this.txtExpiryDate.Size = new System.Drawing.Size(200, 27);
             this.txtExpiryDate.TabIndex = 16;
-            this.txtExpiryDate.Texts = "";
-            this.txtExpiryDate.UnderlinedStyle = false;
+            this.txtExpiryDate.Value = 0;
             // 
             // txtCardName
             // 
             this.txtCardName.BackColor = System.Drawing.SystemColors.Window;
-            this.txtCardName.BorderColor = System.Drawing.Color.Gray;
-            this.txtCardName.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtCardName.BorderRadius = 4;
-            this.txtCardName.BorderSize = 1;
             this.txtCardName.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtCardName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txtCardName.Location = new System.Drawing.Point(24, 70);
             this.txtCardName.Margin = new System.Windows.Forms.Padding(0);
-            this.txtCardName.Multiline = false;
             this.txtCardName.Name = "txtCardName";
-            this.txtCardName.Padding = new System.Windows.Forms.Padding(10, 9, 10, 7);
-            this.txtCardName.PasswordChar = false;
-            this.txtCardName.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtCardName.PlaceholderText = "";
-            this.txtCardName.Size = new System.Drawing.Size(200, 34);
+            this.txtCardName.Size = new System.Drawing.Size(200, 27);
             this.txtCardName.TabIndex = 13;
-            this.txtCardName.Texts = "";
-            this.txtCardName.UnderlinedStyle = false;
             // 
             // label15
             // 
             this.label15.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label15.Location = new System.Drawing.Point(240, 114);
+            this.label15.Location = new System.Drawing.Point(240, 104);
             this.label15.Margin = new System.Windows.Forms.Padding(0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(150, 30);
@@ -366,10 +321,32 @@
             this.label12.Text = "Card Type";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // label23
+            // 
+            this.label23.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label23.Location = new System.Drawing.Point(240, 168);
+            this.label23.Margin = new System.Windows.Forms.Padding(0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(150, 30);
+            this.label23.TabIndex = 11;
+            this.label23.Text = "Payment Date";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label25
+            // 
+            this.label25.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label25.Location = new System.Drawing.Point(20, 168);
+            this.label25.Margin = new System.Windows.Forms.Padding(0);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(150, 30);
+            this.label25.TabIndex = 11;
+            this.label25.Text = "Reference Number";
+            this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // label14
             // 
             this.label14.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label14.Location = new System.Drawing.Point(20, 114);
+            this.label14.Location = new System.Drawing.Point(20, 104);
             this.label14.Margin = new System.Windows.Forms.Padding(0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(150, 30);
@@ -403,7 +380,7 @@
             // 
             this.label11.BackColor = System.Drawing.Color.Gray;
             this.label11.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label11.Location = new System.Drawing.Point(20, 266);
+            this.label11.Location = new System.Drawing.Point(20, 236);
             this.label11.Margin = new System.Windows.Forms.Padding(0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(644, 1);
@@ -448,29 +425,19 @@
             // txtBatchID
             // 
             this.txtBatchID.BackColor = System.Drawing.SystemColors.Window;
-            this.txtBatchID.BorderColor = System.Drawing.Color.Gray;
-            this.txtBatchID.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtBatchID.BorderRadius = 4;
-            this.txtBatchID.BorderSize = 1;
             this.txtBatchID.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtBatchID.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtBatchID.Location = new System.Drawing.Point(90, 10);
+            this.txtBatchID.Location = new System.Drawing.Point(90, 13);
             this.txtBatchID.Margin = new System.Windows.Forms.Padding(0);
-            this.txtBatchID.Multiline = false;
             this.txtBatchID.Name = "txtBatchID";
-            this.txtBatchID.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
-            this.txtBatchID.PasswordChar = false;
-            this.txtBatchID.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtBatchID.PlaceholderText = "";
-            this.txtBatchID.Size = new System.Drawing.Size(200, 34);
+            this.txtBatchID.ReadOnly = true;
+            this.txtBatchID.Size = new System.Drawing.Size(200, 27);
             this.txtBatchID.TabIndex = 8;
-            this.txtBatchID.Texts = "";
-            this.txtBatchID.UnderlinedStyle = false;
             // 
             // label17
             // 
             this.label17.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.label17.Location = new System.Drawing.Point(20, 12);
+            this.label17.Location = new System.Drawing.Point(20, 15);
             this.label17.Margin = new System.Windows.Forms.Padding(0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(70, 30);
@@ -568,6 +535,118 @@
             this.panel3.Size = new System.Drawing.Size(684, 155);
             this.panel3.TabIndex = 13;
             // 
+            // txtTotalAmount_Base
+            // 
+            this.txtTotalAmount_Base.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtTotalAmount_Base.Location = new System.Drawing.Point(24, 69);
+            this.txtTotalAmount_Base.Margin = new System.Windows.Forms.Padding(0);
+            this.txtTotalAmount_Base.Name = "txtTotalAmount_Base";
+            this.txtTotalAmount_Base.Size = new System.Drawing.Size(100, 30);
+            this.txtTotalAmount_Base.TabIndex = 1;
+            this.txtTotalAmount_Base.TabStop = true;
+            this.txtTotalAmount_Base.Text = "$9999.99";
+            this.txtTotalAmount_Base.UseVisualStyleBackColor = true;
+            // 
+            // txtTotalAmount_Include_SVCFee
+            // 
+            this.txtTotalAmount_Include_SVCFee.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtTotalAmount_Include_SVCFee.Location = new System.Drawing.Point(129, 69);
+            this.txtTotalAmount_Include_SVCFee.Margin = new System.Windows.Forms.Padding(0);
+            this.txtTotalAmount_Include_SVCFee.Name = "txtTotalAmount_Include_SVCFee";
+            this.txtTotalAmount_Include_SVCFee.Size = new System.Drawing.Size(100, 30);
+            this.txtTotalAmount_Include_SVCFee.TabIndex = 2;
+            this.txtTotalAmount_Include_SVCFee.TabStop = true;
+            this.txtTotalAmount_Include_SVCFee.Text = "$9999.99";
+            this.txtTotalAmount_Include_SVCFee.UseVisualStyleBackColor = true;
+            // 
+            // txtTotalAmount_NoneTax_Base
+            // 
+            this.txtTotalAmount_NoneTax_Base.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtTotalAmount_NoneTax_Base.Location = new System.Drawing.Point(363, 69);
+            this.txtTotalAmount_NoneTax_Base.Margin = new System.Windows.Forms.Padding(0);
+            this.txtTotalAmount_NoneTax_Base.Name = "txtTotalAmount_NoneTax_Base";
+            this.txtTotalAmount_NoneTax_Base.Size = new System.Drawing.Size(100, 30);
+            this.txtTotalAmount_NoneTax_Base.TabIndex = 4;
+            this.txtTotalAmount_NoneTax_Base.TabStop = true;
+            this.txtTotalAmount_NoneTax_Base.Text = "$9999.99";
+            this.txtTotalAmount_NoneTax_Base.UseVisualStyleBackColor = true;
+            // 
+            // txtTotalAmount_Include_CashDiscount
+            // 
+            this.txtTotalAmount_Include_CashDiscount.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtTotalAmount_Include_CashDiscount.Location = new System.Drawing.Point(234, 69);
+            this.txtTotalAmount_Include_CashDiscount.Margin = new System.Windows.Forms.Padding(0);
+            this.txtTotalAmount_Include_CashDiscount.Name = "txtTotalAmount_Include_CashDiscount";
+            this.txtTotalAmount_Include_CashDiscount.Size = new System.Drawing.Size(100, 30);
+            this.txtTotalAmount_Include_CashDiscount.TabIndex = 3;
+            this.txtTotalAmount_Include_CashDiscount.TabStop = true;
+            this.txtTotalAmount_Include_CashDiscount.Text = "$9999.99";
+            this.txtTotalAmount_Include_CashDiscount.UseVisualStyleBackColor = true;
+            // 
+            // txtTotalAmount_NoneTax_Include_SVCFee
+            // 
+            this.txtTotalAmount_NoneTax_Include_SVCFee.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtTotalAmount_NoneTax_Include_SVCFee.Location = new System.Drawing.Point(468, 69);
+            this.txtTotalAmount_NoneTax_Include_SVCFee.Margin = new System.Windows.Forms.Padding(0);
+            this.txtTotalAmount_NoneTax_Include_SVCFee.Name = "txtTotalAmount_NoneTax_Include_SVCFee";
+            this.txtTotalAmount_NoneTax_Include_SVCFee.Size = new System.Drawing.Size(100, 30);
+            this.txtTotalAmount_NoneTax_Include_SVCFee.TabIndex = 5;
+            this.txtTotalAmount_NoneTax_Include_SVCFee.TabStop = true;
+            this.txtTotalAmount_NoneTax_Include_SVCFee.Text = "$9999.99";
+            this.txtTotalAmount_NoneTax_Include_SVCFee.UseVisualStyleBackColor = true;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label22.Location = new System.Drawing.Point(359, 45);
+            this.label22.Margin = new System.Windows.Forms.Padding(0);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(192, 19);
+            this.label22.TabIndex = 17;
+            this.label22.Text = "Final Total ( Exclude Tax )";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txtTotalAmount_NoneTax_Include_CashDiscount
+            // 
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.Location = new System.Drawing.Point(573, 69);
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.Margin = new System.Windows.Forms.Padding(0);
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.Name = "txtTotalAmount_NoneTax_Include_CashDiscount";
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.Size = new System.Drawing.Size(100, 30);
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.TabIndex = 6;
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.TabStop = true;
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.Text = "$9999.99";
+            this.txtTotalAmount_NoneTax_Include_CashDiscount.UseVisualStyleBackColor = true;
+            // 
+            // panel8
+            // 
+            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel8.Location = new System.Drawing.Point(350, 55);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(330, 53);
+            this.panel8.TabIndex = 16;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label21.Location = new System.Drawing.Point(20, 45);
+            this.label21.Margin = new System.Windows.Forms.Padding(0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(188, 19);
+            this.label21.TabIndex = 15;
+            this.label21.Text = "Final Total ( Include Tax )";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel4
+            // 
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Location = new System.Drawing.Point(11, 55);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(330, 53);
+            this.panel4.TabIndex = 13;
+            // 
             // txtGratuity
             // 
             this.txtGratuity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -622,78 +701,6 @@
             this.label9.Size = new System.Drawing.Size(644, 1);
             this.label9.TabIndex = 10;
             this.label9.Text = "label9";
-            // 
-            // txtTotalAmount_NoneTax_Include_CashDiscount
-            // 
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.Location = new System.Drawing.Point(573, 69);
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.Margin = new System.Windows.Forms.Padding(0);
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.Name = "txtTotalAmount_NoneTax_Include_CashDiscount";
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.Size = new System.Drawing.Size(100, 30);
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.TabIndex = 6;
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.TabStop = true;
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.Text = "$9999.99";
-            this.txtTotalAmount_NoneTax_Include_CashDiscount.UseVisualStyleBackColor = true;
-            // 
-            // txtTotalAmount_Include_CashDiscount
-            // 
-            this.txtTotalAmount_Include_CashDiscount.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtTotalAmount_Include_CashDiscount.Location = new System.Drawing.Point(234, 69);
-            this.txtTotalAmount_Include_CashDiscount.Margin = new System.Windows.Forms.Padding(0);
-            this.txtTotalAmount_Include_CashDiscount.Name = "txtTotalAmount_Include_CashDiscount";
-            this.txtTotalAmount_Include_CashDiscount.Size = new System.Drawing.Size(100, 30);
-            this.txtTotalAmount_Include_CashDiscount.TabIndex = 3;
-            this.txtTotalAmount_Include_CashDiscount.TabStop = true;
-            this.txtTotalAmount_Include_CashDiscount.Text = "$9999.99";
-            this.txtTotalAmount_Include_CashDiscount.UseVisualStyleBackColor = true;
-            // 
-            // txtTotalAmount_NoneTax_Include_SVCFee
-            // 
-            this.txtTotalAmount_NoneTax_Include_SVCFee.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtTotalAmount_NoneTax_Include_SVCFee.Location = new System.Drawing.Point(468, 69);
-            this.txtTotalAmount_NoneTax_Include_SVCFee.Margin = new System.Windows.Forms.Padding(0);
-            this.txtTotalAmount_NoneTax_Include_SVCFee.Name = "txtTotalAmount_NoneTax_Include_SVCFee";
-            this.txtTotalAmount_NoneTax_Include_SVCFee.Size = new System.Drawing.Size(100, 30);
-            this.txtTotalAmount_NoneTax_Include_SVCFee.TabIndex = 5;
-            this.txtTotalAmount_NoneTax_Include_SVCFee.TabStop = true;
-            this.txtTotalAmount_NoneTax_Include_SVCFee.Text = "$9999.99";
-            this.txtTotalAmount_NoneTax_Include_SVCFee.UseVisualStyleBackColor = true;
-            // 
-            // txtTotalAmount_Include_SVCFee
-            // 
-            this.txtTotalAmount_Include_SVCFee.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtTotalAmount_Include_SVCFee.Location = new System.Drawing.Point(129, 69);
-            this.txtTotalAmount_Include_SVCFee.Margin = new System.Windows.Forms.Padding(0);
-            this.txtTotalAmount_Include_SVCFee.Name = "txtTotalAmount_Include_SVCFee";
-            this.txtTotalAmount_Include_SVCFee.Size = new System.Drawing.Size(100, 30);
-            this.txtTotalAmount_Include_SVCFee.TabIndex = 2;
-            this.txtTotalAmount_Include_SVCFee.TabStop = true;
-            this.txtTotalAmount_Include_SVCFee.Text = "$9999.99";
-            this.txtTotalAmount_Include_SVCFee.UseVisualStyleBackColor = true;
-            // 
-            // txtTotalAmount_NoneTax_Base
-            // 
-            this.txtTotalAmount_NoneTax_Base.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtTotalAmount_NoneTax_Base.Location = new System.Drawing.Point(363, 69);
-            this.txtTotalAmount_NoneTax_Base.Margin = new System.Windows.Forms.Padding(0);
-            this.txtTotalAmount_NoneTax_Base.Name = "txtTotalAmount_NoneTax_Base";
-            this.txtTotalAmount_NoneTax_Base.Size = new System.Drawing.Size(100, 30);
-            this.txtTotalAmount_NoneTax_Base.TabIndex = 4;
-            this.txtTotalAmount_NoneTax_Base.TabStop = true;
-            this.txtTotalAmount_NoneTax_Base.Text = "$9999.99";
-            this.txtTotalAmount_NoneTax_Base.UseVisualStyleBackColor = true;
-            // 
-            // txtTotalAmount_Base
-            // 
-            this.txtTotalAmount_Base.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtTotalAmount_Base.Location = new System.Drawing.Point(24, 69);
-            this.txtTotalAmount_Base.Margin = new System.Windows.Forms.Padding(0);
-            this.txtTotalAmount_Base.Name = "txtTotalAmount_Base";
-            this.txtTotalAmount_Base.Size = new System.Drawing.Size(100, 30);
-            this.txtTotalAmount_Base.TabIndex = 1;
-            this.txtTotalAmount_Base.TabStop = true;
-            this.txtTotalAmount_Base.Text = "$9999.99";
-            this.txtTotalAmount_Base.UseVisualStyleBackColor = true;
             // 
             // panel2
             // 
@@ -752,7 +759,7 @@
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
             this.btnOK.ForeColor = System.Drawing.Color.White;
-            this.btnOK.Location = new System.Drawing.Point(516, 703);
+            this.btnOK.Location = new System.Drawing.Point(516, 668);
             this.btnOK.Margin = new System.Windows.Forms.Padding(0);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(150, 50);
@@ -773,7 +780,7 @@
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
             this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Location = new System.Drawing.Point(356, 703);
+            this.btnCancel.Location = new System.Drawing.Point(356, 668);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(0);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(150, 50);
@@ -796,147 +803,27 @@
             this.label1.Text = "Finish Ticket";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel4
-            // 
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Location = new System.Drawing.Point(11, 55);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(330, 53);
-            this.panel4.TabIndex = 13;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label21.Location = new System.Drawing.Point(20, 45);
-            this.label21.Margin = new System.Windows.Forms.Padding(0);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(188, 19);
-            this.label21.TabIndex = 15;
-            this.label21.Text = "Final Total ( Include Tax )";
-            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label22.Location = new System.Drawing.Point(359, 45);
-            this.label22.Margin = new System.Windows.Forms.Padding(0);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(192, 19);
-            this.label22.TabIndex = 17;
-            this.label22.Text = "Final Total ( Exclude Tax )";
-            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // panel8
-            // 
-            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel8.Location = new System.Drawing.Point(350, 55);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(330, 53);
-            this.panel8.TabIndex = 16;
-            // 
-            // label23
-            // 
-            this.label23.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label23.Location = new System.Drawing.Point(240, 188);
-            this.label23.Margin = new System.Windows.Forms.Padding(0);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(150, 30);
-            this.label23.TabIndex = 11;
-            this.label23.Text = "Payment Date";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // paymentDate
-            // 
-            this.paymentDate.Font = new System.Drawing.Font("Roboto", 12F);
-            this.paymentDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.paymentDate.Location = new System.Drawing.Point(244, 221);
-            this.paymentDate.Name = "paymentDate";
-            this.paymentDate.Size = new System.Drawing.Size(127, 27);
-            this.paymentDate.TabIndex = 19;
-            // 
-            // paymentTime
-            // 
-            this.paymentTime.Font = new System.Drawing.Font("Roboto", 12F);
-            this.paymentTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.paymentTime.Location = new System.Drawing.Point(377, 221);
-            this.paymentTime.Name = "paymentTime";
-            this.paymentTime.Size = new System.Drawing.Size(133, 27);
-            this.paymentTime.TabIndex = 20;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.label24);
-            this.panel6.Location = new System.Drawing.Point(473, 221);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(46, 27);
-            this.panel6.TabIndex = 21;
-            // 
-            // label24
-            // 
-            this.label24.BackColor = System.Drawing.Color.DimGray;
-            this.label24.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label24.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label24.Location = new System.Drawing.Point(0, 0);
-            this.label24.Margin = new System.Windows.Forms.Padding(0);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(1, 27);
-            this.label24.TabIndex = 12;
-            this.label24.Text = "Auth Code";
-            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label25
-            // 
-            this.label25.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label25.Location = new System.Drawing.Point(20, 188);
-            this.label25.Margin = new System.Windows.Forms.Padding(0);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(150, 30);
-            this.label25.TabIndex = 11;
-            this.label25.Text = "Reference Number";
-            this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // txtReferenceNumber
-            // 
-            this.txtReferenceNumber.BackColor = System.Drawing.SystemColors.Window;
-            this.txtReferenceNumber.BorderColor = System.Drawing.Color.Gray;
-            this.txtReferenceNumber.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.txtReferenceNumber.BorderRadius = 4;
-            this.txtReferenceNumber.BorderSize = 1;
-            this.txtReferenceNumber.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtReferenceNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtReferenceNumber.Location = new System.Drawing.Point(24, 218);
-            this.txtReferenceNumber.Margin = new System.Windows.Forms.Padding(0);
-            this.txtReferenceNumber.Multiline = false;
-            this.txtReferenceNumber.Name = "txtReferenceNumber";
-            this.txtReferenceNumber.Padding = new System.Windows.Forms.Padding(10, 9, 10, 7);
-            this.txtReferenceNumber.PasswordChar = false;
-            this.txtReferenceNumber.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtReferenceNumber.PlaceholderText = "";
-            this.txtReferenceNumber.Size = new System.Drawing.Size(200, 36);
-            this.txtReferenceNumber.TabIndex = 16;
-            this.txtReferenceNumber.Texts = "";
-            this.txtReferenceNumber.UnderlinedStyle = false;
-            // 
             // FinishTicketWithPaymentDetailForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 768);
+            this.ClientSize = new System.Drawing.Size(686, 733);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FinishTicketWithPaymentDetailForm";
             this.Text = "FinishSaleReceiptForm";
             this.panel1.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            this.panel6.ResumeLayout(false);
             this.pnlBatchID.ResumeLayout(false);
+            this.pnlBatchID.PerformLayout();
             this.pnlPaymentMethod.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -960,18 +847,16 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Panel panel5;
-        private RJCodeAdvance.RJControls.RJTextBox txtCardName;
+        private TextBox txtCardName;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label11;
         private RJCodeAdvance.RJControls.RJComboBox cmbPaymentMethod;
-        private RJCodeAdvance.RJControls.RJTextBox txtMerchantID;
-        private RJCodeAdvance.RJControls.RJTextBox txtCardNumber;
-        private RJCodeAdvance.RJControls.RJTextBox txtAutoCode;
-        private RJCodeAdvance.RJControls.RJTextBox txtCardType;
-        private System.Windows.Forms.Label label16;
+        private TextBox txtCardNumber;
+        private TextBox txtAuthCode;
+        private TextBox txtCardType;
         private System.Windows.Forms.Label label13;
-        private RJCodeAdvance.RJControls.RJTextBox txtExpiryDate;
+        private IntergeTextBox txtExpiryDate;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label14;
@@ -980,9 +865,9 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.RadioButton txtTotalAmount_Include_CashDiscount;
         private RJCodeAdvance.RJControls.RJButton btnBrowseBatch;
-        private RJCodeAdvance.RJControls.RJTextBox txtBatchID;
+        private TextBox txtBatchID;
         private System.Windows.Forms.Panel panel7;
-        private RJCodeAdvance.RJControls.RJTextBox txtNote;
+        private TextBox txtNote;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.RadioButton txtTotalAmount_NoneTax_Include_CashDiscount;
         private System.Windows.Forms.RadioButton txtTotalAmount_NoneTax_Include_SVCFee;
@@ -998,7 +883,7 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.DateTimePicker paymentTime;
-        private RJCodeAdvance.RJControls.RJTextBox txtReferenceNumber;
+        private IntergeTextBox txtReferenceNumber;
         private System.Windows.Forms.Label label25;
     }
 }
