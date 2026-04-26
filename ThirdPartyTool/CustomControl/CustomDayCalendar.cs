@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLogicSystems.XPos.Utilites;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,13 +7,8 @@ namespace ThirdPartyTool.CustomControl
 {
     public partial class CustomDayCalendar : UserControl
     {
-        public event EventHandler DoneSelectDayEvent;
+        public event EventHandler<DateTime> DoneSelectDayEvent;
 
-        private Color CurrentDayColor = Color.FromArgb(11, 87, 208);
-        private Color GrayColor = Color.Gray;
-        private Color BlackColor = Color.Black;
-
-        private DateTime selectedArea;
         public CustomDayCalendar()
         {
             InitializeComponent();
@@ -63,52 +59,7 @@ namespace ThirdPartyTool.CustomControl
 
         private void BtnDay_Click(object sender, EventArgs e)
         {
-            DoneSelectDayEvent?.Invoke(sender, e);
-        }
-
-        public void UpdateDays(DateTime _selectedArea)
-        {
-            selectedArea = _selectedArea;
-            try
-            {
-                int startIndex = (int)selectedArea.DayOfWeek + 1;
-                int lastIndex = startIndex + selectedArea.AddDays(-1).Day - 1;
-                int currentIndex = startIndex + DateTime.Now.Day - 1;
-
-                DateTime startDay = selectedArea.AddDays((int)selectedArea.DayOfWeek * -1);
-
-                foreach (Button btn in pnlContainerDays.Controls)
-                {
-                    btn.Tag = startDay;
-                    btn.Text = startDay.Day.ToString();
-                    if (startDay.Month == selectedArea.Month)
-                    {
-                        if (startDay.Month == DateTime.Now.Month && startDay.Day == DateTime.Now.Day)
-                        {
-                            btn.FlatAppearance.BorderSize = 1;
-                            btn.ForeColor = CurrentDayColor;
-                        }
-                        else
-                        {
-                            btn.ForeColor = BlackColor;
-                            btn.FlatAppearance.BorderSize = 0;
-                        }
-                    }
-                    else
-                    {
-                        btn.ForeColor = GrayColor;
-                        btn.FlatAppearance.BorderSize = 0;
-                    }
-
-                    startDay = startDay.AddDays(1);
-
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("CustomDayCalendar.UpdateDays()", ex);
-            }
-
+            DoneSelectDayEvent?.Invoke(sender, Utility.GetDateTimeFromObject((sender as Control).Tag));
         }
     }
 }

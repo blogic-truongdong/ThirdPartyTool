@@ -32,6 +32,7 @@
             this.btnDateRange = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
+            this.txtFocus = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lblDateRange
@@ -88,12 +89,20 @@
             this.btnPrevious.TabStop = false;
             this.btnPrevious.UseVisualStyleBackColor = false;
             // 
+            // txtFocus
+            // 
+            this.txtFocus.Location = new System.Drawing.Point(72, -100);
+            this.txtFocus.Name = "txtFocus";
+            this.txtFocus.Size = new System.Drawing.Size(100, 20);
+            this.txtFocus.TabIndex = 4;
+            // 
             // CustomDateTimePicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.txtFocus);
             this.Controls.Add(this.lblDateRange);
             this.Controls.Add(this.btnDateRange);
             this.Controls.Add(this.btnNext);
@@ -101,6 +110,7 @@
             this.Name = "CustomDateTimePicker";
             this.Size = new System.Drawing.Size(200, 40);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -110,5 +120,6 @@
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Label lblDateRange;
         private System.Windows.Forms.Button btnDateRange;
+        private System.Windows.Forms.TextBox txtFocus;
     }
 }

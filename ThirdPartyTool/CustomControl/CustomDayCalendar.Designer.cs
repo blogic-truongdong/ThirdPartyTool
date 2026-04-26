@@ -77,8 +77,8 @@
             this.btn38 = new System.Windows.Forms.Button();
             this.btn42 = new System.Windows.Forms.Button();
             this.btn39 = new System.Windows.Forms.Button();
-            this.pnlContainerDays = new System.Windows.Forms.Panel();
-            this.pnlContainerDays.SuspendLayout();
+            this.pnlContainer = new System.Windows.Forms.Panel();
+            this.pnlContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn1
@@ -788,64 +788,64 @@
             this.btn39.Tag = "39";
             this.btn39.UseVisualStyleBackColor = true;
             // 
-            // pnlContainerDays
+            // pnlContainer
             // 
-            this.pnlContainerDays.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.pnlContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlContainerDays.Controls.Add(this.btn1);
-            this.pnlContainerDays.Controls.Add(this.btn2);
-            this.pnlContainerDays.Controls.Add(this.btn3);
-            this.pnlContainerDays.Controls.Add(this.btn4);
-            this.pnlContainerDays.Controls.Add(this.btn5);
-            this.pnlContainerDays.Controls.Add(this.btn6);
-            this.pnlContainerDays.Controls.Add(this.btn7);
-            this.pnlContainerDays.Controls.Add(this.btn8);
-            this.pnlContainerDays.Controls.Add(this.btn9);
-            this.pnlContainerDays.Controls.Add(this.btn10);
-            this.pnlContainerDays.Controls.Add(this.btn11);
-            this.pnlContainerDays.Controls.Add(this.btn12);
-            this.pnlContainerDays.Controls.Add(this.btn13);
-            this.pnlContainerDays.Controls.Add(this.btn14);
-            this.pnlContainerDays.Controls.Add(this.btn15);
-            this.pnlContainerDays.Controls.Add(this.btn16);
-            this.pnlContainerDays.Controls.Add(this.btn17);
-            this.pnlContainerDays.Controls.Add(this.btn18);
-            this.pnlContainerDays.Controls.Add(this.btn19);
-            this.pnlContainerDays.Controls.Add(this.btn20);
-            this.pnlContainerDays.Controls.Add(this.btn21);
-            this.pnlContainerDays.Controls.Add(this.btn22);
-            this.pnlContainerDays.Controls.Add(this.btn23);
-            this.pnlContainerDays.Controls.Add(this.btn24);
-            this.pnlContainerDays.Controls.Add(this.btn25);
-            this.pnlContainerDays.Controls.Add(this.btn26);
-            this.pnlContainerDays.Controls.Add(this.btn27);
-            this.pnlContainerDays.Controls.Add(this.btn28);
-            this.pnlContainerDays.Controls.Add(this.btn29);
-            this.pnlContainerDays.Controls.Add(this.btn30);
-            this.pnlContainerDays.Controls.Add(this.btn31);
-            this.pnlContainerDays.Controls.Add(this.btn32);
-            this.pnlContainerDays.Controls.Add(this.btn33);
-            this.pnlContainerDays.Controls.Add(this.btn34);
-            this.pnlContainerDays.Controls.Add(this.btn35);
-            this.pnlContainerDays.Controls.Add(this.btn36);
-            this.pnlContainerDays.Controls.Add(this.btn37);
-            this.pnlContainerDays.Controls.Add(this.btn38);
-            this.pnlContainerDays.Controls.Add(this.btn39);
-            this.pnlContainerDays.Controls.Add(this.btn40);
-            this.pnlContainerDays.Controls.Add(this.btn41);
-            this.pnlContainerDays.Controls.Add(this.btn42);
-            this.pnlContainerDays.Location = new System.Drawing.Point(0, 40);
-            this.pnlContainerDays.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlContainerDays.Name = "pnlContainerDays";
-            this.pnlContainerDays.Size = new System.Drawing.Size(420, 240);
-            this.pnlContainerDays.TabIndex = 18;
+            this.pnlContainer.Controls.Add(this.btn1);
+            this.pnlContainer.Controls.Add(this.btn2);
+            this.pnlContainer.Controls.Add(this.btn3);
+            this.pnlContainer.Controls.Add(this.btn4);
+            this.pnlContainer.Controls.Add(this.btn5);
+            this.pnlContainer.Controls.Add(this.btn6);
+            this.pnlContainer.Controls.Add(this.btn7);
+            this.pnlContainer.Controls.Add(this.btn8);
+            this.pnlContainer.Controls.Add(this.btn9);
+            this.pnlContainer.Controls.Add(this.btn10);
+            this.pnlContainer.Controls.Add(this.btn11);
+            this.pnlContainer.Controls.Add(this.btn12);
+            this.pnlContainer.Controls.Add(this.btn13);
+            this.pnlContainer.Controls.Add(this.btn14);
+            this.pnlContainer.Controls.Add(this.btn15);
+            this.pnlContainer.Controls.Add(this.btn16);
+            this.pnlContainer.Controls.Add(this.btn17);
+            this.pnlContainer.Controls.Add(this.btn18);
+            this.pnlContainer.Controls.Add(this.btn19);
+            this.pnlContainer.Controls.Add(this.btn20);
+            this.pnlContainer.Controls.Add(this.btn21);
+            this.pnlContainer.Controls.Add(this.btn22);
+            this.pnlContainer.Controls.Add(this.btn23);
+            this.pnlContainer.Controls.Add(this.btn24);
+            this.pnlContainer.Controls.Add(this.btn25);
+            this.pnlContainer.Controls.Add(this.btn26);
+            this.pnlContainer.Controls.Add(this.btn27);
+            this.pnlContainer.Controls.Add(this.btn28);
+            this.pnlContainer.Controls.Add(this.btn29);
+            this.pnlContainer.Controls.Add(this.btn30);
+            this.pnlContainer.Controls.Add(this.btn31);
+            this.pnlContainer.Controls.Add(this.btn32);
+            this.pnlContainer.Controls.Add(this.btn33);
+            this.pnlContainer.Controls.Add(this.btn34);
+            this.pnlContainer.Controls.Add(this.btn35);
+            this.pnlContainer.Controls.Add(this.btn36);
+            this.pnlContainer.Controls.Add(this.btn37);
+            this.pnlContainer.Controls.Add(this.btn38);
+            this.pnlContainer.Controls.Add(this.btn39);
+            this.pnlContainer.Controls.Add(this.btn40);
+            this.pnlContainer.Controls.Add(this.btn41);
+            this.pnlContainer.Controls.Add(this.btn42);
+            this.pnlContainer.Location = new System.Drawing.Point(0, 40);
+            this.pnlContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlContainer.Name = "pnlContainer";
+            this.pnlContainer.Size = new System.Drawing.Size(420, 240);
+            this.pnlContainer.TabIndex = 18;
             // 
             // CustomDayCalendar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.pnlContainerDays);
+            this.Controls.Add(this.pnlContainer);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label6);
@@ -855,7 +855,7 @@
             this.Controls.Add(this.label1);
             this.Name = "CustomDayCalendar";
             this.Size = new System.Drawing.Size(420, 280);
-            this.pnlContainerDays.ResumeLayout(false);
+            this.pnlContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -911,6 +911,6 @@
         public System.Windows.Forms.Button btn38;
         public System.Windows.Forms.Button btn42;
         public System.Windows.Forms.Button btn39;
-        private System.Windows.Forms.Panel pnlContainerDays;
+        public System.Windows.Forms.Panel pnlContainer;
     }
 }

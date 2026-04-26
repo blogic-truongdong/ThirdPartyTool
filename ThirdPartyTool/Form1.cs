@@ -7,8 +7,6 @@ namespace ThirdPartyTool
         public Form1()
         {
             InitializeComponent();
-
-            customDateTimePicker1.DateTimeValues = System.DateTime.Now;
         }
     }
 }

@@ -31,8 +31,8 @@
             this.rjComboBox1 = new RJCodeAdvance.RJControls.RJComboBox();
             this.rjDatePicker1 = new RJCodeAdvance.RJControls.RJDatePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.customDateTimePicker1 = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
             this.DateTimeStartDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
+            this.customDateTimePicker1 = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
             this.SuspendLayout();
             // 
             // rjComboBox1
@@ -76,16 +76,6 @@
             this.dateTimePicker1.TabIndex = 2;
             this.dateTimePicker1.Value = new System.DateTime(2020, 10, 27, 0, 0, 0, 0);
             // 
-            // customDateTimePicker1
-            // 
-            this.customDateTimePicker1.BackColor = System.Drawing.Color.White;
-            this.customDateTimePicker1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.customDateTimePicker1.DateTimeValues = new System.DateTime(2026, 4, 23, 0, 0, 0, 0);
-            this.customDateTimePicker1.Location = new System.Drawing.Point(451, 187);
-            this.customDateTimePicker1.Name = "customDateTimePicker1";
-            this.customDateTimePicker1.Size = new System.Drawing.Size(200, 40);
-            this.customDateTimePicker1.TabIndex = 3;
-            // 
             // DateTimeStartDate
             // 
             this.DateTimeStartDate.DateTimeValues = new System.DateTime(2015, 12, 14, 11, 10, 0, 0);
@@ -96,6 +86,16 @@
             this.DateTimeStartDate.Size = new System.Drawing.Size(452, 39);
             this.DateTimeStartDate.TabIndex = 15;
             this.DateTimeStartDate.WrongValues = false;
+            // 
+            // customDateTimePicker1
+            // 
+            this.customDateTimePicker1.BackColor = System.Drawing.Color.White;
+            this.customDateTimePicker1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.customDateTimePicker1.DateTimeValues = new System.DateTime(2026, 2, 22, 0, 0, 0, 0);
+            this.customDateTimePicker1.Location = new System.Drawing.Point(451, 187);
+            this.customDateTimePicker1.Name = "customDateTimePicker1";
+            this.customDateTimePicker1.Size = new System.Drawing.Size(200, 40);
+            this.customDateTimePicker1.TabIndex = 3;
             // 
             // Form1
             // 

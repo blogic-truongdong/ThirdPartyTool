@@ -40,11 +40,14 @@
             this.btn9 = new System.Windows.Forms.Button();
             this.btn5 = new System.Windows.Forms.Button();
             this.btn1 = new System.Windows.Forms.Button();
+            this.pnlContainer = new System.Windows.Forms.FlowLayoutPanel();
+            this.pnlContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn12
             // 
             this.btn12.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn12.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn12.FlatAppearance.BorderSize = 0;
             this.btn12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn12.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -55,12 +58,13 @@
             this.btn12.TabIndex = 39;
             this.btn12.TabStop = false;
             this.btn12.Tag = "12";
-            this.btn12.Text = " ";
+            this.btn12.Text = " 1";
             this.btn12.UseVisualStyleBackColor = true;
             // 
             // btn8
             // 
             this.btn8.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn8.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn8.FlatAppearance.BorderSize = 0;
             this.btn8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn8.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -71,12 +75,13 @@
             this.btn8.TabIndex = 35;
             this.btn8.TabStop = false;
             this.btn8.Tag = "8";
-            this.btn8.Text = " ";
+            this.btn8.Text = " 1";
             this.btn8.UseVisualStyleBackColor = true;
             // 
             // btn4
             // 
             this.btn4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn4.FlatAppearance.BorderSize = 0;
             this.btn4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -87,12 +92,13 @@
             this.btn4.TabIndex = 31;
             this.btn4.TabStop = false;
             this.btn4.Tag = "4";
-            this.btn4.Text = " ";
+            this.btn4.Text = " 1";
             this.btn4.UseVisualStyleBackColor = true;
             // 
             // btn11
             // 
             this.btn11.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn11.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn11.FlatAppearance.BorderSize = 0;
             this.btn11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn11.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -103,12 +109,13 @@
             this.btn11.TabIndex = 38;
             this.btn11.TabStop = false;
             this.btn11.Tag = "11";
-            this.btn11.Text = " ";
+            this.btn11.Text = " 1";
             this.btn11.UseVisualStyleBackColor = true;
             // 
             // btn7
             // 
             this.btn7.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn7.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn7.FlatAppearance.BorderSize = 0;
             this.btn7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn7.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -119,12 +126,13 @@
             this.btn7.TabIndex = 34;
             this.btn7.TabStop = false;
             this.btn7.Tag = "7";
-            this.btn7.Text = " ";
+            this.btn7.Text = " 1";
             this.btn7.UseVisualStyleBackColor = true;
             // 
             // btn3
             // 
             this.btn3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn3.FlatAppearance.BorderSize = 0;
             this.btn3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn3.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -135,12 +143,13 @@
             this.btn3.TabIndex = 30;
             this.btn3.TabStop = false;
             this.btn3.Tag = "3";
-            this.btn3.Text = " ";
+            this.btn3.Text = " 1";
             this.btn3.UseVisualStyleBackColor = true;
             // 
             // btn10
             // 
             this.btn10.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn10.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn10.FlatAppearance.BorderSize = 0;
             this.btn10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn10.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -151,12 +160,13 @@
             this.btn10.TabIndex = 37;
             this.btn10.TabStop = false;
             this.btn10.Tag = "10";
-            this.btn10.Text = " ";
+            this.btn10.Text = " 1";
             this.btn10.UseVisualStyleBackColor = true;
             // 
             // btn6
             // 
             this.btn6.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn6.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn6.FlatAppearance.BorderSize = 0;
             this.btn6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -167,12 +177,13 @@
             this.btn6.TabIndex = 33;
             this.btn6.TabStop = false;
             this.btn6.Tag = "6";
-            this.btn6.Text = " ";
+            this.btn6.Text = " 1";
             this.btn6.UseVisualStyleBackColor = true;
             // 
             // btn2
             // 
             this.btn2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn2.FlatAppearance.BorderSize = 0;
             this.btn2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -183,12 +194,13 @@
             this.btn2.TabIndex = 29;
             this.btn2.TabStop = false;
             this.btn2.Tag = "2";
-            this.btn2.Text = " ";
+            this.btn2.Text = " 1";
             this.btn2.UseVisualStyleBackColor = true;
             // 
             // btn9
             // 
             this.btn9.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn9.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn9.FlatAppearance.BorderSize = 0;
             this.btn9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn9.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -199,12 +211,13 @@
             this.btn9.TabIndex = 36;
             this.btn9.TabStop = false;
             this.btn9.Tag = "9";
-            this.btn9.Text = " ";
+            this.btn9.Text = " 1";
             this.btn9.UseVisualStyleBackColor = true;
             // 
             // btn5
             // 
             this.btn5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn5.FlatAppearance.BorderSize = 0;
             this.btn5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn5.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -215,12 +228,13 @@
             this.btn5.TabIndex = 32;
             this.btn5.TabStop = false;
             this.btn5.Tag = "5";
-            this.btn5.Text = " ";
+            this.btn5.Text = " 1";
             this.btn5.UseVisualStyleBackColor = true;
             // 
             // btn1
             // 
             this.btn1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btn1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.btn1.FlatAppearance.BorderSize = 0;
             this.btn1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -231,27 +245,37 @@
             this.btn1.TabIndex = 28;
             this.btn1.TabStop = false;
             this.btn1.Tag = "1";
-            this.btn1.Text = " ";
+            this.btn1.Text = " 1";
             this.btn1.UseVisualStyleBackColor = true;
+            // 
+            // pnlContainer
+            // 
+            this.pnlContainer.Controls.Add(this.btn1);
+            this.pnlContainer.Controls.Add(this.btn2);
+            this.pnlContainer.Controls.Add(this.btn3);
+            this.pnlContainer.Controls.Add(this.btn4);
+            this.pnlContainer.Controls.Add(this.btn5);
+            this.pnlContainer.Controls.Add(this.btn6);
+            this.pnlContainer.Controls.Add(this.btn7);
+            this.pnlContainer.Controls.Add(this.btn8);
+            this.pnlContainer.Controls.Add(this.btn9);
+            this.pnlContainer.Controls.Add(this.btn10);
+            this.pnlContainer.Controls.Add(this.btn11);
+            this.pnlContainer.Controls.Add(this.btn12);
+            this.pnlContainer.Location = new System.Drawing.Point(0, 0);
+            this.pnlContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlContainer.Name = "pnlContainer";
+            this.pnlContainer.Size = new System.Drawing.Size(420, 280);
+            this.pnlContainer.TabIndex = 40;
             // 
             // CustomYearCalendar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btn12);
-            this.Controls.Add(this.btn8);
-            this.Controls.Add(this.btn4);
-            this.Controls.Add(this.btn11);
-            this.Controls.Add(this.btn7);
-            this.Controls.Add(this.btn3);
-            this.Controls.Add(this.btn10);
-            this.Controls.Add(this.btn6);
-            this.Controls.Add(this.btn2);
-            this.Controls.Add(this.btn9);
-            this.Controls.Add(this.btn5);
-            this.Controls.Add(this.btn1);
+            this.Controls.Add(this.pnlContainer);
             this.Name = "CustomYearCalendar";
             this.Size = new System.Drawing.Size(420, 280);
+            this.pnlContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -270,5 +294,6 @@
         private System.Windows.Forms.Button btn9;
         private System.Windows.Forms.Button btn5;
         private System.Windows.Forms.Button btn1;
+        public System.Windows.Forms.FlowLayoutPanel pnlContainer;
     }
 }

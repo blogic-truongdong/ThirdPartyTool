@@ -1,11 +1,13 @@
 ﻿using BLogicSystems.XPos.Utilites;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ThirdPartyTool.CustomControl
 {
     public partial class CustomMonthCalendar : UserControl
     {
+
         public event EventHandler<int> DoneSelectMonthEvent;
 
         public CustomMonthCalendar()
@@ -30,5 +32,7 @@ namespace ThirdPartyTool.CustomControl
         {
             DoneSelectMonthEvent?.Invoke(sender, Utility.GetIntFromObject((sender as Control).Tag));
         }
+
+       
     }
 }

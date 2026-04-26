@@ -7,6 +7,7 @@ namespace ThirdPartyTool.CustomControl
 {
     public partial class CustomDateTimePicker : UserControl
     {
+        public event EventHandler DateTimeValuesChanged;
         private DateTime StartDate;
         private DateTime EndDate;
         private DateTime dateTimeValues;
@@ -28,22 +29,38 @@ namespace ThirdPartyTool.CustomControl
             InitializeComponent();
 
             dateRange = new CustomCalendar();
-            dateRange.DoneSelectDayEvent += DateRange_DoneSelectDayEvent;
-            dateRange.DoneSelectMonthEvent += DateRange_DoneSelectMonthEvent;
+            dateRange.DateTimeValuesChanged += DateRange_DateTimeValuesChanged;
+            dateRange.DoneDateTimeValuesChanged += DateRange_DoneDateTimeValuesChanged;
             popDateRange = new PoperContainer(dateRange);
 
             lblDateRange.Click += LblDateRange_Click;
+            btnDateRange.Click += LblDateRange_Click;
 
+            btnNext.GotFocus += BtnControls_GotFocus;
+            btnPrevious.GotFocus += BtnControls_GotFocus;
+            lblDateRange.GotFocus += BtnControls_GotFocus;
+            btnDateRange.GotFocus += BtnControls_GotFocus;
         }
 
-        private void DateRange_DoneSelectMonthEvent(object sender, int e)
+        private void DateRange_DoneDateTimeValuesChanged(object sender, DateTime e)
         {
+            this.DateTimeValues = e;
 
-        }
-
-        private void DateRange_DoneSelectDayEvent(object sender, EventArgs e)
-        {
             this.popDateRange.Close();
+
+            DateTimeValuesChanged?.Invoke(null, null);
+        }
+
+        private void DateRange_DateTimeValuesChanged(object sender, DateTime e)
+        {
+            DateTimeValues = e;
+
+            DateTimeValuesChanged?.Invoke(null, null);
+        }
+
+        private void BtnControls_GotFocus(object sender, EventArgs e)
+        {
+            txtFocus.Focus();
         }
 
         private void LblDateRange_Click(object sender, System.EventArgs e)
