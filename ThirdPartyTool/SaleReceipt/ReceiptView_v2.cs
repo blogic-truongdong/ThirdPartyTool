@@ -8,7 +8,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
-using ThirdPartyTool.Models;
 
 namespace ThirdPartyTool.SaleReceipt
 {
@@ -37,7 +36,6 @@ namespace ThirdPartyTool.SaleReceipt
             btnBack2.Click += BtnBackCloseTicket_Click;
             btnBack4.Click += BtnBackCloseTicket_Click;
             btnBack5.Click += BtnBackCloseTicket_Click;
-            btnBack7.Click += BtnBackCloseTicket_Click;
 
             btnScanCreditCardTransaction.Click += BtnScanCreditCardTransaction_Click;
 
@@ -54,7 +52,6 @@ namespace ThirdPartyTool.SaleReceipt
             btnProcessVoidTicket.Click += BtnProcessVoidTicket_Click;
             btnProcessCancelTicket.Click += BtnProcessCancelTicket_Click;
             btnProcessAddTipBySaleToken.Click += BtnProcessAddTipBySaleToken_Click;
-            BtnProcessUpdateServiceCharges.Click += BtnProcessUpdateServiceCharges_Click;
         }
 
         private async void BtnScanCreditCardTransaction_Click(object sender, EventArgs e)
@@ -162,68 +159,6 @@ namespace ThirdPartyTool.SaleReceipt
             catch (Exception ex)
             {
                 BLogicLogger.Exception("BtnScanCreditCardTransaction_Click", ex);
-            }
-        }
-
-        private void BtnProcessUpdateServiceCharges_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (TransactionStatusID != "FIN" && TransactionStatusID != "VOID" && TransactionStatusID != "RET")
-                {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Update Service Charges những ticket đang ở trạng thái Finish, VOID and Cancel.");
-                    informationDialogForm.ShowDialog();
-                    return;
-                }
-
-                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to update Service Charges for ticket #{MainSaleReceiptNumber}?");
-                var result = confirmFirmDialog.ShowDialog();
-                if (result == DialogResult.No)
-                    return;
-
-
-                RequestModel requestModel = new RequestModel();
-                requestModel.serviceChargesValues.SaleReceiptID = MainSaleReceiptID;
-                requestModel.serviceChargesValues.ServiceFee = Utility.GetDecimalFromObject(txtManualServiceCharge.Text);
-                requestModel.serviceChargesValues.ServiceFeeTaxAmount = Utility.GetDecimalFromObject(txtManualServiceChargeTax.Text);
-                requestModel.serviceChargesValues.AreaFeeAmount = Utility.GetDecimalFromObject(txtAreaServiceCharge.Text);
-                requestModel.serviceChargesValues.AreaFeeTaxAmount = Utility.GetDecimalFromObject(txtAreaServiceChargeTax.Text);
-                requestModel.serviceChargesValues.PartyServiceFeeAmount = Utility.GetDecimalFromObject(txtPartyServiceCharge.Text);
-                requestModel.serviceChargesValues.PartyServiceFeeTaxAmount = Utility.GetDecimalFromObject(txtPartyServiceChargeTax.Text);
-                requestModel.serviceChargesValues.AutoGratuityAmount = Utility.GetDecimalFromObject(txtAutoServiceCharge.Text);
-                requestModel.serviceChargesValues.AutoGratuityTaxAmount = Utility.GetDecimalFromObject(txtAutoServiceChargeTax.Text);
-                requestModel.serviceChargesValues.SVCFeePaidAmount = Utility.GetDecimalFromObject(txtCustomFee.Text);
-                requestModel.serviceChargesValues.SVCFeeTaxPaidAmount = Utility.GetDecimalFromObject(txtCustomFeeTax.Text);
-                requestModel.serviceChargesValues.CashDiscountPaidAmount = Utility.GetDecimalFromObject(txtCashDiscount.Text);
-                requestModel.serviceChargesValues.CashDiscountTaxPaidAmount = Utility.GetDecimalFromObject(txtCashDiscountTax.Text);
-
-                ProcessForm processForm = new ProcessForm();
-                processForm.CurrentProcessName = ProcessNameEnum.UpdateServiceChargeBySaleReceiptID;
-                processForm.requestModel = requestModel;
-                processForm.ShowDialog();
-
-                if (processForm.IsSuccess)
-                {
-                    TokenSaleReceiptID = string.Empty;
-                    TokenSaleReceiptNumber = string.Empty;
-
-                    PrintControl_TokenReceipt.PrintingSystem?.Dispose();
-                    PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
-                    PrintControl_TokenReceipt.Refresh();
-
-                    txtSearch.Text = MainSaleReceiptNumber;
-
-                    ReloadCurrentReceipt();
-                }
-                else
-                {
-                    InformationDialogForm errorDialog = new InformationDialogForm("Add Tip Fail. Please contact TruongDS");
-                    errorDialog.ShowDialog();
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("BtnProcessUpdateServiceCharges_Click", ex);
             }
         }
 
@@ -586,9 +521,13 @@ namespace ThirdPartyTool.SaleReceipt
                         return;
                     }
 
-                    ProcessShowUpdateServiceCharges();
-
-                    pnlUpdateServiceCharges.BringToFront();
+                    SelectServiceChargeToAdjstForm selectServiceChargeToAdjstForm = new SelectServiceChargeToAdjstForm();
+                    selectServiceChargeToAdjstForm.SaleReceiptID = MainSaleReceiptID;
+                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(selectServiceChargeToAdjstForm, Helper.MainForm);
+                    if (selectServiceChargeToAdjstForm.IsChangedServiceCharges)
+                    {
+                        ReloadCurrentReceipt();
+                    }
                 }
             }
             catch (Exception ex)
@@ -596,64 +535,6 @@ namespace ThirdPartyTool.SaleReceipt
                 BLogicLogger.Exception("BtnShow_Click in ReceiptView_v2", ex);
             }
 
-        }
-
-        private void ProcessShowUpdateServiceCharges()
-        {
-            try
-            {
-                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptID = '{MainSaleReceiptID}' ";
-                    var reader = sqlCommand.ExecuteReader();
-                    dtSaleReceipts.Load(reader);
-
-                    reader.Close();
-                }
-
-                decimal _ServiceFee = Utility.GetDecimalFromRow("ServiceFee", dtSaleReceipts.Rows[0]);
-                decimal _ServiceFeeTaxAmount = Utility.GetDecimalFromRow("ServiceFeeTaxAmount", dtSaleReceipts.Rows[0]);
-                decimal _AutoGratuityAmount = Utility.GetDecimalFromRow("AutoGratuityAmount", dtSaleReceipts.Rows[0]);
-                decimal _AutoGratuityTaxAmount = Utility.GetDecimalFromRow("AutoGratuityTaxAmount", dtSaleReceipts.Rows[0]);
-                decimal _AreaFeeAmount = Utility.GetDecimalFromRow("AreaFeeAmount", dtSaleReceipts.Rows[0]);
-                decimal _AreaFeeTaxAmount = Utility.GetDecimalFromRow("AreaFeeTaxAmount", dtSaleReceipts.Rows[0]);
-                decimal _PartyServiceFeeAmount = Utility.GetDecimalFromRow("PartyServiceFeeAmount", dtSaleReceipts.Rows[0]);
-                decimal _PartyServiceFeeTaxAmount = Utility.GetDecimalFromRow("PartyServiceFeeTaxAmount", dtSaleReceipts.Rows[0]);
-                decimal _SVCFeePaidAmount = Utility.GetDecimalFromRow("SVCFeePaidAmount", dtSaleReceipts.Rows[0]);
-                decimal _SVCFeeTaxPaidAmount = Utility.GetDecimalFromRow("SVCFeeTaxPaidAmount", dtSaleReceipts.Rows[0]);
-                decimal _CashDiscountPaidAmount = Utility.GetDecimalFromRow("CashDiscountPaidAmount", dtSaleReceipts.Rows[0]);
-                decimal _CashDiscountTaxPaidAmount = Utility.GetDecimalFromRow("CashDiscountTaxPaidAmount", dtSaleReceipts.Rows[0]);
-
-                txtManualServiceCharge.Text = (_ServiceFee).ToString("c2");
-                txtManualServiceChargeTax.Text = _ServiceFeeTaxAmount.ToString("c2");
-
-                txtAreaServiceCharge.Text = (_AreaFeeAmount).ToString("c2");
-                txtAreaServiceChargeTax.Text = _AreaFeeTaxAmount.ToString("c2");
-
-                txtPartyServiceCharge.Text = (_PartyServiceFeeAmount).ToString("c2");
-                txtPartyServiceChargeTax.Text = _PartyServiceFeeTaxAmount.ToString("c2");
-
-                txtAutoServiceCharge.Text = (_AutoGratuityAmount).ToString("c2");
-                txtAutoServiceChargeTax.Text = _AutoGratuityTaxAmount.ToString("c2");
-
-                txtCustomFee.Text = (_SVCFeePaidAmount - _SVCFeeTaxPaidAmount).ToString("c2");
-                txtCustomFeeTax.Text = _SVCFeeTaxPaidAmount.ToString("c2");
-
-                txtCashDiscount.Text = (_CashDiscountPaidAmount - _CashDiscountPaidAmount).ToString("c2");
-                txtCashDiscountTax.Text = _CashDiscountTaxPaidAmount.ToString("c2");
-
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("ProcessShowUpdateServiceCharges", ex);
-            }
         }
 
         private void BtnBackCloseTicket_Click(object sender, EventArgs e)

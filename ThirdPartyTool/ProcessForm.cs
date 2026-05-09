@@ -3899,63 +3899,63 @@ namespace ThirdPartyTool
             switch (serviceChargeType)
             {
                 case ServiceChargeType.AreaServiceFee:
-                    sql = $"update SaleReceipts set " +
-                        $"AreaFeeAmount = '{new_ServiceChargeAmount}', " +
-                        $"TotalAmount = '{new_TotalAmount_In_SaleReceipts}', " +
-                        $"PaidAmount = '{new_TotalAmount_In_SaleReceipts}', " +
-                        $"SalesOrderFee = '{new_SalesOrderFee_In_SaleReceipts}', " +
-                        $"TaxAmount = '{new_TaxAmount_In_SaleReceipts}' " +
-                        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    sql = $"update SaleReceipts set " +
+                    //        $"AreaFeeAmount = '{new_ServiceChargeAmount}', " +
+                    //        $"TotalAmount = '{new_TotalAmount_In_SaleReceipts}', " +
+                    //        $"PaidAmount = '{new_TotalAmount_In_SaleReceipts}', " +
+                    //        $"SalesOrderFee = '{new_SalesOrderFee_In_SaleReceipts}', " +
+                    //        $"TaxAmount = '{new_TaxAmount_In_SaleReceipts}' " +
+                    //        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set " +
-                        $"AmountTendered = '{new_AmountTendered_In_SaleReceiptPaymentDetails}', " +
-                        $"PaidServiceFee = '{new_PaidServiceFee_InSaleReceiptPaymentDetails}', " +
-                        $"AreaFeeAmount = '{new_ServiceChargeAmount_InSaleReceiptPaymentDetails}' " +
-                        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    sql = $"update SaleReceiptPaymentDetails set " +
+                    //        $"AmountTendered = '{new_AmountTendered_In_SaleReceiptPaymentDetails}', " +
+                    //        $"PaidServiceFee = '{new_PaidServiceFee_InSaleReceiptPaymentDetails}', " +
+                    //        $"AreaFeeAmount = '{new_ServiceChargeAmount_InSaleReceiptPaymentDetails}' " +
+                    //        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceipts set AreaFeeTaxAmount = '{new_ServiceChargeTaxAmount}', ServiceChargeTaxAmount = '{new_ServiceChargeTaxAmount_In_SaleReceipts}' where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    sql = $"update SaleReceipts set AreaFeeTaxAmount = '{new_ServiceChargeTaxAmount}', ServiceChargeTaxAmount = '{new_ServiceChargeTaxAmount_In_SaleReceipts}' where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set AreaFeeTaxAmount = '{new_ServiceChargeTaxAmount_InSaleReceiptPaymentDetails}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    sql = $"update SaleReceiptPaymentDetails set AreaFeeTaxAmount = '{new_ServiceChargeTaxAmount_InSaleReceiptPaymentDetails}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    if (saleReceiptEntity.SVCFeeTaxPaidAmount != 0)
-                    {
-                        sql = $"update SaleReceiptPaymentDetails set TaxAmountByPaymentModeTaxCustomFee = '{new_TaxAmount_In_SaleReceipts}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                        await RunQueryUpdateAsync(conn, sql);
-                    }
+                    //    if (saleReceiptEntity.SVCFeeTaxPaidAmount != 0)
+                    //    {
+                    //        sql = $"update SaleReceiptPaymentDetails set TaxAmountByPaymentModeTaxCustomFee = '{new_TaxAmount_In_SaleReceipts}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //        await RunQueryUpdateAsync(conn, sql);
+                    //    }
 
-                    break;
-                case ServiceChargeType.AutoServiceFee:
-                    sql = $"update SaleReceipts set " +
-                        $"AutoGratuityAmount = '{new_ServiceChargeAmount}', " +
-                        $"TotalAmount = '{new_TotalAmount_In_SaleReceipts}', " +
-                        $"PaidAmount = '{new_TotalAmount_In_SaleReceipts}', " +
-                        $"SalesOrderFee = '{new_SalesOrderFee_In_SaleReceipts}', " +
-                        $"TaxAmount = '{new_TaxAmount_In_SaleReceipts}' " +
-                        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    break;
+                    //case ServiceChargeType.AutoServiceFee:
+                    //    sql = $"update SaleReceipts set " +
+                    //        $"AutoGratuityAmount = '{new_ServiceChargeAmount}', " +
+                    //        $"TotalAmount = '{new_TotalAmount_In_SaleReceipts}', " +
+                    //        $"PaidAmount = '{new_TotalAmount_In_SaleReceipts}', " +
+                    //        $"SalesOrderFee = '{new_SalesOrderFee_In_SaleReceipts}', " +
+                    //        $"TaxAmount = '{new_TaxAmount_In_SaleReceipts}' " +
+                    //        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set " +
-                        $"AmountTendered = '{new_AmountTendered_In_SaleReceiptPaymentDetails}', " +
-                        $"PaidServiceFee = '{new_PaidServiceFee_InSaleReceiptPaymentDetails}', " +
-                        $"AutoGratuityAmount = '{new_ServiceChargeAmount_InSaleReceiptPaymentDetails}' " +
-                        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    sql = $"update SaleReceiptPaymentDetails set " +
+                    //        $"AmountTendered = '{new_AmountTendered_In_SaleReceiptPaymentDetails}', " +
+                    //        $"PaidServiceFee = '{new_PaidServiceFee_InSaleReceiptPaymentDetails}', " +
+                    //        $"AutoGratuityAmount = '{new_ServiceChargeAmount_InSaleReceiptPaymentDetails}' " +
+                    //        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceipts set AutoGratuityTaxAmount = '{new_ServiceChargeTaxAmount}', ServiceChargeTaxAmount = '{new_ServiceChargeTaxAmount_In_SaleReceipts}' where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    sql = $"update SaleReceipts set AutoGratuityTaxAmount = '{new_ServiceChargeTaxAmount}', ServiceChargeTaxAmount = '{new_ServiceChargeTaxAmount_In_SaleReceipts}' where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set AutoGratuityTaxAmount = '{new_ServiceChargeTaxAmount_InSaleReceiptPaymentDetails}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //    sql = $"update SaleReceiptPaymentDetails set AutoGratuityTaxAmount = '{new_ServiceChargeTaxAmount_InSaleReceiptPaymentDetails}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
 
-                    if (saleReceiptEntity.SVCFeeTaxPaidAmount != 0)
-                    {
-                        sql = $"update SaleReceiptPaymentDetails set TaxAmountByPaymentModeTaxCustomFee = '{new_TaxAmount_In_SaleReceipts}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                        await RunQueryUpdateAsync(conn, sql);
-                    }
+                    //    if (saleReceiptEntity.SVCFeeTaxPaidAmount != 0)
+                    //    {
+                    //        sql = $"update SaleReceiptPaymentDetails set TaxAmountByPaymentModeTaxCustomFee = '{new_TaxAmount_In_SaleReceipts}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //        await RunQueryUpdateAsync(conn, sql);
+                    //    }
 
                     break;
                 case ServiceChargeType.PartyServiceFee:
@@ -3990,85 +3990,85 @@ namespace ThirdPartyTool
                     break;
                 case ServiceChargeType.ManualServiceFee:
 
-                    sql = $"update SaleReceipts set " +
-                        $"ServiceFee = '{new_ServiceChargeAmount}', " +
-                        $"TotalAmount = '{new_TotalAmount_In_SaleReceipts}', " +
-                        $"PaidAmount = '{new_TotalAmount_In_SaleReceipts}', " +
-                        $"SalesOrderFee = '{new_SalesOrderFee_In_SaleReceipts}', " +
-                        $"TaxAmount = '{new_TaxAmount_In_SaleReceipts}' " +
-                        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceipts set " +
+                    //    $"ServiceFee = '{new_ServiceChargeAmount}', " +
+                    //    $"TotalAmount = '{new_TotalAmount_In_SaleReceipts}', " +
+                    //    $"PaidAmount = '{new_TotalAmount_In_SaleReceipts}', " +
+                    //    $"SalesOrderFee = '{new_SalesOrderFee_In_SaleReceipts}', " +
+                    //    $"TaxAmount = '{new_TaxAmount_In_SaleReceipts}' " +
+                    //    $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set " +
-                        $"AmountTendered = '{new_AmountTendered_In_SaleReceiptPaymentDetails}', " +
-                        $"PaidServiceFee = '{new_PaidServiceFee_InSaleReceiptPaymentDetails}', " +
-                        $"ServiceFee = '{new_ServiceChargeAmount_InSaleReceiptPaymentDetails}' " +
-                        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceiptPaymentDetails set " +
+                    //    $"AmountTendered = '{new_AmountTendered_In_SaleReceiptPaymentDetails}', " +
+                    //    $"PaidServiceFee = '{new_PaidServiceFee_InSaleReceiptPaymentDetails}', " +
+                    //    $"ServiceFee = '{new_ServiceChargeAmount_InSaleReceiptPaymentDetails}' " +
+                    //    $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceipts set ServiceFeeTaxAmount = '{new_ServiceChargeTaxAmount}', ServiceChargeTaxAmount = '{new_ServiceChargeTaxAmount_In_SaleReceipts}' where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceipts set ServiceFeeTaxAmount = '{new_ServiceChargeTaxAmount}', ServiceChargeTaxAmount = '{new_ServiceChargeTaxAmount_In_SaleReceipts}' where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set ServiceFeeTaxAmount = '{new_ServiceChargeTaxAmount_InSaleReceiptPaymentDetails}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceiptPaymentDetails set ServiceFeeTaxAmount = '{new_ServiceChargeTaxAmount_InSaleReceiptPaymentDetails}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    if (saleReceiptEntity.SVCFeeTaxPaidAmount != 0)
-                    {
-                        sql = $"update SaleReceiptPaymentDetails set TaxAmountByPaymentModeTaxCustomFee = '{new_TaxAmount_In_SaleReceipts}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                        await RunQueryUpdateAsync(conn, sql);
-                    }
+                    //if (saleReceiptEntity.SVCFeeTaxPaidAmount != 0)
+                    //{
+                    //    sql = $"update SaleReceiptPaymentDetails set TaxAmountByPaymentModeTaxCustomFee = '{new_TaxAmount_In_SaleReceipts}' where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //    await RunQueryUpdateAsync(conn, sql);
+                    //}
 
                     break;
 
                 case ServiceChargeType.SVCFee:
 
-                    sql = $"update SaleReceipts set " +
-                        $"SVCFeeAmount = '{requestModel.serviceChargesValues.SVCFeePaidAmount + requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}', " +
-                        $"SVCFeePaidAmount = '{requestModel.serviceChargesValues.SVCFeePaidAmount + requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
-                        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceipts set " +
+                    //    $"SVCFeeAmount = '{requestModel.serviceChargesValues.SVCFeePaidAmount + requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}', " +
+                    //    $"SVCFeePaidAmount = '{requestModel.serviceChargesValues.SVCFeePaidAmount + requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
+                    //    $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceipts set " +
-                        $"SVCFeeTaxAmount = '{requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}', " +
-                        $"SVCFeeTaxPaidAmount = '{requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
-                        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceipts set " +
+                    //    $"SVCFeeTaxAmount = '{requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}', " +
+                    //    $"SVCFeeTaxPaidAmount = '{requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
+                    //    $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set " +
-                        $"SVCFeeAmount = '{requestModel.serviceChargesValues.SVCFeePaidAmount + requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
-                        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceiptPaymentDetails set " +
+                    //    $"SVCFeeAmount = '{requestModel.serviceChargesValues.SVCFeePaidAmount + requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
+                    //    $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set " +
-                        $"SVCFeeTaxAmount = '{requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
-                        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceiptPaymentDetails set " +
+                    //    $"SVCFeeTaxAmount = '{requestModel.serviceChargesValues.SVCFeeTaxPaidAmount}' " +
+                    //    $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
                     break;
 
                 case ServiceChargeType.CashDiscount:
 
-                    sql = $"update SaleReceipts set " +
-                        $"CashDiscountAmount = '{requestModel.serviceChargesValues.CashDiscountPaidAmount + requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}', " +
-                        $"CashDiscountPaidAmount = '{requestModel.serviceChargesValues.CashDiscountPaidAmount + requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
-                        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceipts set " +
+                    //    $"CashDiscountAmount = '{requestModel.serviceChargesValues.CashDiscountPaidAmount + requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}', " +
+                    //    $"CashDiscountPaidAmount = '{requestModel.serviceChargesValues.CashDiscountPaidAmount + requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
+                    //    $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceipts set " +
-                        $"CashDiscountTaxAmount = '{requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}', " +
-                        $"CashDiscountTaxPaidAmount = '{requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
-                        $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceipts set " +
+                    //    $"CashDiscountTaxAmount = '{requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}', " +
+                    //    $"CashDiscountTaxPaidAmount = '{requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
+                    //    $"where SaleReceiptID = '{saleReceiptEntity.SaleReceiptID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set " +
-                        $"CashDiscountAmount = '{requestModel.serviceChargesValues.CashDiscountPaidAmount + requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
-                        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceiptPaymentDetails set " +
+                    //    $"CashDiscountAmount = '{requestModel.serviceChargesValues.CashDiscountPaidAmount + requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
+                    //    $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
-                    sql = $"update SaleReceiptPaymentDetails set " +
-                        $"CashDiscountTaxAmount = '{requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
-                        $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
-                    await RunQueryUpdateAsync(conn, sql);
+                    //sql = $"update SaleReceiptPaymentDetails set " +
+                    //    $"CashDiscountTaxAmount = '{requestModel.serviceChargesValues.CashDiscountTaxPaidAmount}' " +
+                    //    $"where SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailEntity.SaleReceiptPaymentDetailID}';";
+                    //await RunQueryUpdateAsync(conn, sql);
 
                     break;
             }

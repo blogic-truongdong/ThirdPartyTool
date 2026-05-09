@@ -1,13 +1,13 @@
 ﻿namespace ThirdPartyTool.CustomControl
 {
-    partial class NumericUpDownNoArrows
+    partial class CustomComboboxDropdown
     {
-        /// <summary>
+        /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
+        /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,13 +22,26 @@
 
         #region Component Designer generated code
 
-        /// <summary>
+        /// <summary> 
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // CustomComboboxDropdown
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.BackColor = System.Drawing.Color.White;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Name = "CustomComboboxDropdown";
+            this.Size = new System.Drawing.Size(116, 8);
+            this.Load += new System.EventHandler(this.CustomComboboxDropdown_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

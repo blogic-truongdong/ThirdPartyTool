@@ -469,6 +469,12 @@
     <Compile Include="AdvancedFunctions\CloseUnPaidTicketForm.Designer.cs">
       <DependentUpon>CloseUnPaidTicketForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AdvancedFunctions\ReSyncDataFor7ShiftsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdvancedFunctions\ReSyncDataFor7ShiftsForm.Designer.cs">
+      <DependentUpon>ReSyncDataFor7ShiftsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLogicLogger.cs" />
     <Compile Include="ConnectDatabaseForm.cs">
       <SubType>Form</SubType>
@@ -500,6 +506,18 @@
     </Compile>
     <Compile Include="CustomControl\CustomCalendar.Designer.cs">
       <DependentUpon>CustomCalendar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomCombobox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomCombobox.Designer.cs">
+      <DependentUpon>CustomCombobox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomComboboxDropdown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomComboboxDropdown.Designer.cs">
+      <DependentUpon>CustomComboboxDropdown.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControl\CustomDateTimePicker.cs">
       <SubType>UserControl</SubType>
@@ -536,12 +554,6 @@
     </Compile>
     <Compile Include="CustomControl\NumericTextBox.Designer.cs">
       <DependentUpon>NumericTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControl\NumericUpDownNoArrows.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControl\NumericUpDownNoArrows.Designer.cs">
-      <DependentUpon>NumericUpDownNoArrows.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialog\ConfirmDialogForm.cs">
       <SubType>Form</SubType>
@@ -650,6 +662,8 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ListEmployeeResponseModel.cs" />
+    <Compile Include="Models\7Shifts\CreateReceiptFor7ShiftsModel.cs" />
+    <Compile Include="Models\7Shifts\CreateReceiptFor7ShiftsResponseModel.cs" />
     <Compile Include="Models\BatchEntity.cs" />
     <Compile Include="Models\ConfigurationsEntity.cs" />
     <Compile Include="Models\EmployeeClockInInfoEntity.cs" />
@@ -729,6 +743,12 @@
     </Compile>
     <Compile Include="SaleReceipt\EditItemPriceForm.Designer.cs">
       <DependentUpon>EditItemPriceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\EnterServiceChargeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\EnterServiceChargeForm.Designer.cs">
+      <DependentUpon>EnterServiceChargeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SaleReceipt\FinishSaleReceiptForm.cs">
       <SubType>Form</SubType>
@@ -814,6 +834,12 @@
     <Compile Include="SaleReceipt\SelectSaleReceiptPaymentDetailForm.Designer.cs">
       <DependentUpon>SelectSaleReceiptPaymentDetailForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SaleReceipt\SelectServiceChargeToAdjstForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaleReceipt\SelectServiceChargeToAdjstForm.Designer.cs">
+      <DependentUpon>SelectServiceChargeToAdjstForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SaleReceipt\ServiceChargesRow.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -859,6 +885,7 @@
       <DependentUpon>StartForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SystemConfigurations.cs" />
+    <Compile Include="ThirdPartyEnum.cs" />
     <Compile Include="ThirdPartyHelper.cs" />
     <Compile Include="ToolView.cs">
       <SubType>UserControl</SubType>
@@ -903,11 +930,20 @@
     <EmbeddedResource Include="AdvancedFunctions\CloseUnPaidTicketForm.resx">
       <DependentUpon>CloseUnPaidTicketForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedFunctions\ReSyncDataFor7ShiftsForm.resx">
+      <DependentUpon>ReSyncDataFor7ShiftsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConnectDatabaseForm.resx">
       <DependentUpon>ConnectDatabaseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControl\CustomCalendar.resx">
       <DependentUpon>CustomCalendar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomCombobox.resx">
+      <DependentUpon>CustomCombobox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomComboboxDropdown.resx">
+      <DependentUpon>CustomComboboxDropdown.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControl\CustomDateTimePicker.resx">
       <DependentUpon>CustomDateTimePicker.cs</DependentUpon>
@@ -1009,6 +1045,9 @@
     <EmbeddedResource Include="SaleReceipt\EditItemPriceForm.resx">
       <DependentUpon>EditItemPriceForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\EnterServiceChargeForm.resx">
+      <DependentUpon>EnterServiceChargeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\FinishSaleReceiptForm.resx">
       <DependentUpon>FinishSaleReceiptForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1050,6 +1089,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\SelectSaleReceiptPaymentDetailForm.resx">
       <DependentUpon>SelectSaleReceiptPaymentDetailForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaleReceipt\SelectServiceChargeToAdjstForm.resx">
+      <DependentUpon>SelectServiceChargeToAdjstForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SaleReceipt\ServiceChargesRow.resx">
       <DependentUpon>ServiceChargesRow.cs</DependentUpon>
@@ -1166,6 +1208,8 @@
     <Content Include="Lib\log4net.dll" />
     <Content Include="Lib\System.Printing.dll" />
     <Content Include="Lib\zxing.dll" />
+    <None Include="Resources\icon_close_white.png" />
+    <None Include="Resources\icon_tax_24x24.png" />
     <None Include="Resources\icon_calendar_16x16.png" />
     <None Include="Resources\icon_previous_16x16.png" />
     <None Include="Resources\icon_next_16x16.png" />
@@ -1181,6 +1225,9 @@
     <None Include="Resources\icon_edit_2.png" />
     <None Include="Resources\Icon_CreditCard.png" />
     <None Include="Resources\Icon_Arrow_Down.png" />
+    <None Include="Resources\icon_arrow_down_16x16.png" />
+    <None Include="Resources\icon_arrow_down_24x24.png" />
+    <None Include="Resources\icon_amount_24x24.png" />
     <Content Include="Resources\Icon_BLogic_Tool.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

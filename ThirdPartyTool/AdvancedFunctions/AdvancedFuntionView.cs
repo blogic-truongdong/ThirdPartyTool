@@ -13,6 +13,14 @@ namespace ThirdPartyTool.AdvancedFunctions
             this.btnCloseUnPaidTicket.Click += BtnCloseUnPaidTicket_Click;
 
             btnClearTableStatus.Click += BtnClearTableStatus_Click;
+
+            btnSyncDataFor7Shifts.Click += BtnSyncDataFor7Shifts_Click;
+        }
+
+        private void BtnSyncDataFor7Shifts_Click(object sender, EventArgs e)
+        {
+            ReSyncDataFor7ShiftsForm form = new ReSyncDataFor7ShiftsForm();
+            BLogicMessageBox.ShowPopUpFormWithDIMBackground(form, Helper.MainForm);
         }
 
         private void BtnClearTableStatus_Click(object sender, EventArgs e)

@@ -32,7 +32,11 @@
             this.rjDatePicker1 = new RJCodeAdvance.RJControls.RJDatePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.DateTimeStartDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.customCombobox1 = new ThirdPartyTool.CustomControl.CustomCombobox();
             this.customDateTimePicker1 = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
+            this.customCombobox2 = new ThirdPartyTool.CustomControl.CustomCombobox();
             this.SuspendLayout();
             // 
             // rjComboBox1
@@ -87,21 +91,64 @@
             this.DateTimeStartDate.TabIndex = 15;
             this.DateTimeStartDate.WrongValues = false;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(385, 57);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 16;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"});
+            this.comboBox2.Location = new System.Drawing.Point(611, 259);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(121, 21);
+            this.comboBox2.TabIndex = 18;
+            // 
+            // customCombobox1
+            // 
+            this.customCombobox1.Font = new System.Drawing.Font("Roboto", 12F);
+            this.customCombobox1.Location = new System.Drawing.Point(195, 63);
+            this.customCombobox1.Margin = new System.Windows.Forms.Padding(0);
+            this.customCombobox1.Name = "customCombobox1";
+            this.customCombobox1.Size = new System.Drawing.Size(183, 35);
+            this.customCombobox1.TabIndex = 17;
+            // 
             // customDateTimePicker1
             // 
             this.customDateTimePicker1.BackColor = System.Drawing.Color.White;
             this.customDateTimePicker1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.customDateTimePicker1.DateTimeValues = new System.DateTime(2026, 2, 22, 0, 0, 0, 0);
+            this.customDateTimePicker1.Value = new System.DateTime(2026, 2, 22, 0, 0, 0, 0);
             this.customDateTimePicker1.Location = new System.Drawing.Point(451, 187);
             this.customDateTimePicker1.Name = "customDateTimePicker1";
             this.customDateTimePicker1.Size = new System.Drawing.Size(200, 40);
             this.customDateTimePicker1.TabIndex = 3;
+            // 
+            // customCombobox2
+            // 
+            this.customCombobox2.Location = new System.Drawing.Point(242, 188);
+            this.customCombobox2.Name = "customCombobox2";
+            this.customCombobox2.Size = new System.Drawing.Size(153, 35);
+            this.customCombobox2.TabIndex = 19;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.customCombobox2);
+            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.customCombobox1);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.DateTimeStartDate);
             this.Controls.Add(this.customDateTimePicker1);
             this.Controls.Add(this.dateTimePicker1);
@@ -120,5 +167,9 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private CustomControl.CustomDateTimePicker customDateTimePicker1;
         public BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom DateTimeStartDate;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private CustomControl.CustomCombobox customCombobox1;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private CustomControl.CustomCombobox customCombobox2;
     }
 }

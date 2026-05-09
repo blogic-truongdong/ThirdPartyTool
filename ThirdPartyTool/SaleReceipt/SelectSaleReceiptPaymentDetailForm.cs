@@ -8,13 +8,20 @@ namespace ThirdPartyTool.SaleReceipt
     public partial class SelectSaleReceiptPaymentDetailForm : Form
     {
         public string SaleReceiptPaymentDetailID = string.Empty;
-
+        public string SaleReceiptID = string.Empty;
         public SelectSaleReceiptPaymentDetailForm()
         {
             InitializeComponent();
 
             this.btnCancel.Click += BtnCancel_Click;
             this.btnOK.Click += BtnOK_Click;
+
+            this.Load += SelectSaleReceiptPaymentDetailForm_Load;
+        }
+
+        private void SelectSaleReceiptPaymentDetailForm_Load(object sender, System.EventArgs e)
+        {
+
         }
 
         private void BtnOK_Click(object sender, System.EventArgs e)

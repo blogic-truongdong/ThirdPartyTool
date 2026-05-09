@@ -1,6 +1,7 @@
 ﻿using BLogicSystems.XPos.SharedModule.Models;
 using BLogicSystems.XPos.Utilites;
 using BLogicSystems.XPos.Utilites.Logging;
+using BLogicSystems.XPos.Utilities.HttpClientHelper;
 using Dapper;
 using Newtonsoft.Json;
 using System;
@@ -10,6 +11,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
@@ -2093,6 +2095,90 @@ namespace ThirdPartyTool
                 return 0;
             }
             return dTaxAmountByPaymentModeTaxCustomFee;
+        }
+
+        public static async Task<HttpClientFactoryResponse> ProcessRequest_7Shifts(string url, HttpMethod httpMethod, string jsonData, string parameters = "")//string companyID
+        {
+            HttpClientFactoryResponse response = new HttpClientFactoryResponse();
+            try
+            {
+                string baseUrl = $"https://api.7shifts.com/v2/company/{POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftCompanyID}";
+                string accessToken = POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftAccessToken;
+                HttpClient httpClient = new HttpClient();
+                httpClient.Timeout = TimeSpan.FromSeconds(45);
+
+                var httpRequestMessage = new HttpRequestMessage();
+                httpRequestMessage.Method = httpMethod;
+                httpRequestMessage.RequestUri = new Uri($"{baseUrl}/{url}{parameters}");
+                httpRequestMessage.Headers.Add("Authorization", $"Bearer {accessToken}");
+
+                if (!string.IsNullOrWhiteSpace(jsonData))
+                {
+                    var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                    httpRequestMessage.Content = content;
+                }
+
+                var resp = await httpClient.SendAsync(httpRequestMessage);
+
+                string str = await resp.Content.ReadAsStringAsync();
+
+                SevenShiftResponse sevenShiftResponse = JsonConvert.DeserializeObject<SevenShiftResponse>(str);
+                response.StatusCode = resp.StatusCode;
+                response.Message = str;
+                response.IsSuccess = resp.IsSuccessStatusCode;
+                response.RequestData = $"URL: {url}. Data: {jsonData}";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Message = ex.Message;
+                response.IsSuccess = false;
+                BLogicLogger.Error($"#### ProcessRequest error: {ex.Message}", ex);
+            }
+
+            return response;
+        }
+
+        public static HttpClientFactoryResponse ProcessRequest_7Shifts_Sync(string url, HttpMethod httpMethod, string jsonData, string parameters = "")//string companyID
+        {
+            HttpClientFactoryResponse response = new HttpClientFactoryResponse();
+            try
+            {
+                string baseUrl = $"https://api.7shifts.com/v2/company/{POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftCompanyID}";
+                string accessToken = POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftAccessToken;
+                HttpClient httpClient = new HttpClient();
+                httpClient.Timeout = TimeSpan.FromSeconds(45);
+
+                var httpRequestMessage = new HttpRequestMessage();
+                httpRequestMessage.Method = httpMethod;
+                httpRequestMessage.RequestUri = new Uri($"{baseUrl}/{url}{parameters}");
+                httpRequestMessage.Headers.Add("Authorization", $"Bearer {accessToken}");
+
+                if (!string.IsNullOrWhiteSpace(jsonData))
+                {
+                    var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                    httpRequestMessage.Content = content;
+                }
+
+                var resp = httpClient.SendAsync(httpRequestMessage).Result;
+
+                string str = resp.Content.ReadAsStringAsync().Result;
+
+                SevenShiftResponse sevenShiftResponse = JsonConvert.DeserializeObject<SevenShiftResponse>(str);
+                response.StatusCode = resp.StatusCode;
+                response.Message = str;
+                response.IsSuccess = resp.IsSuccessStatusCode;
+                response.RequestData = $"URL: {url}. Data: {jsonData}";
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Message = ex.Message;
+                response.IsSuccess = false;
+                BLogicLogger.Error($"#### ProcessRequest error: {ex.Message}", ex);
+            }
+
+            return response;
         }
     }
 }

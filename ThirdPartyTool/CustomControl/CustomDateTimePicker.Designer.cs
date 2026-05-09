@@ -30,9 +30,9 @@
         {
             this.lblDateRange = new System.Windows.Forms.Label();
             this.btnDateRange = new System.Windows.Forms.Button();
-            this.btnNext = new System.Windows.Forms.Button();
-            this.btnPrevious = new System.Windows.Forms.Button();
             this.txtFocus = new System.Windows.Forms.TextBox();
+            this.btnPrevious = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblDateRange
@@ -61,19 +61,12 @@
             this.btnDateRange.TabStop = false;
             this.btnDateRange.UseVisualStyleBackColor = false;
             // 
-            // btnNext
+            // txtFocus
             // 
-            this.btnNext.BackColor = System.Drawing.Color.White;
-            this.btnNext.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnNext.FlatAppearance.BorderSize = 0;
-            this.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNext.Image = global::ThirdPartyTool.Properties.Resources.icon_next_16x16;
-            this.btnNext.Location = new System.Drawing.Point(170, 0);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(30, 40);
-            this.btnNext.TabIndex = 1;
-            this.btnNext.TabStop = false;
-            this.btnNext.UseVisualStyleBackColor = false;
+            this.txtFocus.Location = new System.Drawing.Point(72, -100);
+            this.txtFocus.Name = "txtFocus";
+            this.txtFocus.Size = new System.Drawing.Size(100, 20);
+            this.txtFocus.TabIndex = 4;
             // 
             // btnPrevious
             // 
@@ -89,12 +82,19 @@
             this.btnPrevious.TabStop = false;
             this.btnPrevious.UseVisualStyleBackColor = false;
             // 
-            // txtFocus
+            // btnNext
             // 
-            this.txtFocus.Location = new System.Drawing.Point(72, -100);
-            this.txtFocus.Name = "txtFocus";
-            this.txtFocus.Size = new System.Drawing.Size(100, 20);
-            this.txtFocus.TabIndex = 4;
+            this.btnNext.BackColor = System.Drawing.Color.White;
+            this.btnNext.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnNext.FlatAppearance.BorderSize = 0;
+            this.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNext.Image = global::ThirdPartyTool.Properties.Resources.icon_next_16x16;
+            this.btnNext.Location = new System.Drawing.Point(170, 0);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(30, 40);
+            this.btnNext.TabIndex = 1;
+            this.btnNext.TabStop = false;
+            this.btnNext.UseVisualStyleBackColor = false;
             // 
             // CustomDateTimePicker
             // 
@@ -115,11 +115,10 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnPrevious;
-        private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Label lblDateRange;
         private System.Windows.Forms.Button btnDateRange;
         private System.Windows.Forms.TextBox txtFocus;
+        private System.Windows.Forms.Button btnPrevious;
+        private System.Windows.Forms.Button btnNext;
     }
 }

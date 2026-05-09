@@ -14,7 +14,7 @@ namespace ThirdPartyTool.CustomControl
         private PoperContainer popDateRange;
         private CustomCalendar dateRange;
 
-        public DateTime DateTimeValues
+        public DateTime Value
         {
             get => dateTimeValues;
             set
@@ -40,11 +40,24 @@ namespace ThirdPartyTool.CustomControl
             btnPrevious.GotFocus += BtnControls_GotFocus;
             lblDateRange.GotFocus += BtnControls_GotFocus;
             btnDateRange.GotFocus += BtnControls_GotFocus;
+
+            btnNext.Click += BtnNext_Click;
+            btnPrevious.Click += BtnPrevious_Click;
+        }
+
+        private void BtnPrevious_Click(object sender, EventArgs e)
+        {
+            Value = Value.AddDays(-1);
+        }
+
+        private void BtnNext_Click(object sender, EventArgs e)
+        {
+            Value = Value.AddDays(1);
         }
 
         private void DateRange_DoneDateTimeValuesChanged(object sender, DateTime e)
         {
-            this.DateTimeValues = e;
+            this.Value = e;
 
             this.popDateRange.Close();
 
@@ -53,7 +66,7 @@ namespace ThirdPartyTool.CustomControl
 
         private void DateRange_DateTimeValuesChanged(object sender, DateTime e)
         {
-            DateTimeValues = e;
+            Value = e;
 
             DateTimeValuesChanged?.Invoke(null, null);
         }

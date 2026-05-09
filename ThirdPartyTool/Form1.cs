@@ -7,6 +7,8 @@ namespace ThirdPartyTool
         public Form1()
         {
             InitializeComponent();
+
+
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using BLogicSystems.MonthCalendar;
-using BLogicSystems.XPos.Utilites;
+﻿using BLogicSystems.XPos.Utilites;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -82,7 +81,7 @@ namespace ThirdPartyTool.CustomControl
 
         private void MonthCalendar_DoneSelectMonthEvent(object sender, int e)
         {
-            month = e;
+            DateTimeValues = new DateTime(year, e, 1);
 
             CurrentType = CustomCalendarType.Day;
 
@@ -93,12 +92,12 @@ namespace ThirdPartyTool.CustomControl
 
         private void DayCalendar_DoneSelectDayEvent(object sender, DateTime e)
         {
-            DoneDateTimeValuesChanged?.Invoke(null,e);
+            DoneDateTimeValuesChanged?.Invoke(null, e);
         }
 
         private void BtnPrevious_Click(object sender, EventArgs e)
         {
-            if(CurrentType == CustomCalendarType.Day)
+            if (CurrentType == CustomCalendarType.Day)
             {
                 month--;
 
@@ -112,7 +111,7 @@ namespace ThirdPartyTool.CustomControl
 
                 UpdateCalendar();
             }
-            else if(CurrentType == CustomCalendarType.Month)
+            else if (CurrentType == CustomCalendarType.Month)
             {
                 year--;
 
@@ -123,7 +122,7 @@ namespace ThirdPartyTool.CustomControl
             }
             else if (CurrentType == CustomCalendarType.Year)
             {
-                year-=12;
+                year -= 12;
 
                 UpdateCalendar();
             }
@@ -238,7 +237,7 @@ namespace ThirdPartyTool.CustomControl
                         btn.BackColor = DefaultBackColor;
                         btn.ForeColor = DefaultForeColor;
                     }
-                    
+
                     tempYear++;
                 }
             }
@@ -255,7 +254,7 @@ namespace ThirdPartyTool.CustomControl
             {
                 foreach (Button btn in this.monthCalendar.pnlContainer.Controls)
                 {
-                    if(Utility.GetIntFromObject(btn.Tag) == month)
+                    if (Utility.GetIntFromObject(btn.Tag) == month)
                     {
                         btn.BackColor = SelectedBackColor;
                         btn.ForeColor = SelectedForeColor;
@@ -294,8 +293,10 @@ namespace ThirdPartyTool.CustomControl
                     {
                         if (startDay.Month == DateTime.Now.Month && startDay.Day == DateTime.Now.Day)
                         {
-                            btn.FlatAppearance.BorderSize = 1;
-                            btn.ForeColor = SelectedBackColor;
+                            //btn.FlatAppearance.BorderSize = 1;
+                            //btn.ForeColor = SelectedBackColor;
+                            btn.BackColor = SelectedBackColor;
+                            btn.ForeColor = SelectedForeColor;
                         }
                         else
                         {
