@@ -30,8 +30,6 @@
         {
             this.pnlContainer = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.EndDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
-            this.StartDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -39,10 +37,17 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.pnlLoadingContainer = new System.Windows.Forms.Panel();
+            this.pnlLoading = new System.Windows.Forms.PictureBox();
+            this.btnCancelProcess = new System.Windows.Forms.Button();
+            this.EndDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
+            this.StartDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
             this.pnlContainer.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.pnlLoadingContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlContainer
@@ -55,7 +60,7 @@
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(0, 0);
             this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Size = new System.Drawing.Size(500, 298);
+            this.pnlContainer.Size = new System.Drawing.Size(500, 300);
             this.pnlContainer.TabIndex = 0;
             // 
             // panel3
@@ -68,28 +73,8 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 56);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(498, 170);
+            this.panel3.Size = new System.Drawing.Size(498, 172);
             this.panel3.TabIndex = 2;
-            // 
-            // EndDate
-            // 
-            this.EndDate.BackColor = System.Drawing.Color.White;
-            this.EndDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.EndDate.Location = new System.Drawing.Point(194, 90);
-            this.EndDate.Name = "EndDate";
-            this.EndDate.Size = new System.Drawing.Size(200, 35);
-            this.EndDate.TabIndex = 5;
-            this.EndDate.Value = new System.DateTime(((long)(0)));
-            // 
-            // StartDate
-            // 
-            this.StartDate.BackColor = System.Drawing.Color.White;
-            this.StartDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.StartDate.Location = new System.Drawing.Point(194, 45);
-            this.StartDate.Name = "StartDate";
-            this.StartDate.Size = new System.Drawing.Size(200, 35);
-            this.StartDate.TabIndex = 4;
-            this.StartDate.Value = new System.DateTime(((long)(0)));
             // 
             // label3
             // 
@@ -119,7 +104,7 @@
             this.panel2.Controls.Add(this.btnOK);
             this.panel2.Controls.Add(this.btnCancel);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 226);
+            this.panel2.Location = new System.Drawing.Point(0, 228);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(498, 70);
             this.panel2.TabIndex = 1;
@@ -170,22 +155,79 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(498, 56);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Close UnPaid Ticket";
+            this.label1.Text = "Sync Sales Data For 7 Shifts";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // CloseUnPaidTicketForm
+            // pnlLoadingContainer
+            // 
+            this.pnlLoadingContainer.BackColor = System.Drawing.Color.White;
+            this.pnlLoadingContainer.Controls.Add(this.btnCancelProcess);
+            this.pnlLoadingContainer.Controls.Add(this.pnlLoading);
+            this.pnlLoadingContainer.Location = new System.Drawing.Point(150, 50);
+            this.pnlLoadingContainer.Name = "pnlLoadingContainer";
+            this.pnlLoadingContainer.Size = new System.Drawing.Size(200, 200);
+            this.pnlLoadingContainer.TabIndex = 8;
+            this.pnlLoadingContainer.Visible = false;
+            // 
+            // pnlLoading
+            // 
+            this.pnlLoading.BackColor = System.Drawing.Color.White;
+            this.pnlLoading.Image = global::ThirdPartyTool.Properties.Resources.loading51;
+            this.pnlLoading.Location = new System.Drawing.Point(35, 1);
+            this.pnlLoading.Name = "pnlLoading";
+            this.pnlLoading.Size = new System.Drawing.Size(130, 130);
+            this.pnlLoading.TabIndex = 8;
+            this.pnlLoading.TabStop = false;
+            // 
+            // btnCancelProcess
+            // 
+            this.btnCancelProcess.BackColor = System.Drawing.Color.White;
+            this.btnCancelProcess.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancelProcess.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCancelProcess.ForeColor = System.Drawing.Color.Black;
+            this.btnCancelProcess.Location = new System.Drawing.Point(25, 149);
+            this.btnCancelProcess.Name = "btnCancelProcess";
+            this.btnCancelProcess.Size = new System.Drawing.Size(150, 50);
+            this.btnCancelProcess.TabIndex = 9;
+            this.btnCancelProcess.Text = "Cancel";
+            this.btnCancelProcess.UseVisualStyleBackColor = false;
+            // 
+            // EndDate
+            // 
+            this.EndDate.BackColor = System.Drawing.Color.White;
+            this.EndDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.EndDate.Location = new System.Drawing.Point(194, 90);
+            this.EndDate.Name = "EndDate";
+            this.EndDate.Size = new System.Drawing.Size(200, 35);
+            this.EndDate.TabIndex = 5;
+            this.EndDate.Value = new System.DateTime(((long)(0)));
+            // 
+            // StartDate
+            // 
+            this.StartDate.BackColor = System.Drawing.Color.White;
+            this.StartDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.StartDate.Location = new System.Drawing.Point(194, 45);
+            this.StartDate.Name = "StartDate";
+            this.StartDate.Size = new System.Drawing.Size(200, 35);
+            this.StartDate.TabIndex = 4;
+            this.StartDate.Value = new System.DateTime(((long)(0)));
+            // 
+            // ReSyncDataFor7ShiftsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(500, 298);
+            this.ClientSize = new System.Drawing.Size(500, 300);
+            this.Controls.Add(this.pnlLoadingContainer);
             this.Controls.Add(this.pnlContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "CloseUnPaidTicketForm";
+            this.Name = "ReSyncDataFor7ShiftsForm";
             this.Text = "CloseUnPaidTicketForm";
             this.pnlContainer.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.pnlLoadingContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlLoading)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -203,5 +245,8 @@
         private System.Windows.Forms.Label label2;
         private CustomControl.CustomDateTimePicker StartDate;
         private CustomControl.CustomDateTimePicker EndDate;
+        private System.Windows.Forms.Panel pnlLoadingContainer;
+        private System.Windows.Forms.Button btnCancelProcess;
+        private System.Windows.Forms.PictureBox pnlLoading;
     }
 }

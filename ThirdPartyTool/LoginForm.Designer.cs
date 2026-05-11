@@ -38,12 +38,16 @@ namespace ThirdPartyTool
             this.btnCancel = new RJCodeAdvance.RJControls.RJButton();
             this.txtPassword = new RJCodeAdvance.RJControls.RJTextBox();
             this.txtUserName = new RJCodeAdvance.RJControls.RJTextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.label3);
@@ -55,13 +59,13 @@ namespace ThirdPartyTool
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(400, 328);
+            this.panel1.Size = new System.Drawing.Size(500, 450);
             this.panel1.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.Image = global::ThirdPartyTool.Properties.Resources.icon_password_2;
-            this.label2.Location = new System.Drawing.Point(60, 175);
+            this.label2.Location = new System.Drawing.Point(70, 226);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(24, 24);
             this.label2.TabIndex = 8;
@@ -69,22 +73,21 @@ namespace ThirdPartyTool
             // label1
             // 
             this.label1.Image = global::ThirdPartyTool.Properties.Resources.icon_user_24x24;
-            this.label1.Location = new System.Drawing.Point(60, 113);
+            this.label1.Location = new System.Drawing.Point(70, 128);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(24, 24);
             this.label1.TabIndex = 7;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("BLogic", 20F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(165, 45);
+            this.label3.Location = new System.Drawing.Point(50, 30);
             this.label3.Margin = new System.Windows.Forms.Padding(5);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 39);
+            this.label3.Size = new System.Drawing.Size(400, 39);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Login";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label3.Text = "Welcome Back";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnOK
             // 
@@ -97,10 +100,10 @@ namespace ThirdPartyTool
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("BLogic", 14F, System.Drawing.FontStyle.Bold);
             this.btnOK.ForeColor = System.Drawing.Color.White;
-            this.btnOK.Location = new System.Drawing.Point(205, 228);
+            this.btnOK.Location = new System.Drawing.Point(60, 301);
             this.btnOK.Margin = new System.Windows.Forms.Padding(5);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(145, 50);
+            this.btnOK.Size = new System.Drawing.Size(380, 44);
             this.btnOK.TabIndex = 5;
             this.btnOK.Text = "Login";
             this.btnOK.TextColor = System.Drawing.Color.White;
@@ -117,10 +120,10 @@ namespace ThirdPartyTool
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("BLogic", 14F, System.Drawing.FontStyle.Bold);
             this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Location = new System.Drawing.Point(50, 228);
+            this.btnCancel.Location = new System.Drawing.Point(60, 361);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(5);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(145, 50);
+            this.btnCancel.Size = new System.Drawing.Size(380, 44);
             this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextColor = System.Drawing.Color.Black;
@@ -135,7 +138,7 @@ namespace ThirdPartyTool
             this.txtPassword.BorderSize = 1;
             this.txtPassword.Font = new System.Drawing.Font("BLogic", 14F);
             this.txtPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtPassword.Location = new System.Drawing.Point(50, 166);
+            this.txtPassword.Location = new System.Drawing.Point(60, 217);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(5);
             this.txtPassword.Multiline = false;
             this.txtPassword.Name = "txtPassword";
@@ -143,7 +146,7 @@ namespace ThirdPartyTool
             this.txtPassword.PasswordChar = true;
             this.txtPassword.PlaceholderColor = System.Drawing.Color.DarkGray;
             this.txtPassword.PlaceholderText = "Enter your password";
-            this.txtPassword.Size = new System.Drawing.Size(300, 44);
+            this.txtPassword.Size = new System.Drawing.Size(380, 44);
             this.txtPassword.TabIndex = 3;
             this.txtPassword.Texts = "";
             this.txtPassword.UnderlinedStyle = false;
@@ -157,7 +160,7 @@ namespace ThirdPartyTool
             this.txtUserName.BorderSize = 1;
             this.txtUserName.Font = new System.Drawing.Font("BLogic", 14F);
             this.txtUserName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtUserName.Location = new System.Drawing.Point(50, 104);
+            this.txtUserName.Location = new System.Drawing.Point(60, 119);
             this.txtUserName.Margin = new System.Windows.Forms.Padding(5);
             this.txtUserName.Multiline = false;
             this.txtUserName.Name = "txtUserName";
@@ -165,17 +168,37 @@ namespace ThirdPartyTool
             this.txtUserName.PasswordChar = false;
             this.txtUserName.PlaceholderColor = System.Drawing.Color.DarkGray;
             this.txtUserName.PlaceholderText = "Enter your username";
-            this.txtUserName.Size = new System.Drawing.Size(300, 44);
+            this.txtUserName.Size = new System.Drawing.Size(380, 44);
             this.txtUserName.TabIndex = 2;
             this.txtUserName.Texts = "";
             this.txtUserName.UnderlinedStyle = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("BLogic", 12F);
+            this.label4.Location = new System.Drawing.Point(56, 91);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 23);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Username";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("BLogic", 12F);
+            this.label5.Location = new System.Drawing.Point(56, 189);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(78, 23);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Password";
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(400, 328);
+            this.ClientSize = new System.Drawing.Size(500, 450);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LoginForm";
@@ -196,5 +219,7 @@ namespace ThirdPartyTool
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
     }
 }

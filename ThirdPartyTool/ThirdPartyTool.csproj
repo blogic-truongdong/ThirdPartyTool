@@ -475,6 +475,18 @@
     <Compile Include="AdvancedFunctions\ReSyncDataFor7ShiftsForm.Designer.cs">
       <DependentUpon>ReSyncDataFor7ShiftsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AdvancedFunctions\ReSyncDataFor7Shifts_ClearTip_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdvancedFunctions\ReSyncDataFor7Shifts_ClearTip_Form.Designer.cs">
+      <DependentUpon>ReSyncDataFor7Shifts_ClearTip_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdvancedFunctions\UpdateDSPTaxForAllTicketsOfStreamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdvancedFunctions\UpdateDSPTaxForAllTicketsOfStreamForm.Designer.cs">
+      <DependentUpon>UpdateDSPTaxForAllTicketsOfStreamForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLogicLogger.cs" />
     <Compile Include="ConnectDatabaseForm.cs">
       <SubType>Form</SubType>
@@ -664,7 +676,14 @@
     <Compile Include="ListEmployeeResponseModel.cs" />
     <Compile Include="Models\7Shifts\CreateReceiptFor7ShiftsModel.cs" />
     <Compile Include="Models\7Shifts\CreateReceiptFor7ShiftsResponseModel.cs" />
+    <Compile Include="Models\7Shifts\SevenShifts_Cursor.cs" />
+    <Compile Include="Models\7Shifts\SevenShifts_ListReceipt.cs" />
+    <Compile Include="Models\7Shifts\SevenShifts_Meta.cs" />
+    <Compile Include="Models\7Shifts\SevenShifts_Receipt.cs" />
+    <Compile Include="Models\7Shifts\SevenShifts_Receipt_Tip.cs" />
+    <Compile Include="Models\7Shifts\UpdateReceiptFor7ShiftsModel.cs" />
     <Compile Include="Models\BatchEntity.cs" />
+    <Compile Include="Models\CalculateModel.cs" />
     <Compile Include="Models\ConfigurationsEntity.cs" />
     <Compile Include="Models\EmployeeClockInInfoEntity.cs" />
     <Compile Include="Models\EmployeeEntity.cs" />
@@ -672,6 +691,7 @@
     <Compile Include="Models\GeneratePaycorAccessTokenResponse.cs" />
     <Compile Include="Models\GetEmployeesByLegalEntityIDResponse.cs" />
     <Compile Include="Models\GetEmployeeTimeCardPunchesResponse.cs" />
+    <Compile Include="Models\ItemTaxDetail.cs" />
     <Compile Include="Models\PaymentMethodEntity.cs" />
     <Compile Include="Models\PaymentRoleDetailEntity.cs" />
     <Compile Include="Models\RequestModel.cs" />
@@ -682,6 +702,7 @@
     <Compile Include="Models\SaleReceiptInfoResponse.cs" />
     <Compile Include="Models\SaleReceiptPaymentDetailEntity.cs" />
     <Compile Include="Models\SaleReceiptServiceChargeTaxDetailEntity.cs" />
+    <Compile Include="Models\TaxModel.cs" />
     <Compile Include="Models\TimeClockEntity.cs" />
     <Compile Include="Models\TransactionDetailEntity.cs" />
     <Compile Include="Other\OtherView.cs">
@@ -932,6 +953,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AdvancedFunctions\ReSyncDataFor7ShiftsForm.resx">
       <DependentUpon>ReSyncDataFor7ShiftsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedFunctions\ReSyncDataFor7Shifts_ClearTip_Form.resx">
+      <DependentUpon>ReSyncDataFor7Shifts_ClearTip_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedFunctions\UpdateDSPTaxForAllTicketsOfStreamForm.resx">
+      <DependentUpon>UpdateDSPTaxForAllTicketsOfStreamForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectDatabaseForm.resx">
       <DependentUpon>ConnectDatabaseForm.cs</DependentUpon>
@@ -1208,6 +1235,7 @@
     <Content Include="Lib\log4net.dll" />
     <Content Include="Lib\System.Printing.dll" />
     <Content Include="Lib\zxing.dll" />
+    <None Include="Resources\loading51.gif" />
     <None Include="Resources\icon_close_white.png" />
     <None Include="Resources\icon_tax_24x24.png" />
     <None Include="Resources\icon_calendar_16x16.png" />

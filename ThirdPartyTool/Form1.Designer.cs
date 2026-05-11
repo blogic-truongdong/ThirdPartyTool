@@ -37,6 +37,7 @@
             this.customCombobox1 = new ThirdPartyTool.CustomControl.CustomCombobox();
             this.customDateTimePicker1 = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
             this.customCombobox2 = new ThirdPartyTool.CustomControl.CustomCombobox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // rjComboBox1
@@ -127,11 +128,11 @@
             // 
             this.customDateTimePicker1.BackColor = System.Drawing.Color.White;
             this.customDateTimePicker1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.customDateTimePicker1.Value = new System.DateTime(2026, 2, 22, 0, 0, 0, 0);
             this.customDateTimePicker1.Location = new System.Drawing.Point(451, 187);
             this.customDateTimePicker1.Name = "customDateTimePicker1";
             this.customDateTimePicker1.Size = new System.Drawing.Size(200, 40);
             this.customDateTimePicker1.TabIndex = 3;
+            this.customDateTimePicker1.Value = new System.DateTime(2026, 2, 22, 0, 0, 0, 0);
             // 
             // customCombobox2
             // 
@@ -140,11 +141,22 @@
             this.customCombobox2.Size = new System.Drawing.Size(153, 35);
             this.customCombobox2.TabIndex = 19;
             // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.textBox1.Location = new System.Drawing.Point(303, 396);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(135, 31);
+            this.textBox1.TabIndex = 20;
+            this.textBox1.Text = "123";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.customCombobox2);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.customCombobox1);
@@ -157,6 +169,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -171,5 +184,6 @@
         private CustomControl.CustomCombobox customCombobox1;
         private System.Windows.Forms.ComboBox comboBox2;
         private CustomControl.CustomCombobox customCombobox2;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

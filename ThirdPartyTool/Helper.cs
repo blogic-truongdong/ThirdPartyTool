@@ -969,7 +969,7 @@ namespace ThirdPartyTool
                             strInsert += $"''";
                             break;
                         default:
-                            //strInsert += "@" + dt.Columns[i].ColumnName.ToUpper();
+                            strInsert += $"null";
                             break;
                     }
 
@@ -987,7 +987,118 @@ namespace ThirdPartyTool
             return strInsert;
         }
 
+        public static string GenerateQueryInsert_BLogicPOS7_SaleReceiptDetailTaxDetails(DataTable dt,
+            object SaleReceiptDetailID, object SaleReceiptID, object ItemID, object Quantity, object GroupID,
+            object TaxCodeID, object TaxRate, object TaxAmount, object Description, object Price,
+            object ExtendedPrice, object PriceInitial, object returnCode, object ReasonComment,
+            object Status, object range, object LastModifyTime, object EmployeeID, object EmployeeName,
+            object IsCompItem, object IsDeposit, object TaxType, object KDSIDDetail)
+        {
+            string strInsert = $" INSERT INTO {BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails (";
 
+            try
+            {
+                int colCount = dt.Columns.Count;
+                for (int i = 0; i < colCount; i++)
+                {
+                    strInsert += "[" + dt.Columns[i].ColumnName.ToUpper() + "]";
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += ") VALUES (";
+                for (int i = 0; i < colCount; i++)
+                {
+                    switch (dt.Columns[i].ColumnName)
+                    {
+                        case "SaleReceiptDetailTaxDetailID":
+                            strInsert += $"NEWID()";
+                            break;
+                        case "SaleReceiptDetailID":
+                            strInsert += $"'{SaleReceiptDetailID}'";
+                            break;
+                        case "SaleReceiptID":
+                            strInsert += $"'{SaleReceiptID}'";
+                            break;
+                        case "ItemID":
+                            strInsert += $"'{ItemID}'";
+                            break;
+                        case "Quantity":
+                            strInsert += $"'{Quantity}'";
+                            break;
+                        case "GroupID":
+                            strInsert += $"'{GroupID}'";
+                            break;
+                        case "TaxCodeID":
+                            strInsert += $"'{TaxCodeID}'";
+                            break;
+                        case "TaxRate":
+                            strInsert += $"'{TaxRate}'";
+                            break;
+                        case "TaxAmount":
+                            strInsert += $"'{TaxAmount}'";
+                            break;
+                        case "Description":
+                            strInsert += $"'{Description}'";
+                            break;
+                        case "Price":
+                            strInsert += $"'{Price}'";
+                            break;
+                        case "ExtendedPrice":
+                            strInsert += $"'{ExtendedPrice}'";
+                            break;
+                        case "PriceInitial":
+                            strInsert += $"'{PriceInitial}'";
+                            break;
+                        case "ReturnCode":
+                            strInsert += $"'{returnCode}'";
+                            break;
+                        case "ReasonComment":
+                            strInsert += $"'{ReasonComment}'";
+                            break;
+                        case "Status":
+                            strInsert += $"'{Status}'";
+                            break;
+                        case "Range":
+                            strInsert += $"'{range}'";
+                            break;
+                        case "LastModifyTime":
+                            strInsert += $"'{LastModifyTime}'";
+                            break;
+                        case "EmployeeID":
+                            strInsert += $"'{EmployeeID}'";
+                            break;
+                        case "EmployeeName":
+                            strInsert += $"'{EmployeeName}'";
+                            break;
+                        case "IsCompItem":
+                            strInsert += $"'{IsCompItem}'";
+                            break;
+                        case "IsDeposit":
+                            strInsert += $"'{IsDeposit}'";
+                            break;
+                        case "TaxType":
+                            strInsert += $"'{TaxType}'";
+                            break;
+                        case "KDSIDDetail":
+                            strInsert += $"'{KDSIDDetail}'";
+                            break;
+                        default:
+                            strInsert += $"null";
+                            break;
+                    }
+
+                    if (i < colCount - 1)
+                        strInsert += ", ";
+                }
+                strInsert += $"); ";
+            }
+            catch (Exception ex)
+            {
+                BLogicLogger.Exception("GetQueryInsert_Merchant_TransactionDetail", ex);
+            }
+
+            return strInsert;
+        }
 
         public static decimal CalculateSVCFee(decimal amount, decimal svcFee, int svcFeeType, int sTaxIncludeInSVCFee,
             bool isApplyTaxCustomFee = false, decimal dSVCFeeTaxRate = 0, decimal dSVCFeeTaxAmountByPayment = 0)

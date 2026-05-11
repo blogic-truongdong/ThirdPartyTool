@@ -1,7 +1,5 @@
-﻿using BLogicSystems.XPos.ClientUtilities;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using ThirdPartyTool.Dialog;
 
 namespace ThirdPartyTool
 {
@@ -43,14 +41,6 @@ namespace ThirdPartyTool
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-#if DEBUG
-            txtUserName.Text = userName;
-            txtPassword.Text = password;
-#else
-            txtUserName.Text = "";
-            txtPassword.Text = "";
-#endif
-
             label3.Focus();
         }
 
@@ -64,7 +54,11 @@ namespace ThirdPartyTool
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(txtUserName.Text))
+#if DEBUG
+
+#else
+
+                if (string.IsNullOrWhiteSpace(txtUserName.Texts))
                 {
                     InformationDialogForm form = new InformationDialogForm("Please enter your username!");
                     BLogicMessageBox.ShowPopUpFormWithDIMBackground(form);
@@ -72,7 +66,7 @@ namespace ThirdPartyTool
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtPassword.Text))
+                if (string.IsNullOrWhiteSpace(txtPassword.Texts))
                 {
                     InformationDialogForm form = new InformationDialogForm("Please enter your password!");
                     BLogicMessageBox.ShowPopUpFormWithDIMBackground(form);
@@ -80,13 +74,14 @@ namespace ThirdPartyTool
                     return;
                 }
 
-                if (txtPassword.Text != userName && txtPassword.Text != password)
+                if (txtPassword.Texts != userName && txtPassword.Texts != password)
                 {
                     InformationDialogForm form = new InformationDialogForm("The username or password is incorrect");
                     BLogicMessageBox.ShowPopUpFormWithDIMBackground(form);
                     txtPassword.Focus();
                     return;
                 }
+#endif
 
                 DialogResult = DialogResult.OK;
                 this.Close();
