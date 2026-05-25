@@ -104,7 +104,7 @@ namespace ThirdPartyTool.AdvancedFunctions
         {
             try
             {
-                string sql = "select * from SaleReceipts where SaleTypeID = '10' and TransactionStatusID in ('FIN','VOID')";
+                string sql = "select SaleReceiptID, TotalAmount, TaxAmount, SaleReceiptJson from SaleReceipts where SaleTypeID = '10' and TransactionStatusID in ('FIN','VOID')";
 
                 DataTable dtSaleReceipts = Helper.ProcessQuery(true, sql, "SaleReceipts");
 
@@ -134,13 +134,14 @@ namespace ThirdPartyTool.AdvancedFunctions
 
                     Stream_NewOrderEventDto streamOrderEvent = JsonConvert.DeserializeObject<Stream_NewOrderEventDto>(jsonData);
 
-                    decimal newTax = Utility.GetDecimalFromObject(streamOrderEvent._Object.Tax + streamOrderEvent._Object.TaxWithheldByDsp) / 100;
+                    decimal newTax = Utility.GetDecimalFromObject(streamOrderEvent._Object.Tax) / 100;
 
                     decimal TaxAmount = Utility.GetDecimalFromRow("TaxAmount", rowReceipt);
+                    decimal TotalAmount = Utility.GetDecimalFromRow("TotalAmount", rowReceipt);
 
                     decimal balance = newTax - TaxAmount;
 
-                    if (balance > 0)
+                    if (balance < 0)
                     {
                         sql = $"select a.* from SaleReceiptDetails a where SaleReceiptID = '{rowReceipt["SaleReceiptID"]}' order by Range";
                         var listSaleReceiptDetails = Helper.ProcessQueryEntity<SaleReceiptDetailEntity>(true, sql);
@@ -153,6 +154,22 @@ namespace ThirdPartyTool.AdvancedFunctions
 
                         List<CalculateModel> listItems = new List<CalculateModel>();
                         List<CalculateModel> listItemTaxDetail = new List<CalculateModel>();
+
+                        if (newTax > 0)
+                        {
+                            if (dtTaxCodes?.Rows.Count > 0)
+                            {
+                                TaxCodeID = Utility.GetIntFromRow("TaxCodeID", dtTaxCodes.Rows[0]);
+                                TaxRate = Utility.GetDecimalFromRow("TaxRate", dtTaxCodes.Rows[0]);
+                                Taxable = TaxRate > 0 ? 1 : 0;
+                            }
+                        }
+                        else
+                        {
+                            TaxCodeID = 0;
+                            TaxRate = 0;
+                            Taxable = 0;
+                        }
 
                         foreach (var item in listSaleReceiptDetails)
                         {
@@ -169,6 +186,7 @@ namespace ThirdPartyTool.AdvancedFunctions
 
                         if (balanceTax != 0)
                         {
+
                             for (int i = listSaleReceiptDetails.Count - 1; i >= 0; i--)
                             {
                                 var item = listSaleReceiptDetails[i];
@@ -207,7 +225,7 @@ namespace ThirdPartyTool.AdvancedFunctions
                                 {
                                     if (dtSaleReceiptDetailTaxDetails.Rows.Count > 1)
                                     {
-                                        sql = $"update SaleReceiptDetailTaxDetails set TaxCodeID = '0',TaxRate = '0',TaxAmount = '0' where SaleReceiptDetailID = '{item.SaleReceiptDetailID}';";
+                                        sql = $"update SaleReceiptDetailTaxDetails set TaxCodeID = '{TaxCodeID}',TaxRate = '{TaxRate}',TaxAmount = '0' where SaleReceiptDetailID = '{item.SaleReceiptDetailID}';";
                                         result = Helper.RunQueryUpdate(true, sql);
                                     }
 
@@ -216,6 +234,12 @@ namespace ThirdPartyTool.AdvancedFunctions
                                 }
                             }
                         }
+
+                        sql = $"update SaleReceipts set TotalAmount = '{TotalAmount + balance}', TaxAmount = '{newTax}' where SaleReceiptID = '{rowReceipt["SaleReceiptID"]}';";
+                        Helper.RunQueryUpdate(true, sql);
+                    }
+                    else
+                    {
 
                     }
                 }

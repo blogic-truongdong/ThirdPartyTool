@@ -60,22 +60,6 @@ namespace ThirdPartyTool.SaleReceipt
             taxAreaGratuityLabel.Click += PnlAreaGratuity_Click;
             taxAreaGratuityValue.Click += PnlAreaGratuity_Click;
 
-            pnlSVCFee.Click += PnlSVCFee_Click;
-            titleSVCFee.Click += PnlSVCFee_Click;
-            detailSVCFee.Click += PnlSVCFee_Click;
-            amountSVCFeeLabel.Click += PnlSVCFee_Click;
-            amountSVCFeeValue.Click += PnlSVCFee_Click;
-            taxSVCFeeLabel.Click += PnlSVCFee_Click;
-            taxSVCFeeValue.Click += PnlSVCFee_Click;
-
-            pnlCashDiscount.Click += PnlCashDiscount_Click;
-            titleCashDiscount.Click += PnlCashDiscount_Click;
-            detailCashDiscount.Click += PnlCashDiscount_Click;
-            amountCashDiscountLabel.Click += PnlCashDiscount_Click;
-            amountCashDiscountValue.Click += PnlCashDiscount_Click;
-            taxCashDiscountLabel.Click += PnlCashDiscount_Click;
-            taxCashDiscountValue.Click += PnlCashDiscount_Click;
-
             btnClose.Click += BtnClose_Click;
 
             this.Load += SelectServiceChargeToAdjstForm_Load;
@@ -436,12 +420,6 @@ namespace ThirdPartyTool.SaleReceipt
 
                 amountAutoServiceChargeValue.Text = (_AutoGratuityAmount).ToString("c2");
                 taxAutoServiceChargeValue.Text = _AutoGratuityTaxAmount.ToString("c2");
-
-                amountSVCFeeValue.Text = (_SVCFeePaidAmount - _SVCFeeTaxPaidAmount).ToString("c2");
-                taxSVCFeeValue.Text = _SVCFeeTaxPaidAmount.ToString("c2");
-
-                amountCashDiscountValue.Text = (_CashDiscountPaidAmount - _CashDiscountTaxPaidAmount).ToString("c2");
-                taxCashDiscountValue.Text = _CashDiscountTaxPaidAmount.ToString("c2");
             }
             catch (System.Exception ex)
             {
@@ -505,14 +483,14 @@ namespace ThirdPartyTool.SaleReceipt
                         enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountAutoServiceChargeValue.Text);
                         enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxAutoServiceChargeValue.Text);
                         break;
-                    case ServiceChargeType.SVCFee:
-                        enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountSVCFeeValue.Text);
-                        enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxSVCFeeValue.Text);
-                        break;
-                    case ServiceChargeType.CashDiscount:
-                        enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountCashDiscountValue.Text);
-                        enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxCashDiscountValue.Text);
-                        break;
+                        //case ServiceChargeType.SVCFee:
+                        //    enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountSVCFeeValue.Text);
+                        //    enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxSVCFeeValue.Text);
+                        //    break;
+                        //case ServiceChargeType.CashDiscount:
+                        //    enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountCashDiscountValue.Text);
+                        //    enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxCashDiscountValue.Text);
+                        //    break;
                 }
 
                 if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(enterServiceChargeForm, this) == DialogResult.OK)
@@ -538,14 +516,14 @@ namespace ThirdPartyTool.SaleReceipt
                             amountAutoServiceChargeValue.Text = Utility.ConvertDecimalToMoneyString(Amount);
                             taxAutoServiceChargeValue.Text = Utility.ConvertDecimalToMoneyString(Tax);
                             break;
-                        case ServiceChargeType.SVCFee:
-                            amountSVCFeeValue.Text = Utility.ConvertDecimalToMoneyString(Amount);
-                            taxSVCFeeValue.Text = Utility.ConvertDecimalToMoneyString(Tax);
-                            break;
-                        case ServiceChargeType.CashDiscount:
-                            amountCashDiscountValue.Text = Utility.ConvertDecimalToMoneyString(Amount);
-                            taxCashDiscountValue.Text = Utility.ConvertDecimalToMoneyString(Tax);
-                            break;
+                            //case ServiceChargeType.SVCFee:
+                            //    amountSVCFeeValue.Text = Utility.ConvertDecimalToMoneyString(Amount);
+                            //    taxSVCFeeValue.Text = Utility.ConvertDecimalToMoneyString(Tax);
+                            //    break;
+                            //case ServiceChargeType.CashDiscount:
+                            //    amountCashDiscountValue.Text = Utility.ConvertDecimalToMoneyString(Amount);
+                            //    taxCashDiscountValue.Text = Utility.ConvertDecimalToMoneyString(Tax);
+                            //    break;
                     }
 
                     IsChangedServiceCharges = true;

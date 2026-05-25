@@ -24,6 +24,19 @@ namespace ThirdPartyTool.CustomControl
             }
         }
 
+        public DateTime EndValue
+        {
+            get
+            {
+                return dateTimeValues.Date + new TimeSpan(0, 23, 59, 59, 999);
+            }
+            set
+            {
+                dateTimeValues = value.Date;
+                lblDateRange.Text = value.ToShortDateString();
+            }
+        }
+
         public CustomDateTimePicker()
         {
             InitializeComponent();

@@ -34,9 +34,10 @@
             this.btnTest = new System.Windows.Forms.Label();
             this.pnlLoadingContainer = new System.Windows.Forms.Panel();
             this.btnCancelProcess = new System.Windows.Forms.Button();
-            this.pnlLoading = new System.Windows.Forms.PictureBox();
             this.btnSyncDataFor7Shifts_ClearTip = new System.Windows.Forms.Label();
             this.btnUpdateDSPTax = new System.Windows.Forms.Label();
+            this.btnClearSalesData7Shifts = new System.Windows.Forms.Label();
+            this.pnlLoading = new System.Windows.Forms.PictureBox();
             this.pnlLoadingContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlLoading)).BeginInit();
             this.SuspendLayout();
@@ -116,16 +117,6 @@
             this.btnCancelProcess.Text = "Cancel";
             this.btnCancelProcess.UseVisualStyleBackColor = false;
             // 
-            // pnlLoading
-            // 
-            this.pnlLoading.BackColor = System.Drawing.Color.White;
-            this.pnlLoading.Image = global::ThirdPartyTool.Properties.Resources.loading51;
-            this.pnlLoading.Location = new System.Drawing.Point(35, 1);
-            this.pnlLoading.Name = "pnlLoading";
-            this.pnlLoading.Size = new System.Drawing.Size(130, 130);
-            this.pnlLoading.TabIndex = 8;
-            this.pnlLoading.TabStop = false;
-            // 
             // btnSyncDataFor7Shifts_ClearTip
             // 
             this.btnSyncDataFor7Shifts_ClearTip.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -151,11 +142,34 @@
             this.btnUpdateDSPTax.Text = "Update DSP Tax for All Ticket of Stream";
             this.btnUpdateDSPTax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnClearSalesData7Shifts
+            // 
+            this.btnClearSalesData7Shifts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.btnClearSalesData7Shifts.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearSalesData7Shifts.Location = new System.Drawing.Point(280, 105);
+            this.btnClearSalesData7Shifts.Margin = new System.Windows.Forms.Padding(5);
+            this.btnClearSalesData7Shifts.Name = "btnClearSalesData7Shifts";
+            this.btnClearSalesData7Shifts.Size = new System.Drawing.Size(250, 75);
+            this.btnClearSalesData7Shifts.TabIndex = 12;
+            this.btnClearSalesData7Shifts.Text = "Clear Sales Data for 7 Shifts";
+            this.btnClearSalesData7Shifts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlLoading
+            // 
+            this.pnlLoading.BackColor = System.Drawing.Color.White;
+            this.pnlLoading.Image = global::ThirdPartyTool.Properties.Resources.loading51;
+            this.pnlLoading.Location = new System.Drawing.Point(35, 1);
+            this.pnlLoading.Name = "pnlLoading";
+            this.pnlLoading.Size = new System.Drawing.Size(130, 130);
+            this.pnlLoading.TabIndex = 8;
+            this.pnlLoading.TabStop = false;
+            // 
             // AdvancedFuntionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.btnClearSalesData7Shifts);
             this.Controls.Add(this.btnUpdateDSPTax);
             this.Controls.Add(this.btnSyncDataFor7Shifts_ClearTip);
             this.Controls.Add(this.pnlLoadingContainer);
@@ -182,5 +196,6 @@
         private System.Windows.Forms.PictureBox pnlLoading;
         public System.Windows.Forms.Label btnSyncDataFor7Shifts_ClearTip;
         public System.Windows.Forms.Label btnUpdateDSPTax;
+        public System.Windows.Forms.Label btnClearSalesData7Shifts;
     }
 }

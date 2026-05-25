@@ -1,5 +1,7 @@
-﻿using System;
+﻿using BLogicSystems.XPos.ClientUtilities;
+using System;
 using System.Windows.Forms;
+using ThirdPartyTool.Dialog;
 
 namespace ThirdPartyTool
 {

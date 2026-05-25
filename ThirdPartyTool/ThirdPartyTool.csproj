@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -456,6 +457,12 @@
     </Compile>
     <Compile Include="AdvancedFunctions\AdvancedFuntionView.Designer.cs">
       <DependentUpon>AdvancedFuntionView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdvancedFunctions\ClearDataFor7ShiftsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdvancedFunctions\ClearDataFor7ShiftsForm.Designer.cs">
+      <DependentUpon>ClearDataFor7ShiftsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AdvancedFunctions\ClearTableStatusForm.cs">
       <SubType>Form</SubType>
@@ -944,6 +951,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AdvancedFunctions\AdvancedFuntionView.resx">
       <DependentUpon>AdvancedFuntionView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedFunctions\ClearDataFor7ShiftsForm.resx">
+      <DependentUpon>ClearDataFor7ShiftsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AdvancedFunctions\ClearTableStatusForm.resx">
       <DependentUpon>ClearTableStatusForm.cs</DependentUpon>

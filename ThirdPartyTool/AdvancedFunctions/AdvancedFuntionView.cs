@@ -27,9 +27,11 @@ namespace ThirdPartyTool.AdvancedFunctions
 
             btnUpdateDSPTax.Click += BtnUpdateDSPTax_Click;
 
+            btnClearSalesData7Shifts.Click += BtnClearSalesData7Shifts_Click;
 #if DEBUG
             btnCancelProcess.Click += BtnCancelProcess_Click;
             btnTest.Visible = true;
+            btnSyncDataFor7Shifts_ClearTip.Visible = true;
             btnTest.Click += BtnTest_Click;
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
@@ -38,6 +40,12 @@ namespace ThirdPartyTool.AdvancedFunctions
             btnSyncDataFor7Shifts_ClearTip.Click += BtnSyncDataFor7Shifts_ClearTip_Click;
 
 #endif  
+        }
+
+        private void BtnClearSalesData7Shifts_Click(object sender, EventArgs e)
+        {
+            ClearDataFor7ShiftsForm form = new ClearDataFor7ShiftsForm();
+            BLogicMessageBox.ShowPopUpFormWithDIMBackground(form, Helper.MainForm);
         }
 
         private void BtnUpdateDSPTax_Click(object sender, EventArgs e)
@@ -88,8 +96,8 @@ namespace ThirdPartyTool.AdvancedFunctions
                 string url =
                     $"v2/company/{companyId}/receipts" +
                     $"?location_id={locationId}" +
-                    $"&receipt_date[gte]=2026-05-02" +
-                    $"&receipt_date[lte]=2026-05-03" +
+                    $"&receipt_date[gte]=2026-05-01" +
+                    $"&receipt_date[lte]=2026-05-02" +
                     $"&limit=100";
 
             ProcessRetry:
@@ -111,8 +119,8 @@ namespace ThirdPartyTool.AdvancedFunctions
                     url =
                     $"v2/company/{companyId}/receipts" +
                     $"?location_id={locationId}" +
-                    $"&receipt_date[gte]=2026-05-02" +
-                    $"&receipt_date[lte]=2026-05-03" +
+                    $"&receipt_date[gte]=2026-05-01" +
+                    $"&receipt_date[lte]=2026-05-02" +
                     $"&limit=100" +
                     $"&cursor={listSaleReceipt?.meta?.cursor?.next.Substring(15)}";
 

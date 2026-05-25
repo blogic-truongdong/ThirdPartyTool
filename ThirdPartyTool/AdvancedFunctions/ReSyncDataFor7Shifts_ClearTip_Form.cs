@@ -38,6 +38,8 @@ namespace ThirdPartyTool.AdvancedFunctions
         private const string PAYMENT_TYPE_CASH = "cash";
         private const int CREDIT_CARD_PAYMENT_METHOD_ID = 2;
 
+        decimal TotalNetSales = 0;
+
         #endregion
 
         #region Fields
@@ -86,7 +88,7 @@ namespace ThirdPartyTool.AdvancedFunctions
 
         private void CloseUnPaidTicketForm_Load(object sender, EventArgs e)
         {
-            StartDate.Value = new DateTime(DateTime.Now.Year, 1, 1);
+            StartDate.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             EndDate.Value = DateTime.Now;
         }
 
@@ -94,6 +96,7 @@ namespace ThirdPartyTool.AdvancedFunctions
         {
             try
             {
+                TotalNetSales = 0;
                 if (!ConfirmSyncOperation())
                     return;
 
@@ -293,7 +296,7 @@ namespace ThirdPartyTool.AdvancedFunctions
             string sql = $"SELECT a.SaleReceiptID, a.TransactionStatusID, a.SaleReceiptType, " +
                         $"a.TotalAmount, a.TaxAmount, a.SalesOrderFee, a.TotalDiscountAmount, a.DateCreated, b.SaleReceiptID_7Shifts " +
                         $"FROM SaleReceipts a left join SaleReceiptThirdPartyMappings b on a.SaleReceiptID = b.SaleReceiptID " +
-                        $"WHERE a.DateCreated >= '{StartDate.Value}' AND a.DateCreated <= '{EndDate.Value}' " +
+                        $"WHERE a.DateCreated >= '{StartDate.Value}' AND a.DateCreated <= '{EndDate.EndValue}' " +
                         $"AND a.TransactionStatusID IN ('{STATUS_FINISHED}', '{STATUS_VOID}', '{STATUS_RETURN}') " +
                         $"ORDER BY a.DateCreated";
 
@@ -329,11 +332,13 @@ namespace ThirdPartyTool.AdvancedFunctions
 
             decimal gratuity = Utility.GetDecimalFromObject(dtPayments.Compute("SUM(Gratuity)", ""));
 
+            var date = Utility.GetDateTimeFromRow("DateCreated", saleReceiptRow);
+            var receipt_date = (date.Date + new TimeSpan(12, 0, 0)).ToString("yyyy-MM-ddTHH:mm:ssZ");
             UpdateReceiptFor7ShiftsModel model = new UpdateReceiptFor7ShiftsModel
             {
-                receipt_date = Utility.GetDateTimeFromRow("DateCreated", saleReceiptRow).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                receipt_date = receipt_date,
                 net_total = CalculateNetTotal(saleReceiptRow, transactionStatus),
-                gross_total = CalculateGrossTotal(saleReceiptRow),
+                gross_total = CalculateNetTotal(saleReceiptRow, transactionStatus),
                 total_receipt_discounts = 0,
                 tips = 0,
                 status = MapTransactionStatus(transactionStatus),
@@ -344,7 +349,7 @@ namespace ThirdPartyTool.AdvancedFunctions
             };
 
             //AddTipDetails(model, dtPayments);
-            AddReceiptLines(model, dtDetails, transactionStatus);
+            //AddReceiptLines(model, dtDetails, transactionStatus);
 
             return model;
         }
@@ -434,6 +439,8 @@ namespace ThirdPartyTool.AdvancedFunctions
             if (response.IsSuccess)
             {
                 ProcessSuccessfulResponse(response.Message, saleReceiptID);
+
+                TotalNetSales += ((decimal)receiptModel.net_total / 100);
             }
             else
             {

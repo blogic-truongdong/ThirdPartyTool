@@ -29,14 +29,7 @@
         private void InitializeComponent()
         {
             this.pnlContainer = new System.Windows.Forms.Panel();
-            this.pnlCashDiscount = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.taxCashDiscountValue = new System.Windows.Forms.Label();
-            this.amountCashDiscountValue = new System.Windows.Forms.Label();
-            this.taxCashDiscountLabel = new System.Windows.Forms.Label();
-            this.amountCashDiscountLabel = new System.Windows.Forms.Label();
-            this.label41 = new System.Windows.Forms.Label();
-            this.detailCashDiscount = new System.Windows.Forms.Label();
-            this.titleCashDiscount = new System.Windows.Forms.Label();
+            this.btnClose = new System.Windows.Forms.Label();
             this.pnlAreaGratuity = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.taxAreaGratuityValue = new System.Windows.Forms.Label();
             this.amountAreaGratuityValue = new System.Windows.Forms.Label();
@@ -45,14 +38,6 @@
             this.label27 = new System.Windows.Forms.Label();
             this.detailAreaGratuity = new System.Windows.Forms.Label();
             this.titleAreaGratuity = new System.Windows.Forms.Label();
-            this.pnlSVCFee = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.taxSVCFeeValue = new System.Windows.Forms.Label();
-            this.amountSVCFeeValue = new System.Windows.Forms.Label();
-            this.taxSVCFeeLabel = new System.Windows.Forms.Label();
-            this.amountSVCFeeLabel = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.detailSVCFee = new System.Windows.Forms.Label();
-            this.titleSVCFee = new System.Windows.Forms.Label();
             this.pnlAutoServiceCharge = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.taxAutoServiceChargeValue = new System.Windows.Forms.Label();
             this.amountAutoServiceChargeValue = new System.Windows.Forms.Label();
@@ -78,11 +63,8 @@
             this.detailServiceCharge = new System.Windows.Forms.Label();
             this.titleServiceCharge = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Label();
             this.pnlContainer.SuspendLayout();
-            this.pnlCashDiscount.SuspendLayout();
             this.pnlAreaGratuity.SuspendLayout();
-            this.pnlSVCFee.SuspendLayout();
             this.pnlAutoServiceCharge.SuspendLayout();
             this.pnlPartyGratuity.SuspendLayout();
             this.pnlServiceCharge.SuspendLayout();
@@ -93,9 +75,7 @@
             this.pnlContainer.BackColor = System.Drawing.Color.White;
             this.pnlContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlContainer.Controls.Add(this.btnClose);
-            this.pnlContainer.Controls.Add(this.pnlCashDiscount);
             this.pnlContainer.Controls.Add(this.pnlAreaGratuity);
-            this.pnlContainer.Controls.Add(this.pnlSVCFee);
             this.pnlContainer.Controls.Add(this.pnlAutoServiceCharge);
             this.pnlContainer.Controls.Add(this.pnlPartyGratuity);
             this.pnlContainer.Controls.Add(this.pnlServiceCharge);
@@ -103,97 +83,18 @@
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(0, 0);
             this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Size = new System.Drawing.Size(590, 600);
+            this.pnlContainer.Size = new System.Drawing.Size(590, 439);
             this.pnlContainer.TabIndex = 0;
             // 
-            // pnlCashDiscount
+            // btnClose
             // 
-            this.pnlCashDiscount.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlCashDiscount.BorderColor = System.Drawing.Color.Gray;
-            this.pnlCashDiscount.BorderRadius = 5;
-            this.pnlCashDiscount.BorderSize = 1;
-            this.pnlCashDiscount.Controls.Add(this.taxCashDiscountValue);
-            this.pnlCashDiscount.Controls.Add(this.amountCashDiscountValue);
-            this.pnlCashDiscount.Controls.Add(this.taxCashDiscountLabel);
-            this.pnlCashDiscount.Controls.Add(this.amountCashDiscountLabel);
-            this.pnlCashDiscount.Controls.Add(this.label41);
-            this.pnlCashDiscount.Controls.Add(this.detailCashDiscount);
-            this.pnlCashDiscount.Controls.Add(this.titleCashDiscount);
-            this.pnlCashDiscount.Location = new System.Drawing.Point(20, 505);
-            this.pnlCashDiscount.Margin = new System.Windows.Forms.Padding(5);
-            this.pnlCashDiscount.Name = "pnlCashDiscount";
-            this.pnlCashDiscount.Size = new System.Drawing.Size(550, 75);
-            this.pnlCashDiscount.TabIndex = 3;
-            // 
-            // taxCashDiscountValue
-            // 
-            this.taxCashDiscountValue.AutoSize = true;
-            this.taxCashDiscountValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.taxCashDiscountValue.Location = new System.Drawing.Point(470, 41);
-            this.taxCashDiscountValue.Name = "taxCashDiscountValue";
-            this.taxCashDiscountValue.Size = new System.Drawing.Size(49, 19);
-            this.taxCashDiscountValue.TabIndex = 4;
-            this.taxCashDiscountValue.Text = "$0.00";
-            // 
-            // amountCashDiscountValue
-            // 
-            this.amountCashDiscountValue.AutoSize = true;
-            this.amountCashDiscountValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.amountCashDiscountValue.Location = new System.Drawing.Point(470, 16);
-            this.amountCashDiscountValue.Name = "amountCashDiscountValue";
-            this.amountCashDiscountValue.Size = new System.Drawing.Size(49, 19);
-            this.amountCashDiscountValue.TabIndex = 4;
-            this.amountCashDiscountValue.Text = "$0.00";
-            // 
-            // taxCashDiscountLabel
-            // 
-            this.taxCashDiscountLabel.AutoSize = true;
-            this.taxCashDiscountLabel.Font = new System.Drawing.Font("BLogic", 10F);
-            this.taxCashDiscountLabel.Location = new System.Drawing.Point(407, 41);
-            this.taxCashDiscountLabel.Name = "taxCashDiscountLabel";
-            this.taxCashDiscountLabel.Size = new System.Drawing.Size(30, 19);
-            this.taxCashDiscountLabel.TabIndex = 3;
-            this.taxCashDiscountLabel.Text = "Tax";
-            // 
-            // amountCashDiscountLabel
-            // 
-            this.amountCashDiscountLabel.AutoSize = true;
-            this.amountCashDiscountLabel.Font = new System.Drawing.Font("BLogic", 10F);
-            this.amountCashDiscountLabel.Location = new System.Drawing.Point(407, 16);
-            this.amountCashDiscountLabel.Name = "amountCashDiscountLabel";
-            this.amountCashDiscountLabel.Size = new System.Drawing.Size(57, 19);
-            this.amountCashDiscountLabel.TabIndex = 3;
-            this.amountCashDiscountLabel.Text = "Amount";
-            // 
-            // label41
-            // 
-            this.label41.BackColor = System.Drawing.Color.Gray;
-            this.label41.Font = new System.Drawing.Font("BLogic", 10F);
-            this.label41.Location = new System.Drawing.Point(400, 10);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(1, 55);
-            this.label41.TabIndex = 2;
-            this.label41.Text = "General service charge for the order";
-            // 
-            // detailCashDiscount
-            // 
-            this.detailCashDiscount.AutoSize = true;
-            this.detailCashDiscount.Font = new System.Drawing.Font("BLogic", 10F);
-            this.detailCashDiscount.Location = new System.Drawing.Point(17, 40);
-            this.detailCashDiscount.Name = "detailCashDiscount";
-            this.detailCashDiscount.Size = new System.Drawing.Size(230, 19);
-            this.detailCashDiscount.TabIndex = 1;
-            this.detailCashDiscount.Text = "Discount provided for Cash payment";
-            // 
-            // titleCashDiscount
-            // 
-            this.titleCashDiscount.AutoSize = true;
-            this.titleCashDiscount.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
-            this.titleCashDiscount.Location = new System.Drawing.Point(17, 17);
-            this.titleCashDiscount.Name = "titleCashDiscount";
-            this.titleCashDiscount.Size = new System.Drawing.Size(117, 23);
-            this.titleCashDiscount.TabIndex = 0;
-            this.titleCashDiscount.Text = "Cash Discount";
+            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.btnClose.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
+            this.btnClose.Image = global::ThirdPartyTool.Properties.Resources.icon_close_white;
+            this.btnClose.Location = new System.Drawing.Point(535, 5);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(50, 50);
+            this.btnClose.TabIndex = 5;
             // 
             // pnlAreaGratuity
             // 
@@ -283,95 +184,6 @@
             this.titleAreaGratuity.Size = new System.Drawing.Size(109, 23);
             this.titleAreaGratuity.TabIndex = 0;
             this.titleAreaGratuity.Text = "Area Gratuity";
-            // 
-            // pnlSVCFee
-            // 
-            this.pnlSVCFee.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlSVCFee.BorderColor = System.Drawing.Color.Gray;
-            this.pnlSVCFee.BorderRadius = 5;
-            this.pnlSVCFee.BorderSize = 1;
-            this.pnlSVCFee.Controls.Add(this.taxSVCFeeValue);
-            this.pnlSVCFee.Controls.Add(this.amountSVCFeeValue);
-            this.pnlSVCFee.Controls.Add(this.taxSVCFeeLabel);
-            this.pnlSVCFee.Controls.Add(this.amountSVCFeeLabel);
-            this.pnlSVCFee.Controls.Add(this.label34);
-            this.pnlSVCFee.Controls.Add(this.detailSVCFee);
-            this.pnlSVCFee.Controls.Add(this.titleSVCFee);
-            this.pnlSVCFee.Location = new System.Drawing.Point(20, 420);
-            this.pnlSVCFee.Margin = new System.Windows.Forms.Padding(5);
-            this.pnlSVCFee.Name = "pnlSVCFee";
-            this.pnlSVCFee.Size = new System.Drawing.Size(550, 75);
-            this.pnlSVCFee.TabIndex = 2;
-            // 
-            // taxSVCFeeValue
-            // 
-            this.taxSVCFeeValue.AutoSize = true;
-            this.taxSVCFeeValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.taxSVCFeeValue.Location = new System.Drawing.Point(470, 41);
-            this.taxSVCFeeValue.Name = "taxSVCFeeValue";
-            this.taxSVCFeeValue.Size = new System.Drawing.Size(49, 19);
-            this.taxSVCFeeValue.TabIndex = 4;
-            this.taxSVCFeeValue.Text = "$0.00";
-            // 
-            // amountSVCFeeValue
-            // 
-            this.amountSVCFeeValue.AutoSize = true;
-            this.amountSVCFeeValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.amountSVCFeeValue.Location = new System.Drawing.Point(470, 16);
-            this.amountSVCFeeValue.Name = "amountSVCFeeValue";
-            this.amountSVCFeeValue.Size = new System.Drawing.Size(49, 19);
-            this.amountSVCFeeValue.TabIndex = 4;
-            this.amountSVCFeeValue.Text = "$0.00";
-            // 
-            // taxSVCFeeLabel
-            // 
-            this.taxSVCFeeLabel.AutoSize = true;
-            this.taxSVCFeeLabel.Font = new System.Drawing.Font("BLogic", 10F);
-            this.taxSVCFeeLabel.Location = new System.Drawing.Point(407, 41);
-            this.taxSVCFeeLabel.Name = "taxSVCFeeLabel";
-            this.taxSVCFeeLabel.Size = new System.Drawing.Size(30, 19);
-            this.taxSVCFeeLabel.TabIndex = 3;
-            this.taxSVCFeeLabel.Text = "Tax";
-            // 
-            // amountSVCFeeLabel
-            // 
-            this.amountSVCFeeLabel.AutoSize = true;
-            this.amountSVCFeeLabel.Font = new System.Drawing.Font("BLogic", 10F);
-            this.amountSVCFeeLabel.Location = new System.Drawing.Point(407, 16);
-            this.amountSVCFeeLabel.Name = "amountSVCFeeLabel";
-            this.amountSVCFeeLabel.Size = new System.Drawing.Size(57, 19);
-            this.amountSVCFeeLabel.TabIndex = 3;
-            this.amountSVCFeeLabel.Text = "Amount";
-            // 
-            // label34
-            // 
-            this.label34.BackColor = System.Drawing.Color.Gray;
-            this.label34.Font = new System.Drawing.Font("BLogic", 10F);
-            this.label34.Location = new System.Drawing.Point(400, 10);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(1, 55);
-            this.label34.TabIndex = 2;
-            this.label34.Text = "General service charge for the order";
-            // 
-            // detailSVCFee
-            // 
-            this.detailSVCFee.AutoSize = true;
-            this.detailSVCFee.Font = new System.Drawing.Font("BLogic", 10F);
-            this.detailSVCFee.Location = new System.Drawing.Point(17, 40);
-            this.detailSVCFee.Name = "detailSVCFee";
-            this.detailSVCFee.Size = new System.Drawing.Size(240, 19);
-            this.detailSVCFee.TabIndex = 1;
-            this.detailSVCFee.Text = "Additional SVC Fee for the transaction.";
-            // 
-            // titleSVCFee
-            // 
-            this.titleSVCFee.AutoSize = true;
-            this.titleSVCFee.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
-            this.titleSVCFee.Location = new System.Drawing.Point(17, 17);
-            this.titleSVCFee.Name = "titleSVCFee";
-            this.titleSVCFee.Size = new System.Drawing.Size(71, 23);
-            this.titleSVCFee.TabIndex = 0;
-            this.titleSVCFee.Text = "SVC Fee";
             // 
             // pnlAutoServiceCharge
             // 
@@ -653,32 +465,18 @@
             this.label1.Text = "Adjust Service Charges";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnClose
-            // 
-            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnClose.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.btnClose.Image = global::ThirdPartyTool.Properties.Resources.icon_close_white;
-            this.btnClose.Location = new System.Drawing.Point(535, 5);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(50, 50);
-            this.btnClose.TabIndex = 5;
-            // 
             // SelectServiceChargeToAdjstForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(590, 600);
+            this.ClientSize = new System.Drawing.Size(590, 439);
             this.Controls.Add(this.pnlContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "SelectServiceChargeToAdjstForm";
             this.Text = "FinishSaleReceiptForm";
             this.pnlContainer.ResumeLayout(false);
-            this.pnlCashDiscount.ResumeLayout(false);
-            this.pnlCashDiscount.PerformLayout();
             this.pnlAreaGratuity.ResumeLayout(false);
             this.pnlAreaGratuity.PerformLayout();
-            this.pnlSVCFee.ResumeLayout(false);
-            this.pnlSVCFee.PerformLayout();
             this.pnlAutoServiceCharge.ResumeLayout(false);
             this.pnlAutoServiceCharge.PerformLayout();
             this.pnlPartyGratuity.ResumeLayout(false);
@@ -701,14 +499,6 @@
         private System.Windows.Forms.Label amountServiceChargeLabel;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label detailServiceCharge;
-        private CustomControl.BPanel_Rounded pnlCashDiscount;
-        private System.Windows.Forms.Label taxCashDiscountValue;
-        private System.Windows.Forms.Label amountCashDiscountValue;
-        private System.Windows.Forms.Label taxCashDiscountLabel;
-        private System.Windows.Forms.Label amountCashDiscountLabel;
-        private System.Windows.Forms.Label label41;
-        private System.Windows.Forms.Label detailCashDiscount;
-        private System.Windows.Forms.Label titleCashDiscount;
         private CustomControl.BPanel_Rounded pnlAreaGratuity;
         private System.Windows.Forms.Label taxAreaGratuityValue;
         private System.Windows.Forms.Label amountAreaGratuityValue;
@@ -717,14 +507,6 @@
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label detailAreaGratuity;
         private System.Windows.Forms.Label titleAreaGratuity;
-        private CustomControl.BPanel_Rounded pnlSVCFee;
-        private System.Windows.Forms.Label taxSVCFeeValue;
-        private System.Windows.Forms.Label amountSVCFeeValue;
-        private System.Windows.Forms.Label taxSVCFeeLabel;
-        private System.Windows.Forms.Label amountSVCFeeLabel;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label detailSVCFee;
-        private System.Windows.Forms.Label titleSVCFee;
         private CustomControl.BPanel_Rounded pnlAutoServiceCharge;
         private System.Windows.Forms.Label taxAutoServiceChargeValue;
         private System.Windows.Forms.Label amountAutoServiceChargeValue;
