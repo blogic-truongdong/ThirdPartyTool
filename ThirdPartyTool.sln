@@ -5,6 +5,8 @@ VisualStudioVersion = 18.0.11205.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdPartyTool", "ThirdPartyTool\ThirdPartyTool.csproj", "{ACB522E5-F3A5-46F7-976F-6FCA2F03CD42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLogicPOS7SupportTool", "BLogicPOS7SupportTool\BLogicPOS7SupportTool.csproj", "{AA7B96FE-4966-4941-9EA9-16CD139955AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{ACB522E5-F3A5-46F7-976F-6FCA2F03CD42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB522E5-F3A5-46F7-976F-6FCA2F03CD42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACB522E5-F3A5-46F7-976F-6FCA2F03CD42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA7B96FE-4966-4941-9EA9-16CD139955AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA7B96FE-4966-4941-9EA9-16CD139955AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA7B96FE-4966-4941-9EA9-16CD139955AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA7B96FE-4966-4941-9EA9-16CD139955AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

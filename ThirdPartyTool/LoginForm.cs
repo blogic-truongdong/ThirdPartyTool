@@ -1,4 +1,5 @@
 ﻿using BLogicSystems.XPos.ClientUtilities;
+using BLogicSystems.XPos.Utilites.Languages;
 using System;
 using System.Windows.Forms;
 using ThirdPartyTool.Dialog;
@@ -29,6 +30,8 @@ namespace ThirdPartyTool
 
         private void LoginForm_Shown(object sender, EventArgs e)
         {
+            string dateTime = Languages.ConvertDateTimeToStringWithCulture(DateTime.Now.ToString());
+            BLogicLogger.Exception($"BtnLogin_Click in LoginForm: {dateTime}", null);
             label3.Focus();
         }
 

@@ -28,7 +28,7 @@ namespace ThirdPartyTool.CustomControl
         {
             get
             {
-                return dateTimeValues.Date + new TimeSpan(0, 23, 59, 59, 999);
+                return dateTimeValues.Date.AddDays(1).AddMilliseconds(-1);
             }
             set
             {

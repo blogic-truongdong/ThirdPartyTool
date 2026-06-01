@@ -51,7 +51,7 @@ namespace ThirdPartyTool
                         bool isConnectMerchantSuccess = false;
                         try
                         {
-                            string connectionString = $@"data source=.;Initial Catalog={BLogicPOS7};integrated security = SSPI";
+                            string connectionString = $@"data source=.;Initial Catalog={BLogicPOS7};Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
                             using (var connection = new SqlConnection(connectionString))
                             {
                                 connection.Open();
@@ -69,7 +69,7 @@ namespace ThirdPartyTool
                         {
                             try
                             {
-                                string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={BLogicPOS7};integrated security = SSPI";
+                                string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={BLogicPOS7};Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
                                 using (var connection = new SqlConnection(connectionString))
                                 {
                                     connection.Open();
@@ -86,7 +86,7 @@ namespace ThirdPartyTool
 
                         try
                         {
-                            string connectionString = $@"data source=.;Initial Catalog={Merchant};integrated security = SSPI";
+                            string connectionString = $@"data source=.;Initial Catalog={Merchant};Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
                             using (var connection = new SqlConnection(connectionString))
                             {
                                 connection.Open();
@@ -104,7 +104,7 @@ namespace ThirdPartyTool
                         {
                             try
                             {
-                                string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={Merchant};integrated security = SSPI";
+                                string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={Merchant};Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
                                 using (var connection = new SqlConnection(connectionString))
                                 {
                                     connection.Open();

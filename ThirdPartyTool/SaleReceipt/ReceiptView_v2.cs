@@ -348,12 +348,6 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                if (TransactionStatusID != "FIN" && TransactionStatusID != "OPER" && TransactionStatusID != "RET")
-                {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CLOSE những ticket đang ở trạng thái FINISH hoặc OPEN hoặc REFUND.");
-                    informationDialogForm.ShowDialog();
-                    return;
-                }
 
                 ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to CLOSE Ticket#{MainSaleReceiptNumber}?");
                 var result = confirmFirmDialog.ShowDialog();
@@ -434,12 +428,6 @@ namespace ThirdPartyTool.SaleReceipt
                 }
                 else if (control.Name == btnShowCloseTicket.Name)
                 {
-                    if (TransactionStatusID != "FIN" && TransactionStatusID != "OPER" && TransactionStatusID != "RET")
-                    {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CLOSE những ticket đang ở trạng thái FINISH hoặc OPEN hoặc REFUND.");
-                        informationDialogForm.ShowDialog();
-                        return;
-                    }
 
                     pnlCloseTicket.BringToFront();
                 }

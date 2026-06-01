@@ -13,8 +13,8 @@ namespace ThirdPartyTool
         public const int TimeOutQuery = 180;
         private decimal MerchantFeeValue = 3.84620000m;
 
-        private string BLOGICPOSConnection = "data source=.;Initial Catalog=BLogicPOS7;integrated security = SSPI";
-        private string MerchantConnection = "data source=.;Initial Catalog=Merchant;integrated security = SSPI";
+        private string BLOGICPOSConnection = "data source=.;Initial Catalog=BLogicPOS7;Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
+        private string MerchantConnection = "data source=.;Initial Catalog=Merchant;Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
 
         public AddBatchDetailForm()
         {

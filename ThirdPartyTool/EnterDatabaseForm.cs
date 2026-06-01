@@ -27,6 +27,7 @@ namespace ThirdPartyTool
         {
 #if DEBUG
             txtBLogicPOS7.Text = "BLogicPOS7_Testing";
+            txtBLogicPOS7.Text = "BLogicPOS7_Testing";
 #endif
             var time = DateTime.Now.ToShortTimeString();
 

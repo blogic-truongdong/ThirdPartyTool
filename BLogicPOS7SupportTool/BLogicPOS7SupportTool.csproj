@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AA7B96FE-4966-4941-9EA9-16CD139955AD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>BLogicPOS7SupportTool</RootNamespace>
+    <AssemblyName>BLogicPOS7SupportTool</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.1.66\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dashboard\Pages\ReceiptPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\ReceiptPage.Designer.cs">
+      <DependentUpon>ReceiptPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\AppLogger.cs" />
+    <Compile Include="Core\AppSession.cs" />
+    <Compile Include="Core\DimOverlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\Theme.cs" />
+    <Compile Include="Dashboard\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\HomePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\HomePage.Designer.cs">
+      <DependentUpon>HomePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\SyncItemGroupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\SyncItemGroupDialog.Designer.cs">
+      <DependentUpon>SyncItemGroupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\ItemsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\ItemsPage.Designer.cs">
+      <DependentUpon>ItemsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\ShiftPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\ShiftPage.Designer.cs">
+      <DependentUpon>ShiftPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\EditShiftForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\EditShiftForm.Designer.cs">
+      <DependentUpon>EditShiftForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\CashInOutPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\CashInOutPage.Designer.cs">
+      <DependentUpon>CashInOutPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\EditCashInOutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\EditCashInOutForm.Designer.cs">
+      <DependentUpon>EditCashInOutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\ClearTableStatusPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\ClearTableStatusPage.Designer.cs">
+      <DependentUpon>ClearTableStatusPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\AdvancedPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\AdvancedPage.Designer.cs">
+      <DependentUpon>AdvancedPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\InsertTicketPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\InsertTicketPage.Designer.cs">
+      <DependentUpon>InsertTicketPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ClearSalesDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ClearSalesDataForm.Designer.cs">
+      <DependentUpon>ClearSalesDataForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\InsertTransactionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\InsertTransactionForm.Designer.cs">
+      <DependentUpon>InsertTransactionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\EmployeeClockInInfoEntity.cs" />
+    <Compile Include="Models\EmployeeRoles.cs" />
+    <Compile Include="Models\Employees.cs" />
+    <Compile Include="Models\PaymentRoleDetails.cs" />
+    <Compile Include="Models\QueryModel.cs" />
+    <Compile Include="Models\Roles.cs" />
+    <Compile Include="Models\SaleReceiptDetails.cs" />
+    <Compile Include="Models\SaleReceiptDetailTaxDetails.cs" />
+    <Compile Include="Models\SaleReceiptPaymentDetails.cs" />
+    <Compile Include="Models\SaleReceipts.cs" />
+    <Compile Include="Models\SaleReceiptServiceChargeTaxDetails.cs" />
+    <Compile Include="Models\TableArea.cs" />
+    <Compile Include="Models\Items.cs" />
+    <Compile Include="Models\ReceiptHeader.cs" />
+    <Compile Include="Models\ReceiptLineItem.cs" />
+    <Compile Include="Dashboard\Dialogs\AdjustPaymentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\AdjustPaymentForm.Designer.cs" />
+    <Compile Include="Dashboard\Dialogs\PaymentDetailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\PaymentDetailForm.Designer.cs">
+      <DependentUpon>PaymentDetailForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\AddTipByTokenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\AddTipByTokenForm.Designer.cs">
+      <DependentUpon>AddTipByTokenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ReceiptDetailView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ReceiptDetailView.Designer.cs">
+      <DependentUpon>ReceiptDetailView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ServiceChargeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ServiceChargeForm.Designer.cs">
+      <DependentUpon>ServiceChargeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\FinishTicketForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\FinishTicketForm.Designer.cs">
+      <DependentUpon>FinishTicketForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\EditItemsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\EditItemsForm.Designer.cs">
+      <DependentUpon>EditItemsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ItemDetailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\ItemDetailForm.Designer.cs">
+      <DependentUpon>ItemDetailForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\AddItemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\AddItemForm.Designer.cs">
+      <DependentUpon>AddItemForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TimeClock.cs" />
+    <Compile Include="Models\TokenReceiptInfo.cs" />
+    <Compile Include="Models\RefundReceiptInfo.cs" />
+    <Compile Include="Models\ServiceChargeSet.cs" />
+    <Compile Include="Models\FinishTicket.cs" />
+    <Compile Include="Models\ItemEdit.cs" />
+    <Compile Include="Models\ItemEditDetail.cs" />
+    <Compile Include="Models\ReasonCode.cs" />
+    <Compile Include="Models\AddableItem.cs" />
+    <Compile Include="Dashboard\Dialogs\RefundItemsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\RefundItemsForm.Designer.cs">
+      <DependentUpon>RefundItemsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\MergeRefundForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\MergeRefundForm.Designer.cs">
+      <DependentUpon>MergeRefundForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\SelectPaymentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\SelectPaymentForm.Designer.cs">
+      <DependentUpon>SelectPaymentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RefundDetailItem.cs" />
+    <Compile Include="Models\ReceiptPaymentDetail.cs" />
+    <Compile Include="Models\ReceiptPaymentLine.cs" />
+    <Compile Include="Models\ReceiptTaxLine.cs" />
+    <Compile Include="Models\TransactionDetail.cs" />
+    <Compile Include="Core\XlsxReader.cs" />
+    <Compile Include="Models\TicketTemplateRow.cs" />
+    <Compile Include="Services\TicketTemplateService.cs" />
+    <Compile Include="Services\ItemService.cs" />
+    <Compile Include="Services\ReceiptService.cs" />
+    <Compile Include="Services\ShiftService.cs" />
+    <Compile Include="Services\CashInOutService.cs" />
+    <Compile Include="Services\TableService.cs" />
+    <Compile Include="Services\AdvancedService.cs" />
+    <Compile Include="Login\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Setup\DatabaseSetupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Setup\DatabaseSetupForm.Designer.cs">
+      <DependentUpon>DatabaseSetupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Dashboard\Dialogs\PaymentDetailForm.resx">
+      <DependentUpon>PaymentDetailForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\Dialogs\ServiceChargeForm.resx">
+      <DependentUpon>ServiceChargeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\Dialogs\SyncItemGroupDialog.resx">
+      <DependentUpon>SyncItemGroupDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\Pages\ItemsPage.resx">
+      <DependentUpon>ItemsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\Pages\ReceiptPage.resx">
+      <DependentUpon>ReceiptPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Setup\DatabaseSetupForm.resx">
+      <DependentUpon>DatabaseSetupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="CLAUDE.md" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Scripts\CreateScriptLogTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\TemplateInsertSalesData.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dashboard\Controls\" />
+    <Folder Include="Templates\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

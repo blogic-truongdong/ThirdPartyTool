@@ -38,11 +38,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.bPanel_Rounded3 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.bPanel_Rounded5 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.lblEndDate = new System.Windows.Forms.Label();
             this.endDate = new System.Windows.Forms.DateTimePicker();
-            this.bPanel_Rounded4 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.lblStartDate = new System.Windows.Forms.Label();
-            this.startDate = new System.Windows.Forms.DateTimePicker();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -66,15 +62,19 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtFocus = new ThirdPartyTool.CustomControl.BTextBox();
+            this.startDate = new System.Windows.Forms.DateTimePicker();
+            this.bPanel_Rounded4 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
+            this.lblStartDate = new System.Windows.Forms.Label();
+            this.lblEndDate = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.panel2.SuspendLayout();
             this.bPanel_Rounded3.SuspendLayout();
             this.bPanel_Rounded5.SuspendLayout();
-            this.bPanel_Rounded4.SuspendLayout();
             this.bPanel_Rounded2.SuspendLayout();
             this.bPanel_Rounded1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployees)).BeginInit();
+            this.bPanel_Rounded4.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -126,6 +126,8 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.lblStartDate);
+            this.panel2.Controls.Add(this.lblEndDate);
             this.panel2.Controls.Add(this.bPanel_Rounded3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(480, 60);
@@ -162,25 +164,12 @@
             this.bPanel_Rounded5.BorderColor = System.Drawing.Color.Gray;
             this.bPanel_Rounded5.BorderRadius = 5;
             this.bPanel_Rounded5.BorderSize = 1;
-            this.bPanel_Rounded5.Controls.Add(this.lblEndDate);
             this.bPanel_Rounded5.Controls.Add(this.endDate);
             this.bPanel_Rounded5.Location = new System.Drawing.Point(30, 268);
             this.bPanel_Rounded5.Margin = new System.Windows.Forms.Padding(5);
             this.bPanel_Rounded5.Name = "bPanel_Rounded5";
             this.bPanel_Rounded5.Size = new System.Drawing.Size(250, 40);
             this.bPanel_Rounded5.TabIndex = 675;
-            // 
-            // lblEndDate
-            // 
-            this.lblEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblEndDate.Font = new System.Drawing.Font("Roboto", 12F);
-            this.lblEndDate.Image = global::ThirdPartyTool.Properties.Resources.Icon_Arrow_Down;
-            this.lblEndDate.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblEndDate.Location = new System.Drawing.Point(5, 5);
-            this.lblEndDate.Name = "lblEndDate";
-            this.lblEndDate.Size = new System.Drawing.Size(240, 30);
-            this.lblEndDate.TabIndex = 674;
-            this.lblEndDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // endDate
             // 
@@ -191,42 +180,6 @@
             this.endDate.Name = "endDate";
             this.endDate.Size = new System.Drawing.Size(240, 27);
             this.endDate.TabIndex = 673;
-            // 
-            // bPanel_Rounded4
-            // 
-            this.bPanel_Rounded4.BackgroundColor = System.Drawing.Color.Transparent;
-            this.bPanel_Rounded4.BorderColor = System.Drawing.Color.Gray;
-            this.bPanel_Rounded4.BorderRadius = 5;
-            this.bPanel_Rounded4.BorderSize = 1;
-            this.bPanel_Rounded4.Controls.Add(this.lblStartDate);
-            this.bPanel_Rounded4.Controls.Add(this.startDate);
-            this.bPanel_Rounded4.Location = new System.Drawing.Point(30, 184);
-            this.bPanel_Rounded4.Margin = new System.Windows.Forms.Padding(5);
-            this.bPanel_Rounded4.Name = "bPanel_Rounded4";
-            this.bPanel_Rounded4.Size = new System.Drawing.Size(250, 40);
-            this.bPanel_Rounded4.TabIndex = 675;
-            // 
-            // lblStartDate
-            // 
-            this.lblStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblStartDate.Font = new System.Drawing.Font("Roboto", 12F);
-            this.lblStartDate.Image = global::ThirdPartyTool.Properties.Resources.Icon_Arrow_Down;
-            this.lblStartDate.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblStartDate.Location = new System.Drawing.Point(5, 5);
-            this.lblStartDate.Name = "lblStartDate";
-            this.lblStartDate.Size = new System.Drawing.Size(240, 30);
-            this.lblStartDate.TabIndex = 4;
-            this.lblStartDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // startDate
-            // 
-            this.startDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.startDate.Font = new System.Drawing.Font("Roboto", 12F);
-            this.startDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.startDate.Location = new System.Drawing.Point(5, 7);
-            this.startDate.Name = "startDate";
-            this.startDate.Size = new System.Drawing.Size(240, 27);
-            this.startDate.TabIndex = 673;
             // 
             // label6
             // 
@@ -532,6 +485,55 @@
             this.txtFocus.TabIndex = 4;
             this.txtFocus.Text = "Search";
             // 
+            // startDate
+            // 
+            this.startDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.startDate.Font = new System.Drawing.Font("Roboto", 12F);
+            this.startDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.startDate.Location = new System.Drawing.Point(5, 7);
+            this.startDate.Name = "startDate";
+            this.startDate.Size = new System.Drawing.Size(240, 27);
+            this.startDate.TabIndex = 673;
+            // 
+            // bPanel_Rounded4
+            // 
+            this.bPanel_Rounded4.BackgroundColor = System.Drawing.Color.Transparent;
+            this.bPanel_Rounded4.BorderColor = System.Drawing.Color.Gray;
+            this.bPanel_Rounded4.BorderRadius = 5;
+            this.bPanel_Rounded4.BorderSize = 1;
+            this.bPanel_Rounded4.Controls.Add(this.startDate);
+            this.bPanel_Rounded4.Location = new System.Drawing.Point(30, 184);
+            this.bPanel_Rounded4.Margin = new System.Windows.Forms.Padding(5);
+            this.bPanel_Rounded4.Name = "bPanel_Rounded4";
+            this.bPanel_Rounded4.Size = new System.Drawing.Size(250, 40);
+            this.bPanel_Rounded4.TabIndex = 675;
+            // 
+            // lblStartDate
+            // 
+            this.lblStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblStartDate.Font = new System.Drawing.Font("Roboto", 12F);
+            this.lblStartDate.Image = global::ThirdPartyTool.Properties.Resources.Icon_Arrow_Down;
+            this.lblStartDate.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblStartDate.Location = new System.Drawing.Point(36, 406);
+            this.lblStartDate.Name = "lblStartDate";
+            this.lblStartDate.Size = new System.Drawing.Size(240, 30);
+            this.lblStartDate.TabIndex = 4;
+            this.lblStartDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblStartDate.Visible = false;
+            // 
+            // lblEndDate
+            // 
+            this.lblEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblEndDate.Font = new System.Drawing.Font("Roboto", 12F);
+            this.lblEndDate.Image = global::ThirdPartyTool.Properties.Resources.Icon_Arrow_Down;
+            this.lblEndDate.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblEndDate.Location = new System.Drawing.Point(113, 406);
+            this.lblEndDate.Name = "lblEndDate";
+            this.lblEndDate.Size = new System.Drawing.Size(240, 30);
+            this.lblEndDate.TabIndex = 674;
+            this.lblEndDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblEndDate.Visible = false;
+            // 
             // EmployeeView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -550,11 +552,11 @@
             this.bPanel_Rounded3.ResumeLayout(false);
             this.bPanel_Rounded3.PerformLayout();
             this.bPanel_Rounded5.ResumeLayout(false);
-            this.bPanel_Rounded4.ResumeLayout(false);
             this.bPanel_Rounded2.ResumeLayout(false);
             this.bPanel_Rounded1.ResumeLayout(false);
             this.bPanel_Rounded1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployees)).EndInit();
+            this.bPanel_Rounded4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -580,14 +582,10 @@
         private CustomControl.BLabel_Rounded btnSyncRoles;
         private CustomControl.BPanel_Rounded bPanel_Rounded5;
         private System.Windows.Forms.DateTimePicker endDate;
-        private CustomControl.BPanel_Rounded bPanel_Rounded4;
-        private System.Windows.Forms.DateTimePicker startDate;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label lblEndDate;
-        private System.Windows.Forms.Label lblStartDate;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lblCurrentEmployeeName;
         private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeID;
@@ -596,5 +594,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn RoleName;
         private System.Windows.Forms.DataGridViewImageColumn Delete;
         public CustomControl.BTextBox txtFocus;
+        private CustomControl.BPanel_Rounded bPanel_Rounded4;
+        private System.Windows.Forms.DateTimePicker startDate;
+        private System.Windows.Forms.Label lblStartDate;
+        private System.Windows.Forms.Label lblEndDate;
     }
 }

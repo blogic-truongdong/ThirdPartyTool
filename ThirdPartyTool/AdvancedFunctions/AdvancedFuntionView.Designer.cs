@@ -34,10 +34,11 @@
             this.btnTest = new System.Windows.Forms.Label();
             this.pnlLoadingContainer = new System.Windows.Forms.Panel();
             this.btnCancelProcess = new System.Windows.Forms.Button();
+            this.pnlLoading = new System.Windows.Forms.PictureBox();
             this.btnSyncDataFor7Shifts_ClearTip = new System.Windows.Forms.Label();
             this.btnUpdateDSPTax = new System.Windows.Forms.Label();
             this.btnClearSalesData7Shifts = new System.Windows.Forms.Label();
-            this.pnlLoading = new System.Windows.Forms.PictureBox();
+            this.btnCorrectDataStreamOrder = new System.Windows.Forms.Label();
             this.pnlLoadingContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlLoading)).BeginInit();
             this.SuspendLayout();
@@ -53,6 +54,7 @@
             this.btnCloseUnPaidTicket.TabIndex = 0;
             this.btnCloseUnPaidTicket.Text = "Close UnPaid Ticket by Date Range";
             this.btnCloseUnPaidTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnCloseUnPaidTicket.Visible = false;
             // 
             // btnClearTableStatus
             // 
@@ -65,6 +67,7 @@
             this.btnClearTableStatus.TabIndex = 1;
             this.btnClearTableStatus.Text = "Clear Table Status";
             this.btnClearTableStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnClearTableStatus.Visible = false;
             // 
             // btnSyncDataFor7Shifts
             // 
@@ -117,6 +120,16 @@
             this.btnCancelProcess.Text = "Cancel";
             this.btnCancelProcess.UseVisualStyleBackColor = false;
             // 
+            // pnlLoading
+            // 
+            this.pnlLoading.BackColor = System.Drawing.Color.White;
+            this.pnlLoading.Image = global::ThirdPartyTool.Properties.Resources.loading51;
+            this.pnlLoading.Location = new System.Drawing.Point(35, 1);
+            this.pnlLoading.Name = "pnlLoading";
+            this.pnlLoading.Size = new System.Drawing.Size(130, 130);
+            this.pnlLoading.TabIndex = 8;
+            this.pnlLoading.TabStop = false;
+            // 
             // btnSyncDataFor7Shifts_ClearTip
             // 
             this.btnSyncDataFor7Shifts_ClearTip.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -141,6 +154,7 @@
             this.btnUpdateDSPTax.TabIndex = 11;
             this.btnUpdateDSPTax.Text = "Update DSP Tax for All Ticket of Stream";
             this.btnUpdateDSPTax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnUpdateDSPTax.Visible = false;
             // 
             // btnClearSalesData7Shifts
             // 
@@ -153,22 +167,26 @@
             this.btnClearSalesData7Shifts.TabIndex = 12;
             this.btnClearSalesData7Shifts.Text = "Clear Sales Data for 7 Shifts";
             this.btnClearSalesData7Shifts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnClearSalesData7Shifts.Visible = false;
             // 
-            // pnlLoading
+            // btnCorrectDataStreamOrder
             // 
-            this.pnlLoading.BackColor = System.Drawing.Color.White;
-            this.pnlLoading.Image = global::ThirdPartyTool.Properties.Resources.loading51;
-            this.pnlLoading.Location = new System.Drawing.Point(35, 1);
-            this.pnlLoading.Name = "pnlLoading";
-            this.pnlLoading.Size = new System.Drawing.Size(130, 130);
-            this.pnlLoading.TabIndex = 8;
-            this.pnlLoading.TabStop = false;
+            this.btnCorrectDataStreamOrder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.btnCorrectDataStreamOrder.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCorrectDataStreamOrder.Location = new System.Drawing.Point(280, 190);
+            this.btnCorrectDataStreamOrder.Margin = new System.Windows.Forms.Padding(5);
+            this.btnCorrectDataStreamOrder.Name = "btnCorrectDataStreamOrder";
+            this.btnCorrectDataStreamOrder.Size = new System.Drawing.Size(250, 75);
+            this.btnCorrectDataStreamOrder.TabIndex = 13;
+            this.btnCorrectDataStreamOrder.Text = "Correct Data Stream Order";
+            this.btnCorrectDataStreamOrder.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // AdvancedFuntionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.btnCorrectDataStreamOrder);
             this.Controls.Add(this.btnClearSalesData7Shifts);
             this.Controls.Add(this.btnUpdateDSPTax);
             this.Controls.Add(this.btnSyncDataFor7Shifts_ClearTip);
@@ -197,5 +215,6 @@
         public System.Windows.Forms.Label btnSyncDataFor7Shifts_ClearTip;
         public System.Windows.Forms.Label btnUpdateDSPTax;
         public System.Windows.Forms.Label btnClearSalesData7Shifts;
+        public System.Windows.Forms.Label btnCorrectDataStreamOrder;
     }
 }

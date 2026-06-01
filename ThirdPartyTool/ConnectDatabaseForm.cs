@@ -65,7 +65,7 @@ namespace ThirdPartyTool
                 {
                     try
                     {
-                        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtPOSName.Text.Trim()};integrated security = SSPI";
+                        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtPOSName.Text.Trim()};Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
                         using (var connection = new SqlConnection(connectionString))
                         {
                             connection.Open();
@@ -82,7 +82,7 @@ namespace ThirdPartyTool
 
                 try
                 {
-                    string connectionString = $@"data source=.;Initial Catalog={txtMerchantName.Text.Trim()};integrated security = SSPI";
+                    string connectionString = $@"data source=.;Initial Catalog={txtMerchantName.Text.Trim()};Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
                     using (var connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
@@ -100,7 +100,7 @@ namespace ThirdPartyTool
                 {
                     try
                     {
-                        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtMerchantName.Text.Trim()};integrated security = SSPI";
+                        string connectionString = $"data source=.\\SQLEXPRESS;Initial Catalog={txtMerchantName.Text.Trim()};Trusted_Connection=True;integrated security = SSPI;Connection Timeout= 600;TrustServerCertificate=true";
                         using (var connection = new SqlConnection(connectionString))
                         {
                             connection.Open();

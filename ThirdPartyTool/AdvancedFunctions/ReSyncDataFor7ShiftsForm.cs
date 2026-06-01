@@ -97,6 +97,8 @@ namespace ThirdPartyTool.AdvancedFunctions
                 if (!ConfirmSyncOperation())
                     return;
 
+                IsCancelBackgroundWorker = false;
+
                 StartProcess();
                 Task.Run(() => backgroundWorker.RunWorkerAsync());
 
@@ -116,14 +118,120 @@ namespace ThirdPartyTool.AdvancedFunctions
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            var oldBLOGICPOS7_Connection = Helper.BLOGICPOS7_Connection;
+            var oldBLOGICPOS7_Name = Helper.BLOGICPOS7_Name;
             try
             {
-                ProcessSevenShiftsSync();
+                List<string> listDatabase = new List<string>();
+                listDatabase.Add("BLOGICPOS7_1");
+                listDatabase.Add("BLOGICPOS7_2");
+                listDatabase.Add("BLOGICPOS7_3");
+
+                foreach (var databaseName in listDatabase)
+                {
+                    Helper.BLOGICPOS7_Connection = Helper.BLOGICPOS7_Connection.Replace(Helper.BLOGICPOS7_Name, databaseName);
+                    Helper.BLOGICPOS7_Name = databaseName;
+
+                    LoadSevenShiftsConfiguration();
+
+                    if (string.IsNullOrWhiteSpace(POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftCompanyID) ||
+                    POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftLocation == 0 ||
+                    string.IsNullOrWhiteSpace(POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftAccessToken))
+                        return;
+
+                    DataTable dtSaleReceipts = LoadSaleReceipts();
+
+                    if (dtSaleReceipts == null || dtSaleReceipts.Rows.Count == 0)
+                        return;
+
+                    foreach (DataRow saleReceiptRow in dtSaleReceipts.Rows)
+                    {
+                        try
+                        {
+                            string saleReceiptID = Utility.GetStringFromRow("SaleReceiptID", saleReceiptRow);
+                            string SaleReceiptNumber = Utility.GetStringFromRow("SaleReceiptNumber", saleReceiptRow);
+
+                            if (SaleReceiptNumber == "116579")
+                            {
+
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                            string transactionStatus = Utility.GetStringFromRow("TransactionStatusID", saleReceiptRow);
+                            int saleReceiptType = Utility.GetIntFromRow("SaleReceiptType", saleReceiptRow);
+
+                            var date = Utility.GetDateTimeFromRow("DateCreated", saleReceiptRow);
+                            var receipt_date = (date.Date + new TimeSpan(12, 0, 0)).ToString("yyyy-MM-ddTHH:mm:ssZ");
+
+                            var net_total = CalculateNetTotal(saleReceiptRow, transactionStatus);
+
+                            UpdateReceiptFor7ShiftsModel updateReceiptFor7ShiftsModel = new UpdateReceiptFor7ShiftsModel
+                            {
+                                receipt_date = receipt_date,
+                                net_total = net_total,
+                                gross_total = net_total,
+                                total_receipt_discounts = 0,
+                                tips = 0,
+                                status = MapTransactionStatus(transactionStatus),
+                                order_type = saleReceiptType == DINE_IN_RECEIPT_TYPE ? ORDER_TYPE_DINE_IN : ORDER_TYPE_TAKE_OUT,
+                                dining_option = "",
+                                external_user_id = "",
+                                revenue_center = ""
+                            };
+
+                            string jsonData = JsonConvert.SerializeObject(updateReceiptFor7ShiftsModel);
+
+                            var response = Helper.ProcessRequest_7Shifts_Sync($"receipts/ext:{POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftLocation}:{SaleReceiptNumber}", System.Net.Http.HttpMethod.Put, jsonData);
+
+                            if (!response.IsSuccess)
+                            {
+                                response = Helper.ProcessRequest_7Shifts_Sync($"receipts/ext:{POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftLocation}:{saleReceiptID}", System.Net.Http.HttpMethod.Put, jsonData);
+
+                                if (!response.IsSuccess && net_total != 0)
+                                {
+                                    CreateReceiptFor7ShiftsModel createReceiptFor7ShiftsModel = new CreateReceiptFor7ShiftsModel
+                                    {
+                                        receipt_id = saleReceiptID,
+                                        location_id = POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftLocation,
+                                        receipt_date = receipt_date,
+                                        net_total = net_total,
+                                        gross_total = net_total,
+                                        total_receipt_discounts = 0,
+                                        tips = 0,
+                                        status = MapTransactionStatus(transactionStatus),
+                                        order_type = saleReceiptType == DINE_IN_RECEIPT_TYPE ? ORDER_TYPE_DINE_IN : ORDER_TYPE_TAKE_OUT,
+                                    };
+
+                                    jsonData = JsonConvert.SerializeObject(createReceiptFor7ShiftsModel);
+
+                                    response = Helper.ProcessRequest_7Shifts_Sync("receipts", System.Net.Http.HttpMethod.Post, jsonData);
+
+                                }
+                            }
+                        }
+                        catch (Exception ex1)
+                        {
+                            string saleReceiptId = Utility.GetStringFromRow("SaleReceiptID", saleReceiptRow);
+                            BLogicLogger.Exception($"Error processing SaleReceiptID: {saleReceiptId}", ex1);
+                        }
+
+                        if (IsCancelBackgroundWorker)
+                        {
+                            break;
+                        }
+                    }
+                }
             }
-            catch (Exception ex)
+            catch (Exception ex2)
             {
-                BLogicLogger.Exception("ReSyncDataFor7ShiftsForm.BackgroundWorker_DoWork", ex);
+                BLogicLogger.Exception("ReSyncDataFor7ShiftsForm.BackgroundWorker_DoWork", ex2);
             }
+
+            Helper.BLOGICPOS7_Connection = oldBLOGICPOS7_Connection;
+            Helper.BLOGICPOS7_Name = oldBLOGICPOS7_Name;
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -142,67 +250,67 @@ namespace ThirdPartyTool.AdvancedFunctions
 
         #region Main Processing Logic
 
-        private void ProcessSevenShiftsSync()
-        {
-            LoadSevenShiftsConfiguration();
+        //private void ProcessSevenShiftsSync()
+        //{
+        //    LoadSevenShiftsConfiguration();
 
-            if (!ConfigureStoreSpecificSettings())
-                return;
+        //    if (!ConfigureStoreSpecificSettings())
+        //        return;
 
-            for (int i = 0; i < 100000; i++)
-            {
-                DataTable dtSaleReceipts = LoadSaleReceipts();
+        //    for (int i = 0; i < 100000; i++)
+        //    {
+        //        DataTable dtSaleReceipts = LoadSaleReceipts();
 
-                if (dtSaleReceipts == null || dtSaleReceipts.Rows.Count == 0)
-                    break;
+        //        if (dtSaleReceipts == null || dtSaleReceipts.Rows.Count == 0)
+        //            break;
 
-                if (!IsSevenShiftsAccessTokenValid())
-                {
-                    BLogicLogger.Error("7Shifts Access Token is not configured");
-                    return;
-                }
+        //        if (!IsSevenShiftsAccessTokenValid())
+        //        {
+        //            BLogicLogger.Error("7Shifts Access Token is not configured");
+        //            return;
+        //        }
 
-                ProcessSaleReceipts(dtSaleReceipts);
+        //        ProcessSaleReceipts(dtSaleReceipts);
 
-                if (IsCancelBackgroundWorker)
-                {
-                    break;
-                }
-            }
-        }
+        //        if (IsCancelBackgroundWorker)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
 
-        private void ProcessSaleReceipts(DataTable dtSaleReceipts)
-        {
-            foreach (DataRow row in dtSaleReceipts.Rows)
-            {
-                try
-                {
-                    ProcessSingleSaleReceipt(row);
-                }
-                catch (Exception ex)
-                {
-                    string saleReceiptId = Utility.GetStringFromRow("SaleReceiptID", row);
-                    BLogicLogger.Exception($"Error processing SaleReceiptID: {saleReceiptId}", ex);
-                }
+        //private void ProcessSaleReceipts(DataTable dtSaleReceipts)
+        //{
+        //    foreach (DataRow row in dtSaleReceipts.Rows)
+        //    {
+        //        try
+        //        {
+        //            ProcessSingleSaleReceipt(row);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            string saleReceiptId = Utility.GetStringFromRow("SaleReceiptID", row);
+        //            BLogicLogger.Exception($"Error processing SaleReceiptID: {saleReceiptId}", ex);
+        //        }
 
-                if (IsCancelBackgroundWorker)
-                {
-                    break;
-                }
-            }
-        }
+        //        if (IsCancelBackgroundWorker)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
 
-        private void ProcessSingleSaleReceipt(DataRow saleReceiptRow)
-        {
-            string saleReceiptID = Utility.GetStringFromRow("SaleReceiptID", saleReceiptRow);
+        //private void ProcessSingleSaleReceipt(DataRow saleReceiptRow)
+        //{
+        //    string saleReceiptID = Utility.GetStringFromRow("SaleReceiptID", saleReceiptRow);
 
-            DataTable dtSaleReceiptDetails = LoadSaleReceiptDetails(saleReceiptID);
-            DataTable dtSaleReceiptPaymentDetails = LoadSaleReceiptPaymentDetails(saleReceiptID);
+        //    DataTable dtSaleReceiptDetails = LoadSaleReceiptDetails(saleReceiptID);
+        //    DataTable dtSaleReceiptPaymentDetails = LoadSaleReceiptPaymentDetails(saleReceiptID);
 
-            CreateReceiptFor7ShiftsModel receiptModel = BuildReceiptModel(saleReceiptRow, dtSaleReceiptDetails, dtSaleReceiptPaymentDetails);
+        //    CreateReceiptFor7ShiftsModel receiptModel = BuildReceiptModel(saleReceiptRow, dtSaleReceiptDetails, dtSaleReceiptPaymentDetails);
 
-            SendReceiptToSevenShifts(receiptModel, saleReceiptID);
-        }
+        //    SendReceiptToSevenShifts(receiptModel, saleReceiptID);
+        //}
 
         #endregion
 
@@ -291,12 +399,11 @@ namespace ThirdPartyTool.AdvancedFunctions
 
         private DataTable LoadSaleReceipts()
         {
-            string sql = $"SELECT top 100 a.SaleReceiptID, a.TransactionStatusID, a.SaleReceiptType, " +
+            string sql = $"SELECT a.SaleReceiptID, a.SaleReceiptNumber, a.TransactionStatusID, a.SaleReceiptType, " +
                         $"a.TotalAmount, a.TaxAmount, a.SalesOrderFee, a.TotalDiscountAmount, a.DateCreated " +
                         $"FROM SaleReceipts a " +
-                        $"WHERE a.DateCreated >= '{StartDate.Value}' AND a.DateCreated <= '{EndDate.Value}' " +
-                        $"AND a.TransactionStatusID IN ('{STATUS_FINISHED}', '{STATUS_VOID}', '{STATUS_RETURN}') " +
-                        $"AND a.SaleReceiptID NOT IN (SELECT b.SaleReceiptID FROM SaleReceiptThirdPartyMappings b) " +
+                        $"WHERE a.DateCreated >= '{StartDate.Value}' AND a.DateCreated <= '{EndDate.EndValue}' " +
+                        $"AND a.TransactionStatusID IN ('{STATUS_FINISHED}', '{STATUS_VOID}', '{STATUS_RETURN}', 'CANR') " +
                         $"ORDER BY a.DateCreated";
 
             return Helper.ProcessQuery(true, sql, "SaleReceipts");
@@ -330,18 +437,19 @@ namespace ThirdPartyTool.AdvancedFunctions
             int saleReceiptType = Utility.GetIntFromRow("SaleReceiptType", saleReceiptRow);
 
             decimal gratuity = Utility.GetDecimalFromObject(dtPayments.Compute("SUM(Gratuity)", ""));
-
+            var date = Utility.GetDateTimeFromRow("DateCreated", saleReceiptRow);
+            var receipt_date = date.Date + new TimeSpan(12, 0, 0);
             CreateReceiptFor7ShiftsModel model = new CreateReceiptFor7ShiftsModel
             {
                 receipt_id = saleReceiptID,
                 location_id = POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftLocation,
-                receipt_date = Utility.GetDateTimeFromRow("DateCreated", saleReceiptRow).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                receipt_date = receipt_date.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 net_total = CalculateNetTotal(saleReceiptRow, transactionStatus),
                 gross_total = CalculateGrossTotal(saleReceiptRow),
-                total_receipt_discounts = ConvertToCents(Utility.GetDecimalFromRow("TotalDiscountAmount", saleReceiptRow)),
-                tips = ConvertToCents(gratuity),
+                total_receipt_discounts = 0,
+                tips = 0,
                 status = MapTransactionStatus(transactionStatus),
-                order_type = saleReceiptType == DINE_IN_RECEIPT_TYPE ? ORDER_TYPE_DINE_IN : ORDER_TYPE_TAKE_OUT
+                order_type = saleReceiptType == DINE_IN_RECEIPT_TYPE ? ORDER_TYPE_DINE_IN : ORDER_TYPE_TAKE_OUT,
             };
 
             AddTipDetails(model, dtPayments);
@@ -356,8 +464,8 @@ namespace ThirdPartyTool.AdvancedFunctions
                                Utility.GetDecimalFromRow("TaxAmount", row) -
                                Utility.GetDecimalFromRow("SalesOrderFee", row));
 
-            if (transactionStatus == STATUS_RETURN)
-                netTotal *= -1;
+            if (transactionStatus != STATUS_FINISHED)
+                netTotal = 0;
 
             return ConvertToCents(netTotal);
         }

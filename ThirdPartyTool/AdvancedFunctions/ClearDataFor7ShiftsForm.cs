@@ -117,7 +117,7 @@ namespace ThirdPartyTool.AdvancedFunctions
             this.Close();
         }
 
-        private async void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             decimal sumTotal = 0;
             decimal sumTip = 0;
@@ -126,71 +126,76 @@ namespace ThirdPartyTool.AdvancedFunctions
             {
                 string accessToken = "37303131323238622d336636632d343733362d616531312d343261343533343261666136";
 
-                var _httpClient = new HttpClient();
-                _httpClient.BaseAddress = new Uri("https://api.7shifts.com/");
-                _httpClient.DefaultRequestHeaders.Accept.Clear();
-                _httpClient.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
+                var companyId = "337570";
 
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", accessToken);
+                var list = new List<int>();
+                list.Add(411980);
+                list.Add(434330);
 
-                string companyId = "337570";
-                string locationId = "411979";
-
-                string url =
-                 "https://api.7shifts.com/v2/company/337570/receipts" +
-                 "?location_id=411979" +
-                 "&limit=100";
-
-            ProcessRetry:
-
-                HttpResponseMessage response = await _httpClient.GetAsync(url);
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-
-                var listSaleReceipt = JsonConvert.DeserializeObject<SevenShifts_ListReceipt>(responseBody);
-
-                foreach (var item in listSaleReceipt.data)
+                foreach (var locationId in list)
                 {
-                    if (item.ReceiptDate.Date > new DateTime(2026, 05, 11))
-                        continue;
+                    POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftCompanyID = companyId;
+                    POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftLocation = locationId;
+                    POSConfig.Configuration.ConfigValue.SystemConfigValue.SevenShiftAccessToken = accessToken;
 
-                    UpdateReceiptFor7ShiftsModel receiptModel = new UpdateReceiptFor7ShiftsModel()
+                    string url =
+                     "receipts" +
+                     $"?location_id={locationId}" +
+                     "&limit=100";
+
+                ProcessRetry:
+
+                    HttpClientFactoryResponse httpClientFactoryResponse = Helper.ProcessRequest_7Shifts_Sync(url, System.Net.Http.HttpMethod.Get, "");
+
+                    if (httpClientFactoryResponse.IsSuccess)
                     {
-                        net_total = 0,
-                        gross_total = 0,
-                        total_receipt_discounts = 0,
-                        tips = 0,
-                        status = item.Status,
-                        order_type = ORDER_TYPE_DINE_IN,
-                        dining_option = "",
-                        external_user_id = "",
-                        revenue_center = "",
-                        receipt_date = item.ReceiptDate.ToString("yyyy-MM-ddTHH:mm:ssZ")
-                    };
+                        var listSaleReceipt = JsonConvert.DeserializeObject<SevenShifts_ListReceipt>(httpClientFactoryResponse.Message);
 
-                    string jsonData = JsonConvert.SerializeObject(receiptModel);
+                        foreach (var item in listSaleReceipt.data)
+                        {
+                            if (item.ReceiptDate.Date > new DateTime(2026, 05, 11))
+                                continue;
 
-                    HttpClientFactoryResponse httpClientFactoryResponse = Helper.ProcessRequest_7Shifts_Sync($"receipts/{item.ID}", System.Net.Http.HttpMethod.Put, jsonData);
+                            UpdateReceiptFor7ShiftsModel receiptModel = new UpdateReceiptFor7ShiftsModel()
+                            {
+                                net_total = 0,
+                                gross_total = 0,
+                                total_receipt_discounts = 0,
+                                tips = 0,
+                                status = item.Status,
+                                order_type = ORDER_TYPE_DINE_IN,
+                                dining_option = "",
+                                external_user_id = "",
+                                revenue_center = "",
+                                receipt_date = item.ReceiptDate.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                            };
+
+                            string jsonData = JsonConvert.SerializeObject(receiptModel);
+
+                            httpClientFactoryResponse = Helper.ProcessRequest_7Shifts_Sync($"receipts/{item.ID}", System.Net.Http.HttpMethod.Put, jsonData);
+
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(listSaleReceipt?.meta?.cursor?.next))
+                        {
+                            url =
+                            $"receipts" +
+                            $"?location_id={locationId}" +
+                            $"&limit=100" +
+                            $"&cursor={listSaleReceipt?.meta?.cursor?.next}";
+
+                            goto ProcessRetry;
+
+                        }
+                        else
+                        {
+
+                        }
+                    }
 
                 }
 
-                if (!string.IsNullOrWhiteSpace(listSaleReceipt?.meta?.cursor?.next))
-                {
-                    url =
-                    $"https://api.7shifts.com/v2/company/{companyId}/receipts" +
-                    $"?location_id={locationId}" +
-                    $"&limit=100" +
-                    $"&cursor={listSaleReceipt?.meta?.cursor?.next.Substring(15)}";
 
-                    goto ProcessRetry;
-
-                }
-                else
-                {
-
-                }
 
             }
             catch (Exception ex)

@@ -1,0 +1,2 @@
+TransactionDate,TransactionTime,BankTransactionID,TranType,CardNumber,CardType,TotalAmount,Gratuity,FinalTotal,AuthCode,InvoiceNo,RefNo,TerminalID,WorkstationName,EmployeeCode,ItemName,TaxRate,ItemPrice,ItemTaxAmount
+8/1/2026,11:46:18,6329357183,Sale,************2445,VISA,2.24,0,$2.24,68142,6329357183,621316170414,78100139,Kiosk 2,123504,Open Price Taxable,8.25,2.07,0.17
