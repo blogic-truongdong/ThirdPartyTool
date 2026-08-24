@@ -51,7 +51,7 @@ namespace BLogicPOS7SupportTool.Setup
             // 
             // lblServer
             // 
-            this.lblServer.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblServer.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblServer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblServer.Location = new System.Drawing.Point(40, 60);
             this.lblServer.Name = "lblServer";
@@ -76,7 +76,7 @@ namespace BLogicPOS7SupportTool.Setup
             // 
             this.lblDatabase1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDatabase1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblDatabase1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblDatabase1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblDatabase1.Location = new System.Drawing.Point(40, 120);
             this.lblDatabase1.Name = "lblDatabase1";
@@ -101,7 +101,7 @@ namespace BLogicPOS7SupportTool.Setup
             // 
             this.lblDatabase2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDatabase2.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblDatabase2.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblDatabase2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblDatabase2.Location = new System.Drawing.Point(40, 180);
             this.lblDatabase2.Name = "lblDatabase2";

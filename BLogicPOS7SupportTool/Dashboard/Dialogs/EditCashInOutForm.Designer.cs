@@ -78,7 +78,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblEmployeeCaption
             //
             this.lblEmployeeCaption.AutoSize = true;
-            this.lblEmployeeCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblEmployeeCaption.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblEmployeeCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblEmployeeCaption.Location = new System.Drawing.Point(24, 60);
             this.lblEmployeeCaption.Name = "lblEmployeeCaption";
@@ -89,7 +89,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblEmployeeValue
             //
             this.lblEmployeeValue.AutoSize = true;
-            this.lblEmployeeValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblEmployeeValue.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblEmployeeValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.lblEmployeeValue.Location = new System.Drawing.Point(150, 60);
             this.lblEmployeeValue.Name = "lblEmployeeValue";
@@ -108,7 +108,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblType
             //
             this.lblType.AutoSize = true;
-            this.lblType.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblType.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblType.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblType.Location = new System.Drawing.Point(24, 100);
             this.lblType.Name = "lblType";
@@ -129,7 +129,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblAmount
             //
             this.lblAmount.AutoSize = true;
-            this.lblAmount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblAmount.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblAmount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblAmount.Location = new System.Drawing.Point(24, 160);
             this.lblAmount.Name = "lblAmount";
@@ -151,7 +151,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblComment
             //
             this.lblComment.AutoSize = true;
-            this.lblComment.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblComment.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblComment.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblComment.Location = new System.Drawing.Point(24, 220);
             this.lblComment.Name = "lblComment";

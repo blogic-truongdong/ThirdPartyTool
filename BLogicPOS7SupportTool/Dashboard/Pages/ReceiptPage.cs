@@ -36,6 +36,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             btnAddItem.Click += BtnAddItem_Click;
             btnCancelTicket.Click += BtnCancelTicket_Click;
             btnSyncPaymentTime.Click += BtnSyncPaymentTime_Click;
+            btnInsertPayment.Click += BtnInsertPayment_Click;
+            btnAddTip.Click += BtnAddTip_Click;
             this.Load += ReceiptPage_Load;
         }
 
@@ -91,7 +93,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             {
                 var receipts = _service.GetReceipts(searchText);
                 if (receipts.Rows.Count == 0)
-                    return (Header: (ReceiptHeader)null, Items: new List<ReceiptLineItem>(), TaxLines: new List<ReceiptTaxLine>(), PaymentLines: new List<ReceiptPaymentLine>(), ReceiptId: (string)null);
+                    return (Header: (ReceiptHeaderEntity)null, Items: new List<ReceiptLineItemEntity>(), TaxLines: new List<ReceiptTaxLineEntity>(), PaymentLines: new List<ReceiptPaymentLineEntity>(), ReceiptId: (string)null);
 
                 var id = receipts.Rows[0]["SaleReceiptID"].ToString();
                 var detail = _service.GetReceiptDetail(id);
@@ -116,6 +118,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                     btnAddItem.Visible = false;
                     btnCancelTicket.Visible = false;
                     btnSyncPaymentTime.Visible = false;
+                    btnInsertPayment.Visible = false;
+                    btnAddTip.Visible = false;
                     return;
                 }
                 _currentReceiptId = t.Result.ReceiptId;
@@ -133,6 +137,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                 btnAddItem.Visible = true;
                 btnCancelTicket.Visible = true;
                 btnSyncPaymentTime.Visible = true;
+                btnInsertPayment.Visible = true;
+                btnAddTip.Visible = true;
                 PopulateStoreInfo(t.Result.Header);
                 PopulateItems(t.Result.Items);
                 PopulateTotals(t.Result.Header, t.Result.TaxLines, t.Result.PaymentLines);
@@ -239,6 +245,46 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             DoSearch();
         }
 
+        // Adds a payment line (optionally a card transaction in a batch) to the loaded ticket.
+        private void BtnInsertPayment_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentReceiptId)) return;
+
+            if (_currentStatusId == "VOID" || _currentStatusId == "CANR")
+            {
+                MessageBox.Show(
+                    $"Ticket #{_currentReceiptNumber} is currently \"{StatusName(_currentStatusId)}\".\n\n" +
+                    "Payments cannot be inserted into voided or cancelled tickets.",
+                    "Insert Payment", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var dlg = new InsertPaymentForm(_service, _currentReceiptId, _currentReceiptNumber))
+            {
+                if (DimOverlay.ShowDialog(ParentForm, dlg) == DialogResult.OK)
+                    DoSearch();
+            }
+        }
+
+        // Adds a tip-only payment line to a completed ticket, booked to the chosen employee + role.
+        private void BtnAddTip_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentReceiptId)) return;
+
+            if (_currentStatusId != "FIN")
+            {
+                MessageBox.Show("Tips can only be added to completed tickets.", "Add Tip",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var dlg = new InsertPaymentForm(_service, _currentReceiptId, _currentReceiptNumber, InsertPaymentMode.AddTip))
+            {
+                if (DimOverlay.ShowDialog(ParentForm, dlg) == DialogResult.OK)
+                    DoSearch();
+            }
+        }
+
         private void BtnAddTipByToken_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_currentReceiptId)) return;
@@ -272,7 +318,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             {
                 if (DimOverlay.ShowDialog(ParentForm, dlg) == DialogResult.OK)
                 {
-                    AppSession.CorrectDataSaleReceipts(_currentReceiptId);
+                    AppSession.CorrectDataSaleReceiptServiceChargeTaxDetails(_currentReceiptId);
                     DoSearch();
                 }
             }
@@ -289,7 +335,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                 return;
             }
 
-            using (var dlg = new FinishTicketForm(_service, _currentReceiptId, _currentReceiptNumber))
+            using (var dlg = new InsertPaymentForm(_service, _currentReceiptId, _currentReceiptNumber, InsertPaymentMode.Finish))
             {
                 if (DimOverlay.ShowDialog(ParentForm, dlg) == DialogResult.OK)
                     DoSearch();
@@ -500,12 +546,14 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             btnAddItem.Visible = false;
             btnCancelTicket.Visible = false;
             btnSyncPaymentTime.Visible = false;
-            PopulateStoreInfo(new ReceiptHeader());
-            PopulateItems(new List<ReceiptLineItem>());
-            PopulateTotals(new ReceiptHeader(), new List<ReceiptTaxLine>(), new List<ReceiptPaymentLine>());
+            btnInsertPayment.Visible = false;
+            btnAddTip.Visible = false;
+            PopulateStoreInfo(new ReceiptHeaderEntity());
+            PopulateItems(new List<ReceiptLineItemEntity>());
+            PopulateTotals(new ReceiptHeaderEntity(), new List<ReceiptTaxLineEntity>(), new List<ReceiptPaymentLineEntity>());
         }
 
-        private void PopulateStoreInfo(ReceiptHeader header)
+        private void PopulateStoreInfo(ReceiptHeaderEntity header)
         {
             SetLabel(lblStoreName, header.StoreName);
             SetLabel(lblStoreAddress, header.StoreAddress);
@@ -553,7 +601,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             lbl.Visible = !string.IsNullOrWhiteSpace(text);
         }
 
-        private void PopulateItems(List<ReceiptLineItem> items)
+        private void PopulateItems(List<ReceiptLineItemEntity> items)
         {
             pnlItemsList.SuspendLayout();
             pnlItemsList.Controls.Clear();
@@ -567,11 +615,11 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             pnlItemsList.ResumeLayout();
         }
 
-        private static List<Panel> BuildItemRows(List<ReceiptLineItem> items)
+        private static List<Panel> BuildItemRows(List<ReceiptLineItemEntity> items)
         {
             var rows = new List<Panel>();
-            ReceiptLineItem currentParent = null;
-            var currentModifiers = new List<ReceiptLineItem>();
+            ReceiptLineItemEntity currentParent = null;
+            var currentModifiers = new List<ReceiptLineItemEntity>();
 
             void FlushGroup()
             {
@@ -598,7 +646,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                 {
                     FlushGroup();
                     currentParent = item;
-                    currentModifiers = new List<ReceiptLineItem>();
+                    currentModifiers = new List<ReceiptLineItemEntity>();
                 }
                 else
                 {
@@ -610,7 +658,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             return rows;
         }
 
-        private static Panel CreateItemRow(ReceiptLineItem item, bool compLabel = false, bool isCompMod = false)
+        private static Panel CreateItemRow(ReceiptLineItemEntity item, bool compLabel = false, bool isCompMod = false)
         {
             bool isModifier = item.IsModifier;
             decimal displayExtendedPrice = (compLabel || isCompMod)
@@ -638,7 +686,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             {
                 Text = description,
                 Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 9F, isModifier ? FontStyle.Regular : FontStyle.Bold),
+                Font = new Font("Segoe UI", 10F, isModifier ? FontStyle.Regular : FontStyle.Bold),
                 ForeColor = rowForeColor,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(8, 0, 0, 0),
@@ -650,7 +698,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                 Text = "$" + item.Price.ToString("F2") + " x " + item.Quantity,
                 Width = 80,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F),
+                Font = new Font("Segoe UI", 10F),
                 ForeColor = Color.FromArgb(150, 150, 150),
                 TextAlign = ContentAlignment.MiddleRight,
                 AutoSize = false
@@ -663,7 +711,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                 Text = totalText,
                 Width = 80,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 ForeColor = isNegative ? Color.FromArgb(200, 50, 50) : Color.FromArgb(50, 50, 50),
                 TextAlign = ContentAlignment.MiddleRight,
                 Padding = new Padding(0, 0, 8, 0),
@@ -678,7 +726,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             return row;
         }
 
-        private void PopulateTotals(ReceiptHeader header, List<ReceiptTaxLine> taxLines, List<ReceiptPaymentLine> paymentLines)
+        private void PopulateTotals(ReceiptHeaderEntity header, List<ReceiptTaxLineEntity> taxLines, List<ReceiptPaymentLineEntity> paymentLines)
         {
             pnlTotals.SuspendLayout();
             pnlTotals.Controls.Clear();
@@ -753,7 +801,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             {
                 Text = label,
                 Dock = labelOnly ? DockStyle.Fill : DockStyle.Fill,
-                Font = new Font("Segoe UI", 9F, isBold ? FontStyle.Bold : FontStyle.Regular),
+                Font = new Font("Segoe UI", 10F, isBold ? FontStyle.Bold : FontStyle.Regular),
                 ForeColor = Color.FromArgb(50, 50, 50),
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(8, 0, 0, 0),
@@ -771,7 +819,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                 Text = (isNeg ? "-$" : "$") + Math.Abs(amount).ToString("F2"),
                 Width = 120,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F, isBold ? FontStyle.Bold : FontStyle.Regular),
+                Font = new Font("Segoe UI", 10F, isBold ? FontStyle.Bold : FontStyle.Regular),
                 ForeColor = isNeg ? Color.FromArgb(200, 50, 50) : Color.FromArgb(50, 50, 50),
                 TextAlign = ContentAlignment.MiddleRight,
                 Padding = new Padding(0, 0, 8, 0),

@@ -1,4 +1,5 @@
 using BLogicPOS7SupportTool.Models;
+using BLogicSystems.XPos.Utilites;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -715,6 +716,32 @@ namespace BLogicPOS7SupportTool.Core
             return row[col] is Guid g ? g : Guid.Parse(row[col].ToString());
         }
 
+        public static decimal CalculateSVCFeeTaxAmount(decimal svcFeeBaseAmount)
+        {
+            if (svcFeeBaseAmount <= 0)
+                return 0;
+
+            if (!IsApplyTaxForSVCFee || SVCFee == 0)
+                return 0;
+            else
+            {
+                return RoundUp(TaxPercentForSVCFee * svcFeeBaseAmount / 100);
+            }
+        }
+
+        public static decimal CalculateCashDiscountTaxAmount(decimal cashDiscountBaseAmount)
+        {
+            if (cashDiscountBaseAmount <= 0)
+                return 0;
+
+            if (!IsApplyTaxForSVCFee || SVCFee == 0)
+                return 0;
+            else
+            {
+                return RoundUp(TaxPercentForSVCFee * cashDiscountBaseAmount / 100);
+            }
+        }
+
         public static decimal CalculateSVCFeeTaxAmountFromSVCFeeAmount(decimal total)
         {
             if (total <= 0)
@@ -758,6 +785,18 @@ namespace BLogicPOS7SupportTool.Core
             }
         }
 
+        public static decimal CalculateMerchantFeeAmountWithParams(decimal total, decimal svcMerchantFee)
+        {
+            if (SVCFeeType == 1)
+            {
+                return RoundUp(total * (svcMerchantFee / 100));
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public static decimal RoundUp(decimal dInValue, int intPlaces = 2)
         {
             if (dInValue >= 0)
@@ -790,6 +829,23 @@ namespace BLogicPOS7SupportTool.Core
             }
         }
 
+        public static void CorrectAllDataOfSaleReceipts(string receiptId)
+        {
+            try
+            {
+                CorrectDataSaleReceipts(receiptId);
+                CorrectDataSaleReceiptDetailTaxDetails(receiptId);
+                CorrectDataSaleReceiptServiceChargeTaxDetails(receiptId);
+                CorrectDataPaymentRoleDetails(receiptId);
+                CorrectDataSaleReceiptPaymentDetails(receiptId);
+                CorrectDataTransactionDetail(receiptId);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
         public static void CorrectDataSaleReceipts(string receiptId)
         {
             try
@@ -798,13 +854,13 @@ namespace BLogicPOS7SupportTool.Core
 
                 string sql = $@"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'";
 
-                var sale = QueryFirstOrDefault<SaleReceipts>(true, sql);
+                var sale = QueryFirstOrDefault<SaleReceiptsEntity>(true, sql);
 
                 sql = $@"SELECT * FROM dbo.SaleReceiptDetails WHERE SaleReceiptID = '{receiptId}'";
-                var saleDetails = Query<SaleReceiptDetails>(true, sql);
+                var saleDetails = Query<SaleReceiptDetailsEntity>(true, sql);
 
                 sql = $@"SELECT a.*, b.CashAdjust FROM dbo.SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID WHERE SaleReceiptID = '{receiptId}'";
-                var saleReceiptPaymentDetails = Query<SaleReceiptPaymentDetails>(true, sql);
+                var saleReceiptPaymentDetails = Query<SaleReceiptPaymentDetailsEntity>(true, sql);
 
                 if (sale == null || saleDetails == null)
                 {
@@ -812,7 +868,7 @@ namespace BLogicPOS7SupportTool.Core
                 }
 
                 if (saleReceiptPaymentDetails == null)
-                    saleReceiptPaymentDetails = new List<SaleReceiptPaymentDetails>();
+                    saleReceiptPaymentDetails = new List<SaleReceiptPaymentDetailsEntity>();
 
                 var newServiceChargeTaxAmount = sale.AreaFeeTaxAmount + sale.PartyServiceFeeTaxAmount + sale.ServiceFeeTaxAmount + sale.AutoGratuityTaxAmount + sale.ExtraFeeTaxAmount;
 
@@ -832,7 +888,12 @@ namespace BLogicPOS7SupportTool.Core
                 if (sale.TotalAmount != newTotalAmount)
                     listScript.Add($"Update dbo.SaleReceipts SET TotalAmount = '{newTotalAmount}' WHERE SaleReceiptID = '{receiptId}'");
 
-                if (sale.TransactionStatusID == "FIN" || sale.TransactionStatusID == "VOID" || sale.TransactionStatusID == "RET")
+                if (sale.TransactionStatusID == "FIN" || sale.TransactionStatusID == "VOID" || sale.TransactionStatusID == "RET" || sale.TransactionStatusID == "CANR")
+                {
+                    if (sale.PaidAmount != newTotalAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET PaidAmount = '{newTotalAmount}' WHERE SaleReceiptID = '{receiptId}'");
+                }
+                else
                 {
                     if (sale.PaidAmount != newPaidAmount)
                         listScript.Add($"Update dbo.SaleReceipts SET PaidAmount = '{newPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
@@ -856,17 +917,34 @@ namespace BLogicPOS7SupportTool.Core
                 if (sale.ServiceChargeTaxAmount != newServiceChargeTaxAmount)
                     listScript.Add($"Update dbo.SaleReceipts SET ServiceChargeTaxAmount = '{newServiceChargeTaxAmount}' WHERE SaleReceiptID = '{receiptId}'");
 
-                if (sale.SVCFeePaidAmount != newSVCFeePaidAmount)
-                    listScript.Add($"Update dbo.SaleReceipts SET SVCFeePaidAmount = '{newSVCFeePaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+                if (sale.TransactionStatusID == "FIN" || sale.TransactionStatusID == "VOID" || sale.TransactionStatusID == "RET" || sale.TransactionStatusID == "CANR")
+                {
+                    if (sale.SVCFeePaidAmount != newSVCFeePaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET SVCFeeAmount = '{newSVCFeePaidAmount}', SVCFeePaidAmount = '{newSVCFeePaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
 
-                if (sale.SVCFeeTaxPaidAmount != newSVCFeeTaxPaidAmount)
-                    listScript.Add($"Update dbo.SaleReceipts SET SVCFeeTaxPaidAmount = '{newSVCFeeTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+                    if (sale.SVCFeeTaxPaidAmount != newSVCFeeTaxPaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET SVCFeeTaxAmount = '{newSVCFeeTaxPaidAmount}', SVCFeeTaxPaidAmount = '{newSVCFeeTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
 
-                if (sale.CashDiscountPaidAmount != newCashDiscountPaidAmount)
-                    listScript.Add($"Update dbo.SaleReceipts SET CashDiscountPaidAmount = '{newCashDiscountPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+                    if (sale.CashDiscountPaidAmount != newCashDiscountPaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET CashDiscountAmount = '{newCashDiscountPaidAmount}', CashDiscountPaidAmount = '{newCashDiscountPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
 
-                if (sale.CashDiscountTaxPaidAmount != newCashDiscountTaxPaidAmount)
-                    listScript.Add($"Update dbo.SaleReceipts SET CashDiscountTaxPaidAmount = '{newCashDiscountTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+                    if (sale.CashDiscountTaxPaidAmount != newCashDiscountTaxPaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET CashDiscountTaxAmount = '{newCashDiscountTaxPaidAmount}', CashDiscountTaxPaidAmount = '{newCashDiscountTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+                }
+                else
+                {
+                    if (sale.SVCFeePaidAmount != newSVCFeePaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET SVCFeePaidAmount = '{newSVCFeePaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+
+                    if (sale.SVCFeeTaxPaidAmount != newSVCFeeTaxPaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET SVCFeeTaxPaidAmount = '{newSVCFeeTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+
+                    if (sale.CashDiscountPaidAmount != newCashDiscountPaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET CashDiscountPaidAmount = '{newCashDiscountPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+
+                    if (sale.CashDiscountTaxPaidAmount != newCashDiscountTaxPaidAmount)
+                        listScript.Add($"Update dbo.SaleReceipts SET CashDiscountTaxPaidAmount = '{newCashDiscountTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}'");
+                }
 
                 if (sale.FinalGratuity != newFinalGratuity)
                     listScript.Add($"Update dbo.SaleReceipts SET FinalGratuity = '{newFinalGratuity}' WHERE SaleReceiptID = '{receiptId}'");
@@ -875,12 +953,6 @@ namespace BLogicPOS7SupportTool.Core
                 {
                     ProcessNonQuery(true, script);
                 }
-
-                CorrectDataSaleReceiptDetailTaxDetails(receiptId);
-                CorrectDataSaleReceiptServiceChargeTaxDetails(receiptId);
-                CorrectDataPaymentRoleDetails(receiptId);
-                CorrectDataSaleReceiptPaymentDetails(receiptId);
-                CorrectDataTransactionDetail(receiptId);
             }
             catch (Exception ex)
             {
@@ -888,15 +960,15 @@ namespace BLogicPOS7SupportTool.Core
             }
         }
 
-        private static void CorrectDataSaleReceiptServiceChargeTaxDetails(string receiptId)
+        public static void CorrectDataSaleReceiptServiceChargeTaxDetails(string receiptId)
         {
             try
             {
                 string sql = $@"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'";
-                var sale = QueryFirstOrDefault<SaleReceipts>(true, sql);
+                var sale = QueryFirstOrDefault<SaleReceiptsEntity>(true, sql);
 
                 sql = $@"SELECT * FROM dbo.SaleReceiptServiceChargeTaxDetails WHERE SaleReceiptID = '{receiptId}' order by ServiceChargeTaxRate";
-                var details = Query<SaleReceiptServiceChargeTaxDetails>(true, sql);
+                var details = Query<SaleReceiptServiceChargeTaxDetailsEntity>(true, sql);
 
                 if (sale == null || details == null || details.Count == 0)
                     return;
@@ -999,9 +1071,9 @@ namespace BLogicPOS7SupportTool.Core
         // tròn) vào dòng có giá trị lớn nhất để tổng các dòng khớp đúng total. Trường hợp không lưu
         // ServiceChargeTaxRate (sumRate <= 0) thì chia đều total cho các dòng hiện có.
         public static void AllocateTaxByRate(
-            List<SaleReceiptServiceChargeTaxDetails> details, decimal sumRate, decimal total,
-            Action<SaleReceiptServiceChargeTaxDetails, decimal> setter,
-            Func<SaleReceiptServiceChargeTaxDetails, decimal> getter)
+            List<SaleReceiptServiceChargeTaxDetailsEntity> details, decimal sumRate, decimal total,
+            Action<SaleReceiptServiceChargeTaxDetailsEntity, decimal> setter,
+            Func<SaleReceiptServiceChargeTaxDetailsEntity, decimal> getter)
         {
             if (sumRate > 0)
             {
@@ -1032,13 +1104,13 @@ namespace BLogicPOS7SupportTool.Core
         // phần lẻ dồn vào dòng lớn nhất — logic tương tự CorrectDataSaleReceiptServiceChargeTaxDetails
         // nhưng áp cho từng item. Trường hợp không lưu TaxRate (tổng TaxRate = 0) thì chia đều
         // TaxAmount cho các dòng hiện có thay vì bỏ qua.
-        private static void CorrectDataSaleReceiptDetailTaxDetails(string receiptId)
+        public static void CorrectDataSaleReceiptDetailTaxDetails(string receiptId)
         {
             try
             {
-                var details = Query<SaleReceiptDetails>(true,
+                var details = Query<SaleReceiptDetailsEntity>(true,
                     $@"SELECT * FROM dbo.SaleReceiptDetails WHERE SaleReceiptID = '{receiptId}'");
-                var taxDetails = Query<SaleReceiptDetailTaxDetails>(true,
+                var taxDetails = Query<SaleReceiptDetailTaxDetailsEntity>(true,
                     $@"SELECT * FROM dbo.SaleReceiptDetailTaxDetails WHERE SaleReceiptID = '{receiptId}'");
 
                 if (details == null || details.Count == 0 || taxDetails == null || taxDetails.Count == 0)
@@ -1114,27 +1186,131 @@ namespace BLogicPOS7SupportTool.Core
             }
         }
 
+        // Re-syncs the SaleReceiptDetailTaxDetails rows of ONE line item with that item's
+        // TaxAmount / Price / ExtendedPrice / Status. Same rule as
+        // CorrectDataSaleReceiptDetailTaxDetails but scoped to a single SaleReceiptDetailID,
+        // so an edit of one item does not rewrite the whole ticket: the item's TaxAmount is
+        // spread over its tax rows by TaxRate, or split evenly when no TaxRate is stored,
+        // and the rounding remainder is pushed onto the largest row.
+        public static void CorrectDataSaleReceiptDetailTaxDetailsByDetailID(string saleReceiptDetailId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(saleReceiptDetailId))
+                    return;
+
+                var item = QueryFirstOrDefault<SaleReceiptDetailsEntity>(true,
+                    $@"SELECT * FROM dbo.SaleReceiptDetails WHERE SaleReceiptDetailID = '{saleReceiptDetailId}'");
+                var rows = Query<SaleReceiptDetailTaxDetailsEntity>(true,
+                    $@"SELECT * FROM dbo.SaleReceiptDetailTaxDetails WHERE SaleReceiptDetailID = '{saleReceiptDetailId}'");
+
+                if (item == null || rows == null || rows.Count == 0)
+                    return;
+
+                var inv = CultureInfo.InvariantCulture;
+                var sumRate = rows.Sum(x => x.TaxRate);
+
+                // Snapshot the current values so only rows that really change get written.
+                var oldValues = rows.ToDictionary(
+                    x => x.SaleReceiptDetailTaxDetailID,
+                    x => new { x.TaxAmount, x.Price, x.ExtendedPrice, x.Status });
+
+                if (sumRate > 0)
+                {
+                    // TaxRate is stored: spread the item's TaxAmount proportionally.
+                    foreach (var r in rows)
+                        r.TaxAmount = Math.Round(r.TaxRate * item.TaxAmount / sumRate, 2);
+                }
+                else
+                {
+                    // No TaxRate stored (sum = 0): split the item's TaxAmount evenly.
+                    var each = Math.Round(item.TaxAmount / rows.Count, 2);
+                    foreach (var r in rows)
+                        r.TaxAmount = each;
+                }
+
+                foreach (var r in rows)
+                {
+                    r.Price = item.Price;
+                    r.ExtendedPrice = item.ExtendedPrice;
+                    r.Status = item.Status;
+                }
+
+                // Add the rounding remainder to the largest row so the rows add up to item.TaxAmount.
+                var balance = item.TaxAmount - rows.Sum(x => x.TaxAmount);
+                if (balance != 0)
+                {
+                    var target = rows.Where(x => x.TaxAmount != 0).OrderByDescending(x => x.TaxRate).FirstOrDefault()
+                                 ?? rows[0];
+                    target.TaxAmount += balance;
+                }
+
+                // One small script per row; unchanged rows are skipped.
+                foreach (var r in rows)
+                {
+                    var old = oldValues[r.SaleReceiptDetailTaxDetailID];
+                    if (r.TaxAmount == old.TaxAmount && r.Price == old.Price &&
+                        r.ExtendedPrice == old.ExtendedPrice && r.Status == old.Status)
+                        continue;
+
+                    ProcessNonQuery(true,
+                        $@"UPDATE dbo.SaleReceiptDetailTaxDetails SET TaxAmount = '{r.TaxAmount.ToString(inv)}', Price = '{r.Price.ToString(inv)}', ExtendedPrice = '{r.ExtendedPrice.ToString(inv)}', Status = '{r.Status}'
+                           WHERE SaleReceiptDetailTaxDetailID = '{r.SaleReceiptDetailTaxDetailID}'");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error($"CorrectDataSaleReceiptDetailTaxDetailsByDetailID failed, detail: {saleReceiptDetailId}", ex);
+            }
+        }
+
         // Phân bổ service charge (Party / Area / Service+Extra / Auto) và thuế của chúng xuống
         // từng SaleReceiptPaymentDetails theo phần PaidServiceFee mà mỗi payment gánh — port từ
         // logic phân bổ trong Planet SaleReceiptHelperABS.SavePaymentDetail. Hỗ trợ nhiều payment
         // (chia tuần tự); bỏ qua PreAuth và các nhánh đặc thù (split-evenly / house account /
         // gift card / SVCFee-MerchantFee của service charge).
-        private static void CorrectDataSaleReceiptPaymentDetails(string receiptId)
+        public static void CorrectDataSaleReceiptPaymentDetails(string receiptId)
         {
             try
             {
-                var sale = QueryFirstOrDefault<SaleReceipts>(true,
+                var sale = QueryFirstOrDefault<SaleReceiptsEntity>(true,
                     $@"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'");
 
-                var payments = Query<SaleReceiptPaymentDetails>(true,
+                var payments = Query<SaleReceiptPaymentDetailsEntity>(true,
                     $@"SELECT * FROM dbo.SaleReceiptPaymentDetails WHERE SaleReceiptID = '{receiptId}'
                        ORDER BY CreatedDate, SaleReceiptPaymentDetailID");
 
                 if (sale == null || payments == null || payments.Count == 0)
                     return;
 
+                // Snapshot the columns this method writes, before the allocation below mutates
+                // the entities, so each update group is only sent when its values really change.
+                var oldValues = payments.ToDictionary(
+                    x => x.SaleReceiptPaymentDetailID,
+                    x => new
+                    {
+                        x.PaidServiceFee,
+                        x.PartyServiceFeeAmount,
+                        x.AreaFeeAmount,
+                        x.ServiceFee,
+                        x.AutoGratuityAmount,
+                        x.PartyServiceFeeTaxAmount,
+                        x.AreaFeeTaxAmount,
+                        x.ServiceFeeTaxAmount,
+                        x.AutoGratuityTaxAmount,
+                        x.SVCFeeForServiceCharge,
+                        x.SVCFeeForServiceFee,
+                        x.SVCFeeForPartyServiceFeeAmount,
+                        x.SVCFeeForAreaFeeAmount,
+                        x.SVCFeeForAutoGratuityAmount,
+                        x.MerchantFeeForServiceFee,
+                        x.MerchantFeeForPartyServiceFeeAmount,
+                        x.MerchantFeeForAreaFeeAmount,
+                        x.MerchantFeeForAutoGratuityAmount
+                    });
+
                 // Breakdown thuế theo từng ServiceChargeTaxRate, dùng để tách phần thuế cho mỗi payment.
-                var taxDetails = Query<SaleReceiptServiceChargeTaxDetails>(true,
+                var taxDetails = Query<SaleReceiptServiceChargeTaxDetailsEntity>(true,
                     $@"SELECT * FROM dbo.SaleReceiptServiceChargeTaxDetails WHERE SaleReceiptID = '{receiptId}'");
 
                 decimal rate = sale.ServiceChargeTaxRate;
@@ -1246,34 +1422,75 @@ namespace BLogicPOS7SupportTool.Core
                 var inv = CultureInfo.InvariantCulture;
                 foreach (var p in payments)
                 {
-                    string upd = $@"
-                        UPDATE dbo.SaleReceiptPaymentDetails SET
-                            PaidServiceFee           = {p.PaidServiceFee.ToString(inv)},
-                            PartyServiceFeeAmount    = {p.PartyServiceFeeAmount.ToString(inv)},
-                            AreaFeeAmount            = {p.AreaFeeAmount.ToString(inv)},
-                            ServiceFee               = {p.ServiceFee.ToString(inv)},
-                            AutoGratuityAmount       = {p.AutoGratuityAmount.ToString(inv)}
-                        WHERE SaleReceiptPaymentDetailID = {p.SaleReceiptPaymentDetailID}";
-                    ProcessNonQuery(true, upd);
+                    var old = oldValues[p.SaleReceiptPaymentDetailID];
 
-                    upd = $@"
-                        UPDATE dbo.SaleReceiptPaymentDetails SET
-                            PartyServiceFeeTaxAmount = {p.PartyServiceFeeTaxAmount.ToString(inv)},
-                            AreaFeeTaxAmount         = {p.AreaFeeTaxAmount.ToString(inv)},
-                            ServiceFeeTaxAmount      = {p.ServiceFeeTaxAmount.ToString(inv)},
-                            AutoGratuityTaxAmount    = {p.AutoGratuityTaxAmount.ToString(inv)}
-                        WHERE SaleReceiptPaymentDetailID = {p.SaleReceiptPaymentDetailID}";
-                    ProcessNonQuery(true, upd);
+                    // Service charge amounts carried by this payment.
+                    if (p.PaidServiceFee != old.PaidServiceFee
+                        || p.PartyServiceFeeAmount != old.PartyServiceFeeAmount
+                        || p.AreaFeeAmount != old.AreaFeeAmount
+                        || p.ServiceFee != old.ServiceFee
+                        || p.AutoGratuityAmount != old.AutoGratuityAmount)
+                    {
+                        string upd = $@"
+                            UPDATE dbo.SaleReceiptPaymentDetails SET
+                                PaidServiceFee           = {p.PaidServiceFee.ToString(inv)},
+                                PartyServiceFeeAmount    = {p.PartyServiceFeeAmount.ToString(inv)},
+                                AreaFeeAmount            = {p.AreaFeeAmount.ToString(inv)},
+                                ServiceFee               = {p.ServiceFee.ToString(inv)},
+                                AutoGratuityAmount       = {p.AutoGratuityAmount.ToString(inv)}
+                            WHERE SaleReceiptPaymentDetailID = {p.SaleReceiptPaymentDetailID}";
+                        ProcessNonQuery(true, upd);
+                    }
 
-                    upd = $@"
-                        UPDATE dbo.SaleReceiptPaymentDetails SET
-                            SVCFeeForServiceCharge           = {p.SVCFeeForServiceCharge.ToString(inv)},
-                            SVCFeeForServiceFee              = {p.SVCFeeForServiceFee.ToString(inv)},
-                            SVCFeeForPartyServiceFeeAmount   = {p.SVCFeeForPartyServiceFeeAmount.ToString(inv)},
-                            SVCFeeForAreaFeeAmount           = {p.SVCFeeForAreaFeeAmount.ToString(inv)},
-                            SVCFeeForAutoGratuityAmount      = {p.SVCFeeForAutoGratuityAmount.ToString(inv)}
-                        WHERE SaleReceiptPaymentDetailID = {p.SaleReceiptPaymentDetailID}";
-                    ProcessNonQuery(true, upd);
+                    // Tax of each service charge part.
+                    if (p.PartyServiceFeeTaxAmount != old.PartyServiceFeeTaxAmount
+                        || p.AreaFeeTaxAmount != old.AreaFeeTaxAmount
+                        || p.ServiceFeeTaxAmount != old.ServiceFeeTaxAmount
+                        || p.AutoGratuityTaxAmount != old.AutoGratuityTaxAmount)
+                    {
+                        string upd = $@"
+                            UPDATE dbo.SaleReceiptPaymentDetails SET
+                                PartyServiceFeeTaxAmount = {p.PartyServiceFeeTaxAmount.ToString(inv)},
+                                AreaFeeTaxAmount         = {p.AreaFeeTaxAmount.ToString(inv)},
+                                ServiceFeeTaxAmount      = {p.ServiceFeeTaxAmount.ToString(inv)},
+                                AutoGratuityTaxAmount    = {p.AutoGratuityTaxAmount.ToString(inv)}
+                            WHERE SaleReceiptPaymentDetailID = {p.SaleReceiptPaymentDetailID}";
+                        ProcessNonQuery(true, upd);
+                    }
+
+                    // SVC fee (custom fee) per service charge part.
+                    if (p.SVCFeeForServiceCharge != old.SVCFeeForServiceCharge
+                        || p.SVCFeeForServiceFee != old.SVCFeeForServiceFee
+                        || p.SVCFeeForPartyServiceFeeAmount != old.SVCFeeForPartyServiceFeeAmount
+                        || p.SVCFeeForAreaFeeAmount != old.SVCFeeForAreaFeeAmount
+                        || p.SVCFeeForAutoGratuityAmount != old.SVCFeeForAutoGratuityAmount)
+                    {
+                        string upd = $@"
+                            UPDATE dbo.SaleReceiptPaymentDetails SET
+                                SVCFeeForServiceCharge           = {p.SVCFeeForServiceCharge.ToString(inv)},
+                                SVCFeeForServiceFee              = {p.SVCFeeForServiceFee.ToString(inv)},
+                                SVCFeeForPartyServiceFeeAmount   = {p.SVCFeeForPartyServiceFeeAmount.ToString(inv)},
+                                SVCFeeForAreaFeeAmount           = {p.SVCFeeForAreaFeeAmount.ToString(inv)},
+                                SVCFeeForAutoGratuityAmount      = {p.SVCFeeForAutoGratuityAmount.ToString(inv)}
+                            WHERE SaleReceiptPaymentDetailID = {p.SaleReceiptPaymentDetailID}";
+                        ProcessNonQuery(true, upd);
+                    }
+
+                    // Merchant fee per service charge part.
+                    if (p.MerchantFeeForServiceFee != old.MerchantFeeForServiceFee
+                        || p.MerchantFeeForPartyServiceFeeAmount != old.MerchantFeeForPartyServiceFeeAmount
+                        || p.MerchantFeeForAreaFeeAmount != old.MerchantFeeForAreaFeeAmount
+                        || p.MerchantFeeForAutoGratuityAmount != old.MerchantFeeForAutoGratuityAmount)
+                    {
+                        string upd = $@"
+                            UPDATE dbo.SaleReceiptPaymentDetails SET
+                                MerchantFeeForServiceFee              = {p.MerchantFeeForServiceFee.ToString(inv)},
+                                MerchantFeeForPartyServiceFeeAmount   = {p.MerchantFeeForPartyServiceFeeAmount.ToString(inv)},
+                                MerchantFeeForAreaFeeAmount           = {p.MerchantFeeForAreaFeeAmount.ToString(inv)},
+                                MerchantFeeForAutoGratuityAmount      = {p.MerchantFeeForAutoGratuityAmount.ToString(inv)}
+                            WHERE SaleReceiptPaymentDetailID = {p.SaleReceiptPaymentDetailID}";
+                        ProcessNonQuery(true, upd);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1288,16 +1505,16 @@ namespace BLogicPOS7SupportTool.Core
             {
                 List<string> listScript = new List<string>();
 
-                var sale = QueryFirstOrDefault<SaleReceipts>(true,
+                var sale = QueryFirstOrDefault<SaleReceiptsEntity>(true,
                     $@"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'");
 
-                var payments = Query<SaleReceiptPaymentDetails>(true,
+                var payments = Query<SaleReceiptPaymentDetailsEntity>(true,
                     $@"SELECT a.*, b.PaymentMethodType FROM SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID WHERE SaleReceiptID = '{receiptId}'");
 
-                var paymentRoleDetails = Query<PaymentRoleDetails>(true,
+                var paymentRoleDetails = Query<PaymentRoleDetailsEntity>(true,
                     $@"SELECT * FROM dbo.PaymentRoleDetails WHERE SaleReceiptID = '{receiptId}'");
 
-                var tables = Query<QueryModel>(true, $@"SELECT t.name AS TableName FROM sys.tables t ORDER BY t.name;");
+                var tables = Query<QueryModelEntity>(true, $@"SELECT t.name AS TableName FROM sys.tables t ORDER BY t.name;");
 
                 if (sale == null || tables.Exists(x => x.TableName == "PaymentRoleDetails") == false || payments == null || payments.Count == 0)
                 {
@@ -1396,7 +1613,7 @@ namespace BLogicPOS7SupportTool.Core
             {
                 string sql = string.Empty;
 
-                var payments = Query<SaleReceiptPaymentDetails>(true,
+                var payments = Query<SaleReceiptPaymentDetailsEntity>(true,
                     $@"SELECT * FROM SaleReceiptPaymentDetails WHERE SaleReceiptID = '{receiptId}'");
 
                 if (payments?.Count > 0)
@@ -1409,7 +1626,7 @@ namespace BLogicPOS7SupportTool.Core
 
                             // Đọc dữ liệu hiện tại trước để so sánh cũ/mới, chỉ update cột thực sự đổi.
                             sql = $"select * from TransactionDetail where ID = '{item.CreditCardTransactionID}'";
-                            var transactionDetail = QueryFirstOrDefault<TransactionDetail>(false, sql);
+                            var transactionDetail = QueryFirstOrDefault<TransactionDetailEntity>(false, sql);
                             if (transactionDetail == null)
                                 continue;
 
@@ -1578,7 +1795,7 @@ namespace BLogicPOS7SupportTool.Core
         // SaleReceiptServiceChargeTaxDetails nếu có; ngược lại dùng percent tổng. Port từ
         // Planet Helper.CalculateTaxServiceCharge.
         private static decimal CalculateTaxServiceCharge(decimal amount, decimal percent,
-            decimal totalTaxByServiceCharge, List<SaleReceiptServiceChargeTaxDetails> taxDetails)
+            decimal totalTaxByServiceCharge, List<SaleReceiptServiceChargeTaxDetailsEntity> taxDetails)
         {
             if (amount == 0 || totalTaxByServiceCharge == 0)
                 return 0;
@@ -1604,7 +1821,7 @@ namespace BLogicPOS7SupportTool.Core
 
         // Tính SVC fee (custom fee) trên từng phần service charge của một payment — port từ
         // Planet SaleReceiptHelperABS.CalculateCustomFeeForServiceCharge (chỉ phần SVCFeeForXxx).
-        private static void CalculateSVCFeeForServiceCharge(SaleReceiptPaymentDetails p, SaleReceipts sale, bool isApplyTaxCustomFee)
+        private static void CalculateSVCFeeForServiceCharge(SaleReceiptPaymentDetailsEntity p, SaleReceiptsEntity sale, bool isApplyTaxCustomFee)
         {
             // Chỉ áp cho credit card / cash-adjust hoặc khi có cấu hình SVC fee (không phải cash discount).
             bool applies = p.PaymentMethodID == 2 || p.CashAdjust == 2
@@ -1646,6 +1863,37 @@ namespace BLogicPOS7SupportTool.Core
                 else if (p.SVCFeeForServiceFee > 0) p.SVCFeeForServiceFee -= diff;
                 else if (p.SVCFeeForAutoGratuityAmount > 0) p.SVCFeeForAutoGratuityAmount -= diff;
             }
+
+            decimal tempMerchantFeeForServiceCharge = 0;
+            if (isApplyTaxCustomFee)
+            {
+                decimal taxsc = p.AutoGratuityTaxAmount + p.AreaFeeTaxAmount + p.PartyServiceFeeTaxAmount + p.ServiceFeeTaxAmount;
+                tempMerchantFeeForServiceCharge = CalculateMerchantFee((p.PaidServiceFee - taxsc) + p.SVCFeeForServiceCharge, p.MerchantFeePercent);
+
+                p.MerchantFeeForAutoGratuityAmount = CalculateMerchantFee(p.AutoGratuityAmount - p.AutoGratuityTaxAmount + p.SVCFeeForAutoGratuityAmount, p.MerchantFeePercent);
+                p.MerchantFeeForAreaFeeAmount = CalculateMerchantFee(p.AreaFeeAmount - p.AreaFeeTaxAmount + p.SVCFeeForAreaFeeAmount, p.MerchantFeePercent);
+                p.MerchantFeeForPartyServiceFeeAmount = CalculateMerchantFee(p.PartyServiceFeeAmount - p.PartyServiceFeeTaxAmount + p.SVCFeeForPartyServiceFeeAmount, p.MerchantFeePercent);
+                p.MerchantFeeForServiceFee = CalculateMerchantFee(p.ServiceFee - p.ServiceFeeTaxAmount + p.SVCFeeForServiceFee, p.MerchantFeePercent);
+            }
+            else
+            {
+                tempMerchantFeeForServiceCharge = CalculateMerchantFee(p.PaidServiceFee + p.SVCFeeForServiceCharge, p.MerchantFeePercent);
+                p.MerchantFeeForAutoGratuityAmount = CalculateMerchantFee(p.AutoGratuityAmount + p.SVCFeeForAutoGratuityAmount, p.MerchantFeePercent);
+                p.MerchantFeeForAreaFeeAmount = CalculateMerchantFee(p.AreaFeeAmount + p.SVCFeeForAreaFeeAmount, p.MerchantFeePercent);
+                p.MerchantFeeForPartyServiceFeeAmount = CalculateMerchantFee(p.PartyServiceFeeAmount + p.SVCFeeForPartyServiceFeeAmount, p.MerchantFeePercent);
+                p.MerchantFeeForServiceFee = CalculateMerchantFee(p.ServiceFee + p.SVCFeeForServiceFee, p.MerchantFeePercent);
+            }
+
+            tempTotal = p.MerchantFeeForAutoGratuityAmount + p.MerchantFeeForAreaFeeAmount
+               + p.MerchantFeeForPartyServiceFeeAmount + p.MerchantFeeForServiceFee;
+            diff = tempTotal - p.SVCFeeForServiceCharge;
+            if (diff != 0)
+            {
+                if (p.SVCFeeForPartyServiceFeeAmount > 0) p.SVCFeeForPartyServiceFeeAmount -= diff;
+                else if (p.SVCFeeForAreaFeeAmount > 0) p.SVCFeeForAreaFeeAmount -= diff;
+                else if (p.SVCFeeForServiceFee > 0) p.SVCFeeForServiceFee -= diff;
+                else if (p.SVCFeeForAutoGratuityAmount > 0) p.SVCFeeForAutoGratuityAmount -= diff;
+            }
         }
 
         // Tính SVC fee cho một khoản (percent mode). Port từ Planet CalculateSVCFee: chỉ áp dụng khi
@@ -1664,6 +1912,25 @@ namespace BLogicPOS7SupportTool.Core
             return svc;
         }
 
+        public static decimal CalculateMerchantFee(decimal amount, decimal merchantFeeValue)
+        {
+            decimal merchantFeeAmount = 0;
+
+            try
+            {
+
+                if (merchantFeeValue == 0)
+                    merchantFeeValue = MerchantFee;
+
+                merchantFeeAmount = RoundUp(amount * (merchantFeeValue / 100));
+            }
+            catch (Exception ex)
+            {
+                merchantFeeAmount = 0;
+            }
+            return merchantFeeAmount;
+        }
+
         public static EmployeeClockInInfoEntity GetEmployeeClockInInfoEntity(object employeeID, DateTime startDate)
         {
             EmployeeClockInInfoEntity employeeClockInInfoEntity = new EmployeeClockInInfoEntity();
@@ -1671,7 +1938,7 @@ namespace BLogicPOS7SupportTool.Core
             {
 
                 string sql = $"select * from TimeClock where EmployeeID = '{employeeID}' and (ClockStatus = 1 OR (DateTimeIn <= '{startDate}' and '{startDate}' <= DateTimeOut )) order by DateTimeIn desc";
-                var timeClock = QueryFirstOrDefault<TimeClock>(true, sql);
+                var timeClock = QueryFirstOrDefault<TimeClockEntity>(true, sql);
 
                 if (!string.IsNullOrWhiteSpace(timeClock?.TimeClockID))
                 {
@@ -1683,10 +1950,10 @@ namespace BLogicPOS7SupportTool.Core
                 }
 
                 sql = $"select IsUsingRoleTipPool,TipRate,TipRateOT from Employees where EmployeeID = '{employeeID}'";
-                var employee = QueryFirstOrDefault<Employees>(true, sql);
+                var employee = QueryFirstOrDefault<EmployeesEntity>(true, sql);
 
                 sql = $"select top 1 r.RolesID,TipRate,TipRateOT  from EmployeeRoles er left join Roles r on er.RolesID = r.RolesID where er.EmployeeID = '{employeeID}' order by TipRate";
-                var role = QueryFirstOrDefault<Roles>(true, sql);
+                var role = QueryFirstOrDefault<Models.RolesEntity>(true, sql);
 
                 if (employee != null && role != null)
                 {
@@ -1732,5 +1999,103 @@ namespace BLogicPOS7SupportTool.Core
             return employeeClockInInfoEntity;
         }
 
+        public static void LoadBLogicPOS7Configurations()
+        {
+            if (string.IsNullOrEmpty(BLogicPOS7ConnectionString)) return;
+
+            try
+            {
+                var dt = ProcessQuery(true, "SELECT ConfigurationName, ConfigurationValue FROM dbo.Configurations", "Configurations");
+
+                POSConfig.Configuration.ConfigValue.GetValueFromTable(dt);
+
+                string sql = $"SELECT b.SingleTaxRatePercentage FROM dbo.TaxCodeDetails a LEFT JOIN dbo.TaxAuthorities b ON a.TaxAuthorityID = b.TaxAuthorityID WHERE a.TaxCodeID = '{POSConfig.Configuration.ConfigValue.CreditCardConfigValue.TaxCodeIDForCustomFee}'";
+
+                Utility.TaxPercentForSVCFee = Utility.GetDecimalFromObject(ProcessQuerySingleValue(true, sql));
+
+                Utility.IsCredit = true;
+                Utility.IsUseConfigDualPrice = Utility.IsCheckUseDualPrice();
+                Utility.IsApplyTaxForSVCFee = !Utility.IsUseConfigDualPrice && POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee > 0 && Utility.TaxPercentForSVCFee > 0;
+                Utility.IsShowCreditPriceOnScreen = POSConfig.Configuration.ConfigValue.SystemConfigValue.ShowItemPriceOnDualPriceMode == "1";
+                if (!Utility.IsUseConfigDualPrice)
+                    Utility.IsShowCreditPriceOnScreen = false;
+                Utility.IsCurrentPriceUseDualPrice = Utility.IsShowPriceUseDualPrice();
+
+                Utility.EnableSurcharge = POSConfig.Configuration.ConfigValue.SystemConfigValue.EnableSurcharge;
+                if (Utility.EnableSurcharge)
+                {
+                    Utility.IsApplyTaxForSVCFee = true;
+
+                    POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee = POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SurchargeFee;
+                    POSConfig.Configuration.ConfigValue.CreditCardConfigValue.CashDiscount = 0;
+
+                    POSConfig.Configuration.ConfigValue.SystemConfigValue.PrintCustomFee = "1";
+                    POSConfig.Configuration.ConfigValue.CreditCardConfigValue.PrintCustomFee = "1";
+                    POSConfig.Configuration.ConfigValue.CreditCardConfigValue.PrintSVCFeeForGuestCheck = "1";
+                    POSConfig.Configuration.ConfigValue.CreditCardConfigValue.ShowSVCFeeOnCustomerDisplay = "1";
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("LoadBLogicPOS7Configurations failed", ex);
+            }
+        }
+
+        public static SaleReceiptsEntity GetSaleReceiptsByID(string receiptId)
+        {
+            return QueryFirstOrDefault<SaleReceiptsEntity>(true, $"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'");
+        }
+
+        public static SaleReceiptPaymentDetailsEntity GetSaleReceiptPaymentDetailsByID(string saleReceiptPaymentDetailID)
+        {
+            return QueryFirstOrDefault<SaleReceiptPaymentDetailsEntity>(true, $"SELECT * FROM dbo.SaleReceiptPaymentDetails WHERE SaleReceiptPaymentDetailID = '{saleReceiptPaymentDetailID}'");
+        }
+
+        public static List<SaleReceiptPaymentDetailsEntity> GetListSaleReceiptPaymentDetailsBySaleReceiptID(string receiptId)
+        {
+            return Query<SaleReceiptPaymentDetailsEntity>(true, $"SELECT * FROM dbo.SaleReceiptPaymentDetails WHERE SaleReceiptID = '{receiptId}'");
+        }
+
+        public static decimal GetSVCFeePercent(int CreditCardFeeMode)
+        {
+            switch (CreditCardFeeMode)
+            {
+                case 0:
+                    return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee;
+                case 1:
+                    return 0;
+                case 2:
+                    return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SurchargeFee;
+                default:
+                    return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee;
+            }
+        }
+
+        public static decimal GetMerchantFeePercent(int CreditCardFeeMode, string PaymentCardType)
+        {
+            switch (CreditCardFeeMode)
+            {
+                case 0:
+                case 1:
+                    return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee;
+                case 2:
+                    if (string.Equals(PaymentCardType, "Debit", StringComparison.OrdinalIgnoreCase))
+                        return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFeePercentForDebit;
+                    else if (string.Equals(PaymentCardType, "EBT", StringComparison.OrdinalIgnoreCase))
+                        return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFeePercentForEBT;
+                    else
+                        return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee;
+                default:
+                    return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee;
+            }
+        }
+
+        public static decimal GetBaseAmountFee(decimal SVCFeePercent)
+        {
+            if (SVCFeePercent == 0)
+                return POSConfig.Configuration.ConfigValue.CreditCardConfigValue.BaseAmountFee;
+            else
+                return SVCFeePercent / (100 + SVCFeePercent) * 100;
+        }
     }
 }

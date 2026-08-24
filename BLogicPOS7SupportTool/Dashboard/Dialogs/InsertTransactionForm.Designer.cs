@@ -164,7 +164,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             //
             // lblInfo
             //
-            this.lblInfo.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblInfo.Font = new System.Drawing.Font("Segoe UI", 10.75F);
             this.lblInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblInfo.Location = new System.Drawing.Point(16, 12);
             this.lblInfo.Name = "lblInfo";

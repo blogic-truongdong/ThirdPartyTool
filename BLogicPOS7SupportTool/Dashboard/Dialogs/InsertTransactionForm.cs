@@ -48,7 +48,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 return;
             }
 
-            var req = new TransactionDetail
+            var req = new TransactionDetailEntity
             {
                 Amount = amount,
                 Gratuity = gratuity,

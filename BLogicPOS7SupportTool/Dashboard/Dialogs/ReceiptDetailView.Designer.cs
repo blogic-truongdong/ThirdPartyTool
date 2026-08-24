@@ -71,7 +71,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblCustomerPhone
             //
             this.lblCustomerPhone.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCustomerPhone.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCustomerPhone.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblCustomerPhone.ForeColor = System.Drawing.Color.Black;
             this.lblCustomerPhone.Location = new System.Drawing.Point(137, 0);
             this.lblCustomerPhone.Name = "lblCustomerPhone";
@@ -84,7 +84,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblCustomerName
             //
             this.lblCustomerName.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblCustomerName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblCustomerName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblCustomerName.ForeColor = System.Drawing.Color.Black;
             this.lblCustomerName.Location = new System.Drawing.Point(0, 0);
             this.lblCustomerName.Name = "lblCustomerName";
@@ -108,7 +108,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblWorkstation
             //
             this.lblWorkstation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblWorkstation.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblWorkstation.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblWorkstation.ForeColor = System.Drawing.Color.Black;
             this.lblWorkstation.Location = new System.Drawing.Point(137, 0);
             this.lblWorkstation.Name = "lblWorkstation";
@@ -121,7 +121,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblTicketInfo
             //
             this.lblTicketInfo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblTicketInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblTicketInfo.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblTicketInfo.ForeColor = System.Drawing.Color.Black;
             this.lblTicketInfo.Location = new System.Drawing.Point(0, 0);
             this.lblTicketInfo.Name = "lblTicketInfo";
@@ -145,7 +145,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblDateCreated
             //
             this.lblDateCreated.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblDateCreated.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblDateCreated.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblDateCreated.ForeColor = System.Drawing.Color.Black;
             this.lblDateCreated.Location = new System.Drawing.Point(137, 0);
             this.lblDateCreated.Name = "lblDateCreated";
@@ -158,7 +158,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblCashierInfo
             //
             this.lblCashierInfo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblCashierInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCashierInfo.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblCashierInfo.ForeColor = System.Drawing.Color.Black;
             this.lblCashierInfo.Location = new System.Drawing.Point(0, 0);
             this.lblCashierInfo.Name = "lblCashierInfo";

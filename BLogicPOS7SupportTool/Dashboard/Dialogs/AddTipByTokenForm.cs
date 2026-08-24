@@ -14,7 +14,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private readonly ReceiptDetailView _detailView;
         private Point _dragStart;
 
-        private TokenReceiptInfo _token;
+        private TokenReceiptInfoEntity _token;
 
         public AddTipByTokenForm(ReceiptService service, string mainReceiptId, string mainReceiptNumber)
         {

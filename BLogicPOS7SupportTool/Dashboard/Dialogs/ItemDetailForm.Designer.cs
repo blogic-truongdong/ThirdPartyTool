@@ -243,7 +243,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblLeftHeader
             //
             this.lblLeftHeader.AutoSize = true;
-            this.lblLeftHeader.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblLeftHeader.Font = new System.Drawing.Font("Segoe UI", 10.75F, System.Drawing.FontStyle.Bold);
             this.lblLeftHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.lblLeftHeader.Location = new System.Drawing.Point(14, 12);
             this.lblLeftHeader.Name = "lblLeftHeader";
@@ -414,7 +414,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblRightHeader
             //
             this.lblRightHeader.AutoSize = true;
-            this.lblRightHeader.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblRightHeader.Font = new System.Drawing.Font("Segoe UI", 10.75F, System.Drawing.FontStyle.Bold);
             this.lblRightHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.lblRightHeader.Location = new System.Drawing.Point(14, 12);
             this.lblRightHeader.Name = "lblRightHeader";

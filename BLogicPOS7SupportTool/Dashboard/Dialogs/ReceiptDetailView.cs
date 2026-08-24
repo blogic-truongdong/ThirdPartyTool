@@ -15,23 +15,23 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             InitializeComponent();
         }
 
-        public void Populate(ReceiptHeader header, List<ReceiptLineItem> items,
-            List<ReceiptTaxLine> taxLines, List<ReceiptPaymentLine> paymentLines)
+        public void Populate(ReceiptHeaderEntity header, List<ReceiptLineItemEntity> items,
+            List<ReceiptTaxLineEntity> taxLines, List<ReceiptPaymentLineEntity> paymentLines)
         {
-            PopulateStoreInfo(header ?? new ReceiptHeader());
-            PopulateItems(items ?? new List<ReceiptLineItem>());
-            PopulateTotals(header ?? new ReceiptHeader(), taxLines ?? new List<ReceiptTaxLine>(),
-                paymentLines ?? new List<ReceiptPaymentLine>());
+            PopulateStoreInfo(header ?? new ReceiptHeaderEntity());
+            PopulateItems(items ?? new List<ReceiptLineItemEntity>());
+            PopulateTotals(header ?? new ReceiptHeaderEntity(), taxLines ?? new List<ReceiptTaxLineEntity>(),
+                paymentLines ?? new List<ReceiptPaymentLineEntity>());
         }
 
         public void Clear()
         {
-            PopulateStoreInfo(new ReceiptHeader());
-            PopulateItems(new List<ReceiptLineItem>());
-            PopulateTotals(new ReceiptHeader(), new List<ReceiptTaxLine>(), new List<ReceiptPaymentLine>());
+            PopulateStoreInfo(new ReceiptHeaderEntity());
+            PopulateItems(new List<ReceiptLineItemEntity>());
+            PopulateTotals(new ReceiptHeaderEntity(), new List<ReceiptTaxLineEntity>(), new List<ReceiptPaymentLineEntity>());
         }
 
-        private void PopulateStoreInfo(ReceiptHeader header)
+        private void PopulateStoreInfo(ReceiptHeaderEntity header)
         {
             SetLabel(lblStoreName, header.StoreName);
             SetLabel(lblStoreAddress, header.StoreAddress);
@@ -79,7 +79,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             lbl.Visible = !string.IsNullOrWhiteSpace(text);
         }
 
-        private void PopulateItems(List<ReceiptLineItem> items)
+        private void PopulateItems(List<ReceiptLineItemEntity> items)
         {
             pnlItemsList.SuspendLayout();
             pnlItemsList.Controls.Clear();
@@ -93,11 +93,11 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             pnlItemsList.ResumeLayout();
         }
 
-        private static List<Panel> BuildItemRows(List<ReceiptLineItem> items)
+        private static List<Panel> BuildItemRows(List<ReceiptLineItemEntity> items)
         {
             var rows = new List<Panel>();
-            ReceiptLineItem currentParent = null;
-            var currentModifiers = new List<ReceiptLineItem>();
+            ReceiptLineItemEntity currentParent = null;
+            var currentModifiers = new List<ReceiptLineItemEntity>();
 
             void FlushGroup()
             {
@@ -121,7 +121,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 {
                     FlushGroup();
                     currentParent = item;
-                    currentModifiers = new List<ReceiptLineItem>();
+                    currentModifiers = new List<ReceiptLineItemEntity>();
                 }
                 else
                 {
@@ -133,7 +133,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             return rows;
         }
 
-        private static Panel CreateItemRow(ReceiptLineItem item, bool compLabel = false, bool isCompMod = false)
+        private static Panel CreateItemRow(ReceiptLineItemEntity item, bool compLabel = false, bool isCompMod = false)
         {
             bool isModifier = item.IsModifier;
             decimal displayExtendedPrice = (compLabel || isCompMod)
@@ -161,7 +161,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             {
                 Text = description,
                 Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 9F, isModifier ? FontStyle.Regular : FontStyle.Bold),
+                Font = new Font("Segoe UI", 10F, isModifier ? FontStyle.Regular : FontStyle.Bold),
                 ForeColor = rowForeColor,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(8, 0, 0, 0),
@@ -173,7 +173,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Text = "$" + item.Price.ToString("F2") + " x " + item.Quantity,
                 Width = 80,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F),
+                Font = new Font("Segoe UI", 10F),
                 ForeColor = Color.FromArgb(150, 150, 150),
                 TextAlign = ContentAlignment.MiddleRight,
                 AutoSize = false
@@ -186,7 +186,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Text = totalText,
                 Width = 80,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 ForeColor = isNegative ? Color.FromArgb(200, 50, 50) : Color.FromArgb(50, 50, 50),
                 TextAlign = ContentAlignment.MiddleRight,
                 Padding = new Padding(0, 0, 8, 0),
@@ -200,7 +200,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             return row;
         }
 
-        private void PopulateTotals(ReceiptHeader header, List<ReceiptTaxLine> taxLines, List<ReceiptPaymentLine> paymentLines)
+        private void PopulateTotals(ReceiptHeaderEntity header, List<ReceiptTaxLineEntity> taxLines, List<ReceiptPaymentLineEntity> paymentLines)
         {
             pnlTotals.SuspendLayout();
             pnlTotals.Controls.Clear();
@@ -275,7 +275,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             {
                 Text = label,
                 Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 9F, isBold ? FontStyle.Bold : FontStyle.Regular),
+                Font = new Font("Segoe UI", 10F, isBold ? FontStyle.Bold : FontStyle.Regular),
                 ForeColor = Color.FromArgb(50, 50, 50),
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(8, 0, 0, 0),
@@ -293,7 +293,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Text = (isNeg ? "-$" : "$") + Math.Abs(amount).ToString("F2"),
                 Width = 120,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F, isBold ? FontStyle.Bold : FontStyle.Regular),
+                Font = new Font("Segoe UI", 10F, isBold ? FontStyle.Bold : FontStyle.Regular),
                 ForeColor = isNeg ? Color.FromArgb(200, 50, 50) : Color.FromArgb(50, 50, 50),
                 TextAlign = ContentAlignment.MiddleRight,
                 Padding = new Padding(0, 0, 8, 0),

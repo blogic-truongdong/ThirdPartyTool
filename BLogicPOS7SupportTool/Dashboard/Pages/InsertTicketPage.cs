@@ -20,7 +20,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
 
         private readonly TicketTemplateService _service = new TicketTemplateService();
         private readonly BindingSource _source = new BindingSource();
-        private List<TicketTemplateRow> _rows = new List<TicketTemplateRow>();
+        private List<TicketTemplateRowEntity> _rows = new List<TicketTemplateRowEntity>();
         private bool _busy;
 
         public InsertTicketPage()
@@ -147,7 +147,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private void Rebind(List<TicketTemplateRow> rows)
+        private void Rebind(List<TicketTemplateRowEntity> rows)
         {
             _rows = rows;
             _source.DataSource = _rows;
@@ -217,7 +217,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
         {
             foreach (DataGridViewRow gridRow in dgvRows.Rows)
             {
-                var row = gridRow.DataBoundItem as TicketTemplateRow;
+                var row = gridRow.DataBoundItem as TicketTemplateRowEntity;
                 if (row == null) continue;
                 gridRow.Cells["colSelected"].ReadOnly = row.State != TicketTemplateRowState.Ready;
             }
@@ -227,7 +227,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
         {
             if (e.RowIndex < 0 || dgvRows.Columns[e.ColumnIndex].Name != "colSelected") return;
 
-            var row = dgvRows.Rows[e.RowIndex].DataBoundItem as TicketTemplateRow;
+            var row = dgvRows.Rows[e.RowIndex].DataBoundItem as TicketTemplateRowEntity;
             if (row == null) return;
 
             // Refuse the tick on rows that can't be inserted, then put it back.
@@ -250,7 +250,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
         {
             if (e.RowIndex < 0 || e.RowIndex >= dgvRows.Rows.Count) return;
 
-            var row = dgvRows.Rows[e.RowIndex].DataBoundItem as TicketTemplateRow;
+            var row = dgvRows.Rows[e.RowIndex].DataBoundItem as TicketTemplateRowEntity;
             if (row == null) return;
 
             Color fore;
@@ -320,7 +320,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
                 }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private string BuildConfirmationText(List<TicketTemplateRow> todo)
+        private string BuildConfirmationText(List<TicketTemplateRowEntity> todo)
         {
             DateTime from = todo.Min(r => r.TransactionDateTime);
             DateTime to = todo.Max(r => r.TransactionDateTime);

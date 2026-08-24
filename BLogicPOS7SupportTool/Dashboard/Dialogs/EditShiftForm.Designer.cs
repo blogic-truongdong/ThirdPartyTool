@@ -80,7 +80,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblWorkstationCaption
             //
             this.lblWorkstationCaption.AutoSize = true;
-            this.lblWorkstationCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblWorkstationCaption.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblWorkstationCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblWorkstationCaption.Location = new System.Drawing.Point(24, 60);
             this.lblWorkstationCaption.Name = "lblWorkstationCaption";
@@ -91,7 +91,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblWorkstationValue
             //
             this.lblWorkstationValue.AutoSize = true;
-            this.lblWorkstationValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblWorkstationValue.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblWorkstationValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.lblWorkstationValue.Location = new System.Drawing.Point(150, 60);
             this.lblWorkstationValue.Name = "lblWorkstationValue";
@@ -102,7 +102,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblOpeningTimeCaption
             //
             this.lblOpeningTimeCaption.AutoSize = true;
-            this.lblOpeningTimeCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblOpeningTimeCaption.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblOpeningTimeCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblOpeningTimeCaption.Location = new System.Drawing.Point(24, 88);
             this.lblOpeningTimeCaption.Name = "lblOpeningTimeCaption";
@@ -113,7 +113,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblOpeningTimeValue
             //
             this.lblOpeningTimeValue.AutoSize = true;
-            this.lblOpeningTimeValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblOpeningTimeValue.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblOpeningTimeValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.lblOpeningTimeValue.Location = new System.Drawing.Point(150, 88);
             this.lblOpeningTimeValue.Name = "lblOpeningTimeValue";
@@ -124,7 +124,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblClosingTimeCaption
             //
             this.lblClosingTimeCaption.AutoSize = true;
-            this.lblClosingTimeCaption.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblClosingTimeCaption.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblClosingTimeCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblClosingTimeCaption.Location = new System.Drawing.Point(24, 116);
             this.lblClosingTimeCaption.Name = "lblClosingTimeCaption";
@@ -135,7 +135,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblClosingTimeValue
             //
             this.lblClosingTimeValue.AutoSize = true;
-            this.lblClosingTimeValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblClosingTimeValue.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblClosingTimeValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.lblClosingTimeValue.Location = new System.Drawing.Point(150, 116);
             this.lblClosingTimeValue.Name = "lblClosingTimeValue";
@@ -154,7 +154,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblOpeningAmount
             //
             this.lblOpeningAmount.AutoSize = true;
-            this.lblOpeningAmount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblOpeningAmount.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblOpeningAmount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblOpeningAmount.Location = new System.Drawing.Point(24, 164);
             this.lblOpeningAmount.Name = "lblOpeningAmount";
@@ -176,7 +176,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblClosingAmount
             //
             this.lblClosingAmount.AutoSize = true;
-            this.lblClosingAmount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblClosingAmount.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblClosingAmount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblClosingAmount.Location = new System.Drawing.Point(24, 228);
             this.lblClosingAmount.Name = "lblClosingAmount";

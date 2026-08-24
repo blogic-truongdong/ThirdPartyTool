@@ -50,13 +50,13 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
 
         private void lstAreas_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lstAreas.SelectedItem is TableArea area)
+            if (lstAreas.SelectedItem is TableAreaEntity area)
                 LoadTables(area.AreaID, txtSearch.Text.Trim());
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            if (lstAreas.SelectedItem is TableArea area)
+            if (lstAreas.SelectedItem is TableAreaEntity area)
                 LoadTables(area.AreaID, txtSearch.Text.Trim());
         }
 
@@ -117,7 +117,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
 
         private void ReloadCurrentArea()
         {
-            if (lstAreas.SelectedItem is TableArea area)
+            if (lstAreas.SelectedItem is TableAreaEntity area)
                 LoadTables(area.AreaID, txtSearch.Text.Trim());
         }
 

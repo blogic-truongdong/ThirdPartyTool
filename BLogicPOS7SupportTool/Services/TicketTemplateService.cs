@@ -191,7 +191,7 @@ namespace BLogicPOS7SupportTool.Services
         // ID. Nothing is recalculated here - every amount is whatever the workbook's
         // formulas produced. Rows that cannot be used come back marked Invalid rather
         // than throwing, so the grid can show the operator exactly which one is wrong.
-        public List<TicketTemplateRow> Load(string path)
+        public List<TicketTemplateRowEntity> Load(string path)
         {
             var sheets = new Dictionary<string, List<Dictionary<string, string>>>();
             foreach (var sheet in RequiredSheetColumns.Keys)
@@ -214,14 +214,14 @@ namespace BLogicPOS7SupportTool.Services
             var payments = ById(sheets[SheetPaymentDetails]);
             var transactions = ById(sheets[SheetTransactionDetail]);
 
-            var rows = new List<TicketTemplateRow>();
+            var rows = new List<TicketTemplateRowEntity>();
             int line = 1;
 
             foreach (var t in sheets[SheetTemplates])
             {
                 line++;
                 string id = Text(t, "ID");
-                var row = new TicketTemplateRow { Id = id, LineNumber = line, Selected = true };
+                var row = new TicketTemplateRowEntity { Id = id, LineNumber = line, Selected = true };
 
                 row.BankTransactionID = Text(t, "BankTransactionID");
                 row.TranType = Text(t, "TranType");
@@ -366,7 +366,7 @@ namespace BLogicPOS7SupportTool.Services
         //  2. Validate - resolve every reference and spot duplicates
         // ================================================================
 
-        public void Validate(List<TicketTemplateRow> rows)
+        public void Validate(List<TicketTemplateRowEntity> rows)
         {
             if (rows == null || rows.Count == 0) return;
 
@@ -468,7 +468,7 @@ namespace BLogicPOS7SupportTool.Services
         // is the side effect: Insert() only learns which columns this database is missing
         // while it builds its statements, and the operator has to see that in the summary
         // and in the confirmation dialog *before* committing, not afterwards.
-        private void WarmSchemaNotes(TicketTemplateRow sample)
+        private void WarmSchemaNotes(TicketTemplateRowEntity sample)
         {
             if (sample == null) return;
 
@@ -480,7 +480,7 @@ namespace BLogicPOS7SupportTool.Services
                     BatchUnique = Guid.Empty.ToString(),
                     MerchantID = sample.TerminalID,
                     WorkstationName = sample.WorkstationName,
-                    Rows = new List<TicketTemplateRow> { sample }
+                    Rows = new List<TicketTemplateRowEntity> { sample }
                 };
                 string probeId = Guid.Empty.ToString();
 
@@ -520,7 +520,7 @@ namespace BLogicPOS7SupportTool.Services
         // Merchant half fails the BLOGICPOS7 half is deleted again, so no half-ticket
         // is ever left behind (the two databases cannot share a single transaction
         // without a distributed transaction coordinator).
-        public InsertResult Insert(List<TicketTemplateRow> rows, Action<int, int> onProgress)
+        public InsertResult Insert(List<TicketTemplateRowEntity> rows, Action<int, int> onProgress)
         {
             var result = new InsertResult();
             var todo = rows.Where(r => r.Selected && r.State == TicketTemplateRowState.Ready).ToList();
@@ -782,7 +782,7 @@ namespace BLogicPOS7SupportTool.Services
 
         // ---- BLOGICPOS7: the ticket tables --------------------------------
 
-        private string BuildPos7Script(TicketTemplateRow row, Guid receiptId, string transactionId, string tranNumber)
+        private string BuildPos7Script(TicketTemplateRowEntity row, Guid receiptId, string transactionId, string tranNumber)
         {
             var detailId = Guid.NewGuid();
             var taxDetailId = Guid.NewGuid();
@@ -1294,7 +1294,7 @@ namespace BLogicPOS7SupportTool.Services
                   AND NOT EXISTS (SELECT 1 FROM dbo.TransactionDetail WHERE BatchID = '{id}');";
         }
 
-        private string BuildTransactionDetailInsert(TicketTemplateRow row, BatchInfo batch,
+        private string BuildTransactionDetailInsert(TicketTemplateRowEntity row, BatchInfo batch,
             string transactionId, string tranNumber, string ticketNumber)
         {
             var cols = new List<KeyValuePair<string, string>>
@@ -1456,7 +1456,7 @@ namespace BLogicPOS7SupportTool.Services
             public string BatchUnique;
             public string MerchantID;
             public string WorkstationName;
-            public List<TicketTemplateRow> Rows;
+            public List<TicketTemplateRowEntity> Rows;
             public bool Skip;
 
             public DateTime BusinessDate { get { return Rows[0].TransactionDateTime.Date; } }
@@ -1620,7 +1620,7 @@ namespace BLogicPOS7SupportTool.Services
         //  Small helpers
         // ================================================================
 
-        private static string MaskedCardNumber(TicketTemplateRow row)
+        private static string MaskedCardNumber(TicketTemplateRowEntity row)
         {
             return "xxxx" + row.CardLast4;
         }

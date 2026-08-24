@@ -14,7 +14,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private readonly ReceiptDetailView _detailView;
         private Point _dragStart;
 
-        private RefundReceiptInfo _refund;
+        private RefundReceiptInfoEntity _refund;
 
         public MergeRefundForm(ReceiptService service, string mainReceiptId, string mainReceiptNumber)
         {

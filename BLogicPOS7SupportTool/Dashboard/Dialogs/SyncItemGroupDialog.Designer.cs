@@ -73,7 +73,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblStartDate
             // 
             this.lblStartDate.AutoSize = true;
-            this.lblStartDate.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblStartDate.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblStartDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblStartDate.Location = new System.Drawing.Point(24, 60);
             this.lblStartDate.Name = "lblStartDate";
@@ -93,7 +93,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblEndDate
             // 
             this.lblEndDate.AutoSize = true;
-            this.lblEndDate.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblEndDate.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblEndDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblEndDate.Location = new System.Drawing.Point(24, 124);
             this.lblEndDate.Name = "lblEndDate";

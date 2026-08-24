@@ -11,7 +11,7 @@ namespace BLogicPOS7SupportTool.Services
     class TableService
     {
         // Active sitting areas, alphabetical.
-        public List<TableArea> GetAreas()
+        public List<TableAreaEntity> GetAreas()
         {
             const string sql = @"
                 SELECT AreaID, AreaName
@@ -19,10 +19,10 @@ namespace BLogicPOS7SupportTool.Services
                 WHERE isEnable = '1'
                 ORDER BY AreaName";
 
-            var result = new List<TableArea>();
+            var result = new List<TableAreaEntity>();
             var dt = AppSession.ProcessQuery(true, sql, "SittingAreas");
             foreach (DataRow row in dt.Rows)
-                result.Add(new TableArea
+                result.Add(new TableAreaEntity
                 {
                     AreaID = row["AreaID"]?.ToString() ?? "",
                     AreaName = row["AreaName"]?.ToString() ?? ""

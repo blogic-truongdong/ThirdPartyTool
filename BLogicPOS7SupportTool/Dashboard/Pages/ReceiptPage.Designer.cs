@@ -54,6 +54,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             this.lblStoreName = new System.Windows.Forms.Label();
             this.btnCancelTicket = new System.Windows.Forms.Button();
             this.btnSyncPaymentTime = new System.Windows.Forms.Button();
+            this.btnInsertPayment = new System.Windows.Forms.Button();
+            this.btnAddTip = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             this.pnlToolbar.SuspendLayout();
             this.pnlReceipt.SuspendLayout();
@@ -162,9 +164,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnAdjustPayment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdjustPayment.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnAdjustPayment.Location = new System.Drawing.Point(306, 264);
+            this.btnAdjustPayment.Location = new System.Drawing.Point(306, 310);
+            this.btnAdjustPayment.Margin = new System.Windows.Forms.Padding(5);
             this.btnAdjustPayment.Name = "btnAdjustPayment";
-            this.btnAdjustPayment.Size = new System.Drawing.Size(200, 40);
+            this.btnAdjustPayment.Size = new System.Drawing.Size(200, 50);
             this.btnAdjustPayment.TabIndex = 4;
             this.btnAdjustPayment.Text = "Adjust Payments";
             this.btnAdjustPayment.UseVisualStyleBackColor = true;
@@ -174,9 +177,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnRefundItems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefundItems.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnRefundItems.Location = new System.Drawing.Point(306, 356);
+            this.btnRefundItems.Location = new System.Drawing.Point(306, 430);
+            this.btnRefundItems.Margin = new System.Windows.Forms.Padding(5);
             this.btnRefundItems.Name = "btnRefundItems";
-            this.btnRefundItems.Size = new System.Drawing.Size(200, 40);
+            this.btnRefundItems.Size = new System.Drawing.Size(200, 50);
             this.btnRefundItems.TabIndex = 5;
             this.btnRefundItems.Text = "Refund Items";
             this.btnRefundItems.UseVisualStyleBackColor = true;
@@ -186,9 +190,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnVoidTicket.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnVoidTicket.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnVoidTicket.Location = new System.Drawing.Point(306, 172);
+            this.btnVoidTicket.Location = new System.Drawing.Point(306, 190);
+            this.btnVoidTicket.Margin = new System.Windows.Forms.Padding(5);
             this.btnVoidTicket.Name = "btnVoidTicket";
-            this.btnVoidTicket.Size = new System.Drawing.Size(200, 40);
+            this.btnVoidTicket.Size = new System.Drawing.Size(200, 50);
             this.btnVoidTicket.TabIndex = 6;
             this.btnVoidTicket.Text = "Void Ticket";
             this.btnVoidTicket.UseVisualStyleBackColor = true;
@@ -198,9 +203,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnCloseTicket.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCloseTicket.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnCloseTicket.Location = new System.Drawing.Point(306, 126);
+            this.btnCloseTicket.Location = new System.Drawing.Point(306, 130);
+            this.btnCloseTicket.Margin = new System.Windows.Forms.Padding(5);
             this.btnCloseTicket.Name = "btnCloseTicket";
-            this.btnCloseTicket.Size = new System.Drawing.Size(200, 40);
+            this.btnCloseTicket.Size = new System.Drawing.Size(200, 50);
             this.btnCloseTicket.TabIndex = 7;
             this.btnCloseTicket.Text = "Close Ticket";
             this.btnCloseTicket.UseVisualStyleBackColor = true;
@@ -210,9 +216,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnAddTipByToken.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddTipByToken.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnAddTipByToken.Location = new System.Drawing.Point(560, 370);
+            this.btnAddTipByToken.Location = new System.Drawing.Point(516, 130);
+            this.btnAddTipByToken.Margin = new System.Windows.Forms.Padding(5);
             this.btnAddTipByToken.Name = "btnAddTipByToken";
-            this.btnAddTipByToken.Size = new System.Drawing.Size(200, 40);
+            this.btnAddTipByToken.Size = new System.Drawing.Size(200, 50);
             this.btnAddTipByToken.TabIndex = 9;
             this.btnAddTipByToken.Text = "Add Tip By Sale Token";
             this.btnAddTipByToken.UseVisualStyleBackColor = true;
@@ -222,9 +229,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnUpdateServiceCharges.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateServiceCharges.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnUpdateServiceCharges.Location = new System.Drawing.Point(306, 310);
+            this.btnUpdateServiceCharges.Location = new System.Drawing.Point(306, 370);
+            this.btnUpdateServiceCharges.Margin = new System.Windows.Forms.Padding(5);
             this.btnUpdateServiceCharges.Name = "btnUpdateServiceCharges";
-            this.btnUpdateServiceCharges.Size = new System.Drawing.Size(200, 40);
+            this.btnUpdateServiceCharges.Size = new System.Drawing.Size(200, 50);
             this.btnUpdateServiceCharges.TabIndex = 10;
             this.btnUpdateServiceCharges.Text = "Update Service Charges";
             this.btnUpdateServiceCharges.UseVisualStyleBackColor = true;
@@ -234,9 +242,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnFinishTicket.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFinishTicket.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnFinishTicket.Location = new System.Drawing.Point(560, 466);
+            this.btnFinishTicket.Location = new System.Drawing.Point(516, 250);
+            this.btnFinishTicket.Margin = new System.Windows.Forms.Padding(5);
             this.btnFinishTicket.Name = "btnFinishTicket";
-            this.btnFinishTicket.Size = new System.Drawing.Size(200, 40);
+            this.btnFinishTicket.Size = new System.Drawing.Size(200, 50);
             this.btnFinishTicket.TabIndex = 11;
             this.btnFinishTicket.Text = "Finish Ticket";
             this.btnFinishTicket.UseVisualStyleBackColor = true;
@@ -247,8 +256,9 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             this.btnEditItems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditItems.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.btnEditItems.Location = new System.Drawing.Point(560, 514);
+            this.btnEditItems.Margin = new System.Windows.Forms.Padding(5);
             this.btnEditItems.Name = "btnEditItems";
-            this.btnEditItems.Size = new System.Drawing.Size(200, 40);
+            this.btnEditItems.Size = new System.Drawing.Size(200, 50);
             this.btnEditItems.TabIndex = 12;
             this.btnEditItems.Text = "Edit Items";
             this.btnEditItems.UseVisualStyleBackColor = true;
@@ -258,11 +268,12 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnMergeRefund.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMergeRefund.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnMergeRefund.Location = new System.Drawing.Point(306, 402);
+            this.btnMergeRefund.Location = new System.Drawing.Point(306, 490);
+            this.btnMergeRefund.Margin = new System.Windows.Forms.Padding(5);
             this.btnMergeRefund.Name = "btnMergeRefund";
-            this.btnMergeRefund.Size = new System.Drawing.Size(200, 40);
+            this.btnMergeRefund.Size = new System.Drawing.Size(200, 50);
             this.btnMergeRefund.TabIndex = 13;
-            this.btnMergeRefund.Text = "Merge Refund";
+            this.btnMergeRefund.Text = "Merge Refund Sale Token";
             this.btnMergeRefund.UseVisualStyleBackColor = true;
             this.btnMergeRefund.Visible = false;
             // 
@@ -271,8 +282,9 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             this.btnAddItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddItem.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.btnAddItem.Location = new System.Drawing.Point(560, 418);
+            this.btnAddItem.Margin = new System.Windows.Forms.Padding(5);
             this.btnAddItem.Name = "btnAddItem";
-            this.btnAddItem.Size = new System.Drawing.Size(200, 40);
+            this.btnAddItem.Size = new System.Drawing.Size(200, 50);
             this.btnAddItem.TabIndex = 14;
             this.btnAddItem.Text = "Add Item";
             this.btnAddItem.UseVisualStyleBackColor = true;
@@ -325,7 +337,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblCustomerPhone
             // 
             this.lblCustomerPhone.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCustomerPhone.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCustomerPhone.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblCustomerPhone.ForeColor = System.Drawing.Color.Black;
             this.lblCustomerPhone.Location = new System.Drawing.Point(137, 0);
             this.lblCustomerPhone.Name = "lblCustomerPhone";
@@ -338,7 +350,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblCustomerName
             // 
             this.lblCustomerName.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblCustomerName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblCustomerName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblCustomerName.ForeColor = System.Drawing.Color.Black;
             this.lblCustomerName.Location = new System.Drawing.Point(0, 0);
             this.lblCustomerName.Name = "lblCustomerName";
@@ -362,7 +374,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblWorkstation
             // 
             this.lblWorkstation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblWorkstation.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblWorkstation.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblWorkstation.ForeColor = System.Drawing.Color.Black;
             this.lblWorkstation.Location = new System.Drawing.Point(137, 0);
             this.lblWorkstation.Name = "lblWorkstation";
@@ -375,7 +387,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblTicketInfo
             // 
             this.lblTicketInfo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblTicketInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblTicketInfo.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblTicketInfo.ForeColor = System.Drawing.Color.Black;
             this.lblTicketInfo.Location = new System.Drawing.Point(0, 0);
             this.lblTicketInfo.Name = "lblTicketInfo";
@@ -399,7 +411,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblDateCreated
             // 
             this.lblDateCreated.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblDateCreated.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblDateCreated.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblDateCreated.ForeColor = System.Drawing.Color.Black;
             this.lblDateCreated.Location = new System.Drawing.Point(137, 0);
             this.lblDateCreated.Name = "lblDateCreated";
@@ -412,7 +424,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblCashierInfo
             // 
             this.lblCashierInfo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblCashierInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCashierInfo.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblCashierInfo.ForeColor = System.Drawing.Color.Black;
             this.lblCashierInfo.Location = new System.Drawing.Point(0, 0);
             this.lblCashierInfo.Name = "lblCashierInfo";
@@ -510,31 +522,61 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // 
             this.btnCancelTicket.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelTicket.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnCancelTicket.Location = new System.Drawing.Point(306, 218);
+            this.btnCancelTicket.Location = new System.Drawing.Point(306, 250);
+            this.btnCancelTicket.Margin = new System.Windows.Forms.Padding(5);
             this.btnCancelTicket.Name = "btnCancelTicket";
-            this.btnCancelTicket.Size = new System.Drawing.Size(200, 40);
+            this.btnCancelTicket.Size = new System.Drawing.Size(200, 50);
             this.btnCancelTicket.TabIndex = 15;
             this.btnCancelTicket.Text = "Cancel Ticket";
             this.btnCancelTicket.UseVisualStyleBackColor = true;
             this.btnCancelTicket.Visible = false;
-            //
+            // 
             // btnSyncPaymentTime
-            //
+            // 
             this.btnSyncPaymentTime.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSyncPaymentTime.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.btnSyncPaymentTime.Location = new System.Drawing.Point(306, 448);
+            this.btnSyncPaymentTime.Location = new System.Drawing.Point(306, 550);
+            this.btnSyncPaymentTime.Margin = new System.Windows.Forms.Padding(5);
             this.btnSyncPaymentTime.Name = "btnSyncPaymentTime";
-            this.btnSyncPaymentTime.Size = new System.Drawing.Size(200, 40);
+            this.btnSyncPaymentTime.Size = new System.Drawing.Size(200, 50);
             this.btnSyncPaymentTime.TabIndex = 16;
-            this.btnSyncPaymentTime.Text = "Sync Payment Time";
+            this.btnSyncPaymentTime.Text = "Clear Paid Balance For Sales Report";
             this.btnSyncPaymentTime.UseVisualStyleBackColor = true;
             this.btnSyncPaymentTime.Visible = false;
+            // 
+            // btnInsertPayment
+            // 
+            this.btnInsertPayment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInsertPayment.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.btnInsertPayment.Location = new System.Drawing.Point(516, 190);
+            this.btnInsertPayment.Margin = new System.Windows.Forms.Padding(5);
+            this.btnInsertPayment.Name = "btnInsertPayment";
+            this.btnInsertPayment.Size = new System.Drawing.Size(200, 50);
+            this.btnInsertPayment.TabIndex = 17;
+            this.btnInsertPayment.Text = "Insert Payment";
+            this.btnInsertPayment.UseVisualStyleBackColor = true;
+            this.btnInsertPayment.Visible = false;
+            //
+            // btnAddTip
+            //
+            this.btnAddTip.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddTip.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.btnAddTip.Location = new System.Drawing.Point(516, 310);
+            this.btnAddTip.Margin = new System.Windows.Forms.Padding(5);
+            this.btnAddTip.Name = "btnAddTip";
+            this.btnAddTip.Size = new System.Drawing.Size(200, 50);
+            this.btnAddTip.TabIndex = 18;
+            this.btnAddTip.Text = "Add Tip";
+            this.btnAddTip.UseVisualStyleBackColor = true;
+            this.btnAddTip.Visible = false;
             //
             // ReceiptPage
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.btnAddTip);
+            this.Controls.Add(this.btnInsertPayment);
             this.Controls.Add(this.btnSyncPaymentTime);
             this.Controls.Add(this.btnCancelTicket);
             this.Controls.Add(this.btnRefundItems);
@@ -606,5 +648,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
         private System.Windows.Forms.Panel pnlTotals;
         private System.Windows.Forms.Button btnCancelTicket;
         private System.Windows.Forms.Button btnSyncPaymentTime;
+        private System.Windows.Forms.Button btnInsertPayment;
+        private System.Windows.Forms.Button btnAddTip;
     }
 }

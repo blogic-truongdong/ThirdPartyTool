@@ -19,8 +19,8 @@ namespace BLogicPOS7SupportTool.Setup
         private void DatabaseSetupForm_Load(object sender, EventArgs e)
         {
 #if DEBUG
-            txtDatabase1.Text = "BLogicPOS7_MicroPantryFrisco";
-            txtDatabase2.Text = "Merchant_MicroPantryFrisco";
+            txtDatabase1.Text = "BLogicPOS7";
+            txtDatabase2.Text = "Merchant";
             return;
 #endif
         }

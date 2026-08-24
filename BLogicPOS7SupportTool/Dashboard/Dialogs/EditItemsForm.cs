@@ -96,16 +96,16 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 
             int col = hit.Item.SubItems.IndexOf(hit.SubItem);
             if (col == EditColumnIndex)
-                OpenDetail(hit.Item.Tag as RefundDetailItem);
+                OpenDetail(hit.Item.Tag as RefundDetailItemEntity);
         }
 
         private void LvItems_DoubleClick(object sender, EventArgs e)
         {
             if (lvItems.SelectedItems.Count > 0)
-                OpenDetail(lvItems.SelectedItems[0].Tag as RefundDetailItem);
+                OpenDetail(lvItems.SelectedItems[0].Tag as RefundDetailItemEntity);
         }
 
-        private void OpenDetail(RefundDetailItem item)
+        private void OpenDetail(RefundDetailItemEntity item)
         {
             if (item == null) return;
 
@@ -113,6 +113,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             {
                 if (DimOverlay.ShowDialog(this, dlg) == DialogResult.OK)
                 {
+                    AppSession.CorrectDataSaleReceipts(_receiptId);
                     _changed = true;
                     LoadItems();
                 }

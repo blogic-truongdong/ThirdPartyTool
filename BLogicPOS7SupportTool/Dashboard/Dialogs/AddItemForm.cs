@@ -16,7 +16,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private readonly string _receiptNumber;
         private Point _dragStart;
 
-        private AddableItem _selected;
+        private AddableItemEntity _selected;
 
         public AddItemForm(ReceiptService service, string receiptId, string receiptNumber)
         {
@@ -69,7 +69,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 return;
             }
 
-            _selected = lvItems.SelectedItems[0].Tag as AddableItem;
+            _selected = lvItems.SelectedItems[0].Tag as AddableItemEntity;
             if (_selected == null) return;
 
             txtName.Text = _selected.ItemName ?? "";

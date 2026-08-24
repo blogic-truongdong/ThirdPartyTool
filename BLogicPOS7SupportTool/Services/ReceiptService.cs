@@ -1,5 +1,6 @@
 using BLogicPOS7SupportTool.Core;
 using BLogicPOS7SupportTool.Models;
+using BLogicSystems.XPos.Utilites;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,6 +20,13 @@ namespace BLogicPOS7SupportTool.Services
             return dt;
         }
 
+        public SaleReceiptsEntity GetSaleReceiptsEntity(string receiptId)
+        {
+            string sql = $"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'";
+            var entity = AppSession.QueryFirstOrDefault<SaleReceiptsEntity>(true, sql);
+            return entity;
+        }
+
         public DataTable GetReceipts(string search)
         {
             string sql = $@"
@@ -32,7 +40,7 @@ namespace BLogicPOS7SupportTool.Services
             return dt;
         }
 
-        public (ReceiptHeader Header, List<ReceiptLineItem> Items, List<ReceiptTaxLine> TaxLines, List<ReceiptPaymentLine> PaymentLines) GetReceiptDetail(string receiptId)
+        public (ReceiptHeaderEntity Header, List<ReceiptLineItemEntity> Items, List<ReceiptTaxLineEntity> TaxLines, List<ReceiptPaymentLineEntity> PaymentLines) GetReceiptDetail(string receiptId)
         {
             // 1. SaleReceiptDetails
             var idt = AppSession.ProcessQuery(true, $@"
@@ -41,9 +49,9 @@ namespace BLogicPOS7SupportTool.Services
                 WHERE SaleReceiptID = '{receiptId}' AND Status <> 2
                 ORDER BY Range", "ReceiptDetails");
 
-            var items = new List<ReceiptLineItem>();
+            var items = new List<ReceiptLineItemEntity>();
             foreach (DataRow row in idt.Rows)
-                items.Add(new ReceiptLineItem
+                items.Add(new ReceiptLineItemEntity
                 {
                     IsModifier = AppSession.GetString(row, "PriceInitial") == "p",
                     Description = AppSession.GetString(row, "Description"),
@@ -70,8 +78,8 @@ namespace BLogicPOS7SupportTool.Services
                 FROM dbo.SaleReceipts
                 WHERE SaleReceiptID = '{receiptId}'", "SaleReceipts");
 
-            var header = new ReceiptHeader();
-            if (rdt?.Rows.Count == 0) return (header, items, new List<ReceiptTaxLine>(), new List<ReceiptPaymentLine>());
+            var header = new ReceiptHeaderEntity();
+            if (rdt?.Rows.Count == 0) return (header, items, new List<ReceiptTaxLineEntity>(), new List<ReceiptPaymentLineEntity>());
 
             var r = rdt.Rows[0];
             header.SaleReceiptID = AppSession.GetGuid(r, "SaleReceiptID");
@@ -215,12 +223,12 @@ namespace BLogicPOS7SupportTool.Services
                 }
             }
 
-            var listTaxLines = new List<ReceiptTaxLine>();
+            var listTaxLines = new List<ReceiptTaxLineEntity>();
 
             var groups = dtTaxLines.AsEnumerable().GroupBy(x => AppSession.GetDecimal(x, "TaxRate"));
             foreach (var itemGroup in groups)
             {
-                listTaxLines.Add(new ReceiptTaxLine
+                listTaxLines.Add(new ReceiptTaxLineEntity
                 {
                     TaxRate = itemGroup.Key,
                     TaxAmount = itemGroup.Sum(x => AppSession.GetDecimal(x, "TaxAmount"))
@@ -230,7 +238,7 @@ namespace BLogicPOS7SupportTool.Services
             return (header, items, listTaxLines, GetPaymentLines(receiptId));
         }
 
-        private List<ReceiptPaymentLine> GetPaymentLines(string receiptId)
+        private List<ReceiptPaymentLineEntity> GetPaymentLines(string receiptId)
         {
             // 1. SaleReceiptPaymentDetails
             var pdt = AppSession.ProcessQuery(true, $@"
@@ -238,7 +246,7 @@ namespace BLogicPOS7SupportTool.Services
                 FROM dbo.SaleReceiptPaymentDetails
                 WHERE SaleReceiptID = '{receiptId}'", "PaymentDetails");
 
-            if (pdt == null || pdt.Rows.Count == 0) return new List<ReceiptPaymentLine>();
+            if (pdt == null || pdt.Rows.Count == 0) return new List<ReceiptPaymentLineEntity>();
 
             // 2. PaymentMethods — filter by IDs present in this receipt
             var ids = string.Join(",",
@@ -257,7 +265,7 @@ namespace BLogicPOS7SupportTool.Services
                     methodNames[AppSession.GetInt(row, "PaymentMethodID")] = AppSession.GetString(row, "PaymentMethodName");
 
             // 3. Map
-            var lines = new List<ReceiptPaymentLine>();
+            var lines = new List<ReceiptPaymentLineEntity>();
             foreach (DataRow row in pdt.Rows)
             {
                 var amount = AppSession.GetDecimal(row, "AmountTendered")
@@ -267,7 +275,7 @@ namespace BLogicPOS7SupportTool.Services
                     - AppSession.GetDecimal(row, "CashDiscountAmount");
 
                 var methodId = AppSession.GetInt(row, "PaymentMethodID");
-                lines.Add(new ReceiptPaymentLine
+                lines.Add(new ReceiptPaymentLineEntity
                 {
                     PaymentMethodName = methodNames.TryGetValue(methodId, out var name) ? name : "Payment",
                     Amount = amount
@@ -276,7 +284,7 @@ namespace BLogicPOS7SupportTool.Services
             return lines;
         }
 
-        public List<ReceiptPaymentDetail> GetPaymentDetails(string receiptId)
+        public List<ReceiptPaymentDetailEntity> GetPaymentDetails(string receiptId)
         {
             const string sql = @"
                 SELECT a.*, b.PaymentMethodName, b.CashAdjust
@@ -284,7 +292,7 @@ namespace BLogicPOS7SupportTool.Services
                 LEFT JOIN dbo.PaymentMethods b ON a.PaymentMethodID = b.PaymentMethodID
                 WHERE a.SaleReceiptID = @receiptId";
 
-            return AppSession.Query<ReceiptPaymentDetail>(true, sql, new { receiptId });
+            return AppSession.Query<ReceiptPaymentDetailEntity>(true, sql, new { receiptId });
         }
 
         // Updates the editable money fields of one payment (Payment Details form).
@@ -293,12 +301,14 @@ namespace BLogicPOS7SupportTool.Services
             decimal cashDiscountTaxAmount, decimal gratuity, decimal svcFeeForGratuity,
             decimal merchantFee, decimal merchantFeeForTip, string CreditCardTransactionID)
         {
+            svcFeeAmount += svcFeeTaxAmount;
+            cashDiscountAmount += cashDiscountTaxAmount;
 
             var inv = CultureInfo.InvariantCulture;
             var listScript = new List<string>();
 
             string sql = $"select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{id}'";
-            var payment = AppSession.QueryFirstOrDefault<SaleReceiptPaymentDetails>(true, sql);
+            var payment = AppSession.QueryFirstOrDefault<SaleReceiptPaymentDetailsEntity>(true, sql);
 
             if (payment != null)
             {
@@ -341,7 +351,7 @@ namespace BLogicPOS7SupportTool.Services
             if (!string.IsNullOrWhiteSpace(CreditCardTransactionID))
             {
                 sql = $"select * from TransactionDetail where ID = '{CreditCardTransactionID}'";
-                var transaction = AppSession.QueryFirstOrDefault<TransactionDetail>(false, sql);
+                var transaction = AppSession.QueryFirstOrDefault<TransactionDetailEntity>(false, sql);
 
                 if (transaction != null)
                 {
@@ -437,7 +447,7 @@ namespace BLogicPOS7SupportTool.Services
         // Returns the lines of a ticket that are still refundable (not already
         // returned and not voided). Items and modifiers are distinguished the
         // same way the receipt does: PriceInitial blank or "P" => item.
-        public List<RefundDetailItem> GetRefundableItems(string receiptId)
+        public List<RefundDetailItemEntity> GetRefundableItems(string receiptId)
         {
             var dt = AppSession.ProcessQuery(true, $@"
                 SELECT *
@@ -447,7 +457,7 @@ namespace BLogicPOS7SupportTool.Services
                   AND Status <> 2
                 ORDER BY Range", "RefundItems");
 
-            var items = new List<RefundDetailItem>();
+            var items = new List<RefundDetailItemEntity>();
             if (dt == null) return items;
 
             foreach (DataRow row in dt.Rows)
@@ -455,7 +465,7 @@ namespace BLogicPOS7SupportTool.Services
                 var priceInitial = AppSession.GetString(row, "PriceInitial");
                 bool isItem = string.IsNullOrWhiteSpace(priceInitial) || priceInitial == "P";
 
-                items.Add(new RefundDetailItem
+                items.Add(new RefundDetailItemEntity
                 {
                     SaleReceiptDetailID = AppSession.GetString(row, "SaleReceiptDetailID"),
                     GroupID = AppSession.GetString(row, "GroupID"),
@@ -476,71 +486,63 @@ namespace BLogicPOS7SupportTool.Services
         // totals, and (for credit-card payments) reverses the merchant charge
         // and rebuilds the batch. Ported from ThirdPartyTool.PartialRefundItems.
         public bool ProcessPartialRefund(string receiptId, long paymentDetailId,
-            List<string> detailIds, decimal totalAmount, decimal taxAmount)
+            List<string> detailIds, decimal totalAmount, decimal taxAmount,
+            decimal svcfeeAmount, decimal svcFeeTaxAmount, decimal cashDiscountAmount, decimal cashDiscountTaxAmount)
         {
             if (string.IsNullOrEmpty(receiptId) || detailIds == null || detailIds.Count == 0)
                 return false;
 
+            string sql = $"SELECT * FROM dbo.SaleReceipts where SaleReceiptID = '{receiptId}'";
+            var sale = AppSession.QueryFirstOrDefault<SaleReceiptsEntity>(true, sql);
+
+            sql = $"SELECT * FROM dbo.SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{paymentDetailId}'";
+            var payment = AppSession.QueryFirstOrDefault<SaleReceiptPaymentDetailsEntity>(true, sql);
+
+            if (sale == null || payment == null)
+                return false;
+
+            var newTotalAmount = sale.TotalAmount - totalAmount;
+            var newTaxAmount = sale.TaxAmount - taxAmount;
+            var newSVCFeePaidAmount = sale.SVCFeePaidAmount - svcfeeAmount;
+            var newSVCFeeTaxPaidAmount = sale.SVCFeeTaxPaidAmount - svcFeeTaxAmount;
+            var newCashDiscountPaidAmount = sale.CashDiscountPaidAmount - cashDiscountAmount;
+            var newCashDiscountTaxPaidAmount = sale.CashDiscountTaxPaidAmount - cashDiscountTaxAmount;
+
+            var newAmountTendered = payment.AmountTendered - totalAmount;
+            var newPay_SVCFeeAmount = payment.SVCFeeAmount - svcfeeAmount;
+            var newPay_SVCFeeTaxAmount = payment.SVCFeeTaxAmount - svcFeeTaxAmount;
+            var newPay_CashDiscountAmount = payment.CashDiscountAmount - cashDiscountAmount;
+            var newPay_CashDiscountTaxAmount = payment.CashDiscountTaxAmount - cashDiscountTaxAmount;
+            var newPay_MerchantFee = Utility.CalculateMerchantFee(newAmountTendered + newPay_SVCFeeAmount + payment.Gratuity);
+
             string idList = string.Join(",",
                 detailIds.Select(id => "'" + id.Replace("'", "''") + "'"));
-            string total = totalAmount.ToString(CultureInfo.InvariantCulture);
-            string tax = taxAmount.ToString(CultureInfo.InvariantCulture);
 
-            // BLogicPOS7 side — one transaction so the ticket stays consistent.
-            // PaidAmount and TotalAmount both read the row's pre-update TotalAmount,
-            // matching the original (PaidAmount = oldTotalAmount - refund).
-            string sql = $@"
-                SET XACT_ABORT ON;
-                BEGIN TRANSACTION;
-
-                UPDATE dbo.SaleReceiptDetails
-                    SET ReturnCode = '-113', Status = '2'
-                    WHERE SaleReceiptDetailID IN ({idList});
-
-                UPDATE dbo.SaleReceiptDetailTaxDetails
-                    SET ReturnCode = '-113', Status = '2'
-                    WHERE SaleReceiptDetailID IN ({idList});
-
-                UPDATE dbo.SaleReceipts
-                    SET TotalAmount = TotalAmount - {total},
-                        PaidAmount  = TotalAmount - {total},
-                        TaxAmount   = TaxAmount - {tax}
-                    WHERE SaleReceiptID = '{receiptId}';
-
-                UPDATE sr
-                    SET sr.TotalDiscountAmount  = d.DiscTotal,
-                        sr.GlobalDiscountAmount = d.DiscTotal
-                    FROM dbo.SaleReceipts sr
-                    CROSS APPLY (
-                        SELECT ISNULL(SUM(
-                                ISNULL(ItemDiscountValue, 0)
-                                + ISNULL(TotalSaleDiscountAmount, 0)
-                                + ISNULL(StoreDiscountValue, 0)
-                                + ISNULL(DiscountAmount, 0)
-                                + ISNULL(TotalSaleDiscountAmountByCustomer, 0)
-                                + ISNULL(ItemDiscountByPriceLevelAmount, 0)), 0) AS DiscTotal
-                        FROM dbo.SaleReceiptDetails
-                        WHERE SaleReceiptID = '{receiptId}'
-                          AND Status <> 2
-                          AND ISNULL(IsCompItem, 0) = 0
-                    ) d
-                    WHERE sr.SaleReceiptID = '{receiptId}';
-
-                UPDATE dbo.SaleReceiptPaymentDetails
-                    SET AmountTendered = AmountTendered - {total}
-                    WHERE SaleReceiptPaymentDetailID = {paymentDetailId};
-
-                COMMIT;";
+            sql = $"UPDATE dbo.SaleReceiptDetails SET ReturnCode = '-113', Status = '2' WHERE SaleReceiptDetailID IN ({idList});" +
+                $"UPDATE dbo.SaleReceiptDetailTaxDetails SET ReturnCode = '-113', Status = '2' WHERE SaleReceiptDetailID IN ({idList});" +
+                $"UPDATE dbo.SaleReceipts SET TotalAmount = '{newTotalAmount}', PaidAmount = '{newTotalAmount}', TaxAmount = '{newTaxAmount}', SVCFeeAmount = '{newSVCFeePaidAmount}', SVCFeePaidAmount = '{newSVCFeePaidAmount}',CashDiscountAmount = '{newCashDiscountPaidAmount}', CashDiscountPaidAmount = '{newCashDiscountTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}';" +
+                $"UPDATE dbo.SaleReceipts SET SVCFeeTaxAmount = '{newSVCFeeTaxPaidAmount}', SVCFeeTaxPaidAmount = '{newSVCFeeTaxPaidAmount}', CashDiscountTaxAmount = '{newCashDiscountTaxPaidAmount}', CashDiscountTaxPaidAmount = '{newCashDiscountTaxPaidAmount}' WHERE SaleReceiptID = '{receiptId}';" +
+                $"UPDATE sr SET sr.TotalDiscountAmount = d.DiscTotal, sr.GlobalDiscountAmount = d.DiscTotal FROM dbo.SaleReceipts sr CROSS APPLY ( SELECT ISNULL(SUM( ISNULL(ItemDiscountValue, 0) + ISNULL(TotalSaleDiscountAmount, 0) + ISNULL(StoreDiscountValue, 0) + ISNULL(DiscountAmount, 0) + ISNULL(TotalSaleDiscountAmountByCustomer, 0) + ISNULL(ItemDiscountByPriceLevelAmount, 0)), 0) AS DiscTotal FROM dbo.SaleReceiptDetails WHERE SaleReceiptID = '{receiptId}' AND Status <> 2 AND ISNULL(IsCompItem, 0) = 0 ) d WHERE sr.SaleReceiptID = '{receiptId}';" +
+                $"UPDATE dbo.SaleReceiptPaymentDetails SET AmountTendered = '{newAmountTendered}', SVCFeeAmount = '{newPay_SVCFeeAmount}', CashDiscountAmount = '{newPay_CashDiscountAmount}', MerchantFee = '{newPay_MerchantFee}' WHERE SaleReceiptPaymentDetailID = '{paymentDetailId}';" +
+                $"UPDATE dbo.SaleReceiptPaymentDetails SET SVCFeeTaxAmount = '{newPay_SVCFeeTaxAmount}', CashDiscountTaxAmount = '{newPay_CashDiscountTaxAmount}' WHERE SaleReceiptPaymentDetailID = '{paymentDetailId}';";
 
             if (AppSession.ProcessNonQuery(true, sql) < 0)
                 return false;
 
+            if (!string.IsNullOrWhiteSpace(payment.CreditCardTransactionID))
+            {
+                sql = $"UPDATE Merchant.dbo.TransactionDetail SET Amount = '{newAmountTendered + newPay_SVCFeeAmount}', Total = '{newAmountTendered + newPay_SVCFeeAmount + payment.Gratuity}', SVCFee = '{newPay_SVCFeeAmount}',MerchantFee = '{newPay_MerchantFee}' WHERE ID = '{payment.CreditCardTransactionID}';" +
+                    $"UPDATE Merchant.dbo.TransactionDetail SET SVCFeeTaxAmount = '{newPay_SVCFeeTaxAmount}' WHERE ID = '{payment.CreditCardTransactionID}';";
+
+                AppSession.ProcessNonQuery(false, sql);
+            }
+
             // Merchant side — only for the credit-card payment that was refunded.
-            RefundMerchantTransaction(paymentDetailId, totalAmount);
+            RefundMerchantTransaction(paymentDetailId);
             return true;
         }
 
-        private void RefundMerchantTransaction(long paymentDetailId, decimal totalAmount)
+        private void RefundMerchantTransaction(long paymentDetailId)
         {
             var pdt = AppSession.ProcessQuery(true, $@"
                 SELECT PaymentMethodID, CreditCardTransactionType, CreditCardTransactionID
@@ -562,12 +564,6 @@ namespace BLogicPOS7SupportTool.Services
             if (tdt == null || tdt.Rows.Count == 0) return;
 
             var batchUnique = AppSession.GetString(tdt.Rows[0], "BatchUnique");
-            var amt = totalAmount.ToString(CultureInfo.InvariantCulture);
-
-            AppSession.ProcessNonQuery(false, $@"
-                UPDATE dbo.TransactionDetail
-                SET Amount = Amount - {amt}, Total = Total - {amt}
-                WHERE ID = '{safeTranId}'");
 
             if (!string.IsNullOrWhiteSpace(batchUnique))
                 RecalculateMerchantBatch(batchUnique);
@@ -638,7 +634,7 @@ namespace BLogicPOS7SupportTool.Services
         // ---- Edit Items ---------------------------------------------------
 
         // Active (Status <> 2) lines of a ticket, for the Edit Items form.
-        public List<RefundDetailItem> GetEditableItems(string receiptId)
+        public List<RefundDetailItemEntity> GetEditableItems(string receiptId)
         {
             var dt = AppSession.ProcessQuery(true, $@"
                 SELECT *
@@ -646,14 +642,14 @@ namespace BLogicPOS7SupportTool.Services
                 WHERE SaleReceiptID = '{receiptId}' AND Status <> 2
                 ORDER BY Range", "EditItems");
 
-            var items = new List<RefundDetailItem>();
+            var items = new List<RefundDetailItemEntity>();
             if (dt == null) return items;
 
             foreach (DataRow row in dt.Rows)
             {
                 var priceInitial = AppSession.GetString(row, "PriceInitial");
                 bool isItem = string.IsNullOrWhiteSpace(priceInitial) || priceInitial == "P";
-                items.Add(new RefundDetailItem
+                items.Add(new RefundDetailItemEntity
                 {
                     SaleReceiptDetailID = AppSession.GetString(row, "SaleReceiptDetailID"),
                     GroupID = AppSession.GetString(row, "GroupID"),
@@ -731,7 +727,6 @@ namespace BLogicPOS7SupportTool.Services
                     {taxMirror}
                 END
 
-                -- Recompute item-derived header totals from the active lines.
                 UPDATE sr SET
                     sr.TaxAmount            = d.ItemTax + ISNULL(sr.ServiceChargeTaxAmount, 0),
                     sr.TotalAmount          = d.ItemSubtotal + ISNULL(sr.SalesOrderFee, 0) + d.ItemTax + ISNULL(sr.ServiceChargeTaxAmount, 0),
@@ -756,11 +751,12 @@ namespace BLogicPOS7SupportTool.Services
         }
 
         // Edits every editable field of one line from the Item Detail form (price,
-        // quantity, tax %, name, status and the six discount amounts), then recomputes
-        // ExtendedPrice, TaxAmount and the ticket's item-derived header totals.
-        // Tax is charged on the gross (Price * Quantity). ExtendedPrice = gross - total
-        // discount. Only amount columns are written (discount rate/percent left as-is).
-        public bool EditTicketItemDetail(string receiptId, ItemEditDetail edit)
+        // quantity, tax amount, name, status and the six discount amounts).
+        // ExtendedPrice = gross (Price * Quantity) - total discount.
+        // Each group of columns is sent as its own small script (instead of one combined
+        // transaction) and only when its values really differ from what is stored, so an
+        // unchanged group produces no write at all.
+        public bool EditTicketItemDetail(string receiptId, ItemEditDetailEntity edit)
         {
             if (string.IsNullOrEmpty(receiptId) || edit == null || string.IsNullOrEmpty(edit.SaleReceiptDetailID))
                 return false;
@@ -790,77 +786,225 @@ namespace BLogicPOS7SupportTool.Services
                 default: statusVal = 0; isComp = 0; detailReturnCode = "NULL"; break; // Completed
             }
 
-            // Keep the per-tax-code breakdown consistent when there is a single row.
-            string taxMirror = completed
-                ? $@"IF (SELECT COUNT(*) FROM dbo.SaleReceiptDetailTaxDetails WHERE SaleReceiptDetailID = '{id}') = 1
-                        UPDATE dbo.SaleReceiptDetailTaxDetails SET TaxAmount = {taxAmount.ToString(inv)} WHERE SaleReceiptDetailID = '{id}';"
-                : "";
+            // Values currently stored, used to skip the scripts whose columns would not change.
+            var curDt = AppSession.ProcessQuery(true,
+                $@"SELECT Description, Price, Quantity, ExtendedPrice, TaxAmount,
+                          ItemDiscountValue, TotalSaleDiscountAmount, StoreDiscountValue, DiscountAmount,
+                          TotalSaleDiscountAmountByCustomer, ItemDiscountByPriceLevelAmount,
+                          IsCompItem, Status, ReturnCode
+                   FROM dbo.SaleReceiptDetails
+                   WHERE SaleReceiptDetailID = '{id}'", "ItemDetail");
 
-            string sql = $@"
-                SET XACT_ABORT ON;
-                BEGIN TRANSACTION;
+            if (curDt == null || curDt.Rows.Count == 0)
+                return false; // the line is gone, nothing to edit
 
-                UPDATE dbo.SaleReceiptDetails SET
-                    Description                       = N'{safeName}',
-                    Price                             = {edit.Price.ToString(inv)},
-                    Quantity                          = {qty.ToString(inv)},
-                    TaxAmount                         = {taxAmount.ToString(inv)},
-                    ItemDiscountValue                 = {edit.ItemDiscount.ToString(inv)},
-                    TotalSaleDiscountAmount           = {edit.TicketDiscount.ToString(inv)},
-                    StoreDiscountValue                = {edit.StoreDiscount.ToString(inv)},
-                    DiscountAmount                    = {edit.CategoryDiscount.ToString(inv)},
-                    TotalSaleDiscountAmountByCustomer = {edit.CustomerDiscount.ToString(inv)},
-                    ItemDiscountByPriceLevelAmount    = {edit.CustomerLevelDiscount.ToString(inv)},
-                    ExtendedPrice                     = {extendedPrice.ToString(inv)},
-                    IsCompItem                        = {isComp},
-                    Status                            = {statusVal},
-                    ReturnCode                        = {detailReturnCode}
-                WHERE SaleReceiptDetailID = '{id}';
+            var cur = curDt.Rows[0];
 
-                IF OBJECT_ID('dbo.SaleReceiptDetailTaxDetails', 'U') IS NOT NULL
-                BEGIN
-                    UPDATE dbo.SaleReceiptDetailTaxDetails
-                        SET Status = {statusVal}, ReturnCode = {detailReturnCode}
-                        WHERE SaleReceiptDetailID = '{id}';
-                    {taxMirror}
-                END
+            // ReturnCode is nullable, so compare the text we would write ("NULL" or the reason code).
+            string curReturnCode = cur.IsNull("ReturnCode")
+                ? "NULL"
+                : AppSession.GetInt(cur, "ReturnCode").ToString(inv);
 
-                -- Recompute item-derived header totals from the active lines.
-                UPDATE sr SET
-                    sr.TaxAmount            = d.ItemTax + ISNULL(sr.ServiceChargeTaxAmount, 0),
-                    sr.TotalAmount          = d.ItemSubtotal + ISNULL(sr.SalesOrderFee, 0) + d.ItemTax + ISNULL(sr.ServiceChargeTaxAmount, 0),
-                    sr.TotalDiscountAmount  = d.DiscountSum,
-                    sr.GlobalDiscountAmount = d.DiscountSum
-                FROM dbo.SaleReceipts sr
-                CROSS APPLY (
-                    SELECT
-                        ISNULL(SUM(ExtendedPrice), 0) AS ItemSubtotal,
-                        ISNULL(SUM(TaxAmount), 0) AS ItemTax,
-                        ISNULL(SUM(
-                            ISNULL(ItemDiscountValue,0)+ISNULL(TotalSaleDiscountAmount,0)+ISNULL(StoreDiscountValue,0)
-                            +ISNULL(DiscountAmount,0)+ISNULL(TotalSaleDiscountAmountByCustomer,0)+ISNULL(ItemDiscountByPriceLevelAmount,0)), 0) AS DiscountSum
-                    FROM dbo.SaleReceiptDetails
-                    WHERE SaleReceiptID = '{rid}' AND Status <> 2 AND ISNULL(IsCompItem, 0) = 0
-                ) d
-                WHERE sr.SaleReceiptID = '{rid}';
+            // 1. Name, price, quantity, extended price and tax amount.
+            bool pricingChanged =
+                AppSession.GetString(cur, "Description") != (edit.Name ?? "")
+                || AppSession.GetDecimal(cur, "Price") != edit.Price
+                || AppSession.GetDecimal(cur, "Quantity") != qty
+                || AppSession.GetDecimal(cur, "ExtendedPrice") != extendedPrice
+                || AppSession.GetDecimal(cur, "TaxAmount") != taxAmount;
 
-                COMMIT;";
+            if (pricingChanged)
+            {
+                string sql = $@"
+                    UPDATE dbo.SaleReceiptDetails SET
+                        Description   = N'{safeName}',
+                        Price         = {edit.Price.ToString(inv)},
+                        Quantity      = {qty.ToString(inv)},
+                        ExtendedPrice = {extendedPrice.ToString(inv)},
+                        TaxAmount     = {taxAmount.ToString(inv)}
+                    WHERE SaleReceiptDetailID = '{id}'";
 
-            return AppSession.ProcessNonQuery(true, sql) >= 0;
+                if (AppSession.ProcessNonQuery(true, sql) < 0)
+                    return false;
+            }
+
+            // 2. The six discount amounts (rate/percent columns are left as-is).
+            bool discountsChanged =
+                AppSession.GetDecimal(cur, "ItemDiscountValue") != edit.ItemDiscount
+                || AppSession.GetDecimal(cur, "TotalSaleDiscountAmount") != edit.TicketDiscount
+                || AppSession.GetDecimal(cur, "StoreDiscountValue") != edit.StoreDiscount
+                || AppSession.GetDecimal(cur, "DiscountAmount") != edit.CategoryDiscount
+                || AppSession.GetDecimal(cur, "TotalSaleDiscountAmountByCustomer") != edit.CustomerDiscount
+                || AppSession.GetDecimal(cur, "ItemDiscountByPriceLevelAmount") != edit.CustomerLevelDiscount;
+
+            if (discountsChanged)
+            {
+                string sql = $@"
+                    UPDATE dbo.SaleReceiptDetails SET
+                        ItemDiscountValue                 = {edit.ItemDiscount.ToString(inv)},
+                        TotalSaleDiscountAmount           = {edit.TicketDiscount.ToString(inv)},
+                        StoreDiscountValue                = {edit.StoreDiscount.ToString(inv)},
+                        DiscountAmount                    = {edit.CategoryDiscount.ToString(inv)},
+                        TotalSaleDiscountAmountByCustomer = {edit.CustomerDiscount.ToString(inv)},
+                        ItemDiscountByPriceLevelAmount    = {edit.CustomerLevelDiscount.ToString(inv)}
+                    WHERE SaleReceiptDetailID = '{id}'";
+
+                AppSession.ProcessNonQuery(true, sql);
+            }
+
+            // 3. Status, comp flag and reason code on the line.
+            bool statusChanged =
+                (AppSession.GetBool(cur, "IsCompItem") ? 1 : 0) != isComp
+                || AppSession.GetInt(cur, "Status") != statusVal
+                || curReturnCode != detailReturnCode;
+
+            if (statusChanged)
+            {
+                string sql = $@"
+                    UPDATE dbo.SaleReceiptDetails SET
+                        IsCompItem = {isComp},
+                        Status     = {statusVal},
+                        ReturnCode = {detailReturnCode}
+                    WHERE SaleReceiptDetailID = '{id}'";
+
+                AppSession.ProcessNonQuery(true, sql);
+            }
+
+            // 4. Refresh the final* snapshot columns of the ticket, the way the POS server
+            // does after a receipt changes, so reports built on them stay in sync.
+            string transactionStatus = Convert.ToString(AppSession.ProcessQuerySingleValue(true,
+                $"SELECT TransactionStatusID FROM dbo.SaleReceipts WHERE SaleReceiptID = '{rid}'"));
+            UpdateFinalSaleReceipt(rid, transactionStatus);
+
+            return true;
+        }
+
+        // Port of SaleReceiptHelperABS.UpdateFinalSaleReceipt (POS server).
+        // Recomputes the final* columns of SaleReceiptDetails from the live values of the
+        // ticket: each line is aggregated over its whole modifier group (same GroupID),
+        // ignoring voided/returned (Status 2, 98) and comp lines. When the ticket is
+        // finished, SaleReceipts.FinalGratuity is refreshed too
+        // (SaleReceipt_New.UpdateFinalDataForSaleReceiptsInSession).
+        // saleReceiptID must already be SQL-escaped. Databases without the final* columns
+        // are simply left alone.
+        private void UpdateFinalSaleReceipt(string saleReceiptID, string transactionStatus = "")
+        {
+            try
+            {
+                // Final value per line, aggregated over the group the line belongs to.
+                var sql = $@"IF COL_LENGTH('dbo.SaleReceiptDetails', 'finalQuantity') IS NOT NULL
+                            BEGIN
+                            ;WITH FinalSaleReceiptDetails AS (
+                                SELECT
+                                    d.DepartmentID AS ID,
+                                    d.DepartmentName AS Name,
+                                    sdi.SaleReceiptDetailID,
+                                    SUM(v.Quantity) AS FinalQuantity,
+                                    SUM(v.DiscountAmount) AS FinalDiscountAmount,
+                                    SUM(v.CashDiscount) AS FinalCashDiscountAmount,
+                                    SUM(v.CoinDiscount) AS FinalCoinDiscountAmount,
+                                    SUM(v.TaxAmount) AS FinalTaxAmount,
+                                    SUM(v.TotalSales) AS FinalTotalSales,
+                                    SUM(v.GrossSales) AS FinalGrossSales,
+                                    SUM(v.NetSales) AS FinalNetSales,
+                                    SUM(v.NetSalesTax) AS FinalNetSalesTax
+                                FROM
+                                     SaleReceiptDetails sdi
+                                                    JOIN SaleReceipts s ON sdi.SaleReceiptID = s.SaleReceiptID
+                                                    JOIN SaleReceiptDetails sda ON sdi.SaleReceiptID = sda.SaleReceiptID
+                                                        AND sda.GroupID = sdi.GroupID
+                                                        AND sda.Status NOT IN (2, 98)
+                                                        AND sda.IsCompItem = 0
+                                                    JOIN Items i ON sdi.ItemID = i.ItemID
+                                                    RIGHT JOIN Departments d ON i.DeptDeptID = d.DepartmentID
+                                                        AND d.DepartmentID != -4
+                                                        AND d.[Level] = 1
+                                    OUTER APPLY (
+                                        SELECT
+                                            CASE
+                                                WHEN (sda.PriceInitial IS NULL OR sda.PriceInitial = 'P') THEN sdi.Quantity
+                                                ELSE 0
+                                            END AS Quantity,
+                                            (sda.ItemDiscountValue + sda.TotalSaleDiscountAmount + sda.StoreDiscountValue
+                                             + sda.DiscountAmount + sda.TotalSaleDiscountAmountByCustomer
+                                             + sda.ItemDiscountByPriceLevelAmount) AS DiscountAmount,
+                                            sda.CashDiscountPerItem AS CashDiscount,
+                                            sda.CoinDiscountPerItem AS CoinDiscount,
+                                            sda.TaxAmount AS TaxAmount,
+                                            (sda.ExtendedPrice + sda.TaxAmount - sda.CashDiscountPerItem - sda.CoinDiscountPerItem) AS TotalSales,
+                                            (sda.ExtendedPrice + sda.ItemDiscountValue + sda.TotalSaleDiscountAmount
+                                             + sda.StoreDiscountValue + sda.DiscountAmount + sda.TotalSaleDiscountAmountByCustomer
+                                             + sda.ItemDiscountByPriceLevelAmount) AS GrossSales,
+                                            (sda.ExtendedPrice - CASE
+                                                                    WHEN (s.CashDiscountAmount > s.SVCFeeAmount) THEN sda.CashDiscountPerItem
+                                                                    ELSE 0
+                                                                 END - sda.CoinDiscountPerItem) AS NetSales,
+                                            (sda.TaxAmount + sda.ExtendedPrice - CASE
+                                                                                    WHEN (s.CashDiscountAmount > s.SVCFeeAmount) THEN sda.CashDiscountPerItem
+                                                                                    ELSE 0
+                                                                                 END - sda.CoinDiscountPerItem) AS NetSalesTax
+                                    ) v
+                                WHERE s.SaleReceiptID = '{saleReceiptID}'
+                                GROUP BY d.DepartmentID, d.DepartmentName, sdi.SaleReceiptDetailID
+                            )";
+
+                // Write the aggregated values back to SaleReceiptDetails.
+                sql += @"
+                            UPDATE srd
+                            SET
+                                srd.finalQuantity = fsd.FinalQuantity,
+                                srd.finalDiscountAmount = fsd.FinalDiscountAmount,
+                                srd.finalCashDiscount = fsd.FinalCashDiscountAmount,
+                                srd.finalCoinDiscount = fsd.FinalCoinDiscountAmount,
+                                srd.finalTaxAmount = fsd.FinalTaxAmount,
+                                srd.finalTotalSales = fsd.FinalTotalSales,
+                                srd.finalGrossSales = fsd.FinalGrossSales,
+                                srd.finalNetSales = fsd.FinalNetSales,
+                                srd.finalNetSalesTax = fsd.FinalNetSalesTax
+                            FROM dbo.SaleReceiptDetails srd
+                            INNER JOIN FinalSaleReceiptDetails fsd ON srd.SaleReceiptDetailID = fsd.SaleReceiptDetailID;
+                            END";
+
+                var result = AppSession.ProcessNonQuery(true, sql);
+                if (result < 0)
+                    AppLogger.Error($"UpdateFinalSaleReceipt failed for SaleReceiptID: {saleReceiptID}");
+                else
+                    AppLogger.Info($"UpdateFinalSaleReceipt: Update final values for SaleReceiptID = {saleReceiptID} successfully.");
+
+                if (transactionStatus == "FIN")
+                {
+                    AppSession.ProcessNonQuery(true, $@"
+                        IF COL_LENGTH('dbo.SaleReceipts', 'FinalGratuity') IS NOT NULL
+                        BEGIN
+                            ;WITH g AS (
+                                SELECT SaleReceiptID, SUM(Gratuity) AS TotalGratuity
+                                FROM dbo.SaleReceiptPaymentDetails GROUP BY SaleReceiptID
+                            )
+                            UPDATE sr SET sr.FinalGratuity = g.TotalGratuity
+                            FROM dbo.SaleReceipts sr
+                            JOIN g ON g.SaleReceiptID = sr.SaleReceiptID
+                            WHERE sr.TransactionStatusID = 'FIN' AND sr.SaleReceiptID = '{saleReceiptID}';
+                        END");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("UpdateFinalSaleReceipt failed", ex);
+            }
         }
 
         // Reason codes for the Item Detail status combobox, filtered by ReasonType
         // (Cancel/Comp -> 3, Refund -> 13). Ordered by name for display.
-        public List<ReasonCode> GetReasonCodes(int reasonType)
+        public List<ReasonCodeEntity> GetReasonCodes(int reasonType)
         {
             var dt = AppSession.ProcessQuery(true,
                 $"SELECT ReasonCodeID, ReasonCodeName FROM dbo.ReasonCodes WHERE ReasonType = '{reasonType}' ORDER BY ReasonCodeName",
                 "Reasons");
 
-            var list = new List<ReasonCode>();
+            var list = new List<ReasonCodeEntity>();
             if (dt != null)
                 foreach (DataRow r in dt.Rows)
-                    list.Add(new ReasonCode
+                    list.Add(new ReasonCodeEntity
                     {
                         ReasonCodeID = AppSession.GetInt(r, "ReasonCodeID"),
                         ReasonCodeName = AppSession.GetString(r, "ReasonCodeName")
@@ -872,7 +1016,7 @@ namespace BLogicPOS7SupportTool.Services
 
         // Items that can be added to a ticket (special department -2), per the
         // Add Item picker. Excludes the placeholder item and deleted items.
-        public List<AddableItem> GetAddableItems()
+        public List<AddableItemEntity> GetAddableItems()
         {
             var dt = AppSession.ProcessQuery(true,
                 @"SELECT * FROM dbo.Items
@@ -881,10 +1025,10 @@ namespace BLogicPOS7SupportTool.Services
                     AND IsDeleted = '0'
                   ORDER BY ItemName", "Items");
 
-            var list = new List<AddableItem>();
+            var list = new List<AddableItemEntity>();
             if (dt != null)
                 foreach (DataRow r in dt.Rows)
-                    list.Add(new AddableItem
+                    list.Add(new AddableItemEntity
                     {
                         ItemID = AppSession.GetString(r, "ItemID"),
                         ItemName = AppSession.GetString(r, "ItemName"),
@@ -1006,7 +1150,6 @@ namespace BLogicPOS7SupportTool.Services
 
                 INSERT INTO dbo.SaleReceiptDetails ({cols}) VALUES ({vals});
 
-                -- Recompute item-derived header totals from the active lines.
                 UPDATE sr SET
                     sr.TaxAmount            = d.ItemTax + ISNULL(sr.ServiceChargeTaxAmount, 0),
                     sr.TotalAmount          = d.ItemSubtotal + ISNULL(sr.SalesOrderFee, 0) + d.ItemTax + ISNULL(sr.ServiceChargeTaxAmount, 0),
@@ -1085,6 +1228,18 @@ namespace BLogicPOS7SupportTool.Services
             if (AppSession.ProcessNonQuery(true, sql) < 0)
                 return false;
 
+            sql = $@"
+                UPDATE dbo.SaleReceiptDetails SET Status = '3'
+                WHERE SaleReceiptID = '{receiptId}' and Status <> '2'";
+
+            AppSession.ProcessNonQuery(true, sql);
+
+            sql = $@"
+                UPDATE dbo.SaleReceiptDetailTaxDetails SET Status = '3'
+                WHERE SaleReceiptID = '{receiptId}' and Status <> '2'";
+
+            AppSession.ProcessNonQuery(true, sql);
+
             VoidMerchantTransactions(receiptId);
             return true;
         }
@@ -1103,6 +1258,16 @@ namespace BLogicPOS7SupportTool.Services
 
             if (AppSession.ProcessNonQuery(true, sql) < 0)
                 return false;
+
+            sql = $@"
+                UPDATE dbo.SaleReceiptDetails SET Status = '98',ReturnCode = '-106' WHERE SaleReceiptID = '{receiptId}' and Status <> '2'";
+
+            AppSession.ProcessNonQuery(true, sql);
+
+            sql = $@"
+                UPDATE dbo.SaleReceiptDetailTaxDetails SET Status = '98',ReturnCode = '-106' WHERE SaleReceiptID = '{receiptId}' and Status <> '2'";
+
+            AppSession.ProcessNonQuery(true, sql);
 
             VoidMerchantTransactions(receiptId);
             return true;
@@ -1318,7 +1483,7 @@ namespace BLogicPOS7SupportTool.Services
 
         private void UpsertPaymentRoleDetail(string receiptId, long paymentDetailId, int paymentMethodId,
             int paymentMethodType, int cashierId, DateTime dateCreated, decimal gratuity,
-            decimal svcFeeForGratuity, decimal merchantFeeForTip)
+            decimal svcFeeForGratuity, decimal merchantFeeForTip, RoleOption role = null)
         {
             var existsDt = AppSession.ProcessQuery(true,
                 "SELECT 1 AS X WHERE OBJECT_ID('dbo.PaymentRoleDetails', 'U') IS NOT NULL", "X");
@@ -1343,7 +1508,9 @@ namespace BLogicPOS7SupportTool.Services
                 return;
             }
 
-            var emp = GetEmployeeClockInInfo(cashierId, dateCreated);
+            var emp = role != null
+                ? new RoleTipInfo { RolesID = role.RolesID, TipRate = role.TipRate, TipRateOT = role.TipRateOT }
+                : GetEmployeeClockInInfo(cashierId, dateCreated);
             string dc = dateCreated.ToString("yyyy-MM-dd HH:mm:ss");
 
             AppSession.ProcessNonQuery(true, $@"
@@ -1409,13 +1576,63 @@ namespace BLogicPOS7SupportTool.Services
             return info;
         }
 
+        // Roles assigned to an employee, with the tip rates PaymentRoleDetails
+        // gets for each. defaultRoleId is the role GetEmployeeClockInInfo would
+        // pick on its own (the role clocked in with at 'date', else the
+        // employee's role with the lowest tip rate) and keeps its rates;
+        // 0 when that role is not in the list.
+        public List<RoleOption> GetEmployeeRoleOptions(int employeeId, DateTime date, out int defaultRoleId)
+        {
+            var list = new List<RoleOption>();
+            defaultRoleId = 0;
+            try
+            {
+                var emp = AppSession.ProcessQuery(true,
+                    $"SELECT IsUsingRoleTipPool, TipRate, TipRateOT FROM dbo.Employees WHERE EmployeeID = {employeeId}", "Emp");
+                var roles = AppSession.ProcessQuery(true, $@"
+                    SELECT r.RolesID, r.RolesName, r.TipRate, r.TipRateOT
+                    FROM dbo.EmployeeRoles er INNER JOIN dbo.Roles r ON er.RolesID = r.RolesID
+                    WHERE er.EmployeeID = {employeeId} AND ISNULL(er.IsDeleted, 0) = 0 AND ISNULL(r.IsDeleted, 0) = 0
+                    ORDER BY r.RolesName", "Roles");
+                if (roles == null) return list;
+
+                DataRow empRow = emp != null && emp.Rows.Count > 0 ? emp.Rows[0] : null;
+                bool isUsingRoleTipPool = empRow != null && AppSession.GetBool(empRow, "IsUsingRoleTipPool");
+                foreach (DataRow r in roles.Rows)
+                {
+                    var src = isUsingRoleTipPool || empRow == null ? r : empRow;
+                    list.Add(new RoleOption
+                    {
+                        RolesID = AppSession.GetInt(r, "RolesID"),
+                        RolesName = AppSession.GetString(r, "RolesName"),
+                        TipRate = AppSession.GetDecimal(src, "TipRate"),
+                        TipRateOT = AppSession.GetDecimal(src, "TipRateOT")
+                    });
+                }
+
+                var clockIn = GetEmployeeClockInInfo(employeeId, date);
+                var clocked = list.FirstOrDefault(x => x.RolesID == clockIn.RolesID);
+                if (clocked != null)
+                {
+                    defaultRoleId = clocked.RolesID;
+                    clocked.TipRate = clockIn.TipRate;
+                    clocked.TipRateOT = clockIn.TipRateOT;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("GetEmployeeRoleOptions failed", ex);
+            }
+            return list;
+        }
+
         // ---- Add Tip By Sale Token ----------------------------------------
 
         // Looks up a token ticket by its number and computes the tip value it
         // carries (its net payment total).
-        public TokenReceiptInfo LookupTokenReceipt(string ticketNumber)
+        public TokenReceiptInfoEntity LookupTokenReceipt(string ticketNumber)
         {
-            var info = new TokenReceiptInfo();
+            var info = new TokenReceiptInfoEntity();
             if (string.IsNullOrWhiteSpace(ticketNumber)) return info;
 
             var dt = AppSession.ProcessQuery(true, $@"
@@ -1458,65 +1675,50 @@ namespace BLogicPOS7SupportTool.Services
             if (string.IsNullOrEmpty(mainReceiptId) || string.IsNullOrEmpty(tokenReceiptId))
                 return false;
 
-            var mainDt = AppSession.ProcessQuery(true, $@"
-                SELECT CashierID, DateCreated, SaleReceiptNumber, InvoiceNum
-                FROM dbo.SaleReceipts WHERE SaleReceiptID = '{mainReceiptId}'", "Main");
-            if (mainDt == null || mainDt.Rows.Count == 0) return false;
+            var saleEntity = AppSession.GetSaleReceiptsByID(mainReceiptId);
 
-            int cashierId = AppSession.GetInt(mainDt.Rows[0], "CashierID");
-            DateTime dateCreated = AppSession.GetDateTime(mainDt.Rows[0], "DateCreated");
-            string mainNumber = AppSession.GetString(mainDt.Rows[0], "SaleReceiptNumber");
-            string mainInvoice = AppSession.GetString(mainDt.Rows[0], "InvoiceNum");
+            var listPayments = AppSession.GetListSaleReceiptPaymentDetailsBySaleReceiptID(tokenReceiptId);
 
-            var tokDt = AppSession.ProcessQuery(true, $@"
-                SELECT a.SaleReceiptPaymentDetailID, a.PaymentMethodID, b.PaymentMethodType,
-                       a.AmountTendered, a.AmountReturn, a.Gratuity, a.SVCFeeAmount,
-                       a.CashDiscountAmount, a.MerchantFee, a.CreditCardTransactionID
-                FROM dbo.SaleReceiptPaymentDetails a
-                LEFT JOIN dbo.PaymentMethods b ON a.PaymentMethodID = b.PaymentMethodID
-                WHERE a.SaleReceiptID = '{tokenReceiptId}'", "Token");
-            if (tokDt == null || tokDt.Rows.Count == 0) return false;
-
-            decimal svcFeeCfg = GetConfigDecimal("CreditCardConfigValue.SVCFee");
-            decimal merchantFeeCfg = GetConfigDecimal("CreditCardConfigValue.MerchantFee");
-            var inv = CultureInfo.InvariantCulture;
-            string dc = dateCreated.ToString("yyyy-MM-dd HH:mm:ss");
+            if (saleEntity == null || listPayments == null || listPayments.Count == 0)
+                return false;
 
             // Close the token ticket.
-            if (AppSession.ProcessNonQuery(true,
-                $"UPDATE dbo.SaleReceipts SET TransactionStatusID = 'CLO' WHERE SaleReceiptID = '{tokenReceiptId}'") < 0)
+            if (AppSession.ProcessNonQuery(true, $"UPDATE dbo.SaleReceipts SET TransactionStatusID = 'CLO' WHERE SaleReceiptID = '{tokenReceiptId}'") < 0)
                 return false;
+
+            int cashierId = saleEntity.CashierID;
+            DateTime dateCreated = saleEntity.DateCreated;
+            string mainNumber = saleEntity.SaleReceiptNumber;
+            string mainInvoice = saleEntity.InvoiceNum;
+
+            var inv = CultureInfo.InvariantCulture;
+            var dc = saleEntity.DateCreated;
 
             var processed = new List<TokenTipLine>();
 
-            foreach (DataRow item in tokDt.Rows)
+            foreach (var item in listPayments)
             {
-                long pdId = AppSession.GetLong(item, "SaleReceiptPaymentDetailID");
-                int pmId = AppSession.GetInt(item, "PaymentMethodID");
-                int pmType = AppSession.GetInt(item, "PaymentMethodType");
-                decimal svcFeeAmount = AppSession.GetDecimal(item, "SVCFeeAmount");
-                decimal merchantFee = AppSession.GetDecimal(item, "MerchantFee");
-                string ccTranId = AppSession.GetString(item, "CreditCardTransactionID");
+                decimal svcFeeCfg = AppSession.GetSVCFeePercent(saleEntity.CreditCardFeeMode);
+                decimal merchantFeeCfg = AppSession.GetMerchantFeePercent(saleEntity.CreditCardFeeMode, item.PaymentCardType);
+                decimal baseAmountCfg = AppSession.GetBaseAmountFee(saleEntity.SVCFeePercent);
 
-                decimal gratuity = AppSession.GetDecimal(item, "AmountTendered")
-                    - AppSession.GetDecimal(item, "AmountReturn")
-                    + AppSession.GetDecimal(item, "Gratuity")
-                    + svcFeeAmount
-                    - AppSession.GetDecimal(item, "CashDiscountAmount");
+                long pdId = item.SaleReceiptPaymentDetailID;
+                int pmId = item.PaymentMethodID;
+                int pmType = item.PaymentMethodType;
+                decimal svcFeeAmount = item.SVCFeeAmount;
+                decimal merchantFee = item.MerchantFee;
+                string ccTranId = item.CreditCardTransactionID;
 
-                decimal svcFeeForGratuity = svcFeeAmount != 0 ? Math.Round(gratuity * svcFeeCfg / 100m, 2) : 0m;
-                decimal merchantFeeForTip = merchantFee != 0 ? Math.Round(gratuity * merchantFeeCfg / 100m, 2) : 0m;
+                decimal gratuity = item.AmountTendered - item.AmountReturn + item.Gratuity + item.SVCFeeAmount - item.CashDiscountAmount;
 
-                string g = gratuity.ToString(inv);
-                string svcG = svcFeeForGratuity.ToString(inv);
-                string mFeeTip = merchantFeeForTip.ToString(inv);
+                decimal svcFeeForGratuity = Utility.CalculateSVCFeeFromTotalWithParams(gratuity, svcFeeCfg, baseAmountCfg);
+                decimal merchantFeeForTip = Utility.CalculateMerchantFeeWithPercent(gratuity, merchantFeeCfg);
 
-                // Re-parent the token payment to the main ticket as a tip-only line.
                 AppSession.ProcessNonQuery(true, $@"
                     UPDATE dbo.SaleReceiptPaymentDetails
                     SET CreatedDate = '{dc}', AmountTendered = 0, SaleReceiptID = '{mainReceiptId}',
-                        SVCFeeAmount = 0, SVCFeeForGratuity = {svcG}, Gratuity = {g},
-                        MerchantFee = {mFeeTip}, MerchantFeeForTip = {mFeeTip}
+                        SVCFeeAmount = 0, SVCFeeForGratuity = {svcFeeForGratuity}, Gratuity = {gratuity},
+                        MerchantFee = {merchantFeeForTip}, MerchantFeeForTip = {merchantFeeForTip}
                     WHERE SaleReceiptPaymentDetailID = {pdId}");
 
                 UpsertPaymentRoleDetail(mainReceiptId, pdId, pmId, pmType, cashierId, dateCreated,
@@ -1531,7 +1733,6 @@ namespace BLogicPOS7SupportTool.Services
                 });
             }
 
-            // Recalculate main ticket FinalGratuity.
             AppSession.ProcessNonQuery(true, $@"
                 IF COL_LENGTH('dbo.SaleReceipts', 'FinalGratuity') IS NOT NULL
                 BEGIN
@@ -1545,7 +1746,6 @@ namespace BLogicPOS7SupportTool.Services
                     WHERE sr.TransactionStatusID = 'FIN' AND sr.SaleReceiptID = '{mainReceiptId}';
                 END");
 
-            // Merchant: rewrite each credit-card transaction as a tip-only charge.
             var batches = new HashSet<string>();
             foreach (var p in processed)
             {
@@ -1585,9 +1785,9 @@ namespace BLogicPOS7SupportTool.Services
 
         // Looks up a Refund (RET) ticket by its number and computes the amount
         // that will be merged (the negated sum of its AmountReturn values).
-        public RefundReceiptInfo LookupRefundReceipt(string ticketNumber)
+        public RefundReceiptInfoEntity LookupRefundReceipt(string ticketNumber)
         {
-            var info = new RefundReceiptInfo();
+            var info = new RefundReceiptInfoEntity();
             if (string.IsNullOrWhiteSpace(ticketNumber)) return info;
 
             var dt = AppSession.ProcessQuery(true, $@"
@@ -1655,13 +1855,13 @@ namespace BLogicPOS7SupportTool.Services
 
         // ---- Update Service Charges ---------------------------------------
 
-        public ServiceChargeSet GetServiceCharges(string receiptId)
+        public ServiceChargeSetEntity GetServiceCharges(string receiptId)
         {
             string sql = $@"
                 SELECT *
                 FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'";
 
-            return AppSession.QueryFirstOrDefault<ServiceChargeSet>(true, sql);
+            return AppSession.QueryFirstOrDefault<ServiceChargeSetEntity>(true, sql);
         }
 
         // Adjusts one service charge to (newAmount, newTax) and rebalances the
@@ -1677,10 +1877,10 @@ namespace BLogicPOS7SupportTool.Services
                 SELECT *
                 FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'";
 
-            var sale = AppSession.QueryFirstOrDefault<SaleReceipts>(true, sql);
+            var sale = AppSession.QueryFirstOrDefault<SaleReceiptsEntity>(true, sql);
 
             sql = $@"SELECT * FROM dbo.SaleReceiptDetails WHERE SaleReceiptID = '{receiptId}'";
-            var saleDetails = AppSession.Query<SaleReceipts>(true, sql);
+            var saleDetails = AppSession.Query<SaleReceiptsEntity>(true, sql);
 
             if (sale == null && saleDetails != null)
                 return false;
@@ -1693,7 +1893,10 @@ namespace BLogicPOS7SupportTool.Services
                 case ServiceChargeKind.AreaServiceFee:
 
                     if (sale.AreaFeeAmount != newAmount)
+                    {
                         listScript.Add($" UPDATE dbo.SaleReceipts SET AreaFeeAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                        listScript.Add($" UPDATE dbo.SaleReceiptServiceChargeTaxDetails SET AreaFeeAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                    }
 
                     if (sale.AreaFeeTaxAmount != newTax)
                         listScript.Add($" UPDATE dbo.SaleReceipts SET AreaFeeTaxAmount = {newTax.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
@@ -1701,7 +1904,10 @@ namespace BLogicPOS7SupportTool.Services
                     break;
                 case ServiceChargeKind.AutoServiceFee:
                     if (sale.AutoGratuityAmount != newAmount)
+                    {
                         listScript.Add($" UPDATE dbo.SaleReceipts SET AutoGratuityAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                        listScript.Add($" UPDATE dbo.SaleReceiptServiceChargeTaxDetails SET AutoGratuityAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                    }
 
                     if (sale.AutoGratuityTaxAmount != newTax)
                         listScript.Add($" UPDATE dbo.SaleReceipts SET AutoGratuityTaxAmount = {newTax.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
@@ -1709,7 +1915,10 @@ namespace BLogicPOS7SupportTool.Services
                     break;
                 case ServiceChargeKind.PartyServiceFee:
                     if (sale.PartyServiceFeeAmount != newAmount)
+                    {
                         listScript.Add($" UPDATE dbo.SaleReceipts SET PartyServiceFeeAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                        listScript.Add($" UPDATE dbo.SaleReceiptServiceChargeTaxDetails SET PartyServiceFeeAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                    }
 
                     if (sale.PartyServiceFeeTaxAmount != newTax)
                         listScript.Add($" UPDATE dbo.SaleReceipts SET PartyServiceFeeTaxAmount = {newTax.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
@@ -1717,23 +1926,36 @@ namespace BLogicPOS7SupportTool.Services
                     break;
                 case ServiceChargeKind.ExtraServiceFee:
                     if (sale.ExtraFeeAmount != newAmount)
+                    {
                         listScript.Add($" UPDATE dbo.SaleReceipts SET ExtraFeeAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                        listScript.Add($" UPDATE dbo.SaleReceiptServiceChargeTaxDetails SET ExtraFeeAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                    }
 
                     if (sale.ExtraFeeTaxAmount != newTax)
                         listScript.Add($" UPDATE dbo.SaleReceipts SET ExtraFeeTaxAmount = {newTax.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
 
                     break;
                 case ServiceChargeKind.SVCFee:
-                    if (sale.SVCFeeAmount != newAmount)
+                    newAmount += newTax;
+
+                    if (sale.SVCFeePaidAmount != newAmount)
+                    {
                         listScript.Add($" UPDATE dbo.SaleReceipts SET SVCFeeAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                        listScript.Add($" UPDATE dbo.SaleReceipts SET SVCFeePaidAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                    }
 
                     if (sale.SVCFeeTaxAmount != newTax)
                         listScript.Add($" UPDATE dbo.SaleReceipts SET SVCFeeTaxAmount = {newTax.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
 
                     break;
                 case ServiceChargeKind.CashDiscount:
-                    if (sale.CashDiscountAmount != newAmount)
+                    newAmount += newTax;
+
+                    if (sale.CashDiscountPaidAmount != newAmount)
+                    {
                         listScript.Add($" UPDATE dbo.SaleReceipts SET CashDiscountAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                        listScript.Add($" UPDATE dbo.SaleReceipts SET CashDiscountPaidAmount = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                    }
 
                     if (sale.CashDiscountTaxAmount != newTax)
                         listScript.Add($" UPDATE dbo.SaleReceipts SET CashDiscountTaxAmount = {newTax.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
@@ -1741,7 +1963,10 @@ namespace BLogicPOS7SupportTool.Services
                     break;
                 default: // ManualServiceFee
                     if (sale.ServiceFee != newAmount)
+                    {
                         listScript.Add($" UPDATE dbo.SaleReceipts SET ServiceFee = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                        listScript.Add($" UPDATE dbo.SaleReceiptServiceChargeTaxDetails SET ServiceFee = {newAmount.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
+                    }
 
                     if (sale.ServiceFeeTaxAmount != newTax)
                         listScript.Add($" UPDATE dbo.SaleReceipts SET ServiceFeeTaxAmount = {newTax.ToString(inv)} WHERE SaleReceiptID = '{receiptId}';");
@@ -1757,11 +1982,40 @@ namespace BLogicPOS7SupportTool.Services
             return true;
         }
 
+        public bool UpdateTotalServiceCharge(string receiptId)
+        {
+            if (string.IsNullOrEmpty(receiptId)) return false;
+
+            List<string> listScript = new List<string>();
+
+            string sql = $@"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'";
+
+            var sale = AppSession.QueryFirstOrDefault<SaleReceiptsEntity>(true, sql);
+
+            var newSalesOrderFee = sale.AutoGratuityAmount + sale.ServiceFee + sale.ExtraFeeAmount + sale.PartyServiceFeeAmount + sale.AreaFeeAmount;
+            var newServiceChargeTaxAmount = sale.AutoGratuityTaxAmount + sale.ServiceFeeTaxAmount + sale.ExtraFeeTaxAmount + sale.PartyServiceFeeTaxAmount + sale.AreaFeeTaxAmount;
+
+            var balanceSalesOrderFee = newSalesOrderFee - sale.SalesOrderFee;
+            var balanceServiceChargeTaxAmount = newServiceChargeTaxAmount - sale.ServiceChargeTaxAmount;
+
+            var newTotalAmount = sale.TotalAmount + balanceSalesOrderFee + balanceServiceChargeTaxAmount;
+            var newTaxAmount = sale.TaxAmount + balanceServiceChargeTaxAmount;
+
+            sql = $"UPDATE dbo.SaleReceipts SET SalesOrderFee = '{newSalesOrderFee}' WHERE SaleReceiptID = '{receiptId}';" +
+                $"UPDATE dbo.SaleReceipts SET ServiceChargeTaxAmount = '{newServiceChargeTaxAmount}' WHERE SaleReceiptID = '{receiptId}';" +
+                $"UPDATE dbo.SaleReceipts SET TotalAmount = '{newTotalAmount}' WHERE SaleReceiptID = '{receiptId}';" +
+                $"UPDATE dbo.SaleReceipts SET TaxAmount = '{newTaxAmount}' WHERE SaleReceiptID = '{receiptId}';";
+
+            AppSession.ProcessNonQuery(true, sql);
+
+            return true;
+        }
+
         // ---- Finish Ticket ------------------------------------------------
 
-        public FinishInfo GetFinishInfo(string receiptId)
+        public FinishTicketEntity GetFinishInfo(string receiptId)
         {
-            var info = new FinishInfo();
+            var info = new FinishTicketEntity();
             var dt = AppSession.ProcessQuery(true,
                 $"SELECT * FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'", "SR");
             if (dt == null || dt.Rows.Count == 0) return info;
@@ -2160,6 +2414,409 @@ namespace BLogicPOS7SupportTool.Services
                 WHERE SaleReceiptID = '{receiptId}'") >= 0;
         }
 
+        // ---- Insert Payment -----------------------------------------------
+
+        // How a card payment method is written, mirroring what the POS stores
+        // (PaymentStandardForm2 / CreditCardPaymentProcessingFlat / CFacade).
+        public class CardPaymentKind
+        {
+            public string CreditCardTransactionType;
+            public string PaymentCardType;
+            public string TenderType;
+        }
+
+        // Returns null for methods that are not card payments (Cash, Gift Card...).
+        public static CardPaymentKind GetCardPaymentKind(string paymentMethodName)
+        {
+            switch ((paymentMethodName ?? "").Trim().ToUpperInvariant())
+            {
+                // The tool only inserts into settled batches, hence Sale_Settled (same as FinishTicket).
+                case "CREDIT": return new CardPaymentKind { CreditCardTransactionType = "Sale_Settled", PaymentCardType = "Credit", TenderType = "CreditCard" };
+                case "PIN DEBIT": return new CardPaymentKind { CreditCardTransactionType = "Debit", PaymentCardType = "Debit", TenderType = "DebitCard" };
+                case "EBT CASH": return new CardPaymentKind { CreditCardTransactionType = "EBT_CASH", PaymentCardType = "EBT", TenderType = "EBT_Cash" };
+                // POS leaves PaymentCardType empty for EBT Food.
+                case "EBT FOOD": return new CardPaymentKind { CreditCardTransactionType = "EBT", PaymentCardType = "", TenderType = "EBT_Food" };
+                default: return null;
+            }
+        }
+
+        public InsertPaymentInfo GetInsertPaymentInfo(string receiptId)
+        {
+            var info = new InsertPaymentInfo();
+            var sr = AppSession.GetSaleReceiptsByID(receiptId);
+            if (sr == null) return info;
+
+            info.Found = true;
+            info.SaleReceiptNumber = sr.SaleReceiptNumber;
+            info.TransactionStatusID = sr.TransactionStatusID;
+            info.CashierID = sr.CashierID;
+            info.DateCreated = sr.DateCreated;
+            info.CreditCardFeeMode = sr.CreditCardFeeMode;
+            info.SVCFeePercent = sr.SVCFeePercent != 0 ? sr.SVCFeePercent : AppSession.GetSVCFeePercent(sr.CreditCardFeeMode);
+            info.CashDiscountPercent = sr.CashDiscountPercent != 0
+                ? sr.CashDiscountPercent
+                : POSConfig.Configuration.ConfigValue.CreditCardConfigValue.CashDiscount;
+            info.SVCFeeTaxRate = sr.SVCFeeTaxRate;
+
+            var dt = AppSession.ProcessQuery(true,
+                $"SELECT ISNULL(TotalAmount, 0) - ISNULL(PaidAmount, 0) AS Balance FROM dbo.SaleReceipts WHERE SaleReceiptID = '{receiptId}'", "Bal");
+            info.Balance = dt != null && dt.Rows.Count > 0 ? AppSession.GetDecimal(dt.Rows[0], "Balance") : 0m;
+            return info;
+        }
+
+        // Employees that are still enabled, ordered by name.
+        public List<EmployeeOption> GetActiveEmployees()
+        {
+            var list = new List<EmployeeOption>();
+            var dt = AppSession.ProcessQuery(true, @"
+                SELECT EmployeeID, LTRIM(RTRIM(ISNULL(EmployeeFirstName, '') + ' ' + ISNULL(EmployeeLastName, ''))) AS Name
+                FROM dbo.Employees
+                WHERE ISNULL(Enable, 0) = 0 AND EmployeeID > 0
+                ORDER BY Name", "Emp");
+            if (dt == null) return list;
+            foreach (DataRow r in dt.Rows)
+                list.Add(new EmployeeOption
+                {
+                    EmployeeID = AppSession.GetInt(r, "EmployeeID"),
+                    EmployeeName = AppSession.GetString(r, "Name")
+                });
+            return list;
+        }
+
+        // Merchant fee % the POS would use for this kind of card on this ticket.
+        public static decimal GetDefaultMerchantFeePercent(int creditCardFeeMode, string paymentMethodName)
+        {
+            var kind = GetCardPaymentKind(paymentMethodName);
+            if (kind == null) return 0m;
+            // POS hard-codes the merchant fee % of EBT Food to 0.
+            if (kind.TenderType == "EBT_Food") return 0m;
+            return AppSession.GetMerchantFeePercent(creditCardFeeMode, kind.PaymentCardType);
+        }
+
+        // Fills the fee amounts of the request from its percents. Shared by the
+        // dialog preview and the insert so both always agree.
+        //   SVCFeeAmount      = (Tendered - Return) x SVC%
+        //   SVCFeeForGratuity = Gratuity x BaseAmountFee%, BaseAmountFee = SVC% / (100 + SVC%) x 100
+        //   CashDiscount      = (Tendered - Return) x CashDiscount%  (no gratuity column exists for it)
+        //   MerchantFee       = (Tendered - Return + SVCFeeAmount - CashDiscount + Gratuity) x Merchant%
+        //   MerchantFeeForTip = Gratuity x Merchant%
+        // In tip-only mode there is no amount, so only the gratuity parts remain
+        // (MerchantFee then equals MerchantFeeForTip).
+        public static void CalculateInsertPaymentFees(InsertPaymentRequest req)
+        {
+            if (req.TipOnly)
+            {
+                req.AmountTendered = req.AmountReturn = 0m;
+                req.ApplyCashDiscount = req.CashDiscountManual = false;
+                if (req.SVCFeeManual) req.SVCFeeAmount = req.SVCFeeTaxAmount = 0m;
+            }
+
+            decimal net = req.AmountTendered - req.AmountReturn;
+            decimal svcPct = req.ApplySVCFee ? req.SVCFeePercent : 0m;
+            decimal cashDiscountPct = req.ApplyCashDiscount ? req.CashDiscountPercent : 0m;
+            decimal merchantPct = req.ApplyMerchantFee ? req.MerchantFeePercent : 0m;
+
+            if (!req.ApplySVCFee)
+            {
+                req.SVCFeeAmount = req.SVCFeeForGratuity = req.SVCFeeTaxAmount = 0m;
+            }
+            else if (!req.SVCFeeManual)
+            {
+                req.SVCFeeAmount = svcPct > 0 && net > 0 ? RoundUp(net * svcPct / 100m) : 0m;
+                decimal baseAmountFee = svcPct > 0 ? svcPct / (100m + svcPct) * 100m : 0m;
+                req.SVCFeeForGratuity = baseAmountFee > 0 && req.Gratuity > 0 ? RoundUp(req.Gratuity * baseAmountFee / 100m) : 0m;
+                req.SVCFeeTaxAmount = Math.Round(req.SVCFeeAmount * req.SVCFeeTaxPercent / 100m, 2, MidpointRounding.AwayFromZero);
+            }
+
+            if (!req.ApplyCashDiscount)
+            {
+                req.CashDiscountAmount = req.CashDiscountTaxAmount = 0m;
+            }
+            else if (!req.CashDiscountManual)
+            {
+                req.CashDiscountAmount = cashDiscountPct > 0 && net > 0 ? RoundUp(net * cashDiscountPct / 100m) : 0m;
+                req.CashDiscountTaxAmount = Math.Round(req.CashDiscountAmount * req.CashDiscountTaxPercent / 100m, 2, MidpointRounding.AwayFromZero);
+            }
+
+            decimal merchantBase = net + req.SVCFeeAmount - req.CashDiscountAmount + req.Gratuity;
+            if (!req.ApplyMerchantFee)
+            {
+                req.MerchantFee = req.MerchantFeeForTip = 0m;
+            }
+            else if (!req.MerchantFeeManual)
+            {
+                req.MerchantFee = merchantPct > 0 && merchantBase > 0 ? RoundUp(merchantBase * merchantPct / 100m) : 0m;
+                req.MerchantFeeForTip = merchantPct > 0 && req.Gratuity > 0 ? RoundUp(req.Gratuity * merchantPct / 100m) : 0m;
+            }
+            if (req.TipOnly) req.MerchantFee = req.MerchantFeeForTip;
+        }
+
+        // Adds one payment line to a ticket. Card methods (Credit / Pin Debit /
+        // EBT Cash / EBT Food) also get a TransactionDetail row in the chosen
+        // batch, which is then recalculated. The ticket's paid totals are
+        // increased by this payment; its status is left unchanged.
+        public bool InsertPaymentDetail(string receiptId, InsertPaymentRequest req)
+        {
+            if (string.IsNullOrEmpty(receiptId) || req == null) return false;
+
+            try
+            {
+                var sr = AppSession.GetSaleReceiptsByID(receiptId);
+                if (sr == null) return false;
+                if (req.FinishTicket && sr.TransactionStatusID != "OPER") return false;
+                if (req.TipOnly && (sr.TransactionStatusID != "FIN" || req.Gratuity <= 0)) return false;
+
+                CalculateInsertPaymentFees(req);
+
+                var kind = GetCardPaymentKind(req.PaymentMethodName);
+                bool isCard = kind != null;
+                if (isCard && (string.IsNullOrEmpty(AppSession.MerchantConnectionString) || string.IsNullOrEmpty(req.BatchUnique)))
+                    return false;
+
+                var inv = CultureInfo.InvariantCulture;
+                string createdDate = req.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss", inv);
+                decimal net = req.AmountTendered - req.AmountReturn;
+                // The SVC fee / cash discount taxes are only recorded in their own
+                // tax columns (payment line + ticket); they do not change any amount.
+                decimal cardAmount = net + req.SVCFeeAmount - req.CashDiscountAmount;
+                decimal cardTotal = cardAmount + req.Gratuity;
+
+                string cardNumber = string.IsNullOrWhiteSpace(req.TransactionCardNumber)
+                    ? "xxxx0000"
+                    : (req.TransactionCardNumber.Contains("xxxx") ? req.TransactionCardNumber : "xxxx" + req.TransactionCardNumber);
+                string cardType = (req.CardType ?? "").Trim().ToUpper();
+                string transactionId = Guid.NewGuid().ToString();
+                string transactionNumber = req.TransactionNumber;
+                if (isCard && string.IsNullOrWhiteSpace(transactionNumber))
+                {
+                    var numDt = AppSession.ProcessQuery(false,
+                        "SELECT ISNULL(MAX(CAST(Number AS BIGINT)), 0) + 1 AS NextNo FROM dbo.TransactionDetail", "No");
+                    transactionNumber = numDt != null && numDt.Rows.Count > 0 ? AppSession.GetString(numDt.Rows[0], "NextNo") : "1";
+                    while (transactionNumber.Length < 6) transactionNumber = "0" + transactionNumber;
+                }
+
+                int paymentMethodType = 0;
+                var pmDt = AppSession.ProcessQuery(true,
+                    $"SELECT PaymentMethodType FROM dbo.PaymentMethods WHERE PaymentMethodID = {req.PaymentMethodID}", "PM");
+                if (pmDt != null && pmDt.Rows.Count > 0)
+                    paymentMethodType = AppSession.GetInt(pmDt.Rows[0], "PaymentMethodType");
+
+                // ---- payment detail (BLogicPOS7) ----
+                var pdTemplate = AppSession.ProcessQuery(true, "SELECT TOP 0 * FROM dbo.SaleReceiptPaymentDetails", "PD");
+                if (pdTemplate == null || pdTemplate.Columns.Count == 0) return false;
+
+                var idDt = AppSession.ProcessQuery(true,
+                    "SELECT ISNULL(MAX(SaleReceiptPaymentDetailID), 0) + 1 AS NextId FROM dbo.SaleReceiptPaymentDetails", "Id");
+                long newPaymentId = idDt != null && idDt.Rows.Count > 0 ? AppSession.GetLong(idDt.Rows[0], "NextId") : 1;
+
+                var pdMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["SaleReceiptPaymentDetailID"] = Q(newPaymentId.ToString(inv)),
+                    ["SaleReceiptID"] = Q(receiptId),
+                    ["PaymentMethodID"] = Q(req.PaymentMethodID.ToString(inv)),
+                    ["AmountTendered"] = Q(req.AmountTendered.ToString(inv)),
+                    ["AmountReturn"] = Q(req.AmountReturn.ToString(inv)),
+                    ["CreatedDate"] = Q(createdDate),
+                    ["IsDeposit"] = "'0'",
+                    ["GiftExtra"] = "'0'",
+                    ["Cashier"] = Q(req.EmployeeID.ToString(inv)),
+                    ["EmployeePaidID"] = Q(req.EmployeeID.ToString(inv)),
+                    ["ShiftID"] = string.IsNullOrWhiteSpace(sr.ShiftID) ? "null" : Q(sr.ShiftID),
+                    ["GiftCardCode"] = "null",
+                    ["CurrencyAmount"] = "'0'",
+                    ["CurrencyID"] = "'1'",
+                    ["PaymentReceiptID"] = "null",
+                    ["PayByAccuPoint"] = "null",
+                    ["PaymentType"] = "'0'",
+                    ["Gratuity"] = Q(req.Gratuity.ToString(inv)),
+                    ["CreditCardTransactionID"] = isCard ? Q(transactionId) : "null",
+                    ["CreditCardTransactionNumber"] = isCard ? Q(transactionNumber) : "null",
+                    ["CreditCardTransactionCardNumber"] = isCard ? Q(cardNumber) : "null",
+                    ["CreditCardTransactionType"] = isCard ? Q(kind.CreditCardTransactionType) : "null",
+                    ["CreditCardRefNo"] = isCard ? Q(req.RefNo) : "null",
+                    ["CreditCardAuthCode"] = isCard ? Q(req.AuthCode) : "null",
+                    ["CreditCardCardType"] = isCard ? Q(cardType) : "null",
+                    ["CreditCardTransactionMerchantID"] = isCard ? Q(req.MerchantID) : "null",
+                    ["PaymentCardType"] = isCard ? Q(kind.PaymentCardType) : "''",
+                    ["PaidServiceFee"] = "'0'",
+                    ["PaidPayout"] = "'0'",
+                    ["SVCFeeAmount"] = Q(req.SVCFeeAmount.ToString(inv)),
+                    ["SVCFeeForGratuity"] = Q(req.SVCFeeForGratuity.ToString(inv)),
+                    ["SVCFeeForServiceCharge"] = "'0'",
+                    ["CashDiscountAmount"] = Q(req.CashDiscountAmount.ToString(inv)),
+                    ["MerchantFee"] = Q(req.MerchantFee.ToString(inv)),
+                    ["MerchantFeeForTip"] = Q(req.MerchantFeeForTip.ToString(inv)),
+                    ["MerchantFeePercent"] = Q((req.ApplyMerchantFee ? req.MerchantFeePercent : 0m).ToString(inv)),
+                    ["PartyServiceFeeAmount"] = "'0'",
+                    ["SVCFeeForPartyServiceFeeAmount"] = "'0'",
+                    ["AreaFeeAmount"] = "'0'",
+                    ["SVCFeeForAreaFeeAmount"] = "'0'",
+                    ["ServiceFee"] = "'0'",
+                    ["SVCFeeForServiceFee"] = "'0'",
+                    ["MerchantFeeForServiceFee"] = "'0'",
+                    ["MerchantFeeForAreaFeeAmount"] = "'0'",
+                    ["MerchantFeeForPartyServiceFeeAmount"] = "'0'",
+                    ["CardHolderName"] = Q(req.CardHolderName),
+                    ["CardBalance"] = "'0'",
+                    ["AutoGratuityAmount"] = "'0'",
+                    ["SVCFeeForAutoGratuityAmount"] = "'0'",
+                    ["MerchantFeeForAutoGratuityAmount"] = "'0'",
+                    ["IsDecline"] = "'0'",
+                    ["IsDepositPayment"] = "'0'",
+                    ["SVCFeeTaxAmount"] = Q(req.SVCFeeTaxAmount.ToString(inv)),
+                    ["CashDiscountTaxAmount"] = Q(req.CashDiscountTaxAmount.ToString(inv)),
+                    ["ServiceFeeTaxAmount"] = "'0'",
+                    ["AreaFeeTaxAmount"] = "'0'",
+                    ["PartyServiceFeeTaxAmount"] = "'0'",
+                    ["AutoGratuityTaxAmount"] = "'0'",
+                    ["TaxAmountByPaymentModeTaxCustomFee"] = "'0'",
+                    ["IsCalculateTaxCustomFee"] = req.SVCFeeTaxAmount > 0 ? "1" : "0",
+                    ["CoinDiscountAmount"] = "'0'",
+                    ["PaidHouseAccount"] = "'0'",
+                    ["MerchantFeeForServiceFeeTaxAmount"] = "'0'",
+                    ["MerchantFeeForAreaFeeTaxAmount"] = "'0'",
+                    ["MerchantFeeForPartyServiceFeeTaxAmount"] = "'0'",
+                    ["MerchantFeeForAutoGratuityTaxAmount"] = "'0'"
+                };
+
+                string pdInsert = "SET IDENTITY_INSERT dbo.SaleReceiptPaymentDetails ON; "
+                    + BuildColumnInsert("dbo.SaleReceiptPaymentDetails", pdTemplate, pdMap, false)
+                    + " SET IDENTITY_INSERT dbo.SaleReceiptPaymentDetails OFF;";
+                if (AppSession.ProcessNonQuery(true, pdInsert) <= 0) return false;
+
+                // ---- merchant transaction (card methods only) ----
+                if (isCard)
+                {
+                    string safeBatch = req.BatchUnique.Replace("'", "''");
+                    var template = AppSession.ProcessQuery(false,
+                        $"SELECT TOP 1 * FROM dbo.TransactionDetail WHERE BatchUnique = '{safeBatch}' ORDER BY [Date] DESC", "Tran");
+                    if (template == null || template.Columns.Count == 0)
+                        template = AppSession.ProcessQuery(false, "SELECT TOP 0 * FROM dbo.TransactionDetail", "Tran");
+
+                    string terminalIp = template != null && template.Rows.Count > 0 ? AppSession.GetString(template.Rows[0], "TerminalIpAddress") : "";
+                    string terminalName = template != null && template.Rows.Count > 0 ? AppSession.GetString(template.Rows[0], "TerminalName") : "";
+                    string employeeName = req.EmployeeName ?? "";
+                    decimal svcFeeType = GetConfigDecimal("CreditCardConfigValue.SVCFeeType");
+
+                    var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        ["Address"] = "''",
+                        ["ID"] = Q(transactionId),
+                        ["Number"] = Q(transactionNumber),
+                        ["Date"] = Q(createdDate),
+                        ["TranType"] = "'Sale'",
+                        ["TenderType"] = Q(kind.TenderType),
+                        ["PaymentCardType"] = Q(kind.PaymentCardType),
+                        ["CardNumber"] = Q(cardNumber),
+                        ["CardNumberMasked"] = Q(cardNumber),
+                        ["CardType"] = Q(cardType),
+                        ["Result"] = "'Approved'",
+                        ["TextResponse"] = "'OK'",
+                        ["CaptureStatus"] = "''",
+                        ["InvoiceNo"] = Q(sr.InvoiceNum),
+                        ["CustomerName"] = "''",
+                        ["AuthCode"] = Q(req.AuthCode),
+                        ["RefNo"] = Q(req.RefNo),
+                        ["ExpDate"] = Q(req.ExpDate),
+                        ["CCEntry"] = Q(req.CCEntry),
+                        ["BankApprovalCode"] = Q(req.BankApprovalCode),
+                        ["BankTransactionID"] = Q(req.BankTransactionID),
+                        ["AID"] = Q(req.AID),
+                        ["AuthorizeAmount"] = Q(cardTotal.ToString(inv)),
+                        ["OriginalAmount"] = Q(cardTotal.ToString(inv)),
+                        ["Total"] = Q(cardTotal.ToString(inv)),
+                        ["Amount"] = Q(cardAmount.ToString(inv)),
+                        ["Gratuity"] = Q(req.Gratuity.ToString(inv)),
+                        ["OriginalTip"] = Q(req.Gratuity.ToString(inv)),
+                        ["BatchID"] = Q(req.BatchID),
+                        ["BatchTotal"] = "'0'",
+                        ["BatchStatus"] = "'Closed'",
+                        ["Description"] = "'Success'",
+                        ["ReturnCode"] = "'000000'",
+                        ["MerchantID"] = Q(req.MerchantID),
+                        ["RegisterID"] = Q(req.MerchantID),
+                        ["MerchantAccount"] = Q(req.MerchantID),
+                        ["UserID"] = Q(req.EmployeeID.ToString(inv)),
+                        ["ServerID"] = Q(req.EmployeeID.ToString(inv)),
+                        ["Cashier"] = Q(employeeName),
+                        ["ServerName"] = Q(employeeName),
+                        ["TrackNo"] = "''",
+                        ["IsTipInLine"] = "0",
+                        ["TranStatus"] = "'ACTIVE'",
+                        ["TerminalName"] = Q(terminalName),
+                        ["WorkstationID"] = Q(sr.WorkstationID),
+                        ["WorkstationName"] = Q(sr.WorkstationName),
+                        ["IsChecked"] = "'1'",
+                        ["OrderID"] = Q(sr.SaleReceiptOrder),
+                        ["TicketOrder"] = Q(sr.SaleReceiptOrder),
+                        ["TicketNumber"] = Q(sr.SaleReceiptNumber),
+                        ["SVCFee"] = Q(req.SVCFeeAmount.ToString(inv)),
+                        ["SVCFeeForGratuity"] = Q(req.SVCFeeForGratuity.ToString(inv)),
+                        ["SVCFeeTaxAmount"] = "'0'",
+                        ["SVCFeeType"] = Q(svcFeeType.ToString(inv)),
+                        ["BatchUnique"] = Q(req.BatchUnique),
+                        ["TerminalIpAddress"] = Q(terminalIp),
+                        ["MerchantFee"] = Q(req.MerchantFee.ToString(inv)),
+                        ["MerchantFeeForTip"] = Q(req.MerchantFeeForTip.ToString(inv)),
+                        ["MerchantFeePercent"] = Q((req.ApplyMerchantFee ? req.MerchantFeePercent : 0m).ToString(inv)),
+                        ["IsTryVoidOpenTab"] = "'0'",
+                        ["AmountCaptured"] = "'-1'",
+                        ["TipCaptured"] = "'-1'",
+                        ["IsPhone"] = "'0'",
+                        ["CreditCardInfo"] = "null",
+                        ["AdjustTipInformation"] = "null"
+                    };
+
+                    string merchantInsert = BuildColumnInsert("dbo.TransactionDetail", template, map, false);
+                    if (AppSession.ProcessNonQuery(false, merchantInsert) <= 0)
+                    {
+                        // The two DBs cannot share a transaction: undo the POS7 row.
+                        AppSession.ProcessNonQuery(true,
+                            $"DELETE FROM dbo.SaleReceiptPaymentDetails WHERE SaleReceiptPaymentDetailID = {newPaymentId}");
+                        return false;
+                    }
+
+                    RecalculateMerchantBatch(req.BatchUnique);
+                }
+
+                // ---- tip distribution ----
+                if (req.Gratuity > 0)
+                    UpsertPaymentRoleDetail(receiptId, newPaymentId, req.PaymentMethodID, paymentMethodType,
+                        req.EmployeeID, req.CreatedDate, req.Gratuity, req.SVCFeeForGratuity, req.MerchantFeeForTip, req.Role);
+
+                // ---- ticket paid totals ----
+                AppSession.ProcessNonQuery(true, $@"
+                    UPDATE dbo.SaleReceipts SET
+                        PaidAmount = ISNULL(PaidAmount, 0) + {net.ToString(inv)},
+                        SVCFeePaidAmount = ISNULL(SVCFeePaidAmount, 0) + {req.SVCFeeAmount.ToString(inv)},
+                        SVCFeeTaxPaidAmount = ISNULL(SVCFeeTaxPaidAmount, 0) + {req.SVCFeeTaxAmount.ToString(inv)},
+                        CashDiscountPaidAmount = ISNULL(CashDiscountPaidAmount, 0) + {req.CashDiscountAmount.ToString(inv)},
+                        CashDiscountTaxPaidAmount = ISNULL(CashDiscountTaxPaidAmount, 0) + {req.CashDiscountTaxAmount.ToString(inv)}{(req.FinishTicket ? @",
+                        TransactionStatusID = 'FIN'" : "")}
+                    WHERE SaleReceiptID = '{receiptId}';
+                    IF COL_LENGTH('dbo.SaleReceipts', 'FinalGratuity') IS NOT NULL
+                        EXEC('UPDATE dbo.SaleReceipts SET FinalGratuity = (SELECT ISNULL(SUM(Gratuity), 0)
+                              FROM dbo.SaleReceiptPaymentDetails WHERE SaleReceiptID = ''{receiptId}'')
+                              WHERE SaleReceiptID = ''{receiptId}''');");
+
+                if (req.FinishTicket)
+                {
+                    AppSession.CorrectDataSaleReceiptPaymentDetails(receiptId);
+                }
+
+                AppLogger.Info($"InsertPaymentDetail: payment {newPaymentId} ({req.PaymentMethodName}) added to ticket {sr.SaleReceiptNumber}"
+                    + (isCard ? $", transaction {transactionNumber} in batch {req.BatchID}" : "")
+                    + (req.FinishTicket ? ", ticket set to FIN" : "")
+                    + (req.TipOnly ? $", tip only {req.Gratuity.ToString(inv)}" + (req.Role != null ? $", role {req.Role.RolesID}" : "") : ""));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("InsertPaymentDetail failed", ex);
+                return false;
+            }
+        }
+
         private string GetCashierName(string cashierId)
         {
             var dt = AppSession.ProcessQuery(true, $@"
@@ -2173,7 +2830,7 @@ namespace BLogicPOS7SupportTool.Services
         // ticket). Only the fields the user supplies are meaningful; the rest are
         // filled with the same safe defaults the payment flow uses so the row is
         // a valid "Sale". Returns true when exactly one row was inserted.
-        public bool InsertTransactionDetail(TransactionDetail req)
+        public bool InsertTransactionDetail(TransactionDetailEntity req)
         {
             try
             {
@@ -2218,7 +2875,7 @@ namespace BLogicPOS7SupportTool.Services
                     ["CardType"] = Q((req.CardType ?? "").ToUpper()),
                     ["Result"] = "'Approved'",
                     ["TextResponse"] = "'OK'",
-                    ["CaptureStatus"] = "'Captured'",
+                    ["CaptureStatus"] = "''",
                     ["AuthCode"] = Q(req.AuthCode),
                     ["RefNo"] = Q(req.RefNo),
                     ["AuthorizeAmount"] = Q(total.ToString(inv)),
@@ -2315,12 +2972,12 @@ namespace BLogicPOS7SupportTool.Services
             public decimal TipRateOT;
         }
 
-        private static List<ReceiptTaxLine> MapTaxLines(DataTable dt)
+        private static List<ReceiptTaxLineEntity> MapTaxLines(DataTable dt)
         {
-            var lines = new List<ReceiptTaxLine>();
+            var lines = new List<ReceiptTaxLineEntity>();
             if (dt == null) return lines;
             foreach (DataRow row in dt.Rows)
-                lines.Add(new ReceiptTaxLine
+                lines.Add(new ReceiptTaxLineEntity
                 {
                     TaxRate = AppSession.GetDecimal(row, "TaxRate"),
                     TaxAmount = AppSession.GetDecimal(row, "TaxAmount")

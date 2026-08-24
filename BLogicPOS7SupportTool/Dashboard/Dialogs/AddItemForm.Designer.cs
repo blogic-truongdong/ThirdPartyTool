@@ -271,7 +271,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             //
             // lblEditHeader
             //
-            this.lblEditHeader.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblEditHeader.Font = new System.Drawing.Font("Segoe UI", 10.75F, System.Drawing.FontStyle.Bold);
             this.lblEditHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
             this.lblEditHeader.Location = new System.Drawing.Point(10, -20);
             this.lblEditHeader.Name = "lblEditHeader";

@@ -1,6 +1,7 @@
 using BLogicPOS7SupportTool.Core;
 using BLogicPOS7SupportTool.Models;
 using BLogicPOS7SupportTool.Services;
+using BLogicSystems.XPos.Utilites;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,20 +12,22 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 {
     partial class RefundItemsForm : Form
     {
+        private SaleReceiptsEntity saleReceipts;
         private readonly ReceiptService _service;
         private readonly string _receiptId;
         private readonly string _receiptNumber;
         private Point _dragStart;
 
-        private static readonly Color DarkText = Color.FromArgb(50, 50, 50);
-        private static readonly Color ModifierText = Color.FromArgb(140, 140, 140);
-        private static readonly Color MutedText = Color.FromArgb(150, 150, 150);
-        private static readonly Color SelectedBg = Color.FromArgb(253, 232, 232);
+        private static readonly Color DarkText = Color.Black;
+        private static readonly Color ModifierText = Color.Black;
+        private static readonly Color MutedText = Color.Black;
+        private static readonly Color SelectedText = Color.White;
+        private static readonly Color SelectedBg = Color.Red;
         private static readonly Color RefundRed = Color.FromArgb(200, 50, 50);
 
         private sealed class RowEntry
         {
-            public RefundDetailItem Item;
+            public RefundDetailItemEntity Item;
             public Panel Panel;
         }
 
@@ -55,6 +58,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 
         private void LoadItems()
         {
+            saleReceipts = _service.GetSaleReceiptsEntity(_receiptId);
+
             var items = _service.GetRefundableItems(_receiptId);
 
             pnlContent.SuspendLayout();
@@ -68,7 +73,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                     Text = "There are no items available to refund on this ticket.",
                     Dock = DockStyle.Top,
                     Height = 40,
-                    Font = new Font("Segoe UI", 9F),
+                    Font = new Font("Segoe UI", 10F),
                     ForeColor = MutedText,
                     TextAlign = ContentAlignment.MiddleCenter
                 });
@@ -100,7 +105,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 
             var row = new Panel
             {
-                Height = 26,
+                Height = 35,
                 Dock = DockStyle.Top,
                 BackColor = Color.White,
                 Cursor = Cursors.Hand,
@@ -111,7 +116,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             {
                 Text = item.Description,
                 Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 9F, isModifier ? FontStyle.Regular : FontStyle.Bold),
+                Font = new Font("Roboto", 10F, isModifier ? FontStyle.Regular : FontStyle.Bold),
                 ForeColor = isModifier ? ModifierText : DarkText,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(isModifier ? 28 : 10, 0, 0, 0),
@@ -124,7 +129,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Text = "$" + item.Price.ToString("F2") + " x " + item.Quantity.ToString("0.##"),
                 Width = 90,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F),
+                Font = new Font("Roboto", 10F),
                 ForeColor = MutedText,
                 TextAlign = ContentAlignment.MiddleRight,
                 Cursor = Cursors.Hand,
@@ -136,7 +141,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Text = Money(item.ExtendedPrice + item.TaxAmount),
                 Width = 80,
                 Dock = DockStyle.Right,
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Roboto", 10F, FontStyle.Bold),
                 ForeColor = DarkText,
                 TextAlign = ContentAlignment.MiddleRight,
                 Padding = new Padding(0, 0, 8, 0),
@@ -175,15 +180,19 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             {
                 bool selected = _selectedGroups.Contains(entry.Item.GroupKey);
                 var bg = selected ? SelectedBg : Color.White;
+                var fg = selected ? SelectedText : DarkText;
                 entry.Panel.BackColor = bg;
                 foreach (Control c in entry.Panel.Controls)
+                {
                     c.BackColor = bg;
+                    c.ForeColor = fg;
+                }
             }
         }
 
         private void RefreshTotals()
         {
-            decimal subtotal = 0m, tax = 0m;
+            decimal subtotal = 0m, tax = 0m, svcfee = 0, cashdiscount = 0;
             foreach (var entry in _rows)
             {
                 if (!_selectedGroups.Contains(entry.Item.GroupKey)) continue;
@@ -191,9 +200,25 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 tax += entry.Item.TaxAmount;
             }
 
+            if (saleReceipts.SVCFeePaidAmount > 0)
+            {
+                var objSVCFee = Utility.CalculateSVCFeeAmount(subtotal + tax, tax, false);
+                svcfee = objSVCFee[0];
+                tax += objSVCFee[1];
+
+                if (saleReceipts.CashDiscountPaidAmount > 0)
+                {
+                    var objCashDiscount = Utility.CalculateCashDiscountAmount(subtotal + tax, tax, saleReceipts.SVCFeePaidAmount);
+                    svcfee -= objCashDiscount[0];
+                    tax -= objCashDiscount[1];
+                }
+            }
+
             lblSubtotal.Text = "Subtotal: " + Money(subtotal);
             lblTax.Text = "Tax: " + Money(tax);
-            lblTotal.Text = "Total Refund: " + Money(subtotal + tax);
+            lblSVCFee.Text = POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFeeLabel + $": {Money(svcfee)}";
+
+            lblTotal.Text = "Total Refund: " + Money(subtotal + tax + svcfee);
         }
 
         private void BtnRefund_Click(object sender, EventArgs e)
@@ -223,6 +248,24 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             var detailIds = selected.Select(r => r.Item.SaleReceiptDetailID).ToList();
             decimal totalAmount = selected.Sum(r => r.Item.ExtendedPrice + r.Item.TaxAmount);
             decimal taxAmount = selected.Sum(r => r.Item.TaxAmount);
+            decimal svcfeeAmount = 0;
+            decimal svcFeeTaxAmount = 0;
+            decimal cashDiscountAmount = 0;
+            decimal cashDiscountTaxAmount = 0;
+
+            if (saleReceipts.SVCFeePaidAmount > 0)
+            {
+                var objSVCFee = Utility.CalculateSVCFeeAmount(totalAmount, taxAmount, false);
+                svcfeeAmount = objSVCFee[0] + objSVCFee[1];
+                svcFeeTaxAmount = objSVCFee[1];
+
+                if (saleReceipts.CashDiscountPaidAmount > 0)
+                {
+                    var objCashDiscount = Utility.CalculateCashDiscountAmount(totalAmount, taxAmount, saleReceipts.SVCFeePaidAmount);
+                    cashDiscountAmount = objCashDiscount[0] + objCashDiscount[1];
+                    cashDiscountTaxAmount = objCashDiscount[1];
+                }
+            }
 
             var payments = _service.GetPaymentDetails(_receiptId);
             if (payments.Count == 0)
@@ -232,7 +275,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 return;
             }
 
-            ReceiptPaymentDetail payment;
+            ReceiptPaymentDetailEntity payment;
             using (var selectForm = new SelectPaymentForm(payments))
             {
                 if (DimOverlay.ShowDialog(this, selectForm) != DialogResult.OK)
@@ -243,12 +286,12 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             if (payment == null) return;
 
             var confirm = MessageBox.Show(
-                $"Refund {Money(totalAmount)} for ticket #{_receiptNumber}?\n\nThis action cannot be undone.",
+                $"Refund {Money(totalAmount + svcfeeAmount - cashDiscountAmount)} for ticket #{_receiptNumber}?\n\nThis action cannot be undone.",
                 "Confirm Refund", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes) return;
 
             bool ok = _service.ProcessPartialRefund(
-                _receiptId, payment.SaleReceiptPaymentDetailID, detailIds, totalAmount, taxAmount);
+                _receiptId, payment.SaleReceiptPaymentDetailID, detailIds, totalAmount, taxAmount, svcfeeAmount, svcFeeTaxAmount, cashDiscountAmount, cashDiscountTaxAmount);
 
             if (ok)
             {

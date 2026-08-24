@@ -12,7 +12,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private readonly string _receiptId;
         private string _receiptNumber;
         private Point _dragStart;
-        private FinishInfo _info;
+        private FinishTicketEntity _info;
 
         public FinishTicketForm(ReceiptService service, string receiptId, string receiptNumber)
         {

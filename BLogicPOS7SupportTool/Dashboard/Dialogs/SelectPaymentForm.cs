@@ -8,7 +8,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 {
     partial class SelectPaymentForm : Form
     {
-        private readonly List<ReceiptPaymentDetail> _payments;
+        private readonly List<ReceiptPaymentDetailEntity> _payments;
         private Point _dragStart;
 
         private static readonly Color HeaderBlue = Color.FromArgb(11, 87, 208);
@@ -18,12 +18,12 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 
         private readonly List<Panel> _cards = new List<Panel>();
 
-        public ReceiptPaymentDetail SelectedPayment { get; private set; }
+        public ReceiptPaymentDetailEntity SelectedPayment { get; private set; }
 
-        public SelectPaymentForm(List<ReceiptPaymentDetail> payments)
+        public SelectPaymentForm(List<ReceiptPaymentDetailEntity> payments)
         {
             InitializeComponent();
-            _payments = payments ?? new List<ReceiptPaymentDetail>();
+            _payments = payments ?? new List<ReceiptPaymentDetailEntity>();
 
             pnlTitleBar.MouseDown += (s, e) => { if (e.Button == MouseButtons.Left) _dragStart = e.Location; };
             pnlTitleBar.MouseMove += (s, e) => { if (e.Button == MouseButtons.Left) Location = new Point(Location.X + e.X - _dragStart.X, Location.Y + e.Y - _dragStart.Y); };
@@ -61,7 +61,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Select(_payments[0]);
         }
 
-        private Panel BuildCard(ReceiptPaymentDetail detail)
+        private Panel BuildCard(ReceiptPaymentDetailEntity detail)
         {
             decimal amount = detail.AmountTendered - detail.AmountReturn
                 + detail.SVCFeeAmount - detail.CashDiscountAmount;
@@ -97,7 +97,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Text = "Total: " + Money(amount) + (tip > 0 ? "    Tip: " + Money(tip) : ""),
                 Dock = DockStyle.Top,
                 Height = 28,
-                Font = new Font("Segoe UI", 9F),
+                Font = new Font("Segoe UI", 10F),
                 ForeColor = LabelGray,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(12, 0, 0, 0),
@@ -125,7 +125,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             return wrapper;
         }
 
-        private void Select(ReceiptPaymentDetail detail)
+        private void Select(ReceiptPaymentDetailEntity detail)
         {
             SelectedPayment = detail;
             foreach (var card in _cards)

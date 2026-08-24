@@ -8,7 +8,7 @@ namespace BLogicPOS7SupportTool.Services
 {
     class ItemService
     {
-        public List<Department> GetDepartments()
+        public List<DepartmentEntity> GetDepartments()
         {
             const string sql = @"
                 SELECT DepartmentID, DepartmentName
@@ -16,11 +16,11 @@ namespace BLogicPOS7SupportTool.Services
                 WHERE Level = '1' AND IsDeleted = '0' AND DepartmentID > 0 AND DepartmentOrder > 0
                 ORDER BY DepartmentOrder";
 
-            var result = new List<Department>();
+            var result = new List<DepartmentEntity>();
             var dt = AppSession.ProcessQuery(true, sql, "Departments");
 
             foreach (DataRow row in dt.Rows)
-                result.Add(new Department
+                result.Add(new DepartmentEntity
                 {
                     DepartmentID = Convert.ToInt32(row["DepartmentID"]),
                     DepartmentName = row["DepartmentName"]?.ToString() ?? ""

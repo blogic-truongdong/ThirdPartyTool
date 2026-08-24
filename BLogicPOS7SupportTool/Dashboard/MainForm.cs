@@ -16,6 +16,7 @@ namespace BLogicPOS7SupportTool.Dashboard
         ClearTableStatusPage clearTableStatusPage = new ClearTableStatusPage();
         AdvancedPage advancedPage = new AdvancedPage();
         InsertTicketPage insertTicketPage = new InsertTicketPage();
+        BatchManagerPage batchManagerPage = new BatchManagerPage();
         private Panel _activeNav;
         private Panel[] _navPanels;
         private Point _dragScreenStart;
@@ -49,6 +50,9 @@ namespace BLogicPOS7SupportTool.Dashboard
 
             insertTicketPage.Dock = DockStyle.Fill;
             pnlContent.Controls.Add(insertTicketPage);
+
+            batchManagerPage.Dock = DockStyle.Fill;
+            pnlContent.Controls.Add(batchManagerPage);
 
             NavigateTo(homePage);
         }
@@ -136,6 +140,8 @@ namespace BLogicPOS7SupportTool.Dashboard
         private void navBatchMgr_Click(object sender, EventArgs e)
         {
             SetActiveNav(navBatchMgr);
+            NavigateTo(batchManagerPage);
+            batchManagerPage.LoadBatches();
         }
 
         private void navTransactions_Click(object sender, EventArgs e)

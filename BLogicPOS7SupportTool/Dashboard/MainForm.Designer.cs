@@ -16,7 +16,6 @@ namespace BLogicPOS7SupportTool.Dashboard
         private void InitializeComponent()
         {
             this.pnlSidebar = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.navInsertTicket = new System.Windows.Forms.Panel();
             this.lblNavInsertTicket = new System.Windows.Forms.Label();
             this.navAdvanced = new System.Windows.Forms.Panel();
@@ -27,20 +26,21 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.lblNavBatchMgr = new System.Windows.Forms.Label();
             this.navEmployees = new System.Windows.Forms.Panel();
             this.lblNavEmployees = new System.Windows.Forms.Label();
-            this.navItems = new System.Windows.Forms.Panel();
-            this.lblNavItems = new System.Windows.Forms.Label();
-            this.navShifts = new System.Windows.Forms.Panel();
-            this.lblNavShifts = new System.Windows.Forms.Label();
-            this.navCashInOut = new System.Windows.Forms.Panel();
-            this.lblNavCashInOut = new System.Windows.Forms.Label();
             this.navClearTable = new System.Windows.Forms.Panel();
             this.lblNavClearTable = new System.Windows.Forms.Label();
+            this.navCashInOut = new System.Windows.Forms.Panel();
+            this.lblNavCashInOut = new System.Windows.Forms.Label();
+            this.navShifts = new System.Windows.Forms.Panel();
+            this.lblNavShifts = new System.Windows.Forms.Label();
+            this.navItems = new System.Windows.Forms.Panel();
+            this.lblNavItems = new System.Windows.Forms.Label();
             this.navReceipts = new System.Windows.Forms.Panel();
             this.lblNavReceipts = new System.Windows.Forms.Label();
             this.navHome = new System.Windows.Forms.Panel();
             this.lblNavHome = new System.Windows.Forms.Label();
             this.pnlSectionDivider = new System.Windows.Forms.Panel();
             this.lblSection = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.pnlContent = new System.Windows.Forms.Panel();
             this.pnlSidebar.SuspendLayout();
             this.navInsertTicket.SuspendLayout();
@@ -59,7 +59,6 @@ namespace BLogicPOS7SupportTool.Dashboard
             // pnlSidebar
             // 
             this.pnlSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.pnlSidebar.Controls.Add(this.panel1);
             this.pnlSidebar.Controls.Add(this.navInsertTicket);
             this.pnlSidebar.Controls.Add(this.navAdvanced);
             this.pnlSidebar.Controls.Add(this.navTransactions);
@@ -73,57 +72,50 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.pnlSidebar.Controls.Add(this.navHome);
             this.pnlSidebar.Controls.Add(this.pnlSectionDivider);
             this.pnlSidebar.Controls.Add(this.lblSection);
+            this.pnlSidebar.Controls.Add(this.panel1);
             this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSidebar.Location = new System.Drawing.Point(0, 0);
             this.pnlSidebar.Name = "pnlSidebar";
             this.pnlSidebar.Size = new System.Drawing.Size(150, 729);
             this.pnlSidebar.TabIndex = 1;
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Black;
-            this.panel1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(149, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1, 729);
-            this.panel1.TabIndex = 9;
-            //
             // navInsertTicket
-            //
+            // 
             this.navInsertTicket.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navInsertTicket.Controls.Add(this.lblNavInsertTicket);
             this.navInsertTicket.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navInsertTicket.Location = new System.Drawing.Point(0, 492);
+            this.navInsertTicket.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navInsertTicket.Location = new System.Drawing.Point(0, 485);
             this.navInsertTicket.Name = "navInsertTicket";
-            this.navInsertTicket.Size = new System.Drawing.Size(240, 44);
+            this.navInsertTicket.Size = new System.Drawing.Size(149, 44);
             this.navInsertTicket.TabIndex = 10;
             this.navInsertTicket.Click += new System.EventHandler(this.navInsertTicket_Click);
             this.navInsertTicket.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
             this.navInsertTicket.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
+            // 
             // lblNavInsertTicket
-            //
+            // 
             this.lblNavInsertTicket.AutoSize = true;
             this.lblNavInsertTicket.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.lblNavInsertTicket.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.lblNavInsertTicket.Location = new System.Drawing.Point(20, 12);
             this.lblNavInsertTicket.Name = "lblNavInsertTicket";
-            this.lblNavInsertTicket.Size = new System.Drawing.Size(96, 21);
+            this.lblNavInsertTicket.Size = new System.Drawing.Size(100, 21);
             this.lblNavInsertTicket.TabIndex = 0;
             this.lblNavInsertTicket.Text = "Insert Tickets";
             this.lblNavInsertTicket.Click += new System.EventHandler(this.navInsertTicket_Click);
             this.lblNavInsertTicket.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
             this.lblNavInsertTicket.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
+            // 
             // navAdvanced
-            //
+            // 
             this.navAdvanced.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navAdvanced.Controls.Add(this.lblNavAdvanced);
             this.navAdvanced.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navAdvanced.Location = new System.Drawing.Point(0, 448);
+            this.navAdvanced.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navAdvanced.Location = new System.Drawing.Point(0, 441);
             this.navAdvanced.Name = "navAdvanced";
-            this.navAdvanced.Size = new System.Drawing.Size(240, 44);
+            this.navAdvanced.Size = new System.Drawing.Size(149, 44);
             this.navAdvanced.TabIndex = 8;
             this.navAdvanced.Click += new System.EventHandler(this.navAdvanced_Click);
             this.navAdvanced.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
@@ -148,10 +140,12 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.navTransactions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navTransactions.Controls.Add(this.lblNavTransactions);
             this.navTransactions.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navTransactions.Location = new System.Drawing.Point(0, 404);
+            this.navTransactions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navTransactions.Location = new System.Drawing.Point(0, 397);
             this.navTransactions.Name = "navTransactions";
-            this.navTransactions.Size = new System.Drawing.Size(240, 44);
+            this.navTransactions.Size = new System.Drawing.Size(149, 44);
             this.navTransactions.TabIndex = 7;
+            this.navTransactions.Visible = false;
             this.navTransactions.Click += new System.EventHandler(this.navTransactions_Click);
             this.navTransactions.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
             this.navTransactions.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
@@ -175,9 +169,10 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.navBatchMgr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navBatchMgr.Controls.Add(this.lblNavBatchMgr);
             this.navBatchMgr.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navBatchMgr.Location = new System.Drawing.Point(0, 360);
+            this.navBatchMgr.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navBatchMgr.Location = new System.Drawing.Point(0, 353);
             this.navBatchMgr.Name = "navBatchMgr";
-            this.navBatchMgr.Size = new System.Drawing.Size(240, 44);
+            this.navBatchMgr.Size = new System.Drawing.Size(149, 44);
             this.navBatchMgr.TabIndex = 6;
             this.navBatchMgr.Click += new System.EventHandler(this.navBatchMgr_Click);
             this.navBatchMgr.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
@@ -202,10 +197,12 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.navEmployees.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navEmployees.Controls.Add(this.lblNavEmployees);
             this.navEmployees.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navEmployees.Location = new System.Drawing.Point(0, 316);
+            this.navEmployees.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navEmployees.Location = new System.Drawing.Point(0, 309);
             this.navEmployees.Name = "navEmployees";
-            this.navEmployees.Size = new System.Drawing.Size(240, 44);
+            this.navEmployees.Size = new System.Drawing.Size(149, 44);
             this.navEmployees.TabIndex = 5;
+            this.navEmployees.Visible = false;
             this.navEmployees.Click += new System.EventHandler(this.navEmployees_Click);
             this.navEmployees.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
             this.navEmployees.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
@@ -224,15 +221,102 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.lblNavEmployees.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
             this.lblNavEmployees.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
             // 
+            // navClearTable
+            // 
+            this.navClearTable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.navClearTable.Controls.Add(this.lblNavClearTable);
+            this.navClearTable.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.navClearTable.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navClearTable.Location = new System.Drawing.Point(0, 265);
+            this.navClearTable.Name = "navClearTable";
+            this.navClearTable.Size = new System.Drawing.Size(149, 44);
+            this.navClearTable.TabIndex = 12;
+            this.navClearTable.Visible = false;
+            this.navClearTable.Click += new System.EventHandler(this.navClearTable_Click);
+            this.navClearTable.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
+            this.navClearTable.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
+            // 
+            // lblNavClearTable
+            // 
+            this.lblNavClearTable.AutoSize = true;
+            this.lblNavClearTable.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lblNavClearTable.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.lblNavClearTable.Location = new System.Drawing.Point(20, 12);
+            this.lblNavClearTable.Name = "lblNavClearTable";
+            this.lblNavClearTable.Size = new System.Drawing.Size(85, 21);
+            this.lblNavClearTable.TabIndex = 0;
+            this.lblNavClearTable.Text = "Clear Table";
+            this.lblNavClearTable.Click += new System.EventHandler(this.navClearTable_Click);
+            this.lblNavClearTable.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
+            this.lblNavClearTable.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
+            // 
+            // navCashInOut
+            // 
+            this.navCashInOut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.navCashInOut.Controls.Add(this.lblNavCashInOut);
+            this.navCashInOut.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.navCashInOut.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navCashInOut.Location = new System.Drawing.Point(0, 221);
+            this.navCashInOut.Name = "navCashInOut";
+            this.navCashInOut.Size = new System.Drawing.Size(149, 44);
+            this.navCashInOut.TabIndex = 11;
+            this.navCashInOut.Click += new System.EventHandler(this.navCashInOut_Click);
+            this.navCashInOut.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
+            this.navCashInOut.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
+            // 
+            // lblNavCashInOut
+            // 
+            this.lblNavCashInOut.AutoSize = true;
+            this.lblNavCashInOut.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lblNavCashInOut.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.lblNavCashInOut.Location = new System.Drawing.Point(20, 12);
+            this.lblNavCashInOut.Name = "lblNavCashInOut";
+            this.lblNavCashInOut.Size = new System.Drawing.Size(93, 21);
+            this.lblNavCashInOut.TabIndex = 0;
+            this.lblNavCashInOut.Text = "Cash In/Out";
+            this.lblNavCashInOut.Click += new System.EventHandler(this.navCashInOut_Click);
+            this.lblNavCashInOut.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
+            this.lblNavCashInOut.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
+            // 
+            // navShifts
+            // 
+            this.navShifts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.navShifts.Controls.Add(this.lblNavShifts);
+            this.navShifts.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.navShifts.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navShifts.Location = new System.Drawing.Point(0, 177);
+            this.navShifts.Name = "navShifts";
+            this.navShifts.Size = new System.Drawing.Size(149, 44);
+            this.navShifts.TabIndex = 10;
+            this.navShifts.Click += new System.EventHandler(this.navShifts_Click);
+            this.navShifts.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
+            this.navShifts.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
+            // 
+            // lblNavShifts
+            // 
+            this.lblNavShifts.AutoSize = true;
+            this.lblNavShifts.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lblNavShifts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.lblNavShifts.Location = new System.Drawing.Point(20, 12);
+            this.lblNavShifts.Name = "lblNavShifts";
+            this.lblNavShifts.Size = new System.Drawing.Size(49, 21);
+            this.lblNavShifts.TabIndex = 0;
+            this.lblNavShifts.Text = "Shifts";
+            this.lblNavShifts.Click += new System.EventHandler(this.navShifts_Click);
+            this.lblNavShifts.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
+            this.lblNavShifts.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
+            // 
             // navItems
             // 
             this.navItems.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navItems.Controls.Add(this.lblNavItems);
             this.navItems.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navItems.Location = new System.Drawing.Point(0, 140);
+            this.navItems.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navItems.Location = new System.Drawing.Point(0, 133);
             this.navItems.Name = "navItems";
-            this.navItems.Size = new System.Drawing.Size(240, 44);
+            this.navItems.Size = new System.Drawing.Size(149, 44);
             this.navItems.TabIndex = 4;
+            this.navItems.Visible = false;
             this.navItems.Click += new System.EventHandler(this.navItems_Click);
             this.navItems.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
             this.navItems.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
@@ -250,96 +334,16 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.lblNavItems.Click += new System.EventHandler(this.navItems_Click);
             this.lblNavItems.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
             this.lblNavItems.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
-            // navShifts
-            //
-            this.navShifts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.navShifts.Controls.Add(this.lblNavShifts);
-            this.navShifts.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navShifts.Location = new System.Drawing.Point(0, 184);
-            this.navShifts.Name = "navShifts";
-            this.navShifts.Size = new System.Drawing.Size(240, 44);
-            this.navShifts.TabIndex = 10;
-            this.navShifts.Click += new System.EventHandler(this.navShifts_Click);
-            this.navShifts.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
-            this.navShifts.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
-            // lblNavShifts
-            //
-            this.lblNavShifts.AutoSize = true;
-            this.lblNavShifts.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.lblNavShifts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.lblNavShifts.Location = new System.Drawing.Point(20, 12);
-            this.lblNavShifts.Name = "lblNavShifts";
-            this.lblNavShifts.Size = new System.Drawing.Size(45, 21);
-            this.lblNavShifts.TabIndex = 0;
-            this.lblNavShifts.Text = "Shifts";
-            this.lblNavShifts.Click += new System.EventHandler(this.navShifts_Click);
-            this.lblNavShifts.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
-            this.lblNavShifts.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
-            // navCashInOut
-            //
-            this.navCashInOut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.navCashInOut.Controls.Add(this.lblNavCashInOut);
-            this.navCashInOut.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navCashInOut.Location = new System.Drawing.Point(0, 228);
-            this.navCashInOut.Name = "navCashInOut";
-            this.navCashInOut.Size = new System.Drawing.Size(240, 44);
-            this.navCashInOut.TabIndex = 11;
-            this.navCashInOut.Click += new System.EventHandler(this.navCashInOut_Click);
-            this.navCashInOut.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
-            this.navCashInOut.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
-            // lblNavCashInOut
-            //
-            this.lblNavCashInOut.AutoSize = true;
-            this.lblNavCashInOut.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.lblNavCashInOut.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.lblNavCashInOut.Location = new System.Drawing.Point(20, 12);
-            this.lblNavCashInOut.Name = "lblNavCashInOut";
-            this.lblNavCashInOut.Size = new System.Drawing.Size(90, 21);
-            this.lblNavCashInOut.TabIndex = 0;
-            this.lblNavCashInOut.Text = "Cash In/Out";
-            this.lblNavCashInOut.Click += new System.EventHandler(this.navCashInOut_Click);
-            this.lblNavCashInOut.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
-            this.lblNavCashInOut.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
-            // navClearTable
-            //
-            this.navClearTable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.navClearTable.Controls.Add(this.lblNavClearTable);
-            this.navClearTable.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navClearTable.Location = new System.Drawing.Point(0, 272);
-            this.navClearTable.Name = "navClearTable";
-            this.navClearTable.Size = new System.Drawing.Size(240, 44);
-            this.navClearTable.TabIndex = 12;
-            this.navClearTable.Click += new System.EventHandler(this.navClearTable_Click);
-            this.navClearTable.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
-            this.navClearTable.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
-            // lblNavClearTable
-            //
-            this.lblNavClearTable.AutoSize = true;
-            this.lblNavClearTable.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.lblNavClearTable.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.lblNavClearTable.Location = new System.Drawing.Point(20, 12);
-            this.lblNavClearTable.Name = "lblNavClearTable";
-            this.lblNavClearTable.Size = new System.Drawing.Size(80, 21);
-            this.lblNavClearTable.TabIndex = 0;
-            this.lblNavClearTable.Text = "Clear Table";
-            this.lblNavClearTable.Click += new System.EventHandler(this.navClearTable_Click);
-            this.lblNavClearTable.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
-            this.lblNavClearTable.MouseLeave += new System.EventHandler(this.NavItem_MouseLeave);
-            //
+            // 
             // navReceipts
-            //
+            // 
             this.navReceipts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navReceipts.Controls.Add(this.lblNavReceipts);
             this.navReceipts.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navReceipts.Location = new System.Drawing.Point(0, 96);
+            this.navReceipts.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navReceipts.Location = new System.Drawing.Point(0, 89);
             this.navReceipts.Name = "navReceipts";
-            this.navReceipts.Size = new System.Drawing.Size(240, 44);
+            this.navReceipts.Size = new System.Drawing.Size(149, 44);
             this.navReceipts.TabIndex = 3;
             this.navReceipts.Click += new System.EventHandler(this.navReceipts_Click);
             this.navReceipts.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
@@ -364,9 +368,10 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.navHome.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.navHome.Controls.Add(this.lblNavHome);
             this.navHome.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.navHome.Location = new System.Drawing.Point(0, 52);
+            this.navHome.Dock = System.Windows.Forms.DockStyle.Top;
+            this.navHome.Location = new System.Drawing.Point(0, 45);
             this.navHome.Name = "navHome";
-            this.navHome.Size = new System.Drawing.Size(240, 44);
+            this.navHome.Size = new System.Drawing.Size(149, 44);
             this.navHome.TabIndex = 2;
             this.navHome.Click += new System.EventHandler(this.navHome_Click);
             this.navHome.MouseEnter += new System.EventHandler(this.NavItem_MouseEnter);
@@ -389,21 +394,34 @@ namespace BLogicPOS7SupportTool.Dashboard
             // pnlSectionDivider
             // 
             this.pnlSectionDivider.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+            this.pnlSectionDivider.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSectionDivider.Location = new System.Drawing.Point(0, 44);
             this.pnlSectionDivider.Name = "pnlSectionDivider";
-            this.pnlSectionDivider.Size = new System.Drawing.Size(240, 1);
+            this.pnlSectionDivider.Size = new System.Drawing.Size(149, 1);
             this.pnlSectionDivider.TabIndex = 1;
             // 
             // lblSection
             // 
-            this.lblSection.AutoSize = true;
-            this.lblSection.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblSection.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblSection.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblSection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblSection.Location = new System.Drawing.Point(16, 20);
+            this.lblSection.Location = new System.Drawing.Point(0, 0);
             this.lblSection.Name = "lblSection";
-            this.lblSection.Size = new System.Drawing.Size(80, 15);
+            this.lblSection.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.lblSection.Size = new System.Drawing.Size(149, 44);
             this.lblSection.TabIndex = 0;
             this.lblSection.Text = "OPERATIONS";
+            this.lblSection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel1.Location = new System.Drawing.Point(149, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1, 729);
+            this.panel1.TabIndex = 9;
             // 
             // pnlContent
             // 
@@ -426,7 +444,6 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BLogicPOS7 Support Tool";
             this.pnlSidebar.ResumeLayout(false);
-            this.pnlSidebar.PerformLayout();
             this.navInsertTicket.ResumeLayout(false);
             this.navInsertTicket.PerformLayout();
             this.navAdvanced.ResumeLayout(false);
@@ -437,12 +454,12 @@ namespace BLogicPOS7SupportTool.Dashboard
             this.navBatchMgr.PerformLayout();
             this.navEmployees.ResumeLayout(false);
             this.navEmployees.PerformLayout();
-            this.navShifts.ResumeLayout(false);
-            this.navShifts.PerformLayout();
-            this.navCashInOut.ResumeLayout(false);
-            this.navCashInOut.PerformLayout();
             this.navClearTable.ResumeLayout(false);
             this.navClearTable.PerformLayout();
+            this.navCashInOut.ResumeLayout(false);
+            this.navCashInOut.PerformLayout();
+            this.navShifts.ResumeLayout(false);
+            this.navShifts.PerformLayout();
             this.navItems.ResumeLayout(false);
             this.navItems.PerformLayout();
             this.navReceipts.ResumeLayout(false);

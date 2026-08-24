@@ -2,7 +2,6 @@ using BLogicPOS7SupportTool.Core;
 using BLogicPOS7SupportTool.Dashboard;
 using BLogicPOS7SupportTool.Login;
 using BLogicPOS7SupportTool.Setup;
-using log4net;
 using log4net.Config;
 using System;
 using System.IO;
@@ -54,6 +53,8 @@ namespace BLogicPOS7SupportTool
 
             // Cache all configurations so the dashboard can read them without DB hits.
             AppSession.LoadConfigurations();
+
+            AppSession.LoadBLogicPOS7Configurations();
 
             Application.Run(new MainForm());
 

@@ -1,3 +1,4 @@
+using BLogicPOS7SupportTool.Core;
 using BLogicPOS7SupportTool.Models;
 using BLogicPOS7SupportTool.Services;
 using System;
@@ -15,14 +16,14 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private readonly ReceiptService _service;
         private readonly string _receiptId;
         private readonly string _receiptNumber;
-        private readonly RefundDetailItem _item;
+        private readonly RefundDetailItemEntity _item;
         private Point _dragStart;
         private bool _loading;
 
         // Reason lists cached per ReasonType so switching status does not re-query.
-        private readonly Dictionary<int, List<ReasonCode>> _reasonCache = new Dictionary<int, List<ReasonCode>>();
+        private readonly Dictionary<int, List<ReasonCodeEntity>> _reasonCache = new Dictionary<int, List<ReasonCodeEntity>>();
 
-        public ItemDetailForm(ReceiptService service, string receiptId, string receiptNumber, RefundDetailItem item)
+        public ItemDetailForm(ReceiptService service, string receiptId, string receiptNumber, RefundDetailItemEntity item)
         {
             InitializeComponent();
             _service = service;
@@ -127,7 +128,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             }
         }
 
-        private List<ReasonCode> GetReasons(int reasonType)
+        private List<ReasonCodeEntity> GetReasons(int reasonType)
         {
             if (!_reasonCache.TryGetValue(reasonType, out var list))
             {
@@ -141,6 +142,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         {
             decimal price = ParseDec(txtPrice.Text);
             decimal qty = ParseDec(txtQty.Text);
+            decimal tax = ParseDec(txtTax.Text);
             decimal gross = price * qty;
             decimal totalDisc = ParseDec(txtItemDisc.Text) + ParseDec(txtTicketDisc.Text)
                 + ParseDec(txtStoreDisc.Text) + ParseDec(txtCategoryDisc.Text)
@@ -148,7 +150,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 
             txtTotalPrice.Text = gross.ToString("F2");
             txtTotalDiscount.Text = totalDisc.ToString("F2");
-            txtFinalTotal.Text = (gross - totalDisc).ToString("F2");
+            txtFinalTotal.Text = (gross + tax - totalDisc).ToString("F2");
         }
 
         private void Save()
@@ -217,7 +219,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 "Item Detail", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes) return;
 
-            var edit = new ItemEditDetail
+            var edit = new ItemEditDetailEntity
             {
                 SaleReceiptDetailID = _item.SaleReceiptDetailID,
                 Name = name,
@@ -240,6 +242,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 MessageBox.Show($"\"{name}\" has been updated and the ticket totals recalculated.",
                     "Item Detail", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
+                AppSession.CorrectDataSaleReceiptDetailTaxDetailsByDetailID(_item.SaleReceiptDetailID);
                 Close();
             }
             else

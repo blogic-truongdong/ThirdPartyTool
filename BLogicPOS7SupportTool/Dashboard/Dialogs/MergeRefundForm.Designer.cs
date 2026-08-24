@@ -197,7 +197,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblDetailHeader
             //
             this.lblDetailHeader.AutoSize = true;
-            this.lblDetailHeader.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblDetailHeader.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblDetailHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
             this.lblDetailHeader.Location = new System.Drawing.Point(16, 172);
             this.lblDetailHeader.Name = "lblDetailHeader";

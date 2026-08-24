@@ -189,6 +189,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             this.txtSvcGratuity.Size = new System.Drawing.Size(196, 25);
             this.txtSvcGratuity.TabIndex = 20;
             this.txtSvcGratuity.Text = "0.00";
+            this.txtSvcGratuity.Visible = false;
             // 
             // lblSvcGratuityCap
             // 
@@ -200,6 +201,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             this.lblSvcGratuityCap.Size = new System.Drawing.Size(127, 13);
             this.lblSvcGratuityCap.TabIndex = 19;
             this.lblSvcGratuityCap.Text = "SVC FEE FOR GRATUITY";
+            this.lblSvcGratuityCap.Visible = false;
             // 
             // txtGratuity
             // 
@@ -402,8 +404,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // pnlTotal
             // 
             this.pnlTotal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(248)))));
-            this.pnlTotal.Controls.Add(this.lblTotalValue);
             this.pnlTotal.Controls.Add(this.lblTotalCaption);
+            this.pnlTotal.Controls.Add(this.lblTotalValue);
             this.pnlTotal.Location = new System.Drawing.Point(16, 12);
             this.pnlTotal.Name = "pnlTotal";
             this.pnlTotal.Size = new System.Drawing.Size(428, 64);
@@ -414,7 +416,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             this.lblTotalValue.AutoSize = true;
             this.lblTotalValue.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblTotalValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.lblTotalValue.Location = new System.Drawing.Point(14, 26);
+            this.lblTotalValue.Location = new System.Drawing.Point(14, 30);
             this.lblTotalValue.Name = "lblTotalValue";
             this.lblTotalValue.Size = new System.Drawing.Size(77, 30);
             this.lblTotalValue.TabIndex = 1;
@@ -423,13 +425,14 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             // lblTotalCaption
             // 
             this.lblTotalCaption.AutoSize = true;
-            this.lblTotalCaption.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.lblTotalCaption.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblTotalCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(110)))));
-            this.lblTotalCaption.Location = new System.Drawing.Point(16, 10);
+            this.lblTotalCaption.Location = new System.Drawing.Point(16, 3);
             this.lblTotalCaption.Name = "lblTotalCaption";
-            this.lblTotalCaption.Size = new System.Drawing.Size(120, 13);
+            this.lblTotalCaption.Size = new System.Drawing.Size(379, 30);
             this.lblTotalCaption.TabIndex = 0;
-            this.lblTotalCaption.Text = "TRANSACTION TOTAL";
+            this.lblTotalCaption.Text = "TOTAL = Amount Tender - Amount Return + SVCFee + SVC Fee Tax\r\n                 - " +
+    "Cash Discount - Cash Discount Tax + Gratuity";
             // 
             // PaymentDetailForm
             // 

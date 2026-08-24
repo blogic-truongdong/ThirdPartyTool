@@ -108,7 +108,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblClearSalesDesc
             //
             this.lblClearSalesDesc.AutoSize = true;
-            this.lblClearSalesDesc.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblClearSalesDesc.Font = new System.Drawing.Font("Segoe UI", 10.75F);
             this.lblClearSalesDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblClearSalesDesc.Location = new System.Drawing.Point(16, 48);
             this.lblClearSalesDesc.Name = "lblClearSalesDesc";
@@ -159,7 +159,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblInsertTranDesc
             //
             this.lblInsertTranDesc.AutoSize = true;
-            this.lblInsertTranDesc.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblInsertTranDesc.Font = new System.Drawing.Font("Segoe UI", 10.75F);
             this.lblInsertTranDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblInsertTranDesc.Location = new System.Drawing.Point(16, 48);
             this.lblInsertTranDesc.Name = "lblInsertTranDesc";

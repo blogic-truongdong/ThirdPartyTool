@@ -48,7 +48,7 @@ namespace BLogicPOS7SupportTool.Login
             // 
             // lblError
             // 
-            this.lblError.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblError.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(47)))), ((int)(((byte)(47)))));
             this.lblError.Location = new System.Drawing.Point(32, 264);
             this.lblError.Name = "lblError";

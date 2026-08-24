@@ -109,7 +109,12 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
 
             var rows = new List<Panel>();
             foreach (var p in payments)
+            {
+                p.SVCFeeAmount -= p.SVCFeeTaxAmount;
+                p.CashDiscountAmount -= p.CashDiscountTaxAmount;
+
                 rows.Add(BuildRow(p));
+            }
 
             // Added first so Dock=Top pushes it below all payment rows.
             pnlContent.Controls.Add(BuildSummaryRow(payments));
@@ -120,7 +125,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             pnlContent.ResumeLayout();
         }
 
-        private Panel BuildSummaryRow(List<ReceiptPaymentDetail> payments)
+        private Panel BuildSummaryRow(List<ReceiptPaymentDetailEntity> payments)
         {
             decimal amount = payments.Sum(p => p.NetAmount);
             decimal gratuity = payments.Sum(p => p.Gratuity);
@@ -147,7 +152,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             return row;
         }
 
-        private Panel BuildRow(ReceiptPaymentDetail detail)
+        private Panel BuildRow(ReceiptPaymentDetailEntity detail)
         {
             var row = new Panel { Dock = DockStyle.Top, Height = RowHeight, BackColor = Color.White };
             row.Controls.Add(new Panel { Dock = DockStyle.Bottom, Height = 1, BackColor = RowDivider });
@@ -168,7 +173,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 Text = FormatCardInfo(detail),
                 Location = new Point(ColCardX, LabelY),
                 Size = new Size(ColCardW, 22),
-                Font = new Font("Segoe UI", 9.5F),
+                Font = new Font("Segoe UI", 10.5F),
                 ForeColor = DarkText,
                 TextAlign = ContentAlignment.MiddleLeft,
                 AutoSize = false
@@ -212,13 +217,13 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             };
         }
 
-        private void OpenDetail(ReceiptPaymentDetail detail)
+        private void OpenDetail(ReceiptPaymentDetailEntity detail)
         {
             using (var dlg = new PaymentDetailForm(_service, detail))
             {
                 if (DimOverlay.ShowDialog(this, dlg) == DialogResult.OK)
                 {
-                    AppSession.CorrectDataSaleReceipts(detail.SaleReceiptID.ToString());
+                    AppSession.CorrectDataSaleReceiptPaymentDetails(detail.SaleReceiptID.ToString());
                     _changed = true;
                     LoadPayments();
                 }
@@ -226,7 +231,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         }
 
         // Card payments -> "**** **** **** 1234"; otherwise -> "TID: <id>".
-        private static string FormatCardInfo(ReceiptPaymentDetail p)
+        private static string FormatCardInfo(ReceiptPaymentDetailEntity p)
         {
             var raw = (p.CreditCardTransactionCardNumber ?? "").Trim();
             if (raw.Length == 0)

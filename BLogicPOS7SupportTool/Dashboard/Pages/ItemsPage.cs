@@ -43,13 +43,13 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
 
         private void lstDepartments_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lstDepartments.SelectedItem is Department dept)
+            if (lstDepartments.SelectedItem is DepartmentEntity dept)
                 LoadItems(dept.DepartmentID, txtSearch.Text.Trim());
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            if (lstDepartments.SelectedItem is Department dept)
+            if (lstDepartments.SelectedItem is DepartmentEntity dept)
                 LoadItems(dept.DepartmentID, txtSearch.Text.Trim());
         }
 

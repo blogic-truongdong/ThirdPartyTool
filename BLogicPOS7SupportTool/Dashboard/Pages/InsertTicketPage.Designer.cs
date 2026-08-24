@@ -118,7 +118,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Pages
             // lblSubtitle
             //
             this.lblSubtitle.AutoSize = true;
-            this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 10.75F);
             this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblSubtitle.Location = new System.Drawing.Point(26, 48);
             this.lblSubtitle.Name = "lblSubtitle";

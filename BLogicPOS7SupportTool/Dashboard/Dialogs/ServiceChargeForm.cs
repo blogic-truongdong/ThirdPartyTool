@@ -20,7 +20,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private readonly (ServiceChargeKind Kind, string Title, TextBox Amount, TextBox Tax, Label Total)[] _rows;
 
         // The values currently in the database, used to detect what actually changed.
-        private ServiceChargeSet _loaded = new ServiceChargeSet();
+        private ServiceChargeSetEntity _loaded = new ServiceChargeSetEntity();
 
         public ServiceChargeForm(ReceiptService service, string receiptId, string receiptNumber)
         {
@@ -73,6 +73,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private void LoadCharges()
         {
             _loaded = _service.GetServiceCharges(_receiptId);
+            _loaded.SVCFeePaidAmount -= _loaded.SVCFeeTaxPaidAmount;
+            _loaded.CashDiscountPaidAmount -= _loaded.CashDiscountTaxPaidAmount;
 
             txtServiceAmount.Text = _loaded.ServiceFee.ToString("F2");
             txtServiceTax.Text = _loaded.ServiceFeeTaxAmount.ToString("F2");
@@ -84,10 +86,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             txtAutoTax.Text = _loaded.AutoGratuityTaxAmount.ToString("F2");
             txtExtraAmount.Text = _loaded.ExtraFeeAmount.ToString("F2");
             txtExtraTax.Text = _loaded.ExtraFeeTaxAmount.ToString("F2");
-            txtSVCFeeAmount.Text = _loaded.SVCFeeAmount.ToString("F2");
-            txtSVCFeeTax.Text = _loaded.SVCFeeTaxAmount.ToString("F2");
-            txtCashDiscAmount.Text = _loaded.CashDiscountAmount.ToString("F2");
-            txtCashDiscTax.Text = _loaded.CashDiscountTaxAmount.ToString("F2");
+            txtSVCFeeAmount.Text = _loaded.SVCFeePaidAmount.ToString("F2");
+            txtSVCFeeTax.Text = _loaded.SVCFeeTaxPaidAmount.ToString("F2");
+            txtCashDiscAmount.Text = _loaded.CashDiscountPaidAmount.ToString("F2");
+            txtCashDiscTax.Text = _loaded.CashDiscountTaxPaidAmount.ToString("F2");
 
             RecomputeSummary();
         }
@@ -151,7 +153,11 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             foreach (var e in edits)
             {
                 if (_service.UpdateServiceCharge(_receiptId, e.Kind, e.Amount, e.Tax))
+                {
+                    _service.UpdateTotalServiceCharge(_receiptId);
+
                     _changed = true;
+                }
                 else
                     failed.Add(e.Title);
             }
@@ -177,8 +183,8 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 case ServiceChargeKind.PartyServiceFee: return (_loaded.PartyServiceFeeAmount, _loaded.PartyServiceFeeTaxAmount);
                 case ServiceChargeKind.AutoServiceFee: return (_loaded.AutoGratuityAmount, _loaded.AutoGratuityTaxAmount);
                 case ServiceChargeKind.ExtraServiceFee: return (_loaded.ExtraFeeAmount, _loaded.ExtraFeeTaxAmount);
-                case ServiceChargeKind.SVCFee: return (_loaded.SVCFeeAmount, _loaded.SVCFeeTaxAmount);
-                case ServiceChargeKind.CashDiscount: return (_loaded.CashDiscountAmount, _loaded.CashDiscountTaxAmount);
+                case ServiceChargeKind.SVCFee: return (_loaded.SVCFeePaidAmount, _loaded.SVCFeeTaxPaidAmount);
+                case ServiceChargeKind.CashDiscount: return (_loaded.CashDiscountPaidAmount, _loaded.CashDiscountTaxPaidAmount);
                 default: return (_loaded.ServiceFee, _loaded.ServiceFeeTaxAmount);
             }
         }

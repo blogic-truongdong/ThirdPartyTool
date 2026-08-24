@@ -1,6 +1,7 @@
 using BLogicPOS7SupportTool.Core;
 using BLogicPOS7SupportTool.Models;
 using BLogicPOS7SupportTool.Services;
+using BLogicSystems.XPos.Utilites;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -10,10 +11,10 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
     partial class PaymentDetailForm : Form
     {
         private readonly ReceiptService _service;
-        private readonly ReceiptPaymentDetail _detail;
+        private readonly ReceiptPaymentDetailEntity _detail;
         private Point _dragStart;
 
-        public PaymentDetailForm(ReceiptService service, ReceiptPaymentDetail detail)
+        public PaymentDetailForm(ReceiptService service, ReceiptPaymentDetailEntity detail)
         {
             InitializeComponent();
             _service = service;
@@ -49,7 +50,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private void TxtSvcFee_TextChanged(object sender, EventArgs e)
         {
             decimal.TryParse(txtSvcFee.Text, out decimal svcFee);
-            txtSvcFeeTax.Text = AppSession.CalculateSVCFeeTaxAmountFromSVCFeeAmount(svcFee).ToString("F2");
+            txtSvcFeeTax.Text = AppSession.CalculateSVCFeeTaxAmount(svcFee).ToString("F2");
 
             UpdateTransactionTotal();
         }
@@ -57,7 +58,7 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
         private void TxtCashDisc_TextChanged(object sender, EventArgs e)
         {
             decimal.TryParse(txtCashDisc.Text, out decimal cashDiscount);
-            txtCashDiscTax.Text = AppSession.CalculateSVCFeeTaxAmountFromSVCFeeAmount(cashDiscount).ToString("F2");
+            txtCashDiscTax.Text = AppSession.CalculateCashDiscountTaxAmount(cashDiscount).ToString("F2");
 
             UpdateTransactionTotal();
         }
@@ -93,9 +94,11 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
             decimal.TryParse(txtTender.Text, out var tender);
             decimal.TryParse(txtReturn.Text, out var ret);
             decimal.TryParse(txtSvcFee.Text, out var svcFee);
+            decimal.TryParse(txtSvcFeeTax.Text, out var svcFeeTax);
             decimal.TryParse(txtCashDisc.Text, out var cashDiscount);
+            decimal.TryParse(txtCashDiscTax.Text, out var cashDiscountTax);
             decimal.TryParse(txtGratuity.Text, out var gratuity);
-            decimal total = tender - ret + svcFee - cashDiscount + gratuity;
+            decimal total = tender - ret + svcFee + svcFeeTax - cashDiscount - cashDiscountTax + gratuity;
             lblTotalValue.Text = (total < 0 ? "-$ " : "$ ") + Math.Abs(total).ToString("N2");
         }
 
@@ -115,8 +118,12 @@ namespace BLogicPOS7SupportTool.Dashboard.Dialogs
                 return;
             }
 
-            decimal merchantFee = AppSession.CalculateMerchantFeeAmount(tender - ret + svcFee + gratuity);
-            decimal merchantFeeForTip = AppSession.CalculateMerchantFeeAmount(gratuity);
+            decimal merchantFeePercent = _detail.MerchantFeePercent;
+            if (merchantFeePercent == 0)
+                merchantFeePercent = Utility.GetDecimalFromObject(AppSession.ProcessQuerySingleValue(true, "CreditCardConfigValue.MerchantFee\r\nCreditCardConfigValue.MerchantFee"));
+
+            decimal merchantFee = AppSession.CalculateMerchantFeeAmountWithParams(tender - ret + svcFee + svcFeeTax + gratuity, merchantFeePercent);
+            decimal merchantFeeForTip = AppSession.CalculateMerchantFeeAmountWithParams(gratuity, merchantFeePercent);
 
             if (_detail.CashAdjust == 1)
             {

@@ -33,6 +33,63 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BLogicSystems.MonthCalendar, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.MonthCalendar.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.POSBackOffice.CheckBoxComboBox, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.POSBackOffice.CheckBoxComboBox.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.POSBackOffice.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.POSBackOffice.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.POSBackOffice.Control, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.POSBackOffice.Control.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Cab, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.Cab.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.ClientUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.ClientUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Devices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.Devices.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.DTO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.DTO.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.License, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.License.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Resources, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.Resources.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.RoutingServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.RoutingServices.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.RoutingServices.XmlSerializers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.RoutingServices.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.SharedModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.SharedModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BLogicSystems.XPos.Utilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="BLogicSystems.XPos.XPOSReports, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BLogicSystems.XPos.XPOSReports.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -126,6 +183,18 @@
     <Compile Include="Dashboard\Pages\ClearTableStatusPage.Designer.cs">
       <DependentUpon>ClearTableStatusPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dashboard\Controls\BatchCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Controls\BatchCard.Designer.cs">
+      <DependentUpon>BatchCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Pages\BatchManagerPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Pages\BatchManagerPage.Designer.cs">
+      <DependentUpon>BatchManagerPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dashboard\Pages\AdvancedPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -137,6 +206,12 @@
     </Compile>
     <Compile Include="Dashboard\Pages\InsertTicketPage.Designer.cs">
       <DependentUpon>InsertTicketPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\SettleBatchPreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\SettleBatchPreviewForm.Designer.cs">
+      <DependentUpon>SettleBatchPreviewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dashboard\Dialogs\ClearSalesDataForm.cs">
       <SubType>Form</SubType>
@@ -150,22 +225,23 @@
     <Compile Include="Dashboard\Dialogs\InsertTransactionForm.Designer.cs">
       <DependentUpon>InsertTransactionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\DepartmentEntity.cs" />
     <Compile Include="Models\EmployeeClockInInfoEntity.cs" />
-    <Compile Include="Models\EmployeeRoles.cs" />
-    <Compile Include="Models\Employees.cs" />
-    <Compile Include="Models\PaymentRoleDetails.cs" />
-    <Compile Include="Models\QueryModel.cs" />
-    <Compile Include="Models\Roles.cs" />
-    <Compile Include="Models\SaleReceiptDetails.cs" />
-    <Compile Include="Models\SaleReceiptDetailTaxDetails.cs" />
-    <Compile Include="Models\SaleReceiptPaymentDetails.cs" />
-    <Compile Include="Models\SaleReceipts.cs" />
-    <Compile Include="Models\SaleReceiptServiceChargeTaxDetails.cs" />
-    <Compile Include="Models\TableArea.cs" />
-    <Compile Include="Models\Items.cs" />
-    <Compile Include="Models\ReceiptHeader.cs" />
-    <Compile Include="Models\ReceiptLineItem.cs" />
+    <Compile Include="Models\EmployeeRolesEntity.cs" />
+    <Compile Include="Models\EmployeesEntity.cs" />
+    <Compile Include="Models\PaymentRoleDetailsEntity.cs" />
+    <Compile Include="Models\QueryModelEntity.cs" />
+    <Compile Include="Models\RolesEntity.cs" />
+    <Compile Include="Models\SaleReceiptDetailsEntity.cs" />
+    <Compile Include="Models\SaleReceiptDetailTaxDetailsEntity.cs" />
+    <Compile Include="Models\SaleReceiptPaymentDetailsEntity.cs" />
+    <Compile Include="Models\SaleReceiptsEntity.cs" />
+    <Compile Include="Models\SaleReceiptServiceChargeTaxDetailsEntity.cs" />
+    <Compile Include="Models\BatchSettlePreviewEntity.cs" />
+    <Compile Include="Models\TableAreaEntity.cs" />
+    <Compile Include="Models\ItemsEntity.cs" />
+    <Compile Include="Models\ReceiptHeaderEntity.cs" />
+    <Compile Include="Models\ReceiptLineItemEntity.cs" />
     <Compile Include="Dashboard\Dialogs\AdjustPaymentForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +270,12 @@
     <Compile Include="Dashboard\Dialogs\ServiceChargeForm.Designer.cs">
       <DependentUpon>ServiceChargeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dashboard\Dialogs\InsertPaymentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\Dialogs\InsertPaymentForm.Designer.cs">
+      <DependentUpon>InsertPaymentForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dashboard\Dialogs\FinishTicketForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,15 +300,16 @@
     <Compile Include="Dashboard\Dialogs\AddItemForm.Designer.cs">
       <DependentUpon>AddItemForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\TimeClock.cs" />
-    <Compile Include="Models\TokenReceiptInfo.cs" />
-    <Compile Include="Models\RefundReceiptInfo.cs" />
-    <Compile Include="Models\ServiceChargeSet.cs" />
-    <Compile Include="Models\FinishTicket.cs" />
+    <Compile Include="Models\TimeClockEntity.cs" />
+    <Compile Include="Models\TokenReceiptInfoEntity.cs" />
+    <Compile Include="Models\RefundReceiptInfoEntity.cs" />
+    <Compile Include="Models\ServiceChargeSetEntity.cs" />
+    <Compile Include="Models\FinishTicketEntity.cs" />
+    <Compile Include="Models\InsertPaymentEntity.cs" />
     <Compile Include="Models\ItemEdit.cs" />
-    <Compile Include="Models\ItemEditDetail.cs" />
-    <Compile Include="Models\ReasonCode.cs" />
-    <Compile Include="Models\AddableItem.cs" />
+    <Compile Include="Models\ItemEditDetailEntity.cs" />
+    <Compile Include="Models\ReasonCodeEntity.cs" />
+    <Compile Include="Models\AddableItemEntity.cs" />
     <Compile Include="Dashboard\Dialogs\RefundItemsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -245,19 +328,20 @@
     <Compile Include="Dashboard\Dialogs\SelectPaymentForm.Designer.cs">
       <DependentUpon>SelectPaymentForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\RefundDetailItem.cs" />
-    <Compile Include="Models\ReceiptPaymentDetail.cs" />
-    <Compile Include="Models\ReceiptPaymentLine.cs" />
-    <Compile Include="Models\ReceiptTaxLine.cs" />
-    <Compile Include="Models\TransactionDetail.cs" />
+    <Compile Include="Models\RefundDetailItemEntity.cs" />
+    <Compile Include="Models\ReceiptPaymentDetailEntity.cs" />
+    <Compile Include="Models\ReceiptPaymentLineEntity.cs" />
+    <Compile Include="Models\ReceiptTaxLineEntity.cs" />
+    <Compile Include="Models\TransactionDetailEntity.cs" />
     <Compile Include="Core\XlsxReader.cs" />
-    <Compile Include="Models\TicketTemplateRow.cs" />
+    <Compile Include="Models\TicketTemplateRowEntity.cs" />
     <Compile Include="Services\TicketTemplateService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Services\ReceiptService.cs" />
     <Compile Include="Services\ShiftService.cs" />
     <Compile Include="Services\CashInOutService.cs" />
     <Compile Include="Services\TableService.cs" />
+    <Compile Include="Services\BatchService.cs" />
     <Compile Include="Services\AdvancedService.cs" />
     <Compile Include="Login\LoginForm.cs">
       <SubType>Form</SubType>
@@ -273,8 +357,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Dashboard\Dialogs\InsertPaymentForm.resx">
+      <DependentUpon>InsertPaymentForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dashboard\Dialogs\PaymentDetailForm.resx">
       <DependentUpon>PaymentDetailForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\Dialogs\RefundItemsForm.resx">
+      <DependentUpon>RefundItemsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dashboard\Dialogs\ServiceChargeForm.resx">
       <DependentUpon>ServiceChargeForm.cs</DependentUpon>
@@ -290,6 +380,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dashboard\Pages\ReceiptPage.resx">
       <DependentUpon>ReceiptPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -332,7 +425,56 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dashboard\Controls\" />
-    <Folder Include="Templates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\BLogicSystems.MonthCalendar.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.POSBackOffice.CheckBoxComboBox.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.POSBackOffice.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.POSBackOffice.Control.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.Cab.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.ClientUtilities.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.Devices.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.DTO.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.License.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.Resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.RoutingServices.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.RoutingServices.XmlSerializers.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.SharedModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.Utilities.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BLogicSystems.XPos.XPOSReports.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\log4net.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
