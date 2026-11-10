@@ -3,10 +3,13 @@ using BLogicSystems.XPos.Utilites;
 using Dapper;
 using DevExpress.XtraReports.UI;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using ThirdPartyTool.CustomControl;
 using ThirdPartyTool.Dialog;
 
 namespace ThirdPartyTool.SaleReceipt
@@ -52,7 +55,156 @@ namespace ThirdPartyTool.SaleReceipt
             btnProcessVoidTicket.Click += BtnProcessVoidTicket_Click;
             btnProcessCancelTicket.Click += BtnProcessCancelTicket_Click;
             btnProcessAddTipBySaleToken.Click += BtnProcessAddTipBySaleToken_Click;
+
+            InitActionButtons();
+            UpdateTicketHeader(null);
+
+            pnlOption.Resize += (s, e) => LayoutActionPanel();
+            LayoutActionPanel();
         }
+
+        private const int ActionPanelMaxWidth = 640;
+
+        /// <summary>Stretch the action grid with the panel, capped so buttons don't get overly wide.</summary>
+        private void LayoutActionPanel()
+        {
+            int available = pnlOption.ClientSize.Width - tlpOption.Left - 24;
+            tlpOption.Width = Math.Max(360, Math.Min(ActionPanelMaxWidth, available));
+        }
+
+        #region Ticket header & action availability
+
+        private static readonly Color ActionText = Color.FromArgb(33, 33, 33);
+        private static readonly Color ActionBorder = Color.FromArgb(208, 211, 217);
+        private static readonly Color ActionHover = Color.FromArgb(243, 246, 252);
+        private static readonly Color DangerText = Color.FromArgb(198, 40, 40);
+        private static readonly Color DangerBorder = Color.FromArgb(239, 154, 154);
+        private static readonly Color DangerHover = Color.FromArgb(255, 244, 244);
+        private static readonly Color MutedText = Color.FromArgb(176, 176, 176);
+        private static readonly Color MutedBorder = Color.FromArgb(230, 230, 230);
+
+        private class ActionRule
+        {
+            public string[] Statuses;
+            public string Requirement;
+            public bool IsDanger;
+        }
+
+        // Mirrors the status checks in BtnShow_Click; only used for visual hints.
+        private Dictionary<BLabel_Rounded, ActionRule> actionRules;
+
+        private void InitActionButtons()
+        {
+            actionRules = new Dictionary<BLabel_Rounded, ActionRule>
+            {
+                { btnShowAddTipForPaymentDetail, new ActionRule { Statuses = new[] { "FIN" }, Requirement = "FINISHED tickets" } },
+                { btnShowAddTipBySaleToken, new ActionRule { Statuses = new[] { "FIN" }, Requirement = "FINISHED tickets" } },
+                { btnShowUpdateServiceCharges, new ActionRule { Statuses = new[] { "FIN" }, Requirement = "FINISHED tickets with a single payment" } },
+                { btnShowPartialRefundTicket, new ActionRule { Statuses = new[] { "FIN" }, Requirement = "FINISHED tickets" } },
+                { btnShowAddSpecialItem, new ActionRule { Statuses = new[] { "FIN", "VOID" }, Requirement = "FINISHED or VOIDED tickets" } },
+                { btnShowFinishTicket, new ActionRule { Statuses = new[] { "OPER" }, Requirement = "OPEN tickets" } },
+                { btnShowCloseTicket, new ActionRule { Statuses = new[] { "OPER", "FIN", "RET" }, Requirement = "OPEN, FINISHED or REFUND tickets" } },
+                { btnShowVoidTicket, new ActionRule { Statuses = new[] { "OPER", "FIN" }, Requirement = "OPEN or FINISHED tickets", IsDanger = true } },
+            };
+
+            foreach (BLabel_Rounded button in actionRules.Keys)
+            {
+                button.MouseEnter += ActionButton_MouseEnter;
+                button.MouseLeave += ActionButton_MouseLeave;
+            }
+        }
+
+        private bool IsActionAvailable(BLabel_Rounded button)
+        {
+            ActionRule rule;
+            if (string.IsNullOrWhiteSpace(MainSaleReceiptID) || !actionRules.TryGetValue(button, out rule))
+                return false;
+            return rule.Statuses.Contains(TransactionStatusID);
+        }
+
+        private void ApplyActionStates()
+        {
+            bool hasTicket = !string.IsNullOrWhiteSpace(MainSaleReceiptID);
+            foreach (KeyValuePair<BLabel_Rounded, ActionRule> pair in actionRules)
+            {
+                BLabel_Rounded button = pair.Key;
+                ActionRule rule = pair.Value;
+                bool available = IsActionAvailable(button);
+
+                button.BackColor = Color.White;
+                button.ForeColor = available ? (rule.IsDanger ? DangerText : ActionText) : MutedText;
+                button.BorderColor = available ? (rule.IsDanger ? DangerBorder : ActionBorder) : MutedBorder;
+
+                string tip = "Available for " + rule.Requirement + ".";
+                if (!hasTicket)
+                    tip = "Search a ticket first. " + tip;
+                else if (!available)
+                    tip = "Not available for this ticket. " + tip;
+                toolTipActions.SetToolTip(button, tip);
+            }
+        }
+
+        private void ActionButton_MouseEnter(object sender, EventArgs e)
+        {
+            BLabel_Rounded button = sender as BLabel_Rounded;
+            if (button == null || !IsActionAvailable(button))
+                return;
+            button.BackColor = actionRules[button].IsDanger ? DangerHover : ActionHover;
+        }
+
+        private void ActionButton_MouseLeave(object sender, EventArgs e)
+        {
+            BLabel_Rounded button = sender as BLabel_Rounded;
+            if (button != null)
+                button.BackColor = Color.White;
+        }
+
+        /// <summary>Refreshes the ticket summary on the right panel. Pass the SaleReceipts row when available.</summary>
+        private void UpdateTicketHeader(DataRow saleReceipt)
+        {
+            if (string.IsNullOrWhiteSpace(MainSaleReceiptID))
+            {
+                lblTicketNumber.Text = "No ticket selected";
+                lblTicketStatus.Visible = false;
+                lblTicketMeta.Text = "Search a ticket number on the left to see the available actions.";
+                ApplyActionStates();
+                return;
+            }
+
+            lblTicketNumber.Text = "Ticket #" + MainSaleReceiptNumber;
+
+            string statusText;
+            Color back, fore;
+            switch (TransactionStatusID)
+            {
+                case "OPER": statusText = "OPEN"; back = Color.FromArgb(227, 242, 253); fore = Color.FromArgb(21, 101, 192); break;
+                case "FIN": statusText = "FINISHED"; back = Color.FromArgb(232, 245, 233); fore = Color.FromArgb(46, 125, 50); break;
+                case "VOID": statusText = "VOIDED"; back = Color.FromArgb(255, 235, 238); fore = Color.FromArgb(198, 40, 40); break;
+                case "RET": statusText = "REFUND"; back = Color.FromArgb(255, 243, 224); fore = Color.FromArgb(230, 81, 0); break;
+                default: statusText = string.IsNullOrWhiteSpace(TransactionStatusID) ? "UNKNOWN" : TransactionStatusID; back = Color.FromArgb(238, 238, 238); fore = Color.FromArgb(97, 97, 97); break;
+            }
+            lblTicketStatus.Text = statusText;
+            lblTicketStatus.BackColor = back;
+            lblTicketStatus.BorderColor = back;
+            lblTicketStatus.ForeColor = fore;
+            lblTicketStatus.Width = TextRenderer.MeasureText(statusText, lblTicketStatus.Font).Width + 24;
+            lblTicketStatus.Visible = true;
+
+            if (saleReceipt != null)
+            {
+                List<string> parts = new List<string>();
+                if (saleReceipt.Table.Columns.Contains("DateCreated") && saleReceipt["DateCreated"] is DateTime)
+                    parts.Add(((DateTime)saleReceipt["DateCreated"]).ToString("M/d/yyyy h:mm tt"));
+                string workstation = saleReceipt.Table.Columns.Contains("WorkstationName") ? Utility.GetStringFromRow("WorkstationName", saleReceipt) : string.Empty;
+                if (!string.IsNullOrWhiteSpace(workstation))
+                    parts.Add(workstation);
+                lblTicketMeta.Text = string.Join("  ·  ", parts);
+            }
+
+            ApplyActionStates();
+        }
+
+        #endregion
 
         private async void BtnScanCreditCardTransaction_Click(object sender, EventArgs e)
         {
@@ -366,6 +518,7 @@ namespace ThirdPartyTool.SaleReceipt
 
                     MainSaleReceiptID = string.Empty;
                     MainSaleReceiptNumber = string.Empty;
+                    UpdateTicketHeader(null);
 
                     PrintControl_Receipt.PrintingSystem?.Dispose();
                     PrintControl_Receipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
@@ -774,6 +927,7 @@ namespace ThirdPartyTool.SaleReceipt
                     MainSaleReceiptID = Utility.GetStringFromRow("SaleReceiptID", dtSaleReceipt.Rows[0]);
                     TransactionStatusID = Utility.GetStringFromRow("TransactionStatusID", dtSaleReceipt.Rows[0]);
                     MainSaleReceiptNumber = Utility.GetStringFromRow("SaleReceiptNumber", dtSaleReceipt.Rows[0]);
+                    UpdateTicketHeader(dtSaleReceipt.Rows[0]);
                 }
 
             }
@@ -794,6 +948,7 @@ namespace ThirdPartyTool.SaleReceipt
                 PrintControl_Receipt.PrintingSystem?.Dispose();
                 PrintControl_Receipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
                 PrintControl_Receipt.Refresh();
+                UpdateTicketHeader(null);
             }
             catch (Exception ex)
             {
