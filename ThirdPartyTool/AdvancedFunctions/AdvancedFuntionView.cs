@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -42,7 +44,30 @@ namespace ThirdPartyTool.AdvancedFunctions
 
             btnSyncDataFor7Shifts_ClearTip.Click += BtnSyncDataFor7Shifts_ClearTip_Click;
 
-#endif  
+#endif
+            flpContent.Resize += (s, e) => LayoutCards();
+            UpdateSections();
+            LayoutCards();
+        }
+
+        /// <summary>Shows a section heading only when at least one of its tools is listed.</summary>
+        private void UpdateSections()
+        {
+            lblSectionTickets.Visible = btnCloseUnPaidTicket.IsListed || btnClearTableStatus.IsListed || btnUpdateDSPTax.IsListed || btnCorrectDataStreamOrder.IsListed;
+            lblSection7Shifts.Visible = btnSyncDataFor7Shifts.IsListed || btnSyncDataFor7Shifts_ClearTip.IsListed || btnClearSalesData7Shifts.IsListed;
+            lblSectionDeveloper.Visible = btnTest.IsListed;
+        }
+
+        /// <summary>Stretches cards to the content width (capped so lines stay readable).</summary>
+        private void LayoutCards()
+        {
+            int width = Math.Min(flpContent.ClientSize.Width - flpContent.Padding.Horizontal, 720);
+            if (width < 200)
+                return;
+            flpContent.SuspendLayout();
+            foreach (Control control in flpContent.Controls)
+                control.Width = width;
+            flpContent.ResumeLayout();
         }
 
         private void BtnCorrectDataStreamOrder_Click(object sender, EventArgs e)
@@ -222,7 +247,122 @@ namespace ThirdPartyTool.AdvancedFunctions
         {
             this.Enabled = !isProcessing;
             pnlLoadingContainer.Visible = isProcessing;
+            if (isProcessing)
+                pnlLoadingContainer.BringToFront();
         }
 
+    }
+
+    /// <summary>
+    /// Clickable tool card: title, one-line description, optional badge and a chevron.
+    /// Derives from Label so existing Click wiring keeps working.
+    /// </summary>
+    public class ActionCard : Label
+    {
+        private static readonly Color Primary = Color.FromArgb(42, 108, 228);
+        private static readonly Color Border = Color.FromArgb(224, 224, 224);
+        private static readonly Color HoverBack = Color.FromArgb(247, 250, 255);
+        private static readonly Color TitleColor = Color.FromArgb(33, 33, 33);
+        private static readonly Color MutedColor = Color.FromArgb(117, 117, 117);
+        private static readonly Color BadgeBack = Color.FromArgb(255, 243, 205);
+        private static readonly Color BadgeText = Color.FromArgb(133, 77, 14);
+        private static readonly Font TitleFont = new Font("Roboto", 11F, FontStyle.Bold);
+        private static readonly Font DescriptionFont = new Font("Roboto", 9.75F);
+        private static readonly Font BadgeFont = new Font("Roboto", 7.5F, FontStyle.Bold);
+
+        private bool hover;
+
+        public ActionCard()
+        {
+            AutoSize = false;
+            BackColor = Color.White;
+            Cursor = Cursors.Hand;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
+        }
+
+        [DefaultValue("")]
+        public string Description { get; set; } = "";
+
+        [DefaultValue("")]
+        public string Badge { get; set; } = "";
+
+        /// <summary>The visibility this card was given (Visible reads false while the parent is hidden).</summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsListed { get; private set; } = true;
+
+        protected override void SetVisibleCore(bool value)
+        {
+            IsListed = value;
+            base.SetVisibleCore(value);
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            hover = true;
+            Invalidate();
+            base.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            hover = false;
+            Invalidate();
+            base.OnMouseLeave(e);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.Clear(Parent?.BackColor ?? Color.White);
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            Rectangle box = new Rectangle(0, 0, Width - 1, Height - 1);
+            using (GraphicsPath path = RoundedRect(box, 8))
+            {
+                using (SolidBrush fill = new SolidBrush(hover ? HoverBack : Color.White))
+                    g.FillPath(fill, path);
+                using (Pen pen = new Pen(hover ? Primary : Border, 1))
+                    g.DrawPath(pen, path);
+            }
+
+            const int left = 20;
+            int textRight = Width - 48;
+            TextFormatFlags flags = TextFormatFlags.NoPrefix | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis;
+
+            Size titleSize = TextRenderer.MeasureText(g, Text, TitleFont, new Size(textRight - left, 24), flags);
+            TextRenderer.DrawText(g, Text, TitleFont, new Rectangle(left, 14, textRight - left, 24), hover ? Primary : TitleColor, flags);
+
+            if (!string.IsNullOrEmpty(Badge))
+            {
+                Size badgeSize = TextRenderer.MeasureText(g, Badge, BadgeFont);
+                Rectangle badge = new Rectangle(left + titleSize.Width + 6, 17, badgeSize.Width + 4, 18);
+                using (GraphicsPath path = RoundedRect(badge, 4))
+                using (SolidBrush brush = new SolidBrush(BadgeBack))
+                    g.FillPath(brush, path);
+                TextRenderer.DrawText(g, Badge, BadgeFont, badge, BadgeText, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix);
+            }
+
+            TextRenderer.DrawText(g, Description, DescriptionFont, new Rectangle(left, 40, textRight - left, 20), MutedColor, flags);
+
+            int cx = Width - 26;
+            int cy = Height / 2;
+            using (Pen chevron = new Pen(hover ? Primary : MutedColor, 2f))
+            {
+                chevron.StartCap = chevron.EndCap = LineCap.Round;
+                g.DrawLines(chevron, new[] { new Point(cx - 3, cy - 6), new Point(cx + 3, cy), new Point(cx - 3, cy + 6) });
+            }
+        }
+
+        private static GraphicsPath RoundedRect(Rectangle r, int radius)
+        {
+            int d = radius * 2;
+            GraphicsPath path = new GraphicsPath();
+            path.AddArc(r.X, r.Y, d, d, 180, 90);
+            path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
+            path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+            path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
     }
 }
