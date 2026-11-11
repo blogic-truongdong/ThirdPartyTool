@@ -75,16 +75,16 @@ namespace ThirdPartyTool.SaleReceipt
                     if (refundItem.IsSelectedItem)
                     {
                         selectedItems++;
-                        totalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
-                        amount += refundItem.ExtendedPrice;
-                        tax += refundItem.TaxAmount;
+                        totalAmount += refundItem.RefundExtendedPrice + refundItem.RefundTaxAmount;
+                        amount += refundItem.RefundExtendedPrice;
+                        tax += refundItem.RefundTaxAmount;
                     }
                 }
                 else if (refundModifier != null && refundModifier.IsSelectedItem)
                 {
-                    totalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
-                    amount += refundModifier.ExtendedPrice;
-                    tax += refundModifier.TaxAmount;
+                    totalAmount += refundModifier.RefundExtendedPrice + refundModifier.RefundTaxAmount;
+                    amount += refundModifier.RefundExtendedPrice;
+                    tax += refundModifier.RefundTaxAmount;
                 }
             }
 
@@ -130,7 +130,7 @@ namespace ThirdPartyTool.SaleReceipt
             try
             {
                 if (!string.IsNullOrWhiteSpace(MainSaleReceiptNumber))
-                    lblSubtitle.Text = $"Ticket #{MainSaleReceiptNumber}  ·  Selecting an item also selects its modifiers.";
+                    lblSubtitle.Text = $"Ticket #{MainSaleReceiptNumber}  ·  Modifiers follow their item  ·  Use − / + to refund only part of a quantity.";
 
                 DataTable dtSaleReceiptDetails = new DataTable("SaleReceiptDetails");
                 DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
@@ -170,6 +170,7 @@ namespace ThirdPartyTool.SaleReceipt
                     {
                         RefundItemRow refundItem = new RefundItemRow();
                         refundItem.SelectedItemChanges += RefundItem_SelectedItemChanges;
+                        refundItem.RefundQuantityChanged += (s, e) => SyncGroup(((RefundItemRow)s).GroupID, true);
                         refundItem.Dock = DockStyle.Top;
                         refundItem.BindingValue(
                             Utility.GetStringFromRow("SaleReceiptDetailID", item),
@@ -223,30 +224,45 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                foreach (System.Windows.Forms.Control item in pnlRefundItemContainer.Controls)
-                {
-                    RefundItemRow refundItem = item as RefundItemRow;
-                    RefundModiferRow refundModifier = item as RefundModiferRow;
-
-                    if (refundItem != null && refundItem.GroupID == e.Data.GroupID)
-                    {
-                        refundItem.IsSelectedItem = e.Data.IsSelectedItem;
-                        refundItem.chkCheck.Checked = e.Data.IsSelectedItem;
-                        refundItem.BackColor = e.Data.IsSelectedItem ? RefundItemRow.SelectedBackColor : Color.White;
-                    }
-                    else if (refundModifier != null && refundModifier.GroupID == e.Data.GroupID)
-                    {
-                        refundModifier.IsSelectedItem = e.Data.IsSelectedItem;
-                        refundModifier.BackColor = e.Data.IsSelectedItem ? RefundItemRow.SelectedBackColor : Color.White;
-                    }
-                }
-
-                UpdateSummary();
+                SyncGroup(e.Data.GroupID, e.Data.IsSelectedItem);
             }
             catch (Exception ex)
             {
                 BLogicLogger.Exception("RefundItem_SelectedItemChanges", ex);
             }
+        }
+
+        /// <summary>
+        /// Applies the selection to every row of the item group and passes the item's refund share
+        /// (e.g. 2 of 3) to its modifiers, then refreshes the totals.
+        /// </summary>
+        private void SyncGroup(string groupID, bool selected)
+        {
+            RefundItemRow owner = null;
+            foreach (System.Windows.Forms.Control item in pnlRefundItemContainer.Controls)
+            {
+                RefundItemRow refundItem = item as RefundItemRow;
+                if (refundItem != null && refundItem.GroupID == groupID)
+                {
+                    if (refundItem.IsSelectedItem != selected)
+                        refundItem.SetSelected(selected);
+                    if (owner == null)
+                        owner = refundItem;
+                }
+            }
+
+            decimal part = owner != null && selected ? owner.RefundQuantity : 1;
+            decimal whole = owner != null && selected ? owner.Quantity : 1;
+            if (whole <= 0) { part = whole = 1; }
+
+            foreach (System.Windows.Forms.Control item in pnlRefundItemContainer.Controls)
+            {
+                RefundModiferRow refundModifier = item as RefundModiferRow;
+                if (refundModifier != null && refundModifier.GroupID == groupID)
+                    refundModifier.SetSelected(selected, part, whole);
+            }
+
+            UpdateSummary();
         }
 
         private void BtnProcessRefundPartialItem_Click(object sender, EventArgs e)
@@ -265,34 +281,42 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     RefundModiferRow refundModifier = item as RefundModiferRow;
 
-                    if (refundModifier != null)
+                    if (refundModifier != null && refundModifier.IsSelectedItem)
                     {
-                        if (refundModifier.IsSelectedItem)
+                        requestModel.objectValues.Add(new ObjectValues()
                         {
-                            requestModel.objectValues.Add(new ObjectValues()
-                            {
-                                SaleReceiptDetailID = refundModifier.SaleReceiptDetailID,
-                            });
+                            SaleReceiptDetailID = refundModifier.SaleReceiptDetailID,
+                            Quantity = refundModifier.Quantity,
+                            ExtendedPrice = refundModifier.ExtendedPrice,
+                            RefundQuantity = refundModifier.RefundQuantity,
+                            RefundExtendedPrice = refundModifier.RefundExtendedPrice,
+                            RefundTaxAmount = refundModifier.RefundTaxAmount,
+                            RefundPart = refundModifier.PortionPart,
+                            RefundWhole = refundModifier.PortionWhole,
+                        });
 
-                            requestModel.TotalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
-                            requestModel.TaxAmount += refundModifier.TaxAmount;
-                        }
+                        requestModel.TotalAmount += refundModifier.RefundExtendedPrice + refundModifier.RefundTaxAmount;
+                        requestModel.TaxAmount += refundModifier.RefundTaxAmount;
                     }
 
                     RefundItemRow refundItem = item as RefundItemRow;
 
-                    if (refundItem != null)
+                    if (refundItem != null && refundItem.IsSelectedItem)
                     {
-                        if (refundItem.IsSelectedItem)
+                        requestModel.objectValues.Add(new ObjectValues()
                         {
-                            requestModel.objectValues.Add(new ObjectValues()
-                            {
-                                SaleReceiptDetailID = refundItem.SaleReceiptDetailID,
-                            });
+                            SaleReceiptDetailID = refundItem.SaleReceiptDetailID,
+                            Quantity = refundItem.Quantity,
+                            ExtendedPrice = refundItem.ExtendedPrice,
+                            RefundQuantity = refundItem.RefundQuantity,
+                            RefundExtendedPrice = refundItem.RefundExtendedPrice,
+                            RefundTaxAmount = refundItem.RefundTaxAmount,
+                            RefundPart = refundItem.RefundQuantity,
+                            RefundWhole = refundItem.Quantity,
+                        });
 
-                            requestModel.TotalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
-                            requestModel.TaxAmount += refundItem.TaxAmount;
-                        }
+                        requestModel.TotalAmount += refundItem.RefundExtendedPrice + refundItem.RefundTaxAmount;
+                        requestModel.TaxAmount += refundItem.RefundTaxAmount;
                     }
                 }
 
@@ -351,7 +375,8 @@ namespace ThirdPartyTool.SaleReceipt
                 }
                 else
                 {
-                    InformationDialogForm errorDialog = new InformationDialogForm("Refund items failed. Please contact TruongDS");
+                    string reason = string.IsNullOrWhiteSpace(processForm.ErrorMessage) ? "Please contact TruongDS." : processForm.ErrorMessage;
+                    InformationDialogForm errorDialog = new InformationDialogForm("The refund was not done. " + reason);
                     errorDialog.ShowDialog();
                 }
             }

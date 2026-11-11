@@ -1,4 +1,4 @@
-﻿namespace ThirdPartyTool.SaleReceipt
+namespace ThirdPartyTool.SaleReceipt
 {
     partial class PartialRefundItemForm
     {
@@ -152,9 +152,9 @@
             //
             this.label2.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.label2.Location = new System.Drawing.Point(438, 0);
+            this.label2.Location = new System.Drawing.Point(380, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 36);
+            this.label2.Size = new System.Drawing.Size(128, 36);
             this.label2.TabIndex = 2;
             this.label2.Text = "Qty";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

@@ -56,7 +56,8 @@ namespace ThirdPartyTool
         PartialRefundItems,
         UpdateServiceChargeBySaleReceiptID,
         ViewShifts,
-        UpdateShift
+        UpdateShift,
+        AddSpecialItem
     }
     public partial class ProcessForm : Form
     {
@@ -203,6 +204,9 @@ namespace ThirdPartyTool
                 {
                     case ProcessNameEnum.PartialRefundItems:
                         PartialRefundItems();
+                        break;
+                    case ProcessNameEnum.AddSpecialItem:
+                        AddSpecialItem();
                         break;
                     case ProcessNameEnum.CancelReceipt:
                         CancelReceipt();
@@ -3225,111 +3229,748 @@ namespace ThirdPartyTool
             }
         }
 
+        /// <summary>
+        /// Refunds the selected item lines of a finished ticket. Same rules as the hand-written partial refund
+        /// scripts (ITT-7927, runbook [DB-11]), generalised:
+        ///  - one transaction for POS and Merchant (same SQL instance, Merchant reached by name), so nothing is
+        ///    ever half-applied;
+        ///  - every check runs on fresh data inside that transaction before anything is written;
+        ///  - SaleReceiptOriginalInfo is stamped before the first refund, exactly like the POS refund screen;
+        ///  - lines: Status 2 / ReturnCode -113 (partial quantities are split, like the POS);
+        ///  - header, the chosen payment and the card Sale move down by the refunded amount; MerchantFee is
+        ///    re-prorated and the batch recalculated when the Sale is in an open batch;
+        ///  - before COMMIT the result is checked against the numbers read at the start; any gap rolls back.
+        /// Stops (nothing written) when the ticket is not FINISHED, a line was already refunded, the payment
+        /// carries a card surcharge (SVC fee), the payment would go negative, or the card batch is settled.
+        /// </summary>
         public void PartialRefundItems()
         {
             try
             {
-                string sql = string.Empty;
-                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
-                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+                string merchantDb = "[" + Helper.Merchant_Name.Replace("]", "]]") + "]";
+                bool hasTaxDetails = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "").Length > 0;
 
-                using (SqlCommand sqlCommand = new SqlCommand())
                 using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    sql = $"select * from SaleReceipts where SaleReceiptID = '{requestModel.SaleReceiptID}';";
-                    sqlCommand.CommandText = sql;
-                    var reader = sqlCommand.ExecuteReader();
-                    dtSaleReceipts.Load(reader);
-                    reader.Close();
-
-                    sql = $"select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{requestModel.SaleReceiptPaymentDetailID}' ";
-                    sqlCommand.CommandText = sql;
-                    reader = sqlCommand.ExecuteReader();
-                    dtSaleReceiptPaymentDetails.Load(reader);
-                    reader.Close();
-
-                    foreach (var item in requestModel.objectValues)
+                    conn.Open();
+                    using (SqlTransaction transaction = conn.BeginTransaction())
+                    using (SqlCommand sqlCommand = conn.CreateCommand())
                     {
-                        sql = $"update SaleReceiptDetails set ReturnCode = '-113',Status = '2' where SaleReceiptDetailID = '{item.SaleReceiptDetailID}';";
-                        RunQueryUpdate(sqlCommand, sql);
-                    }
+                        sqlCommand.Transaction = transaction;
+                        RefundCheck before = ReadRefundState(sqlCommand, merchantDb, hasTaxDetails);
 
-                    DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "");
-                    if (drs.Length > 0)
-                    {
-                        foreach (var item in requestModel.objectValues)
+                        // ---- guards: nothing has been written yet --------------------------------------------
+                        DataRow receipt = before.Receipt;
+                        DataRow payment = before.Payment;
+                        if (receipt == null) throw new RefundStop("Ticket not found.");
+                        if (payment == null) throw new RefundStop("Payment not found on this ticket.");
+
+                        string status = Utility.GetStringFromRow("TransactionStatusID", receipt);
+                        if (status != "FIN")
+                            throw new RefundStop($"The ticket is {status}; only FINISHED tickets can be refunded.");
+
+                        foreach (ObjectValues item in requestModel.objectValues)
                         {
-                            sql = $"update SaleReceiptDetailTaxDetails set ReturnCode = '-113',Status = '2' where SaleReceiptDetailID = '{item.SaleReceiptDetailID}';";
-                            RunQueryUpdate(sqlCommand, sql);
+                            DataRow line = before.Lines.Rows.Cast<DataRow>().FirstOrDefault(r => string.Equals(r["SaleReceiptDetailID"].ToString(), item.SaleReceiptDetailID?.ToString(), StringComparison.OrdinalIgnoreCase));
+                            if (line == null || Utility.GetIntFromRow("Status", line) == 2 || !string.IsNullOrWhiteSpace(Utility.GetStringFromRow("ReturnCode", line)))
+                                throw new RefundStop("An item was already refunded or removed. Reload the ticket and try again.");
+                            if (Utility.GetDecimalFromRow("Quantity", line) != item.Quantity)
+                                throw new RefundStop("An item changed since the list was opened. Reload the ticket and try again.");
                         }
-                    }
 
-                    if (dtSaleReceipts?.Rows.Count > 0)
-                    {
-                        decimal _TotalAmount = Utility.GetDecimalFromRow("TotalAmount", dtSaleReceipts.Rows[0]) - requestModel.TotalAmount;
-                        decimal _TaxAmount = Utility.GetDecimalFromRow("TaxAmount", dtSaleReceipts.Rows[0]) - requestModel.TaxAmount;
+                        if (Utility.GetDecimalFromRow("SVCFeeAmount", payment) != 0)
+                            throw new RefundStop("This payment has a card surcharge (SVC fee). Refunding it needs a manual fix - contact TruongDS.");
 
-                        sql = $"update SaleReceipts set TotalAmount = {_TotalAmount}, PaidAmount = {_TotalAmount}, TaxAmount = {_TaxAmount} where SaleReceiptID = '{requestModel.SaleReceiptID}'";
-                        RunQueryUpdate(sqlCommand, sql);
-                    }
+                        decimal refundTotal = requestModel.TotalAmount;
+                        decimal refundTax = requestModel.TaxAmount;
+                        if (Utility.GetDecimalFromRow("AmountTendered", payment) - refundTotal < 0)
+                            throw new RefundStop($"The refund ({Utility.ConvertDecimalToMoneyString(refundTotal)}) is more than the payment " +
+                                $"({Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("AmountTendered", payment))}).");
 
-                    if (dtSaleReceiptPaymentDetails?.Rows.Count > 0)
-                    {
-                        decimal _AmountTendered = Utility.GetDecimalFromRow("AmountTendered", dtSaleReceiptPaymentDetails.Rows[0]) - requestModel.TotalAmount;
-
-                        sql = $"update SaleReceiptPaymentDetails set AmountTendered = {_AmountTendered} where SaleReceiptPaymentDetailID = '{requestModel.SaleReceiptPaymentDetailID}'";
-                        RunQueryUpdate(sqlCommand, sql);
-                    }
-                }
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
-                    {
-                        if (Utility.GetIntFromRow("PaymentMethodID", item) == 2 &&
-                            Utility.GetStringFromRow("CreditCardTransactionType", item).Contains("Sale"))
+                        DataRow sale = before.Sale;
+                        if (before.IsCard)
                         {
-                            DataTable dtTransactionDetail = new DataTable("TransactionDetail");
-                            sqlCommand.CommandText = $"select * from TransactionDetail where ID = '{item["CreditCardTransactionID"]}'";
-                            var readerMerchant = sqlCommand.ExecuteReader();
-                            dtTransactionDetail.Load(readerMerchant);
-                            readerMerchant.Close();
+                            if (sale == null)
+                                throw new RefundStop("The card transaction of this payment is not in the Merchant database.");
+                            if (!string.Equals(Utility.GetStringFromRow("TranStatus", sale), "ACTIVE", StringComparison.OrdinalIgnoreCase)
+                                || !string.IsNullOrWhiteSpace(Utility.GetStringFromRow("Returned", sale)))
+                                throw new RefundStop("The card transaction is voided or already returned in the Merchant database.");
+                            if (string.Equals(Utility.GetStringFromRow("BatchStatus", sale), "Closed", StringComparison.OrdinalIgnoreCase))
+                                throw new RefundStop("The card batch of this payment is already settled. Refunding it needs a manual fix - contact TruongDS.");
+                            if (Utility.GetDecimalFromRow("Amount", sale) - refundTotal < 0)
+                                throw new RefundStop("The refund is more than the card transaction amount.");
+                        }
 
-                            if (dtTransactionDetail?.Rows.Count > 0)
+                        // ---- 1. original totals, stamped once before the first refund (as the POS does) ----------
+                        if (receipt.Table.Columns.Contains("SaleReceiptOriginalInfo") && string.IsNullOrWhiteSpace(Utility.GetStringFromRow("SaleReceiptOriginalInfo", receipt)))
+                        {
+                            ExecuteLogged(sqlCommand, "update SaleReceipts set SaleReceiptOriginalInfo = @info where SaleReceiptID = @id and ISNULL(SaleReceiptOriginalInfo, '') = ''",
+                                new SqlParameter("@info", BuildOriginalInfo(sqlCommand, receipt)),
+                                new SqlParameter("@id", receipt["SaleReceiptID"]));
+                        }
+
+                        // ---- 2. lines --------------------------------------------------------------------------
+                        foreach (ObjectValues item in requestModel.objectValues)
+                        {
+                            if (item.IsPartialRefund)
                             {
-                                decimal _Amount = Utility.GetDecimalFromRow("Amount", dtTransactionDetail.Rows[0]) - requestModel.TotalAmount;
-                                decimal _Total = Utility.GetDecimalFromRow("Total", dtTransactionDetail.Rows[0]) - requestModel.TotalAmount;
-
-                                sql = $"update Merchant.dbo.TransactionDetail set Amount = {_Amount}, Total = {_Total} where ID = '{item["CreditCardTransactionID"]}';";
-                                RunQueryUpdate(sqlCommand, sql);
-
-                                if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", dtTransactionDetail.Rows[0])))
-                                    UpdateBatchByBatchUnique(dtTransactionDetail.Rows[0]["BatchUnique"]);
+                                SplitRefundedQuantity(sqlCommand, item, hasTaxDetails);
+                                continue;
                             }
+
+                            int rows = ExecuteLoggedCount(sqlCommand, "update SaleReceiptDetails set ReturnCode = -113, Status = 2 where SaleReceiptDetailID = @id and Status <> 2",
+                                new SqlParameter("@id", item.SaleReceiptDetailID));
+                            if (rows != 1)
+                                throw new RefundStop("An item was refunded at the same time by someone else. Nothing was changed.");
+
+                            if (hasTaxDetails)
+                                ExecuteLogged(sqlCommand, "update SaleReceiptDetailTaxDetails set ReturnCode = -113, Status = 2 where SaleReceiptDetailID = @id",
+                                    new SqlParameter("@id", item.SaleReceiptDetailID));
                         }
+
+                        // ---- 3. header ------------------------------------------------------------------------
+                        decimal newTotal = Utility.GetDecimalFromRow("TotalAmount", receipt) - refundTotal;
+                        ExecuteLogged(sqlCommand, "update SaleReceipts set TotalAmount = @total, PaidAmount = @paid, TaxAmount = @tax where SaleReceiptID = @id",
+                            new SqlParameter("@total", newTotal),
+                            new SqlParameter("@paid", Utility.GetDecimalFromRow("PaidAmount", receipt) - refundTotal),
+                            new SqlParameter("@tax", Utility.GetDecimalFromRow("TaxAmount", receipt) - refundTax),
+                            new SqlParameter("@id", receipt["SaleReceiptID"]));
+
+                        // ---- 4. the chosen payment -------------------------------------------------------------
+                        ExecuteLogged(sqlCommand, "update SaleReceiptPaymentDetails set AmountTendered = @a where SaleReceiptPaymentDetailID = @id",
+                            new SqlParameter("@a", Utility.GetDecimalFromRow("AmountTendered", payment) - refundTotal),
+                            new SqlParameter("@id", payment["SaleReceiptPaymentDetailID"]));
+
+                        // ---- 5. card Sale (Sale and PreAuth alike) + its batch ----------------------------------
+                        if (before.IsCard)
+                        {
+                            decimal oldAmount = Utility.GetDecimalFromRow("Amount", sale);
+                            decimal oldTotal = Utility.GetDecimalFromRow("Total", sale);
+                            decimal newSaleTotal = oldTotal - refundTotal;
+                            List<SqlParameter> p = new List<SqlParameter>
+                            {
+                                new SqlParameter("@amount", oldAmount - refundTotal),
+                                new SqlParameter("@total", newSaleTotal),
+                                new SqlParameter("@id", sale["ID"]),
+                            };
+                            string set = "Amount = @amount, Total = @total";
+                            Action<string, decimal> follow = (column, value) =>
+                            {
+                                if (!sale.Table.Columns.Contains(column) || sale[column] == DBNull.Value) return;
+                                set += $", [{column}] = @{column}";
+                                p.Add(new SqlParameter("@" + column, value));
+                            };
+                            if (Utility.GetDecimalFromRow("AuthorizeAmount", sale) == oldAmount)
+                                follow("AuthorizeAmount", oldAmount - refundTotal);
+                            follow("SubTotal", Utility.GetDecimalFromRow("SubTotal", sale) - (refundTotal - refundTax));
+                            follow("TaxAmount", Utility.GetDecimalFromRow("TaxAmount", sale) - refundTax);
+                            follow("TotalAmount", Utility.GetDecimalFromRow("TotalAmount", sale) - refundTotal);
+                            decimal oldFee = Utility.GetDecimalFromRow("MerchantFee", sale);
+                            if (oldFee != 0 && oldTotal != 0)
+                                follow("MerchantFee", Math.Round(oldFee * newSaleTotal / oldTotal, 2, MidpointRounding.AwayFromZero));
+
+                            ExecuteLogged(sqlCommand, $"update {merchantDb}.dbo.TransactionDetail set {set} where ID = @id", p.ToArray());
+
+                            string batchUnique = Utility.GetStringFromRow("BatchUnique", sale);
+                            if (!string.IsNullOrWhiteSpace(batchUnique))
+                                RecalculateBatch(sqlCommand, merchantDb, batchUnique);
+                        }
+
+                        // ---- 6. check the result against what was read at the start ------------------------------
+                        RefundCheck after = ReadRefundState(sqlCommand, merchantDb, hasTaxDetails);
+                        List<string> gaps = new List<string>();
+                        Action<string, decimal, decimal> expect = (what, actual, expected) =>
+                        {
+                            if (Math.Abs(actual - expected) > 0.005m) gaps.Add($"{what}: {actual:0.00} (expected {expected:0.00})");
+                        };
+                        expect("Ticket total", Utility.GetDecimalFromRow("TotalAmount", after.Receipt), Utility.GetDecimalFromRow("TotalAmount", receipt) - refundTotal);
+                        expect("Ticket tax", Utility.GetDecimalFromRow("TaxAmount", after.Receipt), Utility.GetDecimalFromRow("TaxAmount", receipt) - refundTax);
+                        expect("Ticket paid", Utility.GetDecimalFromRow("PaidAmount", after.Receipt), Utility.GetDecimalFromRow("PaidAmount", receipt) - refundTotal);
+                        expect("Kept lines (price + tax)", after.ActiveLinesTotal, before.ActiveLinesTotal - refundTotal);
+                        expect("Kept lines tax", after.ActiveLinesTax, before.ActiveLinesTax - refundTax);
+                        if (hasTaxDetails && before.ActiveTaxRowsTotal == before.ActiveLinesTax)
+                            expect("Kept tax rows = kept lines tax", after.ActiveTaxRowsTotal, after.ActiveLinesTax);
+                        expect("Payment", Utility.GetDecimalFromRow("AmountTendered", after.Payment), Utility.GetDecimalFromRow("AmountTendered", payment) - refundTotal);
+                        if (before.IsCard)
+                        {
+                            expect("Card amount", Utility.GetDecimalFromRow("Amount", after.Sale), Utility.GetDecimalFromRow("Amount", sale) - refundTotal);
+                            expect("Card total", Utility.GetDecimalFromRow("Total", after.Sale), Utility.GetDecimalFromRow("Total", sale) - refundTotal);
+                            // The e-receipt pairs the POS payment with the card row: keep that link exactly as it was.
+                            decimal linkBefore = Utility.GetDecimalFromRow("Amount", sale) - Utility.GetDecimalFromRow("AmountTendered", payment);
+                            decimal linkAfter = Utility.GetDecimalFromRow("Amount", after.Sale) - Utility.GetDecimalFromRow("AmountTendered", after.Payment);
+                            expect("Card amount - payment", linkAfter, linkBefore);
+                        }
+                        if (gaps.Count > 0)
+                            throw new RefundStop("The refund did not add up, nothing was changed:" + Environment.NewLine + string.Join(Environment.NewLine, gaps));
+
+                        transaction.Commit();
                     }
                 }
 
                 IsSuccess = true;
-
+            }
+            catch (RefundStop stop)
+            {
+                ErrorMessage = stop.Message;
+                BLogicLogger.Error("PartialRefundItems stopped: " + stop.Message);
             }
             catch (Exception ex)
             {
-                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
+                ErrorMessage = ex.Message;
+                BLogicLogger.Exception("PartialRefundItems in ProcessForm", ex);
             }
+        }
+
+        /// <summary>A refund rule was not met; the message is shown to the user as is.</summary>
+        private sealed class RefundStop : Exception
+        {
+            public RefundStop(string message) : base(message) { }
+        }
+
+        /// <summary>Snapshot of everything a refund touches, read inside the refund transaction.</summary>
+        private sealed class RefundCheck
+        {
+            public DataRow Receipt;
+            public DataRow Payment;
+            public DataRow Sale;
+            public DataTable Lines;
+            public bool IsCard;
+            public decimal ActiveLinesTotal;
+            public decimal ActiveLinesTax;
+            public decimal ActiveTaxRowsTotal;
+        }
+
+        private RefundCheck ReadRefundState(SqlCommand sqlCommand, string merchantDb, bool hasTaxDetails)
+        {
+            RefundCheck state = new RefundCheck();
+            // UPDLOCK: the rows stay ours until COMMIT, so nobody can refund the same lines in between.
+            DataTable receipt = LoadRows(sqlCommand, "select * from SaleReceipts with (UPDLOCK) where SaleReceiptID = @id", requestModel.SaleReceiptID);
+            state.Receipt = receipt.Rows.Count > 0 ? receipt.Rows[0] : null;
+
+            DataTable payment = LoadRows(sqlCommand, "select * from SaleReceiptPaymentDetails with (UPDLOCK) where SaleReceiptPaymentDetailID = @id", requestModel.SaleReceiptPaymentDetailID);
+            state.Payment = payment.Rows.Count > 0 && string.Equals(payment.Rows[0]["SaleReceiptID"].ToString(), requestModel.SaleReceiptID, StringComparison.OrdinalIgnoreCase)
+                ? payment.Rows[0] : null;
+
+            state.Lines = LoadRows(sqlCommand, "select * from SaleReceiptDetails with (UPDLOCK) where SaleReceiptID = @id", requestModel.SaleReceiptID);
+            foreach (DataRow line in state.Lines.Rows)
+            {
+                if (Utility.GetIntFromRow("Status", line) == 2) continue;
+                state.ActiveLinesTotal += Utility.GetDecimalFromRow("ExtendedPrice", line) + Utility.GetDecimalFromRow("TaxAmount", line);
+                state.ActiveLinesTax += Utility.GetDecimalFromRow("TaxAmount", line);
+            }
+
+            if (hasTaxDetails)
+            {
+                DataTable tax = LoadRows(sqlCommand, "select TaxAmount, Status from SaleReceiptDetailTaxDetails where SaleReceiptID = @id", requestModel.SaleReceiptID);
+                foreach (DataRow row in tax.Rows)
+                    if (Utility.GetIntFromRow("Status", row) != 2)
+                        state.ActiveTaxRowsTotal += Utility.GetDecimalFromRow("TaxAmount", row);
+            }
+
+            string cardID = state.Payment == null ? "" : Utility.GetStringFromRow("CreditCardTransactionID", state.Payment);
+            state.IsCard = state.Payment != null && Utility.GetIntFromRow("PaymentMethodID", state.Payment) == 2 && !string.IsNullOrWhiteSpace(cardID);
+            if (state.IsCard)
+            {
+                DataTable sale = LoadRows(sqlCommand, $"select * from {merchantDb}.dbo.TransactionDetail with (UPDLOCK) where ID = @id", cardID);
+                state.Sale = sale.Rows.Count > 0 ? sale.Rows[0] : null;
+            }
+            return state;
+        }
+
+        /// <summary>The JSON the POS refund screen stamps into SaleReceiptOriginalInfo (SaleReceipt_New.ConvertSaleMouleToString).</summary>
+        private static string BuildOriginalInfo(SqlCommand sqlCommand, DataRow receipt)
+        {
+            Func<string, decimal> money = column => receipt.Table.Columns.Contains(column) ? Utility.GetDecimalFromRow(column, receipt) : 0;
+            decimal taxAmountVAT = 0;
+            try
+            {
+                sqlCommand.Parameters.Clear();
+                sqlCommand.CommandText = "select sum(TaxAmount) from SaleReceiptDetails where SaleReceiptID = @id and TaxType = 1 and (Status <> 2 or ISNULL(ReturnCode, '') = '113')";
+                sqlCommand.Parameters.AddWithValue("@id", receipt["SaleReceiptID"]);
+                taxAmountVAT = Utility.GetDecimalFromObject(sqlCommand.ExecuteScalar());
+            }
+            catch (SqlException)
+            {
+                taxAmountVAT = 0; // older databases without TaxType
+            }
+            finally
+            {
+                sqlCommand.Parameters.Clear();
+            }
+
+            SaleReciptModule original = new SaleReciptModule
+            {
+                SaleReceiptNumber = Utility.GetStringFromRow("SaleReceiptNumber", receipt),
+                TotalAmount = money("TotalAmount"),
+                TotalDiscountAmount = money("TotalDiscountAmount"),
+                TaxAmount = money("TaxAmount"),
+                SalesOrderFee = money("SalesOrderFee"),
+                ServiceFee = money("ServiceFee"),
+                ServiceFeeTaxAmount = money("ServiceFeeTaxAmount"),
+                AreaFeeAmount = money("AreaFeeAmount"),
+                AreaFeeTaxAmount = money("AreaFeeTaxAmount"),
+                PartyServiceFeeAmount = money("PartyServiceFeeAmount"),
+                PartyServiceFeeTaxAmount = money("PartyServiceFeeTaxAmount"),
+                AutoGratuityAmount = money("AutoGratuityAmount"),
+                AutoGratuityTaxAmount = money("AutoGratuityTaxAmount"),
+                ExtraFeeAmount = money("ExtraFeeAmount"),
+                ExtraFeeTaxAmount = money("ExtraFeeTaxAmount"),
+                ServiceChargeTaxAmount = money("ServiceChargeTaxAmount"),
+                SVCFeeAmount = money("SVCFeePaidAmount"),
+                SVCFeeTaxAmount = money("SVCFeeTaxPaidAmount"),
+                CashDiscountAmount = money("CashDiscountPaidAmount"),
+                CashDiscountTaxAmount = money("CashDiscountTaxPaidAmount"),
+                TaxAmountVAT = taxAmountVAT,
+            };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(original, Newtonsoft.Json.Formatting.Indented,
+                new Newtonsoft.Json.JsonSerializerSettings { DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore });
+        }
+
+        /// <summary>Same totals as UpdateBatchByBatchUnique, but inside the refund transaction.</summary>
+        private static void RecalculateBatch(SqlCommand sqlCommand, string merchantDb, string batchUnique)
+        {
+            string td = merchantDb + ".dbo.TransactionDetail";
+            ExecuteLogged(sqlCommand, $@"
+;with t as (
+    select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end) - sum(case when TranType = 'Return' then Total else 0 end) as Total,
+           sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end) as TotalSVCFeeForTip,
+           sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end) as TotalSales,
+           sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Gratuity else 0 end) as TotalTips,
+           sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFee else 0 end) - sum(case when TranType = 'Return' then SVCFee else 0 end) as TotalSVCFeeAmount,
+           sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total - MerchantFee else 0 end) - sum(case when TranType = 'Return' then Total else 0 end) as DepositAmount,
+           sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then MerchantFee else 0 end) as MerchantFeeAmount,
+           count(ID) as TicketCount
+      from {td} where BatchUnique = @b)
+update b set Total = t.Total, TotalSVCFeeForTip = t.TotalSVCFeeForTip, TotalSales = t.TotalSales, TotalTips = t.TotalTips,
+             TotalSVCFeeAmount = t.TotalSVCFeeAmount, DepositAmount = t.DepositAmount, MerchantFeeAmount = t.MerchantFeeAmount, Quantity = t.TicketCount
+  from {merchantDb}.dbo.Batch b cross join t
+ where b.BatchUnique = @b;
+update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where BatchUnique = @b) where BatchUnique = @b
+   and exists (select 1 from {merchantDb}.dbo.Batch where BatchUnique = @b);", new SqlParameter("@b", batchUnique));
+        }
+
+        private static int ExecuteLoggedCount(SqlCommand sqlCommand, string sql, params SqlParameter[] parameters)
+        {
+            BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {sql} [{string.Join(", ", parameters.Select(p => p.ParameterName + "=" + p.Value))}]");
+            sqlCommand.Parameters.Clear();
+            sqlCommand.CommandText = sql;
+            sqlCommand.Parameters.AddRange(parameters);
+            int rows = sqlCommand.ExecuteNonQuery();
+            sqlCommand.Parameters.Clear();
+            return rows;
+        }
+
+
+        /// <summary>
+        /// Partial-quantity refund, done the way the POS does it: the original row keeps the remaining
+        /// quantity and the refunded share is saved as a copy with Status = 2 / ReturnCode = -113.
+        /// Its SaleReceiptDetailTaxDetails rows are split the same way.
+        /// </summary>
+        private void SplitRefundedQuantity(SqlCommand sqlCommand, ObjectValues item, bool hasTaxDetails)
+        {
+            DataTable dtDetail = LoadRows(sqlCommand, "select * from SaleReceiptDetails where SaleReceiptDetailID = @id", item.SaleReceiptDetailID);
+            if (dtDetail.Rows.Count == 0)
+                throw new Exception($"SaleReceiptDetail {item.SaleReceiptDetailID} not found.");
+
+            DataRow detail = dtDetail.Rows[0];
+            decimal quantity = Utility.GetDecimalFromRow("Quantity", detail);
+            decimal extendedPrice = Utility.GetDecimalFromRow("ExtendedPrice", detail);
+            decimal taxAmount = Utility.GetDecimalFromRow("TaxAmount", detail);
+            Guid refundedDetailID = Guid.NewGuid();
+            Dictionary<string, decimal> refundedFinals = SplitFinalColumns(detail, item, quantity, extendedPrice, taxAmount);
+
+            Dictionary<string, object> copy = new Dictionary<string, object>
+            {
+                ["SaleReceiptDetailID"] = refundedDetailID,
+                ["Quantity"] = item.RefundQuantity,
+                ["ExtendedPrice"] = item.RefundExtendedPrice,
+                ["TaxAmount"] = item.RefundTaxAmount,
+                ["ReturnCode"] = "-113",
+                ["Status"] = "2",
+                ["LastModifyTime"] = DateTime.Now,
+            };
+            foreach (var final in refundedFinals)
+                copy[final.Key] = final.Value;
+            InsertCopy(sqlCommand, "SaleReceiptDetails", detail, copy);
+
+            List<SqlParameter> keep = new List<SqlParameter>
+            {
+                new SqlParameter("@q", quantity - item.RefundQuantity),
+                new SqlParameter("@e", extendedPrice - item.RefundExtendedPrice),
+                new SqlParameter("@t", taxAmount - item.RefundTaxAmount),
+                new SqlParameter("@id", detail["SaleReceiptDetailID"]),
+            };
+            string keepFinals = "";
+            foreach (var final in refundedFinals)
+            {
+                string p = "@f" + keep.Count;
+                keepFinals += $", [{final.Key}] = {p}";
+                keep.Add(new SqlParameter(p, Utility.GetDecimalFromRow(final.Key, detail) - final.Value));
+            }
+            ExecuteLogged(sqlCommand, $"update SaleReceiptDetails set Quantity = @q, ExtendedPrice = @e, TaxAmount = @t{keepFinals} where SaleReceiptDetailID = @id",
+                keep.ToArray());
+
+            if (!hasTaxDetails)
+                return;
+
+            DataTable dtTax = LoadRows(sqlCommand, "select * from SaleReceiptDetailTaxDetails where SaleReceiptDetailID = @id", item.SaleReceiptDetailID);
+            if (dtTax.Rows.Count == 0)
+                return;
+
+            // Split each tax line by the same share; when the lines add up to the row's tax, push the
+            // rounding cent onto the largest line so the copies add up to exactly what the UI showed.
+            decimal[] refundTax = new decimal[dtTax.Rows.Count];
+            decimal taxLinesTotal = 0, refundTaxTotal = 0;
+            int largest = 0;
+            for (int i = 0; i < dtTax.Rows.Count; i++)
+            {
+                decimal lineTax = Utility.GetDecimalFromRow("TaxAmount", dtTax.Rows[i]);
+                refundTax[i] = RefundMathPortion(lineTax, item);
+                taxLinesTotal += lineTax;
+                refundTaxTotal += refundTax[i];
+                if (Math.Abs(lineTax) > Math.Abs(Utility.GetDecimalFromRow("TaxAmount", dtTax.Rows[largest])))
+                    largest = i;
+            }
+            if (taxLinesTotal == taxAmount)
+                refundTax[largest] += item.RefundTaxAmount - refundTaxTotal;
+
+            for (int i = 0; i < dtTax.Rows.Count; i++)
+            {
+                DataRow line = dtTax.Rows[i];
+                decimal lineQuantity = Utility.GetDecimalFromRow("Quantity", line);
+                decimal lineExtended = Utility.GetDecimalFromRow("ExtendedPrice", line);
+                decimal lineTax = Utility.GetDecimalFromRow("TaxAmount", line);
+
+                decimal refundLineQuantity = lineQuantity == quantity ? item.RefundQuantity : Math.Round(lineQuantity * item.RefundPart / item.RefundWhole, 2, MidpointRounding.AwayFromZero);
+                decimal refundLineExtended = lineExtended == extendedPrice ? item.RefundExtendedPrice : RefundMathPortion(lineExtended, item);
+
+                InsertCopy(sqlCommand, "SaleReceiptDetailTaxDetails", line, new Dictionary<string, object>
+                {
+                    ["SaleReceiptDetailTaxDetailID"] = Guid.NewGuid(),
+                    ["SaleReceiptDetailID"] = refundedDetailID,
+                    ["Quantity"] = refundLineQuantity,
+                    ["ExtendedPrice"] = refundLineExtended,
+                    ["TaxAmount"] = refundTax[i],
+                    ["ReturnCode"] = "-113",
+                    ["Status"] = "2",
+                    ["LastModifyTime"] = DateTime.Now,
+                });
+
+                ExecuteLogged(sqlCommand, "update SaleReceiptDetailTaxDetails set Quantity = @q, ExtendedPrice = @e, TaxAmount = @t where SaleReceiptDetailTaxDetailID = @id",
+                    new SqlParameter("@q", lineQuantity - refundLineQuantity),
+                    new SqlParameter("@e", lineExtended - refundLineExtended),
+                    new SqlParameter("@t", lineTax - refundTax[i]),
+                    new SqlParameter("@id", line["SaleReceiptDetailTaxDetailID"]));
+            }
+        }
+
+        /// <summary>The Final* report columns of SaleReceiptDetails (totals per line) that a split must share out.</summary>
+        private static readonly string[] FinalColumns = { "FinalQuantity", "FinalDiscountAmount", "FinalCashDiscount", "FinalCoinDiscount",
+            "FinalTaxAmount", "FinalTotalSales", "FinalGrossSales", "FinalNetSales", "FinalNetSalesTax" };
+
+        /// <summary>
+        /// Refunded share of each Final* column. Values that equal the row's quantity / price / tax / price+tax
+        /// take exactly the refunded share of those, so the split row stays consistent with itself.
+        /// </summary>
+        private static Dictionary<string, decimal> SplitFinalColumns(DataRow row, ObjectValues item, decimal quantity, decimal extendedPrice, decimal taxAmount)
+        {
+            Dictionary<string, decimal> parts = new Dictionary<string, decimal>();
+            foreach (string name in FinalColumns)
+            {
+                if (!row.Table.Columns.Contains(name) || row[name] == DBNull.Value)
+                    continue;
+
+                decimal value = Utility.GetDecimalFromRow(name, row);
+                decimal part;
+                if (name == "FinalQuantity")
+                    part = value == quantity ? item.RefundQuantity : Math.Round(value * item.RefundPart / item.RefundWhole, 2, MidpointRounding.AwayFromZero);
+                else if (value == extendedPrice + taxAmount)
+                    part = item.RefundExtendedPrice + item.RefundTaxAmount;
+                else if (value == extendedPrice)
+                    part = item.RefundExtendedPrice;
+                else if (value == taxAmount)
+                    part = item.RefundTaxAmount;
+                else
+                    part = RefundMathPortion(value, item);
+                parts[name] = part;
+            }
+            return parts;
+        }
+
+        private static decimal RefundMathPortion(decimal value, ObjectValues item)
+        {
+            return SaleReceipt.RefundMath.Portion(value, item.RefundPart, item.RefundWhole);
+        }
+
+        private static DataTable LoadRows(SqlCommand sqlCommand, string sql, object id)
+        {
+            DataTable table = new DataTable();
+            sqlCommand.Parameters.Clear();
+            sqlCommand.CommandText = sql;
+            sqlCommand.Parameters.AddWithValue("@id", id ?? DBNull.Value);
+            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                table.Load(reader);
+            sqlCommand.Parameters.Clear();
+            return table;
+        }
+
+        private static void ExecuteLogged(SqlCommand sqlCommand, string sql, params SqlParameter[] parameters)
+        {
+            BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {sql} [{string.Join(", ", parameters.Select(p => p.ParameterName + "=" + p.Value))}]");
+            sqlCommand.Parameters.Clear();
+            sqlCommand.CommandText = sql;
+            sqlCommand.Parameters.AddRange(parameters);
+            sqlCommand.ExecuteNonQuery();
+            sqlCommand.Parameters.Clear();
+        }
+
+        /// <summary>
+        /// Inserts a copy of <paramref name="source"/> (a "select *" row) with some columns overridden.
+        /// Identity, computed and rowversion columns are left to SQL Server; overrides for columns the
+        /// table does not have are ignored, so older POS databases work too.
+        /// </summary>
+        private static void InsertCopy(SqlCommand sqlCommand, string table, DataRow source, IDictionary<string, object> overrides)
+        {
+            HashSet<string> skip = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            sqlCommand.Parameters.Clear();
+            sqlCommand.CommandText = "select c.name from sys.columns c where c.object_id = OBJECT_ID(@t) " +
+                "and (c.is_identity = 1 or c.is_computed = 1 or TYPE_NAME(c.system_type_id) = 'timestamp')";
+            sqlCommand.Parameters.AddWithValue("@t", table);
+            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                while (reader.Read())
+                    skip.Add(reader.GetString(0));
+            sqlCommand.Parameters.Clear();
+
+            Dictionary<string, object> values = new Dictionary<string, object>(overrides, StringComparer.OrdinalIgnoreCase);
+            List<string> columns = new List<string>();
+            List<string> names = new List<string>();
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            foreach (DataColumn column in source.Table.Columns)
+            {
+                if (skip.Contains(column.ColumnName))
+                    continue;
+
+                object value = values.TryGetValue(column.ColumnName, out object v) ? ConvertForColumn(v, column.DataType) : source[column];
+                SqlParameter parameter = new SqlParameter("@p" + parameters.Count, value ?? DBNull.Value);
+                if (column.DataType == typeof(byte[]))
+                    parameter.SqlDbType = SqlDbType.VarBinary;
+                columns.Add("[" + column.ColumnName + "]");
+                names.Add(parameter.ParameterName);
+                parameters.Add(parameter);
+            }
+
+            ExecuteLogged(sqlCommand, $"insert into {table} ({string.Join(", ", columns)}) values ({string.Join(", ", names)})", parameters.ToArray());
+        }
+
+        private static object ConvertForColumn(object value, Type type)
+        {
+            if (value == null || value == DBNull.Value)
+                return DBNull.Value;
+            if (type == typeof(Guid))
+                return value is Guid ? value : new Guid(value.ToString());
+            if (type == typeof(string))
+                return value is Guid g ? g.ToString() : Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
+            return Convert.ChangeType(value, type, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Adds an Open Price / Negative Price item (no tax) to a finished ticket and moves the chosen
+        /// payment by the same amount. For a card payment the Merchant TransactionDetail follows and its
+        /// batch is recalculated. POS writes are one transaction; the Merchant write is committed right after.
+        /// </summary>
+        public void AddSpecialItem()
+        {
+            SpecialItemValues values = requestModel.specialItemValues;
+            try
+            {
+                object batchUnique = null;
+
+                using (SqlConnection pos = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                using (SqlConnection merchant = new SqlConnection(Helper.Merchant_Connection))
+                {
+                    pos.Open();
+                    SqlTransaction posTransaction = pos.BeginTransaction();
+                    SqlCommand posCommand = pos.CreateCommand();
+                    posCommand.Transaction = posTransaction;
+
+                    DataTable dtReceipt = LoadRows(posCommand, "select * from SaleReceipts where SaleReceiptID = @id", values.SaleReceiptID);
+                    DataTable dtItem = LoadRows(posCommand, "select * from Items where ItemID = @id", values.ItemID);
+                    DataTable dtPayment = LoadRows(posCommand, "select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = @id", values.SaleReceiptPaymentDetailID);
+                    // An existing item line of the ticket is the template, so every POS column gets a sensible value.
+                    DataTable dtTemplate = LoadRows(posCommand, "select top 1 * from SaleReceiptDetails where SaleReceiptID = @id and ISNULL(PriceInitial,'') in ('','P') " +
+                        "order by case when Status = 2 then 1 else 0 end, Range", values.SaleReceiptID);
+
+                    if (dtReceipt.Rows.Count == 0) throw new Exception("Ticket not found.");
+                    if (dtItem.Rows.Count == 0) throw new Exception("Special item not found.");
+                    if (dtPayment.Rows.Count == 0) throw new Exception("Payment not found.");
+                    if (dtTemplate.Rows.Count == 0) throw new Exception("The ticket has no item line to copy from.");
+
+                    posCommand.Parameters.Clear();
+                    posCommand.CommandText = "select ISNULL(MAX(Range), -1) from SaleReceiptDetails where SaleReceiptID = @id";
+                    posCommand.Parameters.AddWithValue("@id", values.SaleReceiptID);
+                    int nextRange = Convert.ToInt32(posCommand.ExecuteScalar()) + 1;
+                    posCommand.Parameters.Clear();
+
+                    DateTime now = DateTime.Now;
+                    decimal amount = values.Amount;
+                    DataRow template = dtTemplate.Rows[0];
+                    InsertCopy(posCommand, "SaleReceiptDetails", template, BuildSpecialItemLine(template, dtItem.Rows[0], values, nextRange, now));
+
+                    // Ticket totals
+                    DataRow receipt = dtReceipt.Rows[0];
+                    decimal newTotal = Utility.GetDecimalFromRow("TotalAmount", receipt) + amount;
+                    List<SqlParameter> receiptParams = new List<SqlParameter>
+                    {
+                        new SqlParameter("@total", newTotal),
+                        new SqlParameter("@paid", Utility.GetDecimalFromRow("PaidAmount", receipt) + amount),
+                        new SqlParameter("@id", receipt["SaleReceiptID"]),
+                    };
+                    string receiptSet = "TotalAmount = @total, PaidAmount = @paid";
+                    if (receipt.Table.Columns.Contains("TotalQuantity"))
+                        receiptSet += ", TotalQuantity = ISNULL(TotalQuantity, 0) + 1";
+                    if (receipt.Table.Columns.Contains("DetailSummary"))
+                    {
+                        string summary = Utility.GetStringFromRow("DetailSummary", receipt);
+                        string line = $"(1) {values.ItemName}";
+                        receiptSet += ", DetailSummary = @summary";
+                        receiptParams.Add(new SqlParameter("@summary", string.IsNullOrWhiteSpace(summary) ? line : summary + ", " + line));
+                    }
+                    if (receipt.Table.Columns.Contains("LastModifyDateTime"))
+                    {
+                        receiptSet += ", LastModifyDateTime = @now";
+                        receiptParams.Add(new SqlParameter("@now", now));
+                    }
+                    ExecuteLogged(posCommand, $"update SaleReceipts set {receiptSet} where SaleReceiptID = @id", receiptParams.ToArray());
+
+                    // Payment moves by the same amount
+                    DataRow payment = dtPayment.Rows[0];
+                    decimal newTendered = Utility.GetDecimalFromRow("AmountTendered", payment) + amount;
+                    if (newTendered < 0)
+                        throw new Exception("The payment amount cannot go below zero.");
+                    ExecuteLogged(posCommand, "update SaleReceiptPaymentDetails set AmountTendered = @a where SaleReceiptPaymentDetailID = @id",
+                        new SqlParameter("@a", newTendered),
+                        new SqlParameter("@id", payment["SaleReceiptPaymentDetailID"]));
+
+                    // Card payment: the Merchant transaction follows (Sale and PreAuth alike)
+                    SqlTransaction merchantTransaction = null;
+                    string cardTransactionID = Utility.GetStringFromRow("CreditCardTransactionID", payment);
+                    if (Utility.GetIntFromRow("PaymentMethodID", payment) == 2 && !string.IsNullOrWhiteSpace(cardTransactionID))
+                    {
+                        merchant.Open();
+                        merchantTransaction = merchant.BeginTransaction();
+                        SqlCommand merchantCommand = merchant.CreateCommand();
+                        merchantCommand.Transaction = merchantTransaction;
+
+                        DataTable dtTransaction = LoadRows(merchantCommand, "select * from TransactionDetail where ID = @id", cardTransactionID);
+                        if (dtTransaction.Rows.Count > 0)
+                        {
+                            DataRow transaction = dtTransaction.Rows[0];
+                            decimal oldAmount = Utility.GetDecimalFromRow("Amount", transaction);
+                            List<SqlParameter> tranParams = new List<SqlParameter>
+                            {
+                                new SqlParameter("@amount", oldAmount + amount),
+                                new SqlParameter("@total", Utility.GetDecimalFromRow("Total", transaction) + amount),
+                                new SqlParameter("@id", transaction["ID"]),
+                            };
+                            string tranSet = "Amount = @amount, Total = @total";
+                            if (transaction.Table.Columns.Contains("AuthorizeAmount") && Utility.GetDecimalFromRow("AuthorizeAmount", transaction) == oldAmount)
+                            {
+                                tranSet += ", AuthorizeAmount = @amount";
+                            }
+                            if (transaction.Table.Columns.Contains("TotalAmount"))
+                            {
+                                tranSet += ", TotalAmount = @ticketTotal";
+                                tranParams.Add(new SqlParameter("@ticketTotal", newTotal));
+                            }
+                            ExecuteLogged(merchantCommand, $"update TransactionDetail set {tranSet} where ID = @id", tranParams.ToArray());
+
+                            if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", transaction)))
+                                batchUnique = transaction["BatchUnique"];
+                        }
+                    }
+
+                    posTransaction.Commit();
+                    merchantTransaction?.Commit();
+                }
+
+                // Runs on its own connection, after the TransactionDetail change is committed.
+                if (batchUnique != null)
+                    UpdateBatchByBatchUnique(batchUnique);
+
+                IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                BLogicLogger.Exception("AddSpecialItem in ProcessForm", ex);
+            }
+        }
+
+        /// <summary>Column values for the new special-item line, overriding what is copied from the template line.</summary>
+        private static Dictionary<string, object> BuildSpecialItemLine(DataRow template, DataRow item, SpecialItemValues values, int range, DateTime now)
+        {
+            Dictionary<string, object> line = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            Func<string, object> fromItem = name => item.Table.Columns.Contains(name) ? item[name] : DBNull.Value;
+
+            // Nothing about discounts, commissions, weights or "price before X" carries over from the template line.
+            foreach (DataColumn column in template.Table.Columns)
+            {
+                bool numeric = column.DataType == typeof(decimal) || column.DataType == typeof(double) || column.DataType == typeof(float)
+                    || column.DataType == typeof(int) || column.DataType == typeof(short) || column.DataType == typeof(long) || column.DataType == typeof(byte);
+                if (numeric && System.Text.RegularExpressions.Regex.IsMatch(column.ColumnName, "Discount|Commission|ServiceFee|Before|Redeem|Weight|MarkDown|OpenPriceValue",
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                    line[column.ColumnName] = 0;
+            }
+
+            line["SaleReceiptDetailID"] = Guid.NewGuid();
+            line["ItemID"] = item["ItemID"];
+            line["Description"] = values.ItemName;
+            foreach (string name in new[] { "Description2", "Description3", "Comments", "ReasonComment", "Attribute", "Size", "RefSaleReceiptDetailID",
+                "EBTPaid", "BulkID", "BulkGroupID", "MMID", "MMGroupID", "TPID", "DiscountCode", "CategoryDiscountType", "MMLeastExpensiveDiscountType" })
+            {
+                if (template.Table.Columns.Contains(name))
+                    line[name] = template.Table.Columns[name].DataType == typeof(string) ? (object)"" : DBNull.Value;
+            }
+            line["DescriptionChinese"] = fromItem("DescriptionChinese");
+            line["ShortDescription"] = fromItem("ShortDescription");
+            line["Lookup_Code"] = fromItem("LookupCode");
+            line["ItemUnitCost"] = fromItem("ItemCost");
+            line["ItemGroupID"] = fromItem("ItemGroupID");
+            line["EBTType"] = fromItem("EBTType");
+            line["InventoryUpdatable"] = false;
+
+            foreach (string name in new[] { "Quantity", "QtyPerItem", "FinalQuantity", "QuantityKDS" })
+                line[name] = 1;
+            line["QuantitySold"] = 0;
+
+            foreach (string name in new[] { "Price", "RegularPrice", "DualPrice", "PriceCash", "PriceCC", "ExtendedPrice",
+                "FinalTotalSales", "FinalGrossSales", "FinalNetSales", "FinalNetSalesTax" })
+                line[name] = values.Amount;
+
+            // Special items are added without tax; TaxCodeID stays as on the template, like the POS does for non-taxable lines.
+            line["Taxable"] = false;
+            line["TaxRate"] = 0;
+            line["TaxAmount"] = 0;
+            line["FinalTaxAmount"] = 0;
+
+            line["GroupID"] = Guid.NewGuid().ToString();
+            line["Range"] = range;
+            line["KDSIDDetail"] = Guid.NewGuid();
+            line["PriceInitial"] = DBNull.Value;
+            line["ReturnCode"] = DBNull.Value;
+            line["ModifierLevelID"] = DBNull.Value;
+            line["ModifierType"] = "Normal";
+            if (Utility.GetIntFromRow("Status", template) == 2)
+                line["Status"] = 0;
+            foreach (string name in new[] { "IsCompItem", "IsDeposit", "IsSplitItems", "IsModifierCombine", "IsOverwritePrintModifier", "MMIsApplyItem",
+                "IsLockDiscount", "IsManualWeight" })
+                line[name] = false;
+            line["TPStatus"] = 0;
+            line["HoldMinutes"] = 0;
+            foreach (string name in new[] { "LastModifyTime", "OrderDateTime", "StampDateTime", "HoldDateTime", "KDSDoneDateTime", "COMPDateTime", "TPTime" })
+                line[name] = now;
+
+            return line;
         }
 
         public async Task UpdateServiceChargeBySaleReceiptID()

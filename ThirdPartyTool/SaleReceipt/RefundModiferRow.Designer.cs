@@ -1,4 +1,4 @@
-﻿namespace ThirdPartyTool.SaleReceipt
+namespace ThirdPartyTool.SaleReceipt
 {
     partial class RefundModiferRow
     {
@@ -43,7 +43,7 @@
             this.lblItemName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
             this.lblItemName.Location = new System.Drawing.Point(64, 0);
             this.lblItemName.Name = "lblItemName";
-            this.lblItemName.Size = new System.Drawing.Size(328, 30);
+            this.lblItemName.Size = new System.Drawing.Size(278, 30);
             this.lblItemName.TabIndex = 0;
             this.lblItemName.Text = "Item Name";
             this.lblItemName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -54,9 +54,9 @@
             this.txtQuantity.Dock = System.Windows.Forms.DockStyle.Right;
             this.txtQuantity.Font = new System.Drawing.Font("Roboto", 10F);
             this.txtQuantity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.txtQuantity.Location = new System.Drawing.Point(400, 0);
+            this.txtQuantity.Location = new System.Drawing.Point(342, 0);
             this.txtQuantity.Name = "txtQuantity";
-            this.txtQuantity.Size = new System.Drawing.Size(70, 30);
+            this.txtQuantity.Size = new System.Drawing.Size(128, 30);
             this.txtQuantity.TabIndex = 1;
             this.txtQuantity.Text = "1";
             this.txtQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

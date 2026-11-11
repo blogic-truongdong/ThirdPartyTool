@@ -19,6 +19,18 @@ namespace ThirdPartyTool.Models
         public RefundValues refundValues { get; set; } = new RefundValues();
         public ServiceChargeValues serviceChargesValues { get; set; } = new ServiceChargeValues();
         public List<ObjectValues> objectValues { get; set; } = new List<ObjectValues>();
+        public SpecialItemValues specialItemValues { get; set; } = new SpecialItemValues();
+    }
+
+    /// <summary>An Open Price / Negative Price item added to a finished ticket.</summary>
+    public class SpecialItemValues
+    {
+        public string SaleReceiptID { get; set; }
+        public string SaleReceiptPaymentDetailID { get; set; }
+        public string ItemID { get; set; }
+        public string ItemName { get; set; }
+        /// <summary>Signed line amount: positive for Open Price, negative for Negative Price items. No tax.</summary>
+        public decimal Amount { get; set; }
     }
 
     public class ObjectValues
@@ -26,6 +38,15 @@ namespace ThirdPartyTool.Models
         public object SaleReceiptDetailID { get; set; }
         public decimal Quantity { get; set; }
         public decimal ExtendedPrice { get; set; }
+
+        // Partial-quantity refund (e.g. 2 of 3). When RefundPart < RefundWhole the row is split:
+        // the original keeps the rest and the refunded share is saved as a new row.
+        public decimal RefundQuantity { get; set; }
+        public decimal RefundExtendedPrice { get; set; }
+        public decimal RefundTaxAmount { get; set; }
+        public decimal RefundPart { get; set; } = 1;
+        public decimal RefundWhole { get; set; } = 1;
+        public bool IsPartialRefund => RefundPart < RefundWhole;
     }
 
     public class RefundValues

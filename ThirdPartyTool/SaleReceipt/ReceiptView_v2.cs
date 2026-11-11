@@ -445,7 +445,7 @@ namespace ThirdPartyTool.SaleReceipt
             {
                 if (TransactionStatusID != "OPER")
                 {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể CANCEL những ticket đang ở trạng thái OPER.");
+                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Only OPEN tickets can be canceled.");
                     informationDialogForm.ShowDialog();
                     return;
                 }
@@ -482,7 +482,7 @@ namespace ThirdPartyTool.SaleReceipt
             {
                 if (TransactionStatusID != "FIN")
                 {
-                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể VOID những ticket đang ở trạng thái FINISH.");
+                    InformationDialogForm informationDialogForm = new InformationDialogForm($"Only FINISHED tickets can be voided.");
                     informationDialogForm.ShowDialog();
                     return;
                 }
@@ -574,13 +574,14 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     if (TransactionStatusID != "FIN" && TransactionStatusID != "VOID")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Add Special Item cho những ticket đang ở trạng thái FINISH or VOID");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Special items can only be added to FINISHED or VOIDED tickets.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
 
                     AddSpecialItemForReceiptForm addSpecialItemForReceiptForm = new AddSpecialItemForReceiptForm();
                     addSpecialItemForReceiptForm.SaleReceiptID = MainSaleReceiptID;
+                    addSpecialItemForReceiptForm.SaleReceiptNumber = MainSaleReceiptNumber;
                     if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(addSpecialItemForReceiptForm, Helper.MainForm) == DialogResult.OK)
                     {
                         ReloadCurrentReceipt();
@@ -590,7 +591,7 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     if (TransactionStatusID != "OPER")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Finish những ticket đang ở trạng thái OPEN.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Only OPEN tickets can be finished.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -608,7 +609,7 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     if (TransactionStatusID != "FIN" && TransactionStatusID != "OPER")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể VOID / CANCEL những ticket đang ở trạng thái FINISH hoặc OPEN.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Only FINISHED or OPEN tickets can be voided or canceled.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -619,7 +620,7 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     if (TransactionStatusID != "FIN")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Refund những ticket đang ở trạng thái FINISH.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Only FINISHED tickets can be refunded.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -634,7 +635,7 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     if (TransactionStatusID != "FIN")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Add Tip cho những ticket đang ở trạng thái FINISH.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Tips can only be added to FINISHED tickets.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -646,7 +647,7 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     if (TransactionStatusID != "FIN")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Add Tip cho những ticket đang ở trạng thái FINISH.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Tips can only be added to FINISHED tickets.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -657,7 +658,7 @@ namespace ThirdPartyTool.SaleReceipt
                 {
                     if (TransactionStatusID != "FIN")
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Update Service Charges cho những ticket đang ở trạng thái FINISH.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Service charges can only be updated on FINISHED tickets.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
@@ -679,7 +680,7 @@ namespace ThirdPartyTool.SaleReceipt
 
                     if (dtSaleReceiptPaymentDetails?.Rows.Count != 1)
                     {
-                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Chỉ có thể Update Service Charges cho những ticket thanh toán 1 lần duy nhất. Ko support multi payment.");
+                        InformationDialogForm informationDialogForm = new InformationDialogForm($"Service charges can only be updated on tickets paid with a single payment. Split payments are not supported.");
                         informationDialogForm.ShowDialog();
                         return;
                     }
