@@ -16,6 +16,13 @@ namespace ThirdPartyTool
             pnlMerchant.Click += PnlMerchant_Click;
             btnCancel.Click += BtnCancel_Click;
             this.Load += EnterDatabaseForm_Load;
+
+            KeyPreview = true;
+            KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter) BtnYes_Click(s, e);
+                else if (e.KeyCode == Keys.Escape) BtnCancel_Click(s, e);
+            };
         }
 
         private void BtnCancel_Click(object sender, System.EventArgs e)
@@ -49,6 +56,7 @@ namespace ThirdPartyTool
             if (string.IsNullOrWhiteSpace(txtBLogicPOS7.Text))
             {
                 InformationDialogForm informationDialog = new InformationDialogForm("Database BLogicPOS7 can't be empty.");
+                informationDialog.ShowDialog();
                 txtBLogicPOS7.Focus();
                 return;
             }
@@ -56,6 +64,7 @@ namespace ThirdPartyTool
             if (string.IsNullOrWhiteSpace(txtMerchant.Text))
             {
                 InformationDialogForm informationDialog = new InformationDialogForm("Database Merchant can't be empty.");
+                informationDialog.ShowDialog();
                 txtMerchant.Focus();
                 return;
             }

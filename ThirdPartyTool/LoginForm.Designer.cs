@@ -91,9 +91,9 @@ namespace ThirdPartyTool
             // 
             // btnOK
             // 
-            this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnOK.BorderColor = System.Drawing.Color.Gray;
+            this.btnOK.BackColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BorderColor = System.Drawing.Color.FromArgb(42, 108, 228);
             this.btnOK.BorderRadius = 8;
             this.btnOK.BorderSize = 1;
             this.btnOK.FlatAppearance.BorderSize = 0;
@@ -113,7 +113,7 @@ namespace ThirdPartyTool
             // 
             this.btnCancel.BackColor = System.Drawing.Color.White;
             this.btnCancel.BackgroundColor = System.Drawing.Color.White;
-            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
+            this.btnCancel.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.btnCancel.BorderRadius = 8;
             this.btnCancel.BorderSize = 1;
             this.btnCancel.FlatAppearance.BorderSize = 0;
@@ -132,8 +132,8 @@ namespace ThirdPartyTool
             // txtPassword
             // 
             this.txtPassword.BackColor = System.Drawing.Color.White;
-            this.txtPassword.BorderColor = System.Drawing.Color.Gray;
-            this.txtPassword.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.txtPassword.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
+            this.txtPassword.BorderFocusColor = System.Drawing.Color.FromArgb(42, 108, 228);
             this.txtPassword.BorderRadius = 8;
             this.txtPassword.BorderSize = 1;
             this.txtPassword.Font = new System.Drawing.Font("BLogic", 14F);
@@ -154,8 +154,8 @@ namespace ThirdPartyTool
             // txtUserName
             // 
             this.txtUserName.BackColor = System.Drawing.Color.White;
-            this.txtUserName.BorderColor = System.Drawing.Color.Gray;
-            this.txtUserName.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.txtUserName.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
+            this.txtUserName.BorderFocusColor = System.Drawing.Color.FromArgb(42, 108, 228);
             this.txtUserName.BorderRadius = 8;
             this.txtUserName.BorderSize = 1;
             this.txtUserName.Font = new System.Drawing.Font("BLogic", 14F);
