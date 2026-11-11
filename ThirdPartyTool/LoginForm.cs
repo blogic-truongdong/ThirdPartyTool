@@ -11,8 +11,8 @@ namespace ThirdPartyTool
 {
     public partial class LoginForm : Form
     {
-        string userName = "admin";
-        string password = "8559";
+        const string userName = "admin";
+        const string password = "8559";
 
         /// <summary>Databases the tool works on. Default BLogicPOS7 / Merchant, changed with "Change".</summary>
         public string PosDatabase { get; private set; } = "BLogicPOS7";
@@ -213,7 +213,8 @@ namespace ThirdPartyTool
                     return;
                 }
 
-                if (txtPassword.Input.Text != userName && txtPassword.Input.Text != password)
+                // Username ignores case and surrounding spaces; the password must match exactly.
+                if (!string.Equals(txtUserName.Input.Text.Trim(), userName, StringComparison.OrdinalIgnoreCase) || txtPassword.Input.Text != password)
                 {
                     ShowError("The username or password is incorrect.", txtPassword);
                     return;
