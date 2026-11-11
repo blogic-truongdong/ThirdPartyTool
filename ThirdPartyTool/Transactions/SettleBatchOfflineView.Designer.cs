@@ -167,7 +167,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(777, 44);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Cần phải settle batch trên HOST trước khi thực hiện settle ở đây.";
+            this.label1.Text = "Settle the batch on the HOST first, then settle it here.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             //
             // pnlNoticeGap

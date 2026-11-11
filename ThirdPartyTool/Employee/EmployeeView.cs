@@ -96,13 +96,13 @@ namespace ThirdPartyTool.Employee
 
         private void LblEndDate_Click(object sender, EventArgs e)
         {
-            endDate.Select(); // focus vào control
+            endDate.Select(); // focus the control
             SendKeys.Send("%{DOWN}");
         }
 
         private void LblStartDate_Click(object sender, EventArgs e)
         {
-            startDate.Select(); // focus vào control
+            startDate.Select(); // focus the control
             SendKeys.Send("%{DOWN}");
         }
 

@@ -168,7 +168,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(234, 17);
             this.label10.TabIndex = 32;
-            this.label10.Text = "4. Ko thể Refund thêm 1 lần nào nữa";
+            this.label10.Text = "4. The ticket cannot be refunded again";
             // 
             // label9
             // 
@@ -180,7 +180,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(248, 17);
             this.label9.TabIndex = 32;
-            this.label9.Text = "3. Ticket Refund có cùng Amount, Date";
+            this.label9.Text = "3. The refund ticket has the same amount and date";
             // 
             // label5
             // 
@@ -192,7 +192,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(399, 17);
             this.label5.TabIndex = 32;
-            this.label5.Text = "3. Chỉ có thể Refund Full Amount, ko thể Refund Partial Amount";
+            this.label5.Text = "3. Only the full amount can be refunded, not a partial amount";
             // 
             // label8
             // 
@@ -204,7 +204,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(216, 17);
             this.label8.TabIndex = 32;
-            this.label8.Text = "2. Sẽ Create thêm 1 ticket Refund ";
+            this.label8.Text = "2. A new refund ticket is created";
             // 
             // label4
             // 
@@ -216,7 +216,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(212, 17);
             this.label4.TabIndex = 32;
-            this.label4.Text = "2. Batch trên Host đã được settle";
+            this.label4.Text = "2. The batch has been settled on the host";
             // 
             // label7
             // 
@@ -228,7 +228,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(242, 17);
             this.label7.TabIndex = 32;
-            this.label7.Text = "1. Ticket gốc vẫn còn trạng thái Finish";
+            this.label7.Text = "1. The original ticket stays FINISHED";
             // 
             // label2
             // 
@@ -240,7 +240,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(186, 17);
             this.label2.TabIndex = 32;
-            this.label2.Text = "1. Ticket đã Refund trên host";
+            this.label2.Text = "1. The ticket has been refunded on the host";
             // 
             // label6
             // 
@@ -252,7 +252,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(211, 19);
             this.label6.TabIndex = 31;
-            this.label6.Text = "Sau Khi Refund Thành Công";
+            this.label6.Text = "After a successful refund";
             // 
             // label3
             // 
@@ -264,7 +264,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(226, 19);
             this.label3.TabIndex = 31;
-            this.label3.Text = "Điều kiện dùng chức năng này";
+            this.label3.Text = "Requirements";
             // 
             // BtnUpdate
             // 

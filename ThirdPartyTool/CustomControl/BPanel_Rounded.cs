@@ -30,13 +30,13 @@ namespace ThirdPartyTool.CustomControl
             using (Pen penBorder = new Pen(BorderColor, BorderSize))
             using (SolidBrush brush = new SolidBrush(BackgroundColor))
             {
-                // Fill nền
+                // Fill the background
                 e.Graphics.FillPath(brush, pathSurface);
 
-                // Áp dụng Region (bo góc luôn cho control + children)
+                // Apply the rounded Region (clips the control and its children)
                 this.Region = new Region(pathSurface);
 
-                // Vẽ border
+                // Draw the border
                 if (BorderSize > 0)
                     e.Graphics.DrawPath(penBorder, pathBorder);
             }

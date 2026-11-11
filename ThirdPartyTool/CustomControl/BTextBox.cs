@@ -74,7 +74,7 @@ namespace ThirdPartyTool.CustomControl
             ShowPlaceholder();
         }
 
-        // Lấy text thực sự (không trả về placeholder)
+        // The real text (never the placeholder)
         public string GetRealText()
         {
             return _isPlaceholderActive ? string.Empty : this.Text;

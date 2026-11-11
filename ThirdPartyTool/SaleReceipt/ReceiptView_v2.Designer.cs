@@ -803,10 +803,10 @@
             this.noticeVoid.Name = "noticeVoid";
             this.noticeVoid.Size = new System.Drawing.Size(626, 100);
             this.noticeVoid.TabIndex = 0;
-            this.noticeVoid.Title = "Lưu ý trước khi thực hiện";
+            this.noticeVoid.Title = "Before you continue";
             this.noticeVoid.Lines = new string[] {
-                "Ticket thanh toán bằng Credit Card: phải Refund/Void trên Host trước.",
-                "**Ticket thanh toán bằng GIFT CARD: gọi anh Tuấn để handle void GIFT CARD."};
+                "Credit card tickets: refund or void the transaction on the host first.",
+                "**Gift card tickets: contact Tuan to void the gift card."};
             //
             // pnlVoidGap
             //
@@ -866,7 +866,7 @@
             this.lblVoidCardDesc.Name = "lblVoidCardDesc";
             this.lblVoidCardDesc.Size = new System.Drawing.Size(273, 80);
             this.lblVoidCardDesc.TabIndex = 1;
-            this.lblVoidCardDesc.Text = "Chỉ VOID được những ticket đã FINISH.";
+            this.lblVoidCardDesc.Text = "Only FINISHED tickets can be voided.";
             //
             // btnProcessVoidTicket
             //
@@ -924,7 +924,7 @@
             this.lblCancelCardDesc.Name = "lblCancelCardDesc";
             this.lblCancelCardDesc.Size = new System.Drawing.Size(273, 80);
             this.lblCancelCardDesc.TabIndex = 1;
-            this.lblCancelCardDesc.Text = "Chỉ CANCEL được ticket đang OPEN. Ticket chuyển sang CANCELED, Payment Detail bị xóa khỏi DB.";
+            this.lblCancelCardDesc.Text = "Only OPEN tickets can be canceled. The ticket becomes CANCELED and its payment details are deleted.";
             //
             // btnProcessCancelTicket
             //
@@ -1022,12 +1022,12 @@
             this.noticeClose.Name = "noticeClose";
             this.noticeClose.Size = new System.Drawing.Size(626, 140);
             this.noticeClose.TabIndex = 0;
-            this.noticeClose.Title = "Lưu ý trước khi thực hiện";
+            this.noticeClose.Title = "Before you continue";
             this.noticeClose.Lines = new string[] {
-                "Chỉ CLOSE được những ticket đang OPEN, FINISH hoặc REFUND.",
-                "Ticket thanh toán bằng Credit Card: phải REFUND hoặc VOID trên Host trước.",
-                "Ticket đã CLOSE sẽ không hiển thị trên Sale Report, Batch Report và Transaction Report.",
-                "**Ticket thanh toán bằng GIFT CARD: gọi anh Tuấn để handle void GIFT CARD."};
+                "Only OPEN, FINISHED or REFUNDED tickets can be closed.",
+                "Credit card tickets: refund or void the transaction on the host first.",
+                "Closed tickets no longer appear on the Sale, Batch and Transaction reports.",
+                "**Gift card tickets: contact Tuan to void the gift card."};
             //
             // pnlCloseGap
             //
