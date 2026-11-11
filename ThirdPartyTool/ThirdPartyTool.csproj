@@ -508,6 +508,7 @@
     <Compile Include="CustomControl\NoticeBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Dialog\DialogLayout.cs" />
     <Compile Include="CustomControl\BPanel_Rounded.cs">
       <SubType>Component</SubType>
     </Compile>

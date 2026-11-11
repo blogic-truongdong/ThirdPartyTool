@@ -13,6 +13,10 @@ namespace ThirdPartyTool.Dialog
 
             btnYes.Click += BtnYes_Click;
             btnNo.Click += BtnNo_Click;
+
+            DialogLayout.Arrange(this, panel1, lblTitle, lblMessage, DialogKind.Confirm, btnYes, btnNo);
+            // Enter does not confirm: these dialogs guard void/close/refund actions.
+            DialogLayout.BindKeys(this, DialogResult.No, null);
         }
 
         private void BtnNo_Click(object sender, System.EventArgs e)

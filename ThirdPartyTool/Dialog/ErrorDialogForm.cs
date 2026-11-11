@@ -11,6 +11,9 @@ namespace ThirdPartyTool.Dialog
             lblMessage.Text = message;
 
             btnYes.Click += BtnYes_Click;
+
+            DialogLayout.Arrange(this, panel1, lblTitle, lblMessage, DialogKind.Error, btnYes);
+            DialogLayout.BindKeys(this, DialogResult.Yes, DialogResult.Yes);
         }
 
         private void BtnYes_Click(object sender, System.EventArgs e)
