@@ -45,6 +45,13 @@ namespace ThirdPartyTool.Employee
         {
             try
             {
+                if (CurrentEmployeeID < 0)
+                {
+                    InformationDialogForm informationDialog = new InformationDialogForm("Please select an employee before syncing a role.");
+                    informationDialog.ShowDialog();
+                    return;
+                }
+
                 if (cbbSyncRoles.SelectedIndex <= 0)
                 {
                     InformationDialogForm informationDialog = new InformationDialogForm("Please select Role before process sync role.");
@@ -133,9 +140,14 @@ namespace ThirdPartyTool.Employee
                     cbbSyncRoles.SelectedIndex = 0;
 
                 var currentRow = dgvEmployees.CurrentRow;
+                if (currentRow == null)
+                {
+                    ShowSelectedEmployee(null);
+                    return;
+                }
                 CurrentEmployeeID = Utility.GetIntFromObject(currentRow.Cells["EmployeeID"].Value);
                 CurrentEmployeeName = Utility.GetStringFromObject(currentRow.Cells["EmployeeName"].Value);
-                lblCurrentEmployeeName.Text = $"Employee: {CurrentEmployeeName}";
+                ShowSelectedEmployee(currentRow);
                 startDate.Value = endDate.Value = DateTime.Now;
             }
             catch (Exception ex)
@@ -161,10 +173,15 @@ namespace ThirdPartyTool.Employee
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(txtSearch.Text) || txtSearch.Text == "Search")
+                if (dtEmployees == null)
+                    return;
+
+                string keyword = txtSearch.GetRealText().Trim().Replace("'", "''").Replace("[", "[[]").Replace("%", "[%]").Replace("*", "[*]");
+                if (string.IsNullOrWhiteSpace(keyword))
                     dtEmployees.DefaultView.RowFilter = "";
                 else
-                    dtEmployees.DefaultView.RowFilter = $"EmployeeCode LIKE '%{txtSearch.Text}%' or EmployeeName LIKE '%{txtSearch.Text}%'";
+                    dtEmployees.DefaultView.RowFilter = $"EmployeeCode LIKE '%{keyword}%' or EmployeeName LIKE '%{keyword}%'";
+                UpdateCount();
             }
             catch (Exception ex)
             {
@@ -240,12 +257,46 @@ namespace ThirdPartyTool.Employee
                 cbbSyncRoles.SelectedIndex = 0;
 
                 startDate.Value = endDate.Value = DateTime.Now;
+                UpdateCount();
                 txtSearch.Focus();
             }
             catch (Exception ex)
             {
                 BLogicLogger.Exception("BtnRefresh_Click in EmployeeView", ex);
             }
+        }
+
+        private void UpdateCount()
+        {
+            if (dtEmployees == null)
+            {
+                lblCount.Text = "";
+                return;
+            }
+
+            int total = dtEmployees.Rows.Count;
+            int shown = dtEmployees.DefaultView.Count;
+            string noun = total == 1 ? "employee" : "employees";
+            lblCount.Text = shown == total ? $"{total} {noun}" : $"{shown} of {total} {noun}";
+        }
+
+        private void ShowSelectedEmployee(DataGridViewRow row)
+        {
+            if (row == null)
+            {
+                CurrentEmployeeID = -1;
+                CurrentEmployeeName = "";
+                lblCurrentEmployeeName.Text = "No employee selected";
+                lblCurrentEmployeeMeta.Text = "Pick one from the list.";
+                return;
+            }
+
+            string code = Utility.GetStringFromObject(row.Cells["EmployeeCode"].Value);
+            string role = Utility.GetStringFromObject(row.Cells["RoleName"].Value);
+            lblCurrentEmployeeName.Text = CurrentEmployeeName;
+            lblCurrentEmployeeMeta.Text = string.IsNullOrWhiteSpace(role)
+                ? $"ID {code}"
+                : $"ID {code}  ·  Current role: {role}";
         }
     }
 }

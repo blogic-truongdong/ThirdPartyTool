@@ -42,6 +42,8 @@ namespace ThirdPartyTool
             btnReceipt_V2.Click += BtnOption_Click;
             btnShifts.Click += BtnOption_Click;
             btnAdvancedFuntion.Click += BtnOption_Click;
+
+            InitNavButtons();
         }
 
         private void BtnOption_Click(object sender, EventArgs e)
@@ -204,19 +206,63 @@ namespace ThirdPartyTool
             //Application.Exit();
         }
 
+        // Sidebar look
+        private static readonly Color NavBack = Color.FromArgb(248, 249, 251);
+        private static readonly Color NavText = Color.FromArgb(55, 65, 81);
+        private static readonly Color NavHover = Color.FromArgb(238, 240, 244);
+        private static readonly Color NavActiveBack = Color.FromArgb(232, 240, 254);
+        private static readonly Color NavActiveText = Color.FromArgb(42, 108, 228);
+        private Button activeNavButton;
+
+        private Button[] NavButtons
+        {
+            get
+            {
+                return new[] { btnHome, btnReceipt_V2, btnEmployee, btnMerchant, btnItem, btnEmployeePaycor, btnShifts, btnAdvancedFuntion };
+            }
+        }
+
+        private void InitNavButtons()
+        {
+            foreach (Button button in NavButtons)
+                button.Paint += NavButton_Paint;
+            ResetTabColor();
+        }
+
+        /// <summary>Draws the accent bar on the left edge of the active nav item.</summary>
+        private void NavButton_Paint(object sender, PaintEventArgs e)
+        {
+            if (sender != activeNavButton)
+                return;
+            Button button = (Button)sender;
+            using (SolidBrush brush = new SolidBrush(NavActiveText))
+                e.Graphics.FillRectangle(brush, 0, 8, 3, button.Height - 16);
+        }
+
         private void ResetTabColor()
         {
-            foreach (Control item in pnlLeft.Controls)
+            foreach (Button button in NavButtons)
             {
-                item.BackColor = Tab_BackColorDefault;
-                item.ForeColor = Tab_FoceColorDefault;
+                button.BackColor = NavBack;
+                button.ForeColor = NavText;
+                button.FlatAppearance.MouseOverBackColor = NavHover;
             }
+            Button previous = activeNavButton;
+            activeNavButton = null;
+            if (previous != null)
+                previous.Invalidate();
         }
 
         private void ActiveTabColor(System.Windows.Forms.Control control)
         {
-            control.BackColor = ColorTranslator.FromHtml("#2A6CE4");
-            control.ForeColor = Tab_FoceColorSelected;
+            Button button = control as Button;
+            if (button == null)
+                return;
+            button.BackColor = NavActiveBack;
+            button.ForeColor = NavActiveText;
+            button.FlatAppearance.MouseOverBackColor = NavActiveBack;
+            activeNavButton = button;
+            button.Invalidate();
         }
     }
 }

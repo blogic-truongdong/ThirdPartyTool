@@ -133,7 +133,6 @@
             this.employeeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.employeeView.Location = new System.Drawing.Point(0, 0);
             this.employeeView.Name = "employeeView";
-            this.employeeView.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
             this.employeeView.Size = new System.Drawing.Size(837, 728);
             this.employeeView.TabIndex = 2;
             // 
@@ -180,7 +179,7 @@
             // 
             // Line1
             // 
-            this.Line1.BackColor = System.Drawing.Color.Gray;
+            this.Line1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Line1.Dock = System.Windows.Forms.DockStyle.Left;
             this.Line1.Location = new System.Drawing.Point(170, 1);
             this.Line1.Name = "Line1";
@@ -190,7 +189,8 @@
             // 
             // pnlLeft
             // 
-            this.pnlLeft.BackColor = System.Drawing.Color.White;
+            this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.pnlLeft.Padding = new System.Windows.Forms.Padding(0, 0, 0, 12);
             this.pnlLeft.Controls.Add(this.btnHotFix);
             this.pnlLeft.Controls.Add(this.label4);
             this.pnlLeft.Controls.Add(this.label3);
@@ -227,13 +227,13 @@
             // label4
             // 
             this.label4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label4.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(117)))), ((int)(((byte)(117)))), ((int)(((byte)(117)))));
             this.label4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label4.Location = new System.Drawing.Point(0, 668);
             this.label4.Margin = new System.Windows.Forms.Padding(0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(170, 30);
+            this.label4.Size = new System.Drawing.Size(170, 20);
             this.label4.TabIndex = 22;
             this.label4.Text = "Version 4.00";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -241,13 +241,13 @@
             // label3
             // 
             this.label3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label3.Font = new System.Drawing.Font("Roboto", 12F);
-            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Font = new System.Drawing.Font("Roboto", 9F);
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(117)))), ((int)(((byte)(117)))), ((int)(((byte)(117)))));
             this.label3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label3.Location = new System.Drawing.Point(0, 698);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(170, 30);
+            this.label3.Size = new System.Drawing.Size(170, 20);
             this.label3.TabIndex = 21;
             this.label3.Text = "Release 03-03-2026";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -257,18 +257,23 @@
             this.btnAdvancedFuntion.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnAdvancedFuntion.FlatAppearance.BorderSize = 0;
             this.btnAdvancedFuntion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdvancedFuntion.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnAdvancedFuntion.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnAdvancedFuntion.Image = global::ThirdPartyTool.Properties.Resources.icon_technology;
             this.btnAdvancedFuntion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnAdvancedFuntion.Location = new System.Drawing.Point(0, 280);
             this.btnAdvancedFuntion.Name = "btnAdvancedFuntion";
-            this.btnAdvancedFuntion.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnAdvancedFuntion.Size = new System.Drawing.Size(170, 35);
+            this.btnAdvancedFuntion.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnAdvancedFuntion.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAdvancedFuntion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnAdvancedFuntion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnAdvancedFuntion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnAdvancedFuntion.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnAdvancedFuntion.Size = new System.Drawing.Size(170, 40);
             this.btnAdvancedFuntion.TabIndex = 20;
             this.btnAdvancedFuntion.Text = "  Advanced";
-            this.btnAdvancedFuntion.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnAdvancedFuntion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnAdvancedFuntion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnAdvancedFuntion.UseCompatibleTextRendering = true;
+            this.btnAdvancedFuntion.UseCompatibleTextRendering = false;
             this.btnAdvancedFuntion.UseVisualStyleBackColor = false;
             // 
             // btnShifts
@@ -276,18 +281,23 @@
             this.btnShifts.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnShifts.FlatAppearance.BorderSize = 0;
             this.btnShifts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnShifts.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnShifts.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnShifts.Image = global::ThirdPartyTool.Properties.Resources.icon_shifts;
             this.btnShifts.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnShifts.Location = new System.Drawing.Point(0, 245);
             this.btnShifts.Name = "btnShifts";
-            this.btnShifts.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnShifts.Size = new System.Drawing.Size(170, 35);
+            this.btnShifts.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnShifts.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnShifts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnShifts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnShifts.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnShifts.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnShifts.Size = new System.Drawing.Size(170, 40);
             this.btnShifts.TabIndex = 19;
             this.btnShifts.Text = "  Shifts";
-            this.btnShifts.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnShifts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnShifts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnShifts.UseCompatibleTextRendering = true;
+            this.btnShifts.UseCompatibleTextRendering = false;
             this.btnShifts.UseVisualStyleBackColor = false;
             // 
             // btnEmployeePaycor
@@ -295,18 +305,23 @@
             this.btnEmployeePaycor.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnEmployeePaycor.FlatAppearance.BorderSize = 0;
             this.btnEmployeePaycor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEmployeePaycor.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnEmployeePaycor.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnEmployeePaycor.Image = global::ThirdPartyTool.Properties.Resources.icon_user_2;
             this.btnEmployeePaycor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEmployeePaycor.Location = new System.Drawing.Point(0, 210);
             this.btnEmployeePaycor.Name = "btnEmployeePaycor";
-            this.btnEmployeePaycor.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnEmployeePaycor.Size = new System.Drawing.Size(170, 35);
+            this.btnEmployeePaycor.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnEmployeePaycor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEmployeePaycor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnEmployeePaycor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnEmployeePaycor.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnEmployeePaycor.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnEmployeePaycor.Size = new System.Drawing.Size(170, 40);
             this.btnEmployeePaycor.TabIndex = 18;
             this.btnEmployeePaycor.Text = "  Paycor";
-            this.btnEmployeePaycor.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnEmployeePaycor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEmployeePaycor.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnEmployeePaycor.UseCompatibleTextRendering = true;
+            this.btnEmployeePaycor.UseCompatibleTextRendering = false;
             this.btnEmployeePaycor.UseVisualStyleBackColor = false;
             this.btnEmployeePaycor.Visible = false;
             // 
@@ -315,18 +330,23 @@
             this.btnItem.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnItem.FlatAppearance.BorderSize = 0;
             this.btnItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnItem.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnItem.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnItem.Image = global::ThirdPartyTool.Properties.Resources.icon_item;
             this.btnItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnItem.Location = new System.Drawing.Point(0, 175);
             this.btnItem.Name = "btnItem";
-            this.btnItem.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnItem.Size = new System.Drawing.Size(170, 35);
+            this.btnItem.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnItem.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnItem.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnItem.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnItem.Size = new System.Drawing.Size(170, 40);
             this.btnItem.TabIndex = 17;
             this.btnItem.Text = "  Items";
-            this.btnItem.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnItem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnItem.UseCompatibleTextRendering = true;
+            this.btnItem.UseCompatibleTextRendering = false;
             this.btnItem.UseVisualStyleBackColor = false;
             // 
             // btnMerchant
@@ -334,18 +354,23 @@
             this.btnMerchant.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnMerchant.FlatAppearance.BorderSize = 0;
             this.btnMerchant.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMerchant.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnMerchant.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnMerchant.Image = global::ThirdPartyTool.Properties.Resources.Icon_CreditCard;
             this.btnMerchant.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMerchant.Location = new System.Drawing.Point(0, 140);
             this.btnMerchant.Name = "btnMerchant";
-            this.btnMerchant.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnMerchant.Size = new System.Drawing.Size(170, 35);
+            this.btnMerchant.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnMerchant.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMerchant.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnMerchant.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnMerchant.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnMerchant.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnMerchant.Size = new System.Drawing.Size(170, 40);
             this.btnMerchant.TabIndex = 16;
             this.btnMerchant.Text = "  Merchant";
-            this.btnMerchant.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnMerchant.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMerchant.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnMerchant.UseCompatibleTextRendering = true;
+            this.btnMerchant.UseCompatibleTextRendering = false;
             this.btnMerchant.UseVisualStyleBackColor = false;
             // 
             // btnEmployee
@@ -353,18 +378,23 @@
             this.btnEmployee.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnEmployee.FlatAppearance.BorderSize = 0;
             this.btnEmployee.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEmployee.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnEmployee.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnEmployee.Image = global::ThirdPartyTool.Properties.Resources.icon_user_2;
             this.btnEmployee.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEmployee.Location = new System.Drawing.Point(0, 105);
             this.btnEmployee.Name = "btnEmployee";
-            this.btnEmployee.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnEmployee.Size = new System.Drawing.Size(170, 35);
+            this.btnEmployee.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnEmployee.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEmployee.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnEmployee.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnEmployee.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnEmployee.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnEmployee.Size = new System.Drawing.Size(170, 40);
             this.btnEmployee.TabIndex = 15;
             this.btnEmployee.Text = "  Employees";
-            this.btnEmployee.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnEmployee.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEmployee.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnEmployee.UseCompatibleTextRendering = true;
+            this.btnEmployee.UseCompatibleTextRendering = false;
             this.btnEmployee.UseVisualStyleBackColor = false;
             // 
             // btnReceipt_V2
@@ -372,18 +402,23 @@
             this.btnReceipt_V2.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnReceipt_V2.FlatAppearance.BorderSize = 0;
             this.btnReceipt_V2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReceipt_V2.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnReceipt_V2.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnReceipt_V2.Image = global::ThirdPartyTool.Properties.Resources.Icon_Receipt;
             this.btnReceipt_V2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReceipt_V2.Location = new System.Drawing.Point(0, 70);
             this.btnReceipt_V2.Name = "btnReceipt_V2";
-            this.btnReceipt_V2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnReceipt_V2.Size = new System.Drawing.Size(170, 35);
+            this.btnReceipt_V2.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnReceipt_V2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReceipt_V2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnReceipt_V2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnReceipt_V2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnReceipt_V2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnReceipt_V2.Size = new System.Drawing.Size(170, 40);
             this.btnReceipt_V2.TabIndex = 14;
             this.btnReceipt_V2.Text = "  Receipt";
-            this.btnReceipt_V2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnReceipt_V2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReceipt_V2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnReceipt_V2.UseCompatibleTextRendering = true;
+            this.btnReceipt_V2.UseCompatibleTextRendering = false;
             this.btnReceipt_V2.UseVisualStyleBackColor = false;
             // 
             // btnHome
@@ -391,38 +426,43 @@
             this.btnHome.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnHome.FlatAppearance.BorderSize = 0;
             this.btnHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHome.Font = new System.Drawing.Font("Roboto", 12F);
+            this.btnHome.Font = new System.Drawing.Font("Roboto", 11F);
             this.btnHome.Image = global::ThirdPartyTool.Properties.Resources.Icon_Home;
             this.btnHome.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnHome.Location = new System.Drawing.Point(0, 35);
             this.btnHome.Name = "btnHome";
-            this.btnHome.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnHome.Size = new System.Drawing.Size(170, 35);
+            this.btnHome.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
+            this.btnHome.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHome.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(251)))));
+            this.btnHome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.btnHome.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(240)))), ((int)(((byte)(244)))));
+            this.btnHome.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(240)))), ((int)(((byte)(254)))));
+            this.btnHome.Size = new System.Drawing.Size(170, 40);
             this.btnHome.TabIndex = 12;
             this.btnHome.Text = "  Home";
-            this.btnHome.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.btnHome.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnHome.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnHome.UseCompatibleTextRendering = true;
+            this.btnHome.UseCompatibleTextRendering = false;
             this.btnHome.UseVisualStyleBackColor = false;
             // 
             // label1
             // 
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Font = new System.Drawing.Font("Roboto", 13F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.label1.Size = new System.Drawing.Size(170, 35);
+            this.label1.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.label1.Size = new System.Drawing.Size(170, 56);
             this.label1.TabIndex = 11;
             this.label1.Text = "Settings";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Line2
             // 
-            this.Line2.BackColor = System.Drawing.Color.Gray;
+            this.Line2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Line2.Dock = System.Windows.Forms.DockStyle.Top;
             this.Line2.Location = new System.Drawing.Point(0, 0);
             this.Line2.Name = "Line2";
