@@ -68,41 +68,61 @@
             this.btnScanCreditCardTransaction = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.bLabel_Rounded2 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlVoidTicket = new System.Windows.Forms.Panel();
+            this.pnlVoidHead = new System.Windows.Forms.Panel();
             this.btnBack2 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.btnProcessCancelTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.lblVoidTitle = new System.Windows.Forms.Label();
+            this.lblVoidSubtitle = new System.Windows.Forms.Label();
+            this.pnlVoidBody = new System.Windows.Forms.Panel();
+            this.noticeVoid = new ThirdPartyTool.CustomControl.NoticeBox();
+            this.pnlVoidGap = new System.Windows.Forms.Panel();
+            this.tlpVoidActions = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlVoidCard = new ThirdPartyTool.CustomControl.BPanel_Rounded();
+            this.lblVoidCardTitle = new System.Windows.Forms.Label();
+            this.lblVoidCardDesc = new System.Windows.Forms.Label();
             this.btnProcessVoidTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.pnlCancelCard = new ThirdPartyTool.CustomControl.BPanel_Rounded();
+            this.lblCancelCardTitle = new System.Windows.Forms.Label();
+            this.lblCancelCardDesc = new System.Windows.Forms.Label();
+            this.btnProcessCancelTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlCloseTicket = new System.Windows.Forms.Panel();
-            this.label16 = new System.Windows.Forms.Label();
+            this.pnlCloseHead = new System.Windows.Forms.Panel();
             this.btnBackCloseTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.lblCloseTitle = new System.Windows.Forms.Label();
+            this.lblCloseSubtitle = new System.Windows.Forms.Label();
+            this.pnlCloseBody = new System.Windows.Forms.Panel();
+            this.noticeClose = new ThirdPartyTool.CustomControl.NoticeBox();
+            this.pnlCloseGap = new System.Windows.Forms.Panel();
+            this.pnlCloseActions = new System.Windows.Forms.Panel();
             this.btnProcessCloseTicket = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.pnlAddTipBySaleToken = new System.Windows.Forms.Panel();
-            this.btnProcessAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.pnlTokenHead = new System.Windows.Forms.Panel();
             this.btnBack4 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label26 = new System.Windows.Forms.Label();
+            this.lblTokenTitle = new System.Windows.Forms.Label();
+            this.lblTokenSubtitle = new System.Windows.Forms.Label();
+            this.pnlTokenBody = new System.Windows.Forms.Panel();
+            this.pnlTokenLeft = new System.Windows.Forms.Panel();
             this.bPanel_Rounded1 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.txtSearchTokenReceipt = new ThirdPartyTool.CustomControl.BTextBox();
             this.btnSearchTokenReceipt = new System.Windows.Forms.Label();
+            this.pnlTokenSearchGap = new System.Windows.Forms.Panel();
             this.PrintControl_TokenReceipt = new DevExpress.XtraPrinting.Control.PrintControl();
-            this.label25 = new System.Windows.Forms.Label();
+            this.pnlTokenColumnGap = new System.Windows.Forms.Panel();
+            this.pnlTokenRight = new System.Windows.Forms.Panel();
+            this.pnlTokenSummary = new ThirdPartyTool.CustomControl.BPanel_Rounded();
+            this.lblTokenCaption = new System.Windows.Forms.Label();
+            this.lblTokenNumber = new System.Windows.Forms.Label();
+            this.lblTokenTipCaption = new System.Windows.Forms.Label();
+            this.lblTokenAmount = new System.Windows.Forms.Label();
+            this.lblTokenTarget = new System.Windows.Forms.Label();
+            this.pnlTokenSummaryGap = new System.Windows.Forms.Panel();
+            this.btnProcessAddTipBySaleToken = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlAddTipForPaymentDetail = new System.Windows.Forms.Panel();
-            this.pnlPaymentDetails = new System.Windows.Forms.Panel();
+            this.pnlPaymentHead = new System.Windows.Forms.Panel();
             this.btnBack5 = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.label27 = new System.Windows.Forms.Label();
+            this.lblPaymentSubtitle = new System.Windows.Forms.Label();
+            this.pnlPaymentBody = new System.Windows.Forms.Panel();
+            this.pnlPaymentDetails = new System.Windows.Forms.Panel();
             this.pnlHeader.SuspendLayout();
             this.tlpOption.SuspendLayout();
             this.pnlTicketInfo.SuspendLayout();
@@ -115,11 +135,25 @@
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.pnlVoidTicket.SuspendLayout();
+            this.pnlVoidHead.SuspendLayout();
+            this.pnlVoidBody.SuspendLayout();
+            this.tlpVoidActions.SuspendLayout();
+            this.pnlVoidCard.SuspendLayout();
+            this.pnlCancelCard.SuspendLayout();
             this.pnlCloseTicket.SuspendLayout();
+            this.pnlCloseHead.SuspendLayout();
+            this.pnlCloseBody.SuspendLayout();
+            this.pnlCloseActions.SuspendLayout();
             this.pnlAddTipBySaleToken.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.pnlTokenHead.SuspendLayout();
+            this.pnlTokenBody.SuspendLayout();
+            this.pnlTokenLeft.SuspendLayout();
             this.bPanel_Rounded1.SuspendLayout();
+            this.pnlTokenRight.SuspendLayout();
+            this.pnlTokenSummary.SuspendLayout();
             this.pnlAddTipForPaymentDetail.SuspendLayout();
+            this.pnlPaymentHead.SuspendLayout();
+            this.pnlPaymentBody.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -691,506 +725,668 @@
             this.bLabel_Rounded2.Text = "Back";
             this.bLabel_Rounded2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.bLabel_Rounded2.TextColor = System.Drawing.Color.Black;
-            // 
+            //
             // pnlVoidTicket
-            // 
-            this.pnlVoidTicket.Controls.Add(this.btnBack2);
-            this.pnlVoidTicket.Controls.Add(this.btnProcessCancelTicket);
-            this.pnlVoidTicket.Controls.Add(this.btnProcessVoidTicket);
-            this.pnlVoidTicket.Controls.Add(this.label9);
-            this.pnlVoidTicket.Controls.Add(this.label10);
-            this.pnlVoidTicket.Controls.Add(this.label8);
-            this.pnlVoidTicket.Controls.Add(this.label12);
-            this.pnlVoidTicket.Controls.Add(this.label13);
-            this.pnlVoidTicket.Controls.Add(this.label14);
-            this.pnlVoidTicket.Controls.Add(this.label15);
+            //
+            this.pnlVoidTicket.BackColor = System.Drawing.Color.White;
+            this.pnlVoidTicket.Controls.Add(this.pnlVoidBody);
+            this.pnlVoidTicket.Controls.Add(this.pnlVoidHead);
             this.pnlVoidTicket.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlVoidTicket.Location = new System.Drawing.Point(0, 0);
             this.pnlVoidTicket.Name = "pnlVoidTicket";
             this.pnlVoidTicket.Size = new System.Drawing.Size(666, 553);
             this.pnlVoidTicket.TabIndex = 2;
-            // 
+            //
+            // pnlVoidHead
+            //
+            this.pnlVoidHead.Controls.Add(this.btnBack2);
+            this.pnlVoidHead.Controls.Add(this.lblVoidTitle);
+            this.pnlVoidHead.Controls.Add(this.lblVoidSubtitle);
+            this.pnlVoidHead.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlVoidHead.Name = "pnlVoidHead";
+            this.pnlVoidHead.Size = new System.Drawing.Size(666, 68);
+            this.pnlVoidHead.TabIndex = 0;
+            //
             // btnBack2
-            // 
+            //
             this.btnBack2.BackColor = System.Drawing.Color.White;
             this.btnBack2.BackgroundColor = System.Drawing.Color.White;
-            this.btnBack2.BorderColor = System.Drawing.Color.Gray;
+            this.btnBack2.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.btnBack2.BorderRadius = 5;
             this.btnBack2.BorderSize = 1;
-            this.btnBack2.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnBack2.ForeColor = System.Drawing.Color.Black;
-            this.btnBack2.Location = new System.Drawing.Point(20, 372);
-            this.btnBack2.Margin = new System.Windows.Forms.Padding(10);
+            this.btnBack2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBack2.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.btnBack2.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.btnBack2.Location = new System.Drawing.Point(20, 16);
             this.btnBack2.Name = "btnBack2";
-            this.btnBack2.Size = new System.Drawing.Size(300, 50);
-            this.btnBack2.TabIndex = 42;
-            this.btnBack2.Text = "Back";
+            this.btnBack2.Size = new System.Drawing.Size(84, 36);
+            this.btnBack2.TabIndex = 0;
+            this.btnBack2.Text = "‹  Back";
             this.btnBack2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnBack2.TextColor = System.Drawing.Color.Black;
-            // 
-            // btnProcessCancelTicket
-            // 
-            this.btnProcessCancelTicket.BackColor = System.Drawing.Color.White;
-            this.btnProcessCancelTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnProcessCancelTicket.BorderColor = System.Drawing.Color.Gray;
-            this.btnProcessCancelTicket.BorderRadius = 5;
-            this.btnProcessCancelTicket.BorderSize = 1;
-            this.btnProcessCancelTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnProcessCancelTicket.ForeColor = System.Drawing.Color.Red;
-            this.btnProcessCancelTicket.Location = new System.Drawing.Point(20, 302);
-            this.btnProcessCancelTicket.Margin = new System.Windows.Forms.Padding(10);
-            this.btnProcessCancelTicket.Name = "btnProcessCancelTicket";
-            this.btnProcessCancelTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnProcessCancelTicket.TabIndex = 42;
-            this.btnProcessCancelTicket.Text = "CANCEL TICKET NOW";
-            this.btnProcessCancelTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnProcessCancelTicket.TextColor = System.Drawing.Color.Red;
-            // 
+            this.btnBack2.TextColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            //
+            // lblVoidTitle
+            //
+            this.lblVoidTitle.AutoSize = true;
+            this.lblVoidTitle.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.lblVoidTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblVoidTitle.Location = new System.Drawing.Point(118, 12);
+            this.lblVoidTitle.Name = "lblVoidTitle";
+            this.lblVoidTitle.TabIndex = 1;
+            this.lblVoidTitle.Text = "Void or cancel ticket";
+            //
+            // lblVoidSubtitle
+            //
+            this.lblVoidSubtitle.AutoSize = true;
+            this.lblVoidSubtitle.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblVoidSubtitle.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblVoidSubtitle.Location = new System.Drawing.Point(120, 38);
+            this.lblVoidSubtitle.Name = "lblVoidSubtitle";
+            this.lblVoidSubtitle.TabIndex = 2;
+            this.lblVoidSubtitle.Text = "Void a finished ticket, or cancel an open one.";
+            //
+            // pnlVoidBody
+            //
+            this.pnlVoidBody.AutoScroll = true;
+            this.pnlVoidBody.Controls.Add(this.tlpVoidActions);
+            this.pnlVoidBody.Controls.Add(this.pnlVoidGap);
+            this.pnlVoidBody.Controls.Add(this.noticeVoid);
+            this.pnlVoidBody.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlVoidBody.Name = "pnlVoidBody";
+            this.pnlVoidBody.Padding = new System.Windows.Forms.Padding(20, 4, 20, 20);
+            this.pnlVoidBody.Size = new System.Drawing.Size(666, 485);
+            this.pnlVoidBody.TabIndex = 1;
+            //
+            // noticeVoid
+            //
+            this.noticeVoid.Dock = System.Windows.Forms.DockStyle.Top;
+            this.noticeVoid.Name = "noticeVoid";
+            this.noticeVoid.Size = new System.Drawing.Size(626, 100);
+            this.noticeVoid.TabIndex = 0;
+            this.noticeVoid.Title = "Lưu ý trước khi thực hiện";
+            this.noticeVoid.Lines = new string[] {
+                "Ticket thanh toán bằng Credit Card: phải Refund/Void trên Host trước.",
+                "**Ticket thanh toán bằng GIFT CARD: gọi anh Tuấn để handle void GIFT CARD."};
+            //
+            // pnlVoidGap
+            //
+            this.pnlVoidGap.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlVoidGap.Name = "pnlVoidGap";
+            this.pnlVoidGap.Size = new System.Drawing.Size(626, 16);
+            this.pnlVoidGap.TabIndex = 1;
+            //
+            // tlpVoidActions
+            //
+            this.tlpVoidActions.ColumnCount = 2;
+            this.tlpVoidActions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpVoidActions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpVoidActions.Controls.Add(this.pnlVoidCard, 0, 0);
+            this.tlpVoidActions.Controls.Add(this.pnlCancelCard, 1, 0);
+            this.tlpVoidActions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tlpVoidActions.Name = "tlpVoidActions";
+            this.tlpVoidActions.RowCount = 1;
+            this.tlpVoidActions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpVoidActions.Size = new System.Drawing.Size(626, 200);
+            this.tlpVoidActions.TabIndex = 2;
+            //
+            // pnlVoidCard
+            //
+            this.pnlVoidCard.BackColor = System.Drawing.Color.White;
+            this.pnlVoidCard.BackgroundColor = System.Drawing.Color.White;
+            this.pnlVoidCard.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            this.pnlVoidCard.BorderRadius = 8;
+            this.pnlVoidCard.BorderSize = 1;
+            this.pnlVoidCard.Controls.Add(this.lblVoidCardTitle);
+            this.pnlVoidCard.Controls.Add(this.lblVoidCardDesc);
+            this.pnlVoidCard.Controls.Add(this.btnProcessVoidTicket);
+            this.pnlVoidCard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlVoidCard.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+            this.pnlVoidCard.Name = "pnlVoidCard";
+            this.pnlVoidCard.Size = new System.Drawing.Size(305, 200);
+            this.pnlVoidCard.TabIndex = 0;
+            //
+            // lblVoidCardTitle
+            //
+            this.lblVoidCardTitle.AutoSize = true;
+            this.lblVoidCardTitle.BackColor = System.Drawing.Color.Transparent;
+            this.lblVoidCardTitle.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.lblVoidCardTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblVoidCardTitle.Location = new System.Drawing.Point(16, 16);
+            this.lblVoidCardTitle.Name = "lblVoidCardTitle";
+            this.lblVoidCardTitle.TabIndex = 0;
+            this.lblVoidCardTitle.Text = "Void ticket";
+            //
+            // lblVoidCardDesc
+            //
+            this.lblVoidCardDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblVoidCardDesc.BackColor = System.Drawing.Color.Transparent;
+            this.lblVoidCardDesc.Font = new System.Drawing.Font("Roboto", 10F);
+            this.lblVoidCardDesc.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.lblVoidCardDesc.Location = new System.Drawing.Point(16, 44);
+            this.lblVoidCardDesc.Name = "lblVoidCardDesc";
+            this.lblVoidCardDesc.Size = new System.Drawing.Size(273, 80);
+            this.lblVoidCardDesc.TabIndex = 1;
+            this.lblVoidCardDesc.Text = "Chỉ VOID được những ticket đã FINISH.";
+            //
             // btnProcessVoidTicket
-            // 
+            //
+            this.btnProcessVoidTicket.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.btnProcessVoidTicket.BackColor = System.Drawing.Color.White;
             this.btnProcessVoidTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnProcessVoidTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnProcessVoidTicket.BorderColor = System.Drawing.Color.FromArgb(220, 38, 38);
             this.btnProcessVoidTicket.BorderRadius = 5;
             this.btnProcessVoidTicket.BorderSize = 1;
-            this.btnProcessVoidTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnProcessVoidTicket.ForeColor = System.Drawing.Color.Red;
-            this.btnProcessVoidTicket.Location = new System.Drawing.Point(20, 232);
-            this.btnProcessVoidTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnProcessVoidTicket.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnProcessVoidTicket.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnProcessVoidTicket.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
+            this.btnProcessVoidTicket.Location = new System.Drawing.Point(16, 140);
             this.btnProcessVoidTicket.Name = "btnProcessVoidTicket";
-            this.btnProcessVoidTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnProcessVoidTicket.TabIndex = 42;
-            this.btnProcessVoidTicket.Text = "VOID TICKET NOW";
+            this.btnProcessVoidTicket.Size = new System.Drawing.Size(273, 44);
+            this.btnProcessVoidTicket.TabIndex = 2;
+            this.btnProcessVoidTicket.Text = "Void ticket";
             this.btnProcessVoidTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnProcessVoidTicket.TextColor = System.Drawing.Color.Red;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label9.ForeColor = System.Drawing.Color.Red;
-            this.label9.Location = new System.Drawing.Point(61, 157);
-            this.label9.Margin = new System.Windows.Forms.Padding(5);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(243, 17);
-            this.label9.TabIndex = 39;
-            this.label9.Text = "-> Payment Detail sẽ DELETE trong DB";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label10.ForeColor = System.Drawing.Color.Red;
-            this.label10.Location = new System.Drawing.Point(61, 130);
-            this.label10.Margin = new System.Windows.Forms.Padding(5);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(342, 17);
-            this.label10.TabIndex = 39;
-            this.label10.Text = "-> Sau khi CANCEL -> Ticket sẽ ở trạng thái CANCELED";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
-            this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(39, 184);
-            this.label8.Margin = new System.Windows.Forms.Padding(5);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(548, 17);
-            this.label8.TabIndex = 39;
-            this.label8.Text = "4. Nếu Ticket thanh toán bằng GIFT CARD -> Call anh Tuấn để handle void GIFT CARD" +
-    "";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label12.ForeColor = System.Drawing.Color.Red;
-            this.label12.Location = new System.Drawing.Point(39, 103);
-            this.label12.Margin = new System.Windows.Forms.Padding(5);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(413, 17);
-            this.label12.TabIndex = 39;
-            this.label12.Text = "3. CANCEL TICKET -> chỉ có thể CANCEL những ticket đang OPEN";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label13.ForeColor = System.Drawing.Color.Red;
-            this.label13.Location = new System.Drawing.Point(39, 49);
-            this.label13.Margin = new System.Windows.Forms.Padding(5);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(460, 17);
-            this.label13.TabIndex = 41;
-            this.label13.Text = "1. Nếu Ticket thanh toán bằng Credit Card thì phải Refund/Void trên Host";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label14.ForeColor = System.Drawing.Color.Red;
-            this.label14.Location = new System.Drawing.Point(39, 76);
-            this.label14.Margin = new System.Windows.Forms.Padding(5);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(364, 17);
-            this.label14.TabIndex = 41;
-            this.label14.Text = "2. VOID TICKET -> Chỉ có thể VOID những ticket đã FINISH";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.label15.ForeColor = System.Drawing.Color.Red;
-            this.label15.Location = new System.Drawing.Point(20, 20);
-            this.label15.Margin = new System.Windows.Forms.Padding(5);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(275, 19);
-            this.label15.TabIndex = 34;
-            this.label15.Text = "Những lưu ý khi dùng chức năng này.";
-            // 
+            this.btnProcessVoidTicket.TextColor = System.Drawing.Color.FromArgb(220, 38, 38);
+            //
+            // pnlCancelCard
+            //
+            this.pnlCancelCard.BackColor = System.Drawing.Color.White;
+            this.pnlCancelCard.BackgroundColor = System.Drawing.Color.White;
+            this.pnlCancelCard.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            this.pnlCancelCard.BorderRadius = 8;
+            this.pnlCancelCard.BorderSize = 1;
+            this.pnlCancelCard.Controls.Add(this.lblCancelCardTitle);
+            this.pnlCancelCard.Controls.Add(this.lblCancelCardDesc);
+            this.pnlCancelCard.Controls.Add(this.btnProcessCancelTicket);
+            this.pnlCancelCard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlCancelCard.Margin = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.pnlCancelCard.Name = "pnlCancelCard";
+            this.pnlCancelCard.Size = new System.Drawing.Size(305, 200);
+            this.pnlCancelCard.TabIndex = 1;
+            //
+            // lblCancelCardTitle
+            //
+            this.lblCancelCardTitle.AutoSize = true;
+            this.lblCancelCardTitle.BackColor = System.Drawing.Color.Transparent;
+            this.lblCancelCardTitle.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.lblCancelCardTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblCancelCardTitle.Location = new System.Drawing.Point(16, 16);
+            this.lblCancelCardTitle.Name = "lblCancelCardTitle";
+            this.lblCancelCardTitle.TabIndex = 0;
+            this.lblCancelCardTitle.Text = "Cancel ticket";
+            //
+            // lblCancelCardDesc
+            //
+            this.lblCancelCardDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCancelCardDesc.BackColor = System.Drawing.Color.Transparent;
+            this.lblCancelCardDesc.Font = new System.Drawing.Font("Roboto", 10F);
+            this.lblCancelCardDesc.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.lblCancelCardDesc.Location = new System.Drawing.Point(16, 44);
+            this.lblCancelCardDesc.Name = "lblCancelCardDesc";
+            this.lblCancelCardDesc.Size = new System.Drawing.Size(273, 80);
+            this.lblCancelCardDesc.TabIndex = 1;
+            this.lblCancelCardDesc.Text = "Chỉ CANCEL được ticket đang OPEN. Ticket chuyển sang CANCELED, Payment Detail bị xóa khỏi DB.";
+            //
+            // btnProcessCancelTicket
+            //
+            this.btnProcessCancelTicket.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnProcessCancelTicket.BackColor = System.Drawing.Color.White;
+            this.btnProcessCancelTicket.BackgroundColor = System.Drawing.Color.White;
+            this.btnProcessCancelTicket.BorderColor = System.Drawing.Color.FromArgb(220, 38, 38);
+            this.btnProcessCancelTicket.BorderRadius = 5;
+            this.btnProcessCancelTicket.BorderSize = 1;
+            this.btnProcessCancelTicket.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnProcessCancelTicket.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnProcessCancelTicket.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
+            this.btnProcessCancelTicket.Location = new System.Drawing.Point(16, 140);
+            this.btnProcessCancelTicket.Name = "btnProcessCancelTicket";
+            this.btnProcessCancelTicket.Size = new System.Drawing.Size(273, 44);
+            this.btnProcessCancelTicket.TabIndex = 2;
+            this.btnProcessCancelTicket.Text = "Cancel ticket";
+            this.btnProcessCancelTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnProcessCancelTicket.TextColor = System.Drawing.Color.FromArgb(220, 38, 38);
+            //
             // pnlCloseTicket
-            // 
-            this.pnlCloseTicket.Controls.Add(this.label16);
-            this.pnlCloseTicket.Controls.Add(this.btnBackCloseTicket);
-            this.pnlCloseTicket.Controls.Add(this.btnProcessCloseTicket);
-            this.pnlCloseTicket.Controls.Add(this.label7);
-            this.pnlCloseTicket.Controls.Add(this.label6);
-            this.pnlCloseTicket.Controls.Add(this.label5);
-            this.pnlCloseTicket.Controls.Add(this.label4);
-            this.pnlCloseTicket.Controls.Add(this.label11);
-            this.pnlCloseTicket.Controls.Add(this.label2);
-            this.pnlCloseTicket.Controls.Add(this.label3);
+            //
+            this.pnlCloseTicket.BackColor = System.Drawing.Color.White;
+            this.pnlCloseTicket.Controls.Add(this.pnlCloseBody);
+            this.pnlCloseTicket.Controls.Add(this.pnlCloseHead);
             this.pnlCloseTicket.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlCloseTicket.Location = new System.Drawing.Point(0, 0);
             this.pnlCloseTicket.Name = "pnlCloseTicket";
             this.pnlCloseTicket.Size = new System.Drawing.Size(666, 553);
             this.pnlCloseTicket.TabIndex = 1;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
-            this.label16.ForeColor = System.Drawing.Color.Red;
-            this.label16.Location = new System.Drawing.Point(39, 211);
-            this.label16.Margin = new System.Windows.Forms.Padding(5);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(548, 17);
-            this.label16.TabIndex = 43;
-            this.label16.Text = "4. Nếu Ticket thanh toán bằng GIFT CARD -> Call anh Tuấn để handle void GIFT CARD" +
-    "";
-            // 
+            //
+            // pnlCloseHead
+            //
+            this.pnlCloseHead.Controls.Add(this.btnBackCloseTicket);
+            this.pnlCloseHead.Controls.Add(this.lblCloseTitle);
+            this.pnlCloseHead.Controls.Add(this.lblCloseSubtitle);
+            this.pnlCloseHead.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCloseHead.Name = "pnlCloseHead";
+            this.pnlCloseHead.Size = new System.Drawing.Size(666, 68);
+            this.pnlCloseHead.TabIndex = 0;
+            //
             // btnBackCloseTicket
-            // 
+            //
             this.btnBackCloseTicket.BackColor = System.Drawing.Color.White;
             this.btnBackCloseTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnBackCloseTicket.BorderColor = System.Drawing.Color.Gray;
+            this.btnBackCloseTicket.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.btnBackCloseTicket.BorderRadius = 5;
             this.btnBackCloseTicket.BorderSize = 1;
-            this.btnBackCloseTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnBackCloseTicket.ForeColor = System.Drawing.Color.Black;
-            this.btnBackCloseTicket.Location = new System.Drawing.Point(20, 318);
-            this.btnBackCloseTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnBackCloseTicket.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBackCloseTicket.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.btnBackCloseTicket.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.btnBackCloseTicket.Location = new System.Drawing.Point(20, 16);
             this.btnBackCloseTicket.Name = "btnBackCloseTicket";
-            this.btnBackCloseTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnBackCloseTicket.TabIndex = 42;
-            this.btnBackCloseTicket.Text = "Back";
+            this.btnBackCloseTicket.Size = new System.Drawing.Size(84, 36);
+            this.btnBackCloseTicket.TabIndex = 0;
+            this.btnBackCloseTicket.Text = "‹  Back";
             this.btnBackCloseTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnBackCloseTicket.TextColor = System.Drawing.Color.Black;
-            // 
+            this.btnBackCloseTicket.TextColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            //
+            // lblCloseTitle
+            //
+            this.lblCloseTitle.AutoSize = true;
+            this.lblCloseTitle.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.lblCloseTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblCloseTitle.Location = new System.Drawing.Point(118, 12);
+            this.lblCloseTitle.Name = "lblCloseTitle";
+            this.lblCloseTitle.TabIndex = 1;
+            this.lblCloseTitle.Text = "Close ticket";
+            //
+            // lblCloseSubtitle
+            //
+            this.lblCloseSubtitle.AutoSize = true;
+            this.lblCloseSubtitle.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblCloseSubtitle.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblCloseSubtitle.Location = new System.Drawing.Point(120, 38);
+            this.lblCloseSubtitle.Name = "lblCloseSubtitle";
+            this.lblCloseSubtitle.TabIndex = 2;
+            this.lblCloseSubtitle.Text = "Mark the ticket as closed. Read the notes first.";
+            //
+            // pnlCloseBody
+            //
+            this.pnlCloseBody.AutoScroll = true;
+            this.pnlCloseBody.Controls.Add(this.pnlCloseActions);
+            this.pnlCloseBody.Controls.Add(this.pnlCloseGap);
+            this.pnlCloseBody.Controls.Add(this.noticeClose);
+            this.pnlCloseBody.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlCloseBody.Name = "pnlCloseBody";
+            this.pnlCloseBody.Padding = new System.Windows.Forms.Padding(20, 4, 20, 20);
+            this.pnlCloseBody.Size = new System.Drawing.Size(666, 485);
+            this.pnlCloseBody.TabIndex = 1;
+            //
+            // noticeClose
+            //
+            this.noticeClose.Dock = System.Windows.Forms.DockStyle.Top;
+            this.noticeClose.Name = "noticeClose";
+            this.noticeClose.Size = new System.Drawing.Size(626, 140);
+            this.noticeClose.TabIndex = 0;
+            this.noticeClose.Title = "Lưu ý trước khi thực hiện";
+            this.noticeClose.Lines = new string[] {
+                "Chỉ CLOSE được những ticket đang OPEN, FINISH hoặc REFUND.",
+                "Ticket thanh toán bằng Credit Card: phải REFUND hoặc VOID trên Host trước.",
+                "Ticket đã CLOSE sẽ không hiển thị trên Sale Report, Batch Report và Transaction Report.",
+                "**Ticket thanh toán bằng GIFT CARD: gọi anh Tuấn để handle void GIFT CARD."};
+            //
+            // pnlCloseGap
+            //
+            this.pnlCloseGap.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCloseGap.Name = "pnlCloseGap";
+            this.pnlCloseGap.Size = new System.Drawing.Size(626, 20);
+            this.pnlCloseGap.TabIndex = 1;
+            //
+            // pnlCloseActions
+            //
+            this.pnlCloseActions.Controls.Add(this.btnProcessCloseTicket);
+            this.pnlCloseActions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlCloseActions.Name = "pnlCloseActions";
+            this.pnlCloseActions.Size = new System.Drawing.Size(626, 44);
+            this.pnlCloseActions.TabIndex = 2;
+            //
             // btnProcessCloseTicket
-            // 
-            this.btnProcessCloseTicket.BackColor = System.Drawing.Color.White;
-            this.btnProcessCloseTicket.BackgroundColor = System.Drawing.Color.White;
-            this.btnProcessCloseTicket.BorderColor = System.Drawing.Color.Gray;
+            //
+            this.btnProcessCloseTicket.BackColor = System.Drawing.Color.FromArgb(220, 38, 38);
+            this.btnProcessCloseTicket.BackgroundColor = System.Drawing.Color.FromArgb(220, 38, 38);
+            this.btnProcessCloseTicket.BorderColor = System.Drawing.Color.FromArgb(220, 38, 38);
             this.btnProcessCloseTicket.BorderRadius = 5;
             this.btnProcessCloseTicket.BorderSize = 1;
-            this.btnProcessCloseTicket.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
-            this.btnProcessCloseTicket.ForeColor = System.Drawing.Color.Red;
-            this.btnProcessCloseTicket.Location = new System.Drawing.Point(20, 248);
-            this.btnProcessCloseTicket.Margin = new System.Windows.Forms.Padding(10);
+            this.btnProcessCloseTicket.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnProcessCloseTicket.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnProcessCloseTicket.ForeColor = System.Drawing.Color.White;
+            this.btnProcessCloseTicket.Location = new System.Drawing.Point(0, 0);
             this.btnProcessCloseTicket.Name = "btnProcessCloseTicket";
-            this.btnProcessCloseTicket.Size = new System.Drawing.Size(300, 50);
-            this.btnProcessCloseTicket.TabIndex = 42;
-            this.btnProcessCloseTicket.Text = "Close Ticket Now";
+            this.btnProcessCloseTicket.Size = new System.Drawing.Size(200, 44);
+            this.btnProcessCloseTicket.TabIndex = 0;
+            this.btnProcessCloseTicket.Text = "Close ticket";
             this.btnProcessCloseTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnProcessCloseTicket.TextColor = System.Drawing.Color.Red;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label7.ForeColor = System.Drawing.Color.Red;
-            this.label7.Location = new System.Drawing.Point(61, 184);
-            this.label7.Margin = new System.Windows.Forms.Padding(5);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(134, 17);
-            this.label7.TabIndex = 39;
-            this.label7.Text = "- Transaction Report";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label6.ForeColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(61, 157);
-            this.label6.Margin = new System.Windows.Forms.Padding(5);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(97, 17);
-            this.label6.TabIndex = 39;
-            this.label6.Text = "- Batch Report";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label5.ForeColor = System.Drawing.Color.Red;
-            this.label5.Location = new System.Drawing.Point(61, 130);
-            this.label5.Margin = new System.Windows.Forms.Padding(5);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(86, 17);
-            this.label5.TabIndex = 39;
-            this.label5.Text = "- Sale Report";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label4.ForeColor = System.Drawing.Color.Red;
-            this.label4.Location = new System.Drawing.Point(39, 103);
-            this.label4.Margin = new System.Windows.Forms.Padding(5);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(285, 17);
-            this.label4.TabIndex = 39;
-            this.label4.Text = "3. Ticket đã CLOSE sẽ ko hiện thị trên Report.";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label11.ForeColor = System.Drawing.Color.Red;
-            this.label11.Location = new System.Drawing.Point(39, 76);
-            this.label11.Margin = new System.Windows.Forms.Padding(5);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(485, 17);
-            this.label11.TabIndex = 41;
-            this.label11.Text = "2. Nếu Ticket thanh toán bằng Credit Card thì phải REFUND or VOID trên Host";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Roboto", 10F);
-            this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(39, 49);
-            this.label2.Margin = new System.Windows.Forms.Padding(5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(410, 17);
-            this.label2.TabIndex = 41;
-            this.label2.Text = "1. Chỉ có thể CLOSE những ticket đang OPEN, FINISH và REFUND";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(20, 20);
-            this.label3.Margin = new System.Windows.Forms.Padding(5);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(275, 19);
-            this.label3.TabIndex = 34;
-            this.label3.Text = "Những lưu ý khi dùng chức năng này.";
-            // 
+            this.btnProcessCloseTicket.TextColor = System.Drawing.Color.White;
+            //
             // pnlAddTipBySaleToken
-            // 
-            this.pnlAddTipBySaleToken.Controls.Add(this.btnProcessAddTipBySaleToken);
-            this.pnlAddTipBySaleToken.Controls.Add(this.btnBack4);
-            this.pnlAddTipBySaleToken.Controls.Add(this.tableLayoutPanel2);
-            this.pnlAddTipBySaleToken.Controls.Add(this.label25);
+            //
+            this.pnlAddTipBySaleToken.BackColor = System.Drawing.Color.White;
+            this.pnlAddTipBySaleToken.Controls.Add(this.pnlTokenBody);
+            this.pnlAddTipBySaleToken.Controls.Add(this.pnlTokenHead);
             this.pnlAddTipBySaleToken.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlAddTipBySaleToken.Location = new System.Drawing.Point(0, 0);
             this.pnlAddTipBySaleToken.Name = "pnlAddTipBySaleToken";
             this.pnlAddTipBySaleToken.Size = new System.Drawing.Size(666, 553);
             this.pnlAddTipBySaleToken.TabIndex = 4;
-            // 
-            // btnProcessAddTipBySaleToken
-            // 
-            this.btnProcessAddTipBySaleToken.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnProcessAddTipBySaleToken.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(26)))), ((int)(((byte)(98)))));
-            this.btnProcessAddTipBySaleToken.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(26)))), ((int)(((byte)(98)))));
-            this.btnProcessAddTipBySaleToken.BorderColor = System.Drawing.Color.Gray;
-            this.btnProcessAddTipBySaleToken.BorderRadius = 5;
-            this.btnProcessAddTipBySaleToken.BorderSize = 1;
-            this.btnProcessAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnProcessAddTipBySaleToken.ForeColor = System.Drawing.Color.White;
-            this.btnProcessAddTipBySaleToken.Location = new System.Drawing.Point(335, 224);
-            this.btnProcessAddTipBySaleToken.Margin = new System.Windows.Forms.Padding(10);
-            this.btnProcessAddTipBySaleToken.Name = "btnProcessAddTipBySaleToken";
-            this.btnProcessAddTipBySaleToken.Size = new System.Drawing.Size(132, 50);
-            this.btnProcessAddTipBySaleToken.TabIndex = 36;
-            this.btnProcessAddTipBySaleToken.Text = "Update";
-            this.btnProcessAddTipBySaleToken.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnProcessAddTipBySaleToken.TextColor = System.Drawing.Color.White;
-            // 
+            //
+            // pnlTokenHead
+            //
+            this.pnlTokenHead.Controls.Add(this.btnBack4);
+            this.pnlTokenHead.Controls.Add(this.lblTokenTitle);
+            this.pnlTokenHead.Controls.Add(this.lblTokenSubtitle);
+            this.pnlTokenHead.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTokenHead.Name = "pnlTokenHead";
+            this.pnlTokenHead.Size = new System.Drawing.Size(666, 68);
+            this.pnlTokenHead.TabIndex = 0;
+            //
             // btnBack4
-            // 
-            this.btnBack4.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            //
             this.btnBack4.BackColor = System.Drawing.Color.White;
             this.btnBack4.BackgroundColor = System.Drawing.Color.White;
-            this.btnBack4.BorderColor = System.Drawing.Color.Gray;
+            this.btnBack4.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.btnBack4.BorderRadius = 5;
             this.btnBack4.BorderSize = 1;
-            this.btnBack4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnBack4.ForeColor = System.Drawing.Color.Black;
-            this.btnBack4.Location = new System.Drawing.Point(335, 294);
-            this.btnBack4.Margin = new System.Windows.Forms.Padding(10);
+            this.btnBack4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBack4.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.btnBack4.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.btnBack4.Location = new System.Drawing.Point(20, 16);
             this.btnBack4.Name = "btnBack4";
-            this.btnBack4.Size = new System.Drawing.Size(132, 50);
-            this.btnBack4.TabIndex = 37;
-            this.btnBack4.Text = "Back";
+            this.btnBack4.Size = new System.Drawing.Size(84, 36);
+            this.btnBack4.TabIndex = 0;
+            this.btnBack4.Text = "‹  Back";
             this.btnBack4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnBack4.TextColor = System.Drawing.Color.Black;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Controls.Add(this.label26, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.bPanel_Rounded1, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.PrintControl_TokenReceipt, 0, 2);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(20, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(300, 553);
-            this.tableLayoutPanel2.TabIndex = 35;
-            // 
-            // label26
-            // 
-            this.label26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label26.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Bold);
-            this.label26.Location = new System.Drawing.Point(3, 0);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(294, 30);
-            this.label26.TabIndex = 28;
-            this.label26.Text = "Token Receipt";
-            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            this.btnBack4.TextColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            //
+            // lblTokenTitle
+            //
+            this.lblTokenTitle.AutoSize = true;
+            this.lblTokenTitle.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.lblTokenTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTokenTitle.Location = new System.Drawing.Point(118, 12);
+            this.lblTokenTitle.Name = "lblTokenTitle";
+            this.lblTokenTitle.TabIndex = 1;
+            this.lblTokenTitle.Text = "Add tip from token ticket";
+            //
+            // lblTokenSubtitle
+            //
+            this.lblTokenSubtitle.AutoSize = true;
+            this.lblTokenSubtitle.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblTokenSubtitle.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblTokenSubtitle.Location = new System.Drawing.Point(120, 38);
+            this.lblTokenSubtitle.Name = "lblTokenSubtitle";
+            this.lblTokenSubtitle.TabIndex = 2;
+            this.lblTokenSubtitle.Text = "Find the token ticket. Its total is added as tip to this ticket.";
+            //
+            // pnlTokenBody
+            //
+            this.pnlTokenBody.Controls.Add(this.pnlTokenRight);
+            this.pnlTokenBody.Controls.Add(this.pnlTokenColumnGap);
+            this.pnlTokenBody.Controls.Add(this.pnlTokenLeft);
+            this.pnlTokenBody.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTokenBody.Name = "pnlTokenBody";
+            this.pnlTokenBody.Padding = new System.Windows.Forms.Padding(20, 4, 20, 20);
+            this.pnlTokenBody.Size = new System.Drawing.Size(666, 485);
+            this.pnlTokenBody.TabIndex = 1;
+            //
+            // pnlTokenLeft
+            //
+            this.pnlTokenLeft.Controls.Add(this.PrintControl_TokenReceipt);
+            this.pnlTokenLeft.Controls.Add(this.pnlTokenSearchGap);
+            this.pnlTokenLeft.Controls.Add(this.bPanel_Rounded1);
+            this.pnlTokenLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlTokenLeft.Name = "pnlTokenLeft";
+            this.pnlTokenLeft.Size = new System.Drawing.Size(300, 461);
+            this.pnlTokenLeft.TabIndex = 0;
+            //
             // bPanel_Rounded1
-            // 
-            this.bPanel_Rounded1.BackgroundColor = System.Drawing.Color.Transparent;
-            this.bPanel_Rounded1.BorderColor = System.Drawing.Color.Gray;
+            //
+            this.bPanel_Rounded1.BackgroundColor = System.Drawing.Color.White;
+            this.bPanel_Rounded1.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.bPanel_Rounded1.BorderRadius = 5;
             this.bPanel_Rounded1.BorderSize = 1;
             this.bPanel_Rounded1.Controls.Add(this.txtSearchTokenReceipt);
             this.bPanel_Rounded1.Controls.Add(this.btnSearchTokenReceipt);
-            this.bPanel_Rounded1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bPanel_Rounded1.Location = new System.Drawing.Point(3, 33);
+            this.bPanel_Rounded1.Dock = System.Windows.Forms.DockStyle.Top;
             this.bPanel_Rounded1.Name = "bPanel_Rounded1";
-            this.bPanel_Rounded1.Size = new System.Drawing.Size(294, 40);
-            this.bPanel_Rounded1.TabIndex = 30;
-            // 
+            this.bPanel_Rounded1.Size = new System.Drawing.Size(300, 40);
+            this.bPanel_Rounded1.TabIndex = 0;
+            //
             // txtSearchTokenReceipt
-            // 
+            //
             this.txtSearchTokenReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearchTokenReceipt.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtSearchTokenReceipt.Font = new System.Drawing.Font("Roboto", 12F);
+            this.txtSearchTokenReceipt.Font = new System.Drawing.Font("Roboto", 11F);
             this.txtSearchTokenReceipt.ForeColor = System.Drawing.Color.Gray;
-            this.txtSearchTokenReceipt.Location = new System.Drawing.Point(10, 12);
+            this.txtSearchTokenReceipt.Location = new System.Drawing.Point(12, 11);
             this.txtSearchTokenReceipt.Name = "txtSearchTokenReceipt";
             this.txtSearchTokenReceipt.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtSearchTokenReceipt.PlaceholderText = "Search by Ticket #";
-            this.txtSearchTokenReceipt.Size = new System.Drawing.Size(244, 20);
-            this.txtSearchTokenReceipt.TabIndex = 2;
-            this.txtSearchTokenReceipt.Text = "Search by Ticket #";
-            // 
+            this.txtSearchTokenReceipt.PlaceholderText = "Token ticket #";
+            this.txtSearchTokenReceipt.Size = new System.Drawing.Size(240, 18);
+            this.txtSearchTokenReceipt.TabIndex = 0;
+            this.txtSearchTokenReceipt.Text = "Token ticket #";
+            //
             // btnSearchTokenReceipt
-            // 
+            //
             this.btnSearchTokenReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearchTokenReceipt.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearchTokenReceipt.Image = global::ThirdPartyTool.Properties.Resources.Icon_Search;
-            this.btnSearchTokenReceipt.Location = new System.Drawing.Point(257, 3);
+            this.btnSearchTokenReceipt.Location = new System.Drawing.Point(262, 3);
             this.btnSearchTokenReceipt.Name = "btnSearchTokenReceipt";
             this.btnSearchTokenReceipt.Size = new System.Drawing.Size(34, 34);
             this.btnSearchTokenReceipt.TabIndex = 1;
-            this.btnSearchTokenReceipt.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
+            //
+            // pnlTokenSearchGap
+            //
+            this.pnlTokenSearchGap.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTokenSearchGap.Name = "pnlTokenSearchGap";
+            this.pnlTokenSearchGap.Size = new System.Drawing.Size(300, 10);
+            this.pnlTokenSearchGap.TabIndex = 1;
+            //
             // PrintControl_TokenReceipt
-            // 
+            //
             this.PrintControl_TokenReceipt.BackColor = System.Drawing.Color.White;
-            this.PrintControl_TokenReceipt.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.PrintControl_TokenReceipt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PrintControl_TokenReceipt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PrintControl_TokenReceipt.ForeColor = System.Drawing.Color.White;
             this.PrintControl_TokenReceipt.IsMetric = false;
-            this.PrintControl_TokenReceipt.Location = new System.Drawing.Point(3, 79);
             this.PrintControl_TokenReceipt.Name = "PrintControl_TokenReceipt";
-            this.PrintControl_TokenReceipt.Size = new System.Drawing.Size(294, 471);
-            this.PrintControl_TokenReceipt.TabIndex = 31;
+            this.PrintControl_TokenReceipt.Size = new System.Drawing.Size(300, 411);
+            this.PrintControl_TokenReceipt.TabIndex = 2;
             this.PrintControl_TokenReceipt.TabStop = false;
-            // 
-            // label25
-            // 
-            this.label25.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label25.Font = new System.Drawing.Font("Roboto", 50F, System.Drawing.FontStyle.Bold);
-            this.label25.Location = new System.Drawing.Point(0, 0);
-            this.label25.Name = "label25";
-            this.label25.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.label25.Size = new System.Drawing.Size(20, 553);
-            this.label25.TabIndex = 30;
-            this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
+            // pnlTokenColumnGap
+            //
+            this.pnlTokenColumnGap.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlTokenColumnGap.Name = "pnlTokenColumnGap";
+            this.pnlTokenColumnGap.Size = new System.Drawing.Size(20, 461);
+            this.pnlTokenColumnGap.TabIndex = 1;
+            //
+            // pnlTokenRight
+            //
+            this.pnlTokenRight.Controls.Add(this.btnProcessAddTipBySaleToken);
+            this.pnlTokenRight.Controls.Add(this.pnlTokenSummaryGap);
+            this.pnlTokenRight.Controls.Add(this.pnlTokenSummary);
+            this.pnlTokenRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTokenRight.Name = "pnlTokenRight";
+            this.pnlTokenRight.Size = new System.Drawing.Size(260, 461);
+            this.pnlTokenRight.TabIndex = 2;
+            //
+            // pnlTokenSummary
+            //
+            this.pnlTokenSummary.BackColor = System.Drawing.Color.White;
+            this.pnlTokenSummary.BackgroundColor = System.Drawing.Color.FromArgb(245, 247, 250);
+            this.pnlTokenSummary.BorderColor = System.Drawing.Color.FromArgb(245, 247, 250);
+            this.pnlTokenSummary.BorderRadius = 8;
+            this.pnlTokenSummary.BorderSize = 1;
+            this.pnlTokenSummary.Controls.Add(this.lblTokenCaption);
+            this.pnlTokenSummary.Controls.Add(this.lblTokenNumber);
+            this.pnlTokenSummary.Controls.Add(this.lblTokenTipCaption);
+            this.pnlTokenSummary.Controls.Add(this.lblTokenAmount);
+            this.pnlTokenSummary.Controls.Add(this.lblTokenTarget);
+            this.pnlTokenSummary.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTokenSummary.Name = "pnlTokenSummary";
+            this.pnlTokenSummary.Size = new System.Drawing.Size(260, 176);
+            this.pnlTokenSummary.TabIndex = 0;
+            //
+            // lblTokenCaption
+            //
+            this.lblTokenCaption.AutoSize = true;
+            this.lblTokenCaption.BackColor = System.Drawing.Color.Transparent;
+            this.lblTokenCaption.Font = new System.Drawing.Font("Roboto", 8.5F, System.Drawing.FontStyle.Bold);
+            this.lblTokenCaption.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblTokenCaption.Location = new System.Drawing.Point(16, 16);
+            this.lblTokenCaption.Name = "lblTokenCaption";
+            this.lblTokenCaption.TabIndex = 0;
+            this.lblTokenCaption.Text = "TOKEN TICKET";
+            //
+            // lblTokenNumber
+            //
+            this.lblTokenNumber.AutoSize = true;
+            this.lblTokenNumber.BackColor = System.Drawing.Color.Transparent;
+            this.lblTokenNumber.Font = new System.Drawing.Font("Roboto", 13F, System.Drawing.FontStyle.Bold);
+            this.lblTokenNumber.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTokenNumber.Location = new System.Drawing.Point(15, 34);
+            this.lblTokenNumber.Name = "lblTokenNumber";
+            this.lblTokenNumber.TabIndex = 1;
+            this.lblTokenNumber.Text = "Not selected";
+            //
+            // lblTokenTipCaption
+            //
+            this.lblTokenTipCaption.AutoSize = true;
+            this.lblTokenTipCaption.BackColor = System.Drawing.Color.Transparent;
+            this.lblTokenTipCaption.Font = new System.Drawing.Font("Roboto", 8.5F, System.Drawing.FontStyle.Bold);
+            this.lblTokenTipCaption.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblTokenTipCaption.Location = new System.Drawing.Point(16, 74);
+            this.lblTokenTipCaption.Name = "lblTokenTipCaption";
+            this.lblTokenTipCaption.TabIndex = 2;
+            this.lblTokenTipCaption.Text = "TIP TO ADD";
+            //
+            // lblTokenAmount
+            //
+            this.lblTokenAmount.AutoSize = true;
+            this.lblTokenAmount.BackColor = System.Drawing.Color.Transparent;
+            this.lblTokenAmount.Font = new System.Drawing.Font("Roboto", 18F, System.Drawing.FontStyle.Bold);
+            this.lblTokenAmount.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTokenAmount.Location = new System.Drawing.Point(14, 92);
+            this.lblTokenAmount.Name = "lblTokenAmount";
+            this.lblTokenAmount.TabIndex = 3;
+            this.lblTokenAmount.Text = "$0.00";
+            //
+            // lblTokenTarget
+            //
+            this.lblTokenTarget.AutoSize = true;
+            this.lblTokenTarget.BackColor = System.Drawing.Color.Transparent;
+            this.lblTokenTarget.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblTokenTarget.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.lblTokenTarget.Location = new System.Drawing.Point(16, 140);
+            this.lblTokenTarget.Name = "lblTokenTarget";
+            this.lblTokenTarget.TabIndex = 4;
+            this.lblTokenTarget.Text = "";
+            //
+            // pnlTokenSummaryGap
+            //
+            this.pnlTokenSummaryGap.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTokenSummaryGap.Name = "pnlTokenSummaryGap";
+            this.pnlTokenSummaryGap.Size = new System.Drawing.Size(260, 16);
+            this.pnlTokenSummaryGap.TabIndex = 1;
+            //
+            // btnProcessAddTipBySaleToken
+            //
+            this.btnProcessAddTipBySaleToken.BackColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnProcessAddTipBySaleToken.BackgroundColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnProcessAddTipBySaleToken.BorderColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnProcessAddTipBySaleToken.BorderRadius = 5;
+            this.btnProcessAddTipBySaleToken.BorderSize = 1;
+            this.btnProcessAddTipBySaleToken.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnProcessAddTipBySaleToken.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnProcessAddTipBySaleToken.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnProcessAddTipBySaleToken.ForeColor = System.Drawing.Color.White;
+            this.btnProcessAddTipBySaleToken.Name = "btnProcessAddTipBySaleToken";
+            this.btnProcessAddTipBySaleToken.Size = new System.Drawing.Size(260, 44);
+            this.btnProcessAddTipBySaleToken.TabIndex = 2;
+            this.btnProcessAddTipBySaleToken.Text = "Add tip";
+            this.btnProcessAddTipBySaleToken.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnProcessAddTipBySaleToken.TextColor = System.Drawing.Color.White;
+            //
             // pnlAddTipForPaymentDetail
-            // 
-            this.pnlAddTipForPaymentDetail.Controls.Add(this.pnlPaymentDetails);
-            this.pnlAddTipForPaymentDetail.Controls.Add(this.btnBack5);
-            this.pnlAddTipForPaymentDetail.Controls.Add(this.label27);
+            //
+            this.pnlAddTipForPaymentDetail.BackColor = System.Drawing.Color.White;
+            this.pnlAddTipForPaymentDetail.Controls.Add(this.pnlPaymentBody);
+            this.pnlAddTipForPaymentDetail.Controls.Add(this.pnlPaymentHead);
             this.pnlAddTipForPaymentDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlAddTipForPaymentDetail.Location = new System.Drawing.Point(0, 0);
             this.pnlAddTipForPaymentDetail.Name = "pnlAddTipForPaymentDetail";
             this.pnlAddTipForPaymentDetail.Size = new System.Drawing.Size(666, 553);
             this.pnlAddTipForPaymentDetail.TabIndex = 5;
-            // 
-            // pnlPaymentDetails
-            // 
-            this.pnlPaymentDetails.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlPaymentDetails.Location = new System.Drawing.Point(0, 30);
-            this.pnlPaymentDetails.Name = "pnlPaymentDetails";
-            this.pnlPaymentDetails.Size = new System.Drawing.Size(400, 473);
-            this.pnlPaymentDetails.TabIndex = 31;
-            // 
+            //
+            // pnlPaymentHead
+            //
+            this.pnlPaymentHead.Controls.Add(this.btnBack5);
+            this.pnlPaymentHead.Controls.Add(this.label27);
+            this.pnlPaymentHead.Controls.Add(this.lblPaymentSubtitle);
+            this.pnlPaymentHead.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPaymentHead.Name = "pnlPaymentHead";
+            this.pnlPaymentHead.Size = new System.Drawing.Size(666, 68);
+            this.pnlPaymentHead.TabIndex = 0;
+            //
             // btnBack5
-            // 
+            //
             this.btnBack5.BackColor = System.Drawing.Color.White;
             this.btnBack5.BackgroundColor = System.Drawing.Color.White;
-            this.btnBack5.BorderColor = System.Drawing.Color.Gray;
+            this.btnBack5.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.btnBack5.BorderRadius = 5;
             this.btnBack5.BorderSize = 1;
-            this.btnBack5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnBack5.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnBack5.ForeColor = System.Drawing.Color.Black;
-            this.btnBack5.Location = new System.Drawing.Point(0, 503);
-            this.btnBack5.MaximumSize = new System.Drawing.Size(400, 50);
+            this.btnBack5.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBack5.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.btnBack5.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.btnBack5.Location = new System.Drawing.Point(20, 16);
             this.btnBack5.Name = "btnBack5";
-            this.btnBack5.Size = new System.Drawing.Size(400, 50);
-            this.btnBack5.TabIndex = 32;
-            this.btnBack5.Text = "Back";
+            this.btnBack5.Size = new System.Drawing.Size(84, 36);
+            this.btnBack5.TabIndex = 0;
+            this.btnBack5.Text = "‹  Back";
             this.btnBack5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnBack5.TextColor = System.Drawing.Color.Black;
-            // 
+            this.btnBack5.TextColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            //
             // label27
-            // 
-            this.label27.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label27.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Bold);
-            this.label27.Location = new System.Drawing.Point(0, 0);
-            this.label27.MaximumSize = new System.Drawing.Size(400, 30);
+            //
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.label27.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.label27.Location = new System.Drawing.Point(118, 12);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(400, 30);
-            this.label27.TabIndex = 30;
-            this.label27.Text = "Payment Details";
-            this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label27.TabIndex = 1;
+            this.label27.Text = "Payment details";
+            //
+            // lblPaymentSubtitle
+            //
+            this.lblPaymentSubtitle.AutoSize = true;
+            this.lblPaymentSubtitle.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblPaymentSubtitle.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblPaymentSubtitle.Location = new System.Drawing.Point(120, 38);
+            this.lblPaymentSubtitle.Name = "lblPaymentSubtitle";
+            this.lblPaymentSubtitle.TabIndex = 2;
+            this.lblPaymentSubtitle.Text = "Change the tip on a payment, then press Update.";
+            //
+            // pnlPaymentBody
+            //
+            this.pnlPaymentBody.Controls.Add(this.pnlPaymentDetails);
+            this.pnlPaymentBody.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlPaymentBody.Name = "pnlPaymentBody";
+            this.pnlPaymentBody.Padding = new System.Windows.Forms.Padding(20, 4, 20, 20);
+            this.pnlPaymentBody.Size = new System.Drawing.Size(666, 485);
+            this.pnlPaymentBody.TabIndex = 1;
+            //
+            // pnlPaymentDetails
+            //
+            this.pnlPaymentDetails.AutoScroll = true;
+            this.pnlPaymentDetails.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlPaymentDetails.Name = "pnlPaymentDetails";
+            this.pnlPaymentDetails.Size = new System.Drawing.Size(500, 461);
+            this.pnlPaymentDetails.TabIndex = 0;
             // 
             // ReceiptView_v2
             // 
@@ -1221,13 +1417,44 @@
             this.panel2.PerformLayout();
             this.pnlVoidTicket.ResumeLayout(false);
             this.pnlVoidTicket.PerformLayout();
+            this.pnlVoidHead.ResumeLayout(false);
+            this.pnlVoidHead.PerformLayout();
+            this.pnlVoidBody.ResumeLayout(false);
+            this.pnlVoidBody.PerformLayout();
+            this.tlpVoidActions.ResumeLayout(false);
+            this.tlpVoidActions.PerformLayout();
+            this.pnlVoidCard.ResumeLayout(false);
+            this.pnlVoidCard.PerformLayout();
+            this.pnlCancelCard.ResumeLayout(false);
+            this.pnlCancelCard.PerformLayout();
             this.pnlCloseTicket.ResumeLayout(false);
             this.pnlCloseTicket.PerformLayout();
+            this.pnlCloseHead.ResumeLayout(false);
+            this.pnlCloseHead.PerformLayout();
+            this.pnlCloseBody.ResumeLayout(false);
+            this.pnlCloseBody.PerformLayout();
+            this.pnlCloseActions.ResumeLayout(false);
+            this.pnlCloseActions.PerformLayout();
             this.pnlAddTipBySaleToken.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
+            this.pnlAddTipBySaleToken.PerformLayout();
+            this.pnlTokenHead.ResumeLayout(false);
+            this.pnlTokenHead.PerformLayout();
+            this.pnlTokenBody.ResumeLayout(false);
+            this.pnlTokenBody.PerformLayout();
+            this.pnlTokenLeft.ResumeLayout(false);
+            this.pnlTokenLeft.PerformLayout();
             this.bPanel_Rounded1.ResumeLayout(false);
             this.bPanel_Rounded1.PerformLayout();
+            this.pnlTokenRight.ResumeLayout(false);
+            this.pnlTokenRight.PerformLayout();
+            this.pnlTokenSummary.ResumeLayout(false);
+            this.pnlTokenSummary.PerformLayout();
             this.pnlAddTipForPaymentDetail.ResumeLayout(false);
+            this.pnlAddTipForPaymentDetail.PerformLayout();
+            this.pnlPaymentHead.ResumeLayout(false);
+            this.pnlPaymentHead.PerformLayout();
+            this.pnlPaymentBody.ResumeLayout(false);
+            this.pnlPaymentBody.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1258,46 +1485,10 @@
         private System.Windows.Forms.Panel pnlContainer;
         private System.Windows.Forms.Panel pnlOption;
         private CustomControl.BLabel_Rounded btnShowCloseTicket;
-        private System.Windows.Forms.Panel pnlCloseTicket;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label11;
-        private CustomControl.BLabel_Rounded btnBackCloseTicket;
-        private CustomControl.BLabel_Rounded btnProcessCloseTicket;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
         private CustomControl.BLabel_Rounded btnShowVoidTicket;
-        private System.Windows.Forms.Panel pnlVoidTicket;
-        private CustomControl.BLabel_Rounded btnBack2;
-        private CustomControl.BLabel_Rounded btnProcessVoidTicket;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private CustomControl.BLabel_Rounded btnProcessCancelTicket;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label16;
         private CustomControl.BLabel_Rounded btnShowPartialRefundTicket;
         private CustomControl.BLabel_Rounded btnShowAddTipForPaymentDetail;
         private CustomControl.BLabel_Rounded btnShowAddTipBySaleToken;
-        private System.Windows.Forms.Panel pnlAddTipBySaleToken;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Label label26;
-        private CustomControl.BPanel_Rounded bPanel_Rounded1;
-        private CustomControl.BTextBox txtSearchTokenReceipt;
-        private System.Windows.Forms.Label btnSearchTokenReceipt;
-        public DevExpress.XtraPrinting.Control.PrintControl PrintControl_TokenReceipt;
-        private CustomControl.BLabel_Rounded btnProcessAddTipBySaleToken;
-        public CustomControl.BLabel_Rounded btnBack4;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Panel pnlAddTipForPaymentDetail;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.Panel pnlPaymentDetails;
-        public CustomControl.BLabel_Rounded btnBack5;
         private CustomControl.BLabel_Rounded btnShowUpdateServiceCharges;
         private CustomControl.BLabel_Rounded btnShowFinishTicket;
         private System.Windows.Forms.Panel pnlFinishTicket;
@@ -1308,5 +1499,61 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label18;
         private CustomControl.BLabel_Rounded btnShowAddSpecialItem;
+        private System.Windows.Forms.Panel pnlVoidTicket;
+        private System.Windows.Forms.Panel pnlVoidHead;
+        private ThirdPartyTool.CustomControl.BLabel_Rounded btnBack2;
+        private System.Windows.Forms.Label lblVoidTitle;
+        private System.Windows.Forms.Label lblVoidSubtitle;
+        private System.Windows.Forms.Panel pnlVoidBody;
+        private ThirdPartyTool.CustomControl.NoticeBox noticeVoid;
+        private System.Windows.Forms.Panel pnlVoidGap;
+        private System.Windows.Forms.TableLayoutPanel tlpVoidActions;
+        private ThirdPartyTool.CustomControl.BPanel_Rounded pnlVoidCard;
+        private System.Windows.Forms.Label lblVoidCardTitle;
+        private System.Windows.Forms.Label lblVoidCardDesc;
+        private ThirdPartyTool.CustomControl.BLabel_Rounded btnProcessVoidTicket;
+        private ThirdPartyTool.CustomControl.BPanel_Rounded pnlCancelCard;
+        private System.Windows.Forms.Label lblCancelCardTitle;
+        private System.Windows.Forms.Label lblCancelCardDesc;
+        private ThirdPartyTool.CustomControl.BLabel_Rounded btnProcessCancelTicket;
+        private System.Windows.Forms.Panel pnlCloseTicket;
+        private System.Windows.Forms.Panel pnlCloseHead;
+        private ThirdPartyTool.CustomControl.BLabel_Rounded btnBackCloseTicket;
+        private System.Windows.Forms.Label lblCloseTitle;
+        private System.Windows.Forms.Label lblCloseSubtitle;
+        private System.Windows.Forms.Panel pnlCloseBody;
+        private ThirdPartyTool.CustomControl.NoticeBox noticeClose;
+        private System.Windows.Forms.Panel pnlCloseGap;
+        private System.Windows.Forms.Panel pnlCloseActions;
+        private ThirdPartyTool.CustomControl.BLabel_Rounded btnProcessCloseTicket;
+        private System.Windows.Forms.Panel pnlAddTipBySaleToken;
+        private System.Windows.Forms.Panel pnlTokenHead;
+        public ThirdPartyTool.CustomControl.BLabel_Rounded btnBack4;
+        private System.Windows.Forms.Label lblTokenTitle;
+        private System.Windows.Forms.Label lblTokenSubtitle;
+        private System.Windows.Forms.Panel pnlTokenBody;
+        private System.Windows.Forms.Panel pnlTokenLeft;
+        private ThirdPartyTool.CustomControl.BPanel_Rounded bPanel_Rounded1;
+        private ThirdPartyTool.CustomControl.BTextBox txtSearchTokenReceipt;
+        private System.Windows.Forms.Label btnSearchTokenReceipt;
+        private System.Windows.Forms.Panel pnlTokenSearchGap;
+        public DevExpress.XtraPrinting.Control.PrintControl PrintControl_TokenReceipt;
+        private System.Windows.Forms.Panel pnlTokenColumnGap;
+        private System.Windows.Forms.Panel pnlTokenRight;
+        private ThirdPartyTool.CustomControl.BPanel_Rounded pnlTokenSummary;
+        private System.Windows.Forms.Label lblTokenCaption;
+        private System.Windows.Forms.Label lblTokenNumber;
+        private System.Windows.Forms.Label lblTokenTipCaption;
+        private System.Windows.Forms.Label lblTokenAmount;
+        private System.Windows.Forms.Label lblTokenTarget;
+        private System.Windows.Forms.Panel pnlTokenSummaryGap;
+        private ThirdPartyTool.CustomControl.BLabel_Rounded btnProcessAddTipBySaleToken;
+        private System.Windows.Forms.Panel pnlAddTipForPaymentDetail;
+        private System.Windows.Forms.Panel pnlPaymentHead;
+        public ThirdPartyTool.CustomControl.BLabel_Rounded btnBack5;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label lblPaymentSubtitle;
+        private System.Windows.Forms.Panel pnlPaymentBody;
+        private System.Windows.Forms.Panel pnlPaymentDetails;
     }
 }

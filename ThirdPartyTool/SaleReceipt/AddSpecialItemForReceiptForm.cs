@@ -21,7 +21,7 @@ namespace ThirdPartyTool.SaleReceipt
 
         private void AddSpecialItemForReceiptForm_Load(object sender, System.EventArgs e)
         {
-
+            lblEmpty.Visible = flowLayoutPanel1.Controls.Count == 0;
         }
     }
 }

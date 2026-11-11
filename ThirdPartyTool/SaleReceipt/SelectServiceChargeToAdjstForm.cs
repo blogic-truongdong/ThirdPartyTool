@@ -63,6 +63,51 @@ namespace ThirdPartyTool.SaleReceipt
             btnClose.Click += BtnClose_Click;
 
             this.Load += SelectServiceChargeToAdjstForm_Load;
+
+            InitCardStyle();
+        }
+
+        /// <summary>Hint under the title, and a blue border on the card under the mouse so it reads as clickable.</summary>
+        private void InitCardStyle()
+        {
+            Label hint = new Label
+            {
+                AutoSize = true,
+                BackColor = System.Drawing.Color.White,
+                Font = new System.Drawing.Font("Roboto", 9.75F),
+                ForeColor = System.Drawing.Color.FromArgb(117, 117, 117),
+                Location = new System.Drawing.Point(20, 42),
+                Text = "Click a charge to change its amount.",
+            };
+            pnlContainer.Controls.Add(hint);
+            hint.BringToFront();
+            btnClose.BringToFront();
+
+            foreach (CustomControl.BPanel_Rounded card in new[] { pnlServiceCharge, pnlPartyGratuity, pnlAutoServiceCharge, pnlAreaGratuity })
+            {
+                CustomControl.BPanel_Rounded target = card;
+                EventHandler enter = (s, e) => SetCardHover(target, true);
+                EventHandler leave = (s, e) =>
+                {
+                    // Leaving into a child label still counts as inside the card.
+                    if (!target.ClientRectangle.Contains(target.PointToClient(Cursor.Position)))
+                        SetCardHover(target, false);
+                };
+                target.MouseEnter += enter;
+                target.MouseLeave += leave;
+                foreach (Control child in target.Controls)
+                {
+                    child.Cursor = Cursors.Hand;
+                    child.MouseEnter += enter;
+                    child.MouseLeave += leave;
+                }
+            }
+        }
+
+        private static void SetCardHover(CustomControl.BPanel_Rounded card, bool hover)
+        {
+            card.BorderColor = hover ? System.Drawing.Color.FromArgb(42, 108, 228) : System.Drawing.Color.FromArgb(224, 224, 224);
+            card.Invalidate();
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -73,7 +73,7 @@
             // pnlContainer
             // 
             this.pnlContainer.BackColor = System.Drawing.Color.White;
-            this.pnlContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            
             this.pnlContainer.Controls.Add(this.btnClose);
             this.pnlContainer.Controls.Add(this.pnlAreaGratuity);
             this.pnlContainer.Controls.Add(this.pnlAutoServiceCharge);
@@ -83,24 +83,27 @@
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(0, 0);
             this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Size = new System.Drawing.Size(590, 439);
+            this.pnlContainer.Size = new System.Drawing.Size(588, 437);
             this.pnlContainer.TabIndex = 0;
             // 
             // btnClose
             // 
-            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnClose.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.btnClose.Image = global::ThirdPartyTool.Properties.Resources.icon_close_white;
-            this.btnClose.Location = new System.Drawing.Point(535, 5);
+            this.btnClose.BackColor = System.Drawing.Color.White;
+            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClose.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.btnClose.Image = global::ThirdPartyTool.Properties.Resources.icon_close;
+            this.btnClose.Location = new System.Drawing.Point(534, 14);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(50, 50);
+            this.btnClose.Size = new System.Drawing.Size(40, 40);
             this.btnClose.TabIndex = 5;
             // 
             // pnlAreaGratuity
             // 
-            this.pnlAreaGratuity.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlAreaGratuity.BorderColor = System.Drawing.Color.Gray;
-            this.pnlAreaGratuity.BorderRadius = 5;
+            this.pnlAreaGratuity.BackColor = System.Drawing.Color.White;
+            this.pnlAreaGratuity.BackgroundColor = System.Drawing.Color.White;
+            this.pnlAreaGratuity.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pnlAreaGratuity.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            this.pnlAreaGratuity.BorderRadius = 8;
             this.pnlAreaGratuity.BorderSize = 1;
             this.pnlAreaGratuity.Controls.Add(this.taxAreaGratuityValue);
             this.pnlAreaGratuity.Controls.Add(this.amountAreaGratuityValue);
@@ -117,28 +120,31 @@
             // 
             // taxAreaGratuityValue
             // 
-            this.taxAreaGratuityValue.AutoSize = true;
-            this.taxAreaGratuityValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.taxAreaGratuityValue.Location = new System.Drawing.Point(470, 41);
+            this.taxAreaGratuityValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.taxAreaGratuityValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.taxAreaGratuityValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.taxAreaGratuityValue.Location = new System.Drawing.Point(468, 41);
             this.taxAreaGratuityValue.Name = "taxAreaGratuityValue";
-            this.taxAreaGratuityValue.Size = new System.Drawing.Size(49, 19);
+            this.taxAreaGratuityValue.Size = new System.Drawing.Size(64, 19);
             this.taxAreaGratuityValue.TabIndex = 4;
             this.taxAreaGratuityValue.Text = "$0.00";
             // 
             // amountAreaGratuityValue
             // 
-            this.amountAreaGratuityValue.AutoSize = true;
-            this.amountAreaGratuityValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.amountAreaGratuityValue.Location = new System.Drawing.Point(470, 16);
+            this.amountAreaGratuityValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.amountAreaGratuityValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.amountAreaGratuityValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.amountAreaGratuityValue.Location = new System.Drawing.Point(468, 16);
             this.amountAreaGratuityValue.Name = "amountAreaGratuityValue";
-            this.amountAreaGratuityValue.Size = new System.Drawing.Size(49, 19);
+            this.amountAreaGratuityValue.Size = new System.Drawing.Size(64, 19);
             this.amountAreaGratuityValue.TabIndex = 4;
             this.amountAreaGratuityValue.Text = "$0.00";
             // 
             // taxAreaGratuityLabel
             // 
             this.taxAreaGratuityLabel.AutoSize = true;
-            this.taxAreaGratuityLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.taxAreaGratuityLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.taxAreaGratuityLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.taxAreaGratuityLabel.Location = new System.Drawing.Point(407, 41);
             this.taxAreaGratuityLabel.Name = "taxAreaGratuityLabel";
             this.taxAreaGratuityLabel.Size = new System.Drawing.Size(30, 19);
@@ -148,7 +154,8 @@
             // amountAreaGratuityLabel
             // 
             this.amountAreaGratuityLabel.AutoSize = true;
-            this.amountAreaGratuityLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.amountAreaGratuityLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.amountAreaGratuityLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.amountAreaGratuityLabel.Location = new System.Drawing.Point(407, 16);
             this.amountAreaGratuityLabel.Name = "amountAreaGratuityLabel";
             this.amountAreaGratuityLabel.Size = new System.Drawing.Size(57, 19);
@@ -157,8 +164,8 @@
             // 
             // label27
             // 
-            this.label27.BackColor = System.Drawing.Color.Gray;
-            this.label27.Font = new System.Drawing.Font("BLogic", 10F);
+            this.label27.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
+            this.label27.Font = new System.Drawing.Font("Roboto", 10F);
             this.label27.Location = new System.Drawing.Point(400, 10);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(1, 55);
@@ -168,7 +175,8 @@
             // detailAreaGratuity
             // 
             this.detailAreaGratuity.AutoSize = true;
-            this.detailAreaGratuity.Font = new System.Drawing.Font("BLogic", 10F);
+            this.detailAreaGratuity.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.detailAreaGratuity.Font = new System.Drawing.Font("Roboto", 10F);
             this.detailAreaGratuity.Location = new System.Drawing.Point(17, 40);
             this.detailAreaGratuity.Name = "detailAreaGratuity";
             this.detailAreaGratuity.Size = new System.Drawing.Size(214, 19);
@@ -178,7 +186,8 @@
             // titleAreaGratuity
             // 
             this.titleAreaGratuity.AutoSize = true;
-            this.titleAreaGratuity.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
+            this.titleAreaGratuity.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.titleAreaGratuity.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.titleAreaGratuity.Location = new System.Drawing.Point(17, 17);
             this.titleAreaGratuity.Name = "titleAreaGratuity";
             this.titleAreaGratuity.Size = new System.Drawing.Size(109, 23);
@@ -187,9 +196,11 @@
             // 
             // pnlAutoServiceCharge
             // 
-            this.pnlAutoServiceCharge.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlAutoServiceCharge.BorderColor = System.Drawing.Color.Gray;
-            this.pnlAutoServiceCharge.BorderRadius = 5;
+            this.pnlAutoServiceCharge.BackColor = System.Drawing.Color.White;
+            this.pnlAutoServiceCharge.BackgroundColor = System.Drawing.Color.White;
+            this.pnlAutoServiceCharge.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pnlAutoServiceCharge.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            this.pnlAutoServiceCharge.BorderRadius = 8;
             this.pnlAutoServiceCharge.BorderSize = 1;
             this.pnlAutoServiceCharge.Controls.Add(this.taxAutoServiceChargeValue);
             this.pnlAutoServiceCharge.Controls.Add(this.amountAutoServiceChargeValue);
@@ -206,28 +217,31 @@
             // 
             // taxAutoServiceChargeValue
             // 
-            this.taxAutoServiceChargeValue.AutoSize = true;
-            this.taxAutoServiceChargeValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.taxAutoServiceChargeValue.Location = new System.Drawing.Point(470, 41);
+            this.taxAutoServiceChargeValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.taxAutoServiceChargeValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.taxAutoServiceChargeValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.taxAutoServiceChargeValue.Location = new System.Drawing.Point(468, 41);
             this.taxAutoServiceChargeValue.Name = "taxAutoServiceChargeValue";
-            this.taxAutoServiceChargeValue.Size = new System.Drawing.Size(49, 19);
+            this.taxAutoServiceChargeValue.Size = new System.Drawing.Size(64, 19);
             this.taxAutoServiceChargeValue.TabIndex = 4;
             this.taxAutoServiceChargeValue.Text = "$0.00";
             // 
             // amountAutoServiceChargeValue
             // 
-            this.amountAutoServiceChargeValue.AutoSize = true;
-            this.amountAutoServiceChargeValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.amountAutoServiceChargeValue.Location = new System.Drawing.Point(470, 16);
+            this.amountAutoServiceChargeValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.amountAutoServiceChargeValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.amountAutoServiceChargeValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.amountAutoServiceChargeValue.Location = new System.Drawing.Point(468, 16);
             this.amountAutoServiceChargeValue.Name = "amountAutoServiceChargeValue";
-            this.amountAutoServiceChargeValue.Size = new System.Drawing.Size(49, 19);
+            this.amountAutoServiceChargeValue.Size = new System.Drawing.Size(64, 19);
             this.amountAutoServiceChargeValue.TabIndex = 4;
             this.amountAutoServiceChargeValue.Text = "$0.00";
             // 
             // taxAutoServiceChargeLabel
             // 
             this.taxAutoServiceChargeLabel.AutoSize = true;
-            this.taxAutoServiceChargeLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.taxAutoServiceChargeLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.taxAutoServiceChargeLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.taxAutoServiceChargeLabel.Location = new System.Drawing.Point(407, 41);
             this.taxAutoServiceChargeLabel.Name = "taxAutoServiceChargeLabel";
             this.taxAutoServiceChargeLabel.Size = new System.Drawing.Size(30, 19);
@@ -237,7 +251,8 @@
             // amountAutoServiceChargeLabel
             // 
             this.amountAutoServiceChargeLabel.AutoSize = true;
-            this.amountAutoServiceChargeLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.amountAutoServiceChargeLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.amountAutoServiceChargeLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.amountAutoServiceChargeLabel.Location = new System.Drawing.Point(407, 16);
             this.amountAutoServiceChargeLabel.Name = "amountAutoServiceChargeLabel";
             this.amountAutoServiceChargeLabel.Size = new System.Drawing.Size(57, 19);
@@ -246,8 +261,8 @@
             // 
             // label20
             // 
-            this.label20.BackColor = System.Drawing.Color.Gray;
-            this.label20.Font = new System.Drawing.Font("BLogic", 10F);
+            this.label20.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
+            this.label20.Font = new System.Drawing.Font("Roboto", 10F);
             this.label20.Location = new System.Drawing.Point(400, 10);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(1, 55);
@@ -257,7 +272,8 @@
             // detailAutoServiceCharge
             // 
             this.detailAutoServiceCharge.AutoSize = true;
-            this.detailAutoServiceCharge.Font = new System.Drawing.Font("BLogic", 10F);
+            this.detailAutoServiceCharge.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.detailAutoServiceCharge.Font = new System.Drawing.Font("Roboto", 10F);
             this.detailAutoServiceCharge.Location = new System.Drawing.Point(17, 40);
             this.detailAutoServiceCharge.Name = "detailAutoServiceCharge";
             this.detailAutoServiceCharge.Size = new System.Drawing.Size(247, 19);
@@ -267,7 +283,8 @@
             // titleAutoServiceCharge
             // 
             this.titleAutoServiceCharge.AutoSize = true;
-            this.titleAutoServiceCharge.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
+            this.titleAutoServiceCharge.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.titleAutoServiceCharge.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.titleAutoServiceCharge.Location = new System.Drawing.Point(17, 17);
             this.titleAutoServiceCharge.Name = "titleAutoServiceCharge";
             this.titleAutoServiceCharge.Size = new System.Drawing.Size(163, 23);
@@ -276,9 +293,11 @@
             // 
             // pnlPartyGratuity
             // 
-            this.pnlPartyGratuity.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlPartyGratuity.BorderColor = System.Drawing.Color.Gray;
-            this.pnlPartyGratuity.BorderRadius = 5;
+            this.pnlPartyGratuity.BackColor = System.Drawing.Color.White;
+            this.pnlPartyGratuity.BackgroundColor = System.Drawing.Color.White;
+            this.pnlPartyGratuity.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pnlPartyGratuity.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            this.pnlPartyGratuity.BorderRadius = 8;
             this.pnlPartyGratuity.BorderSize = 1;
             this.pnlPartyGratuity.Controls.Add(this.taxPartyGratuityValue);
             this.pnlPartyGratuity.Controls.Add(this.amountPartyGratuityValue);
@@ -295,28 +314,31 @@
             // 
             // taxPartyGratuityValue
             // 
-            this.taxPartyGratuityValue.AutoSize = true;
-            this.taxPartyGratuityValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.taxPartyGratuityValue.Location = new System.Drawing.Point(470, 41);
+            this.taxPartyGratuityValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.taxPartyGratuityValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.taxPartyGratuityValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.taxPartyGratuityValue.Location = new System.Drawing.Point(468, 41);
             this.taxPartyGratuityValue.Name = "taxPartyGratuityValue";
-            this.taxPartyGratuityValue.Size = new System.Drawing.Size(49, 19);
+            this.taxPartyGratuityValue.Size = new System.Drawing.Size(64, 19);
             this.taxPartyGratuityValue.TabIndex = 4;
             this.taxPartyGratuityValue.Text = "$0.00";
             // 
             // amountPartyGratuityValue
             // 
-            this.amountPartyGratuityValue.AutoSize = true;
-            this.amountPartyGratuityValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.amountPartyGratuityValue.Location = new System.Drawing.Point(470, 16);
+            this.amountPartyGratuityValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.amountPartyGratuityValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.amountPartyGratuityValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.amountPartyGratuityValue.Location = new System.Drawing.Point(468, 16);
             this.amountPartyGratuityValue.Name = "amountPartyGratuityValue";
-            this.amountPartyGratuityValue.Size = new System.Drawing.Size(49, 19);
+            this.amountPartyGratuityValue.Size = new System.Drawing.Size(64, 19);
             this.amountPartyGratuityValue.TabIndex = 4;
             this.amountPartyGratuityValue.Text = "$0.00";
             // 
             // taxPartyGratuityLabel
             // 
             this.taxPartyGratuityLabel.AutoSize = true;
-            this.taxPartyGratuityLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.taxPartyGratuityLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.taxPartyGratuityLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.taxPartyGratuityLabel.Location = new System.Drawing.Point(407, 41);
             this.taxPartyGratuityLabel.Name = "taxPartyGratuityLabel";
             this.taxPartyGratuityLabel.Size = new System.Drawing.Size(30, 19);
@@ -326,7 +348,8 @@
             // amountPartyGratuityLabel
             // 
             this.amountPartyGratuityLabel.AutoSize = true;
-            this.amountPartyGratuityLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.amountPartyGratuityLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.amountPartyGratuityLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.amountPartyGratuityLabel.Location = new System.Drawing.Point(407, 16);
             this.amountPartyGratuityLabel.Name = "amountPartyGratuityLabel";
             this.amountPartyGratuityLabel.Size = new System.Drawing.Size(57, 19);
@@ -335,8 +358,8 @@
             // 
             // label13
             // 
-            this.label13.BackColor = System.Drawing.Color.Gray;
-            this.label13.Font = new System.Drawing.Font("BLogic", 10F);
+            this.label13.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
+            this.label13.Font = new System.Drawing.Font("Roboto", 10F);
             this.label13.Location = new System.Drawing.Point(400, 10);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(1, 55);
@@ -346,7 +369,8 @@
             // detailPartyGratuity
             // 
             this.detailPartyGratuity.AutoSize = true;
-            this.detailPartyGratuity.Font = new System.Drawing.Font("BLogic", 10F);
+            this.detailPartyGratuity.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.detailPartyGratuity.Font = new System.Drawing.Font("Roboto", 10F);
             this.detailPartyGratuity.Location = new System.Drawing.Point(17, 40);
             this.detailPartyGratuity.Name = "detailPartyGratuity";
             this.detailPartyGratuity.Size = new System.Drawing.Size(217, 19);
@@ -356,7 +380,8 @@
             // titlePartyGratuity
             // 
             this.titlePartyGratuity.AutoSize = true;
-            this.titlePartyGratuity.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
+            this.titlePartyGratuity.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.titlePartyGratuity.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.titlePartyGratuity.Location = new System.Drawing.Point(17, 17);
             this.titlePartyGratuity.Name = "titlePartyGratuity";
             this.titlePartyGratuity.Size = new System.Drawing.Size(114, 23);
@@ -365,9 +390,11 @@
             // 
             // pnlServiceCharge
             // 
-            this.pnlServiceCharge.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlServiceCharge.BorderColor = System.Drawing.Color.Gray;
-            this.pnlServiceCharge.BorderRadius = 5;
+            this.pnlServiceCharge.BackColor = System.Drawing.Color.White;
+            this.pnlServiceCharge.BackgroundColor = System.Drawing.Color.White;
+            this.pnlServiceCharge.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pnlServiceCharge.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            this.pnlServiceCharge.BorderRadius = 8;
             this.pnlServiceCharge.BorderSize = 1;
             this.pnlServiceCharge.Controls.Add(this.taxServiceChargeValue);
             this.pnlServiceCharge.Controls.Add(this.amountServiceChargeValue);
@@ -384,28 +411,31 @@
             // 
             // taxServiceChargeValue
             // 
-            this.taxServiceChargeValue.AutoSize = true;
-            this.taxServiceChargeValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.taxServiceChargeValue.Location = new System.Drawing.Point(470, 41);
+            this.taxServiceChargeValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.taxServiceChargeValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.taxServiceChargeValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.taxServiceChargeValue.Location = new System.Drawing.Point(468, 41);
             this.taxServiceChargeValue.Name = "taxServiceChargeValue";
-            this.taxServiceChargeValue.Size = new System.Drawing.Size(49, 19);
+            this.taxServiceChargeValue.Size = new System.Drawing.Size(64, 19);
             this.taxServiceChargeValue.TabIndex = 4;
             this.taxServiceChargeValue.Text = "$0.00";
             // 
             // amountServiceChargeValue
             // 
-            this.amountServiceChargeValue.AutoSize = true;
-            this.amountServiceChargeValue.Font = new System.Drawing.Font("BLogic", 10F, System.Drawing.FontStyle.Bold);
-            this.amountServiceChargeValue.Location = new System.Drawing.Point(470, 16);
+            this.amountServiceChargeValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.amountServiceChargeValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.amountServiceChargeValue.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Bold);
+            this.amountServiceChargeValue.Location = new System.Drawing.Point(468, 16);
             this.amountServiceChargeValue.Name = "amountServiceChargeValue";
-            this.amountServiceChargeValue.Size = new System.Drawing.Size(49, 19);
+            this.amountServiceChargeValue.Size = new System.Drawing.Size(64, 19);
             this.amountServiceChargeValue.TabIndex = 4;
             this.amountServiceChargeValue.Text = "$0.00";
             // 
             // taxServiceChargeLabel
             // 
             this.taxServiceChargeLabel.AutoSize = true;
-            this.taxServiceChargeLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.taxServiceChargeLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.taxServiceChargeLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.taxServiceChargeLabel.Location = new System.Drawing.Point(407, 41);
             this.taxServiceChargeLabel.Name = "taxServiceChargeLabel";
             this.taxServiceChargeLabel.Size = new System.Drawing.Size(30, 19);
@@ -415,7 +445,8 @@
             // amountServiceChargeLabel
             // 
             this.amountServiceChargeLabel.AutoSize = true;
-            this.amountServiceChargeLabel.Font = new System.Drawing.Font("BLogic", 10F);
+            this.amountServiceChargeLabel.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.amountServiceChargeLabel.Font = new System.Drawing.Font("Roboto", 10F);
             this.amountServiceChargeLabel.Location = new System.Drawing.Point(407, 16);
             this.amountServiceChargeLabel.Name = "amountServiceChargeLabel";
             this.amountServiceChargeLabel.Size = new System.Drawing.Size(57, 19);
@@ -424,8 +455,8 @@
             // 
             // label4
             // 
-            this.label4.BackColor = System.Drawing.Color.Gray;
-            this.label4.Font = new System.Drawing.Font("BLogic", 10F);
+            this.label4.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
+            this.label4.Font = new System.Drawing.Font("Roboto", 10F);
             this.label4.Location = new System.Drawing.Point(400, 10);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(1, 55);
@@ -435,7 +466,8 @@
             // detailServiceCharge
             // 
             this.detailServiceCharge.AutoSize = true;
-            this.detailServiceCharge.Font = new System.Drawing.Font("BLogic", 10F);
+            this.detailServiceCharge.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.detailServiceCharge.Font = new System.Drawing.Font("Roboto", 10F);
             this.detailServiceCharge.Location = new System.Drawing.Point(17, 40);
             this.detailServiceCharge.Name = "detailServiceCharge";
             this.detailServiceCharge.Size = new System.Drawing.Size(227, 19);
@@ -445,7 +477,8 @@
             // titleServiceCharge
             // 
             this.titleServiceCharge.AutoSize = true;
-            this.titleServiceCharge.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
+            this.titleServiceCharge.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.titleServiceCharge.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
             this.titleServiceCharge.Location = new System.Drawing.Point(17, 17);
             this.titleServiceCharge.Name = "titleServiceCharge";
             this.titleServiceCharge.Size = new System.Drawing.Size(125, 23);
@@ -454,22 +487,25 @@
             // 
             // label1
             // 
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.label1.BackColor = System.Drawing.Color.White;
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Roboto", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(588, 60);
+            this.label1.Padding = new System.Windows.Forms.Padding(18, 14, 0, 0);
+            this.label1.Size = new System.Drawing.Size(588, 72);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Adjust Service Charges";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label1.Text = "Adjust service charges";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // SelectServiceChargeToAdjstForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.ClientSize = new System.Drawing.Size(590, 439);
+            this.Padding = new System.Windows.Forms.Padding(1);
             this.Controls.Add(this.pnlContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "SelectServiceChargeToAdjstForm";

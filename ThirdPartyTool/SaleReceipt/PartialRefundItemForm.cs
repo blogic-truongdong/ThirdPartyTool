@@ -25,6 +25,93 @@ namespace ThirdPartyTool.SaleReceipt
             btnProcessRefundPartialItem.Click += BtnProcessRefundPartialItem_Click;
 
             btnClose.Click += BtnClose_Click;
+            btnCancel.Click += BtnClose_Click;
+
+            chkAll.Click += ChkAll_Click;
+            pnlRefundItemContainer.Layout += (s, e) => AlignColumnHeaders();
+        }
+
+        private static readonly Color RefundRed = Color.FromArgb(220, 38, 38);
+        private static readonly Color DisabledBack = Color.FromArgb(229, 231, 235);
+        private static readonly Color DisabledText = Color.FromArgb(156, 163, 175);
+
+        /// <summary>Header checkbox: select every item (modifiers follow their item).</summary>
+        private void ChkAll_Click(object sender, EventArgs e)
+        {
+            bool target = chkAll.Checked;
+            foreach (System.Windows.Forms.Control item in pnlRefundItemContainer.Controls)
+            {
+                RefundItemRow refundItem = item as RefundItemRow;
+                if (refundItem != null && refundItem.IsSelectedItem != target)
+                    refundItem.ToggleSelection();
+            }
+            UpdateSummary();
+        }
+
+        /// <summary>Keeps the Qty/Amount headers above their columns when the list shows a scrollbar.</summary>
+        private void AlignColumnHeaders()
+        {
+            int scroll = pnlRefundItemContainer.VerticalScroll.Visible ? SystemInformation.VerticalScrollBarWidth : 0;
+            label3.Left = pnlColumns.Width - scroll - label3.Width;
+            label2.Left = label3.Left - label2.Width;
+        }
+
+        private void UpdateSummary()
+        {
+            decimal totalAmount = 0;
+            decimal amount = 0;
+            decimal tax = 0;
+            int items = 0;
+            int selectedItems = 0;
+
+            foreach (System.Windows.Forms.Control item in pnlRefundItemContainer.Controls)
+            {
+                RefundItemRow refundItem = item as RefundItemRow;
+                RefundModiferRow refundModifier = item as RefundModiferRow;
+
+                if (refundItem != null)
+                {
+                    items++;
+                    if (refundItem.IsSelectedItem)
+                    {
+                        selectedItems++;
+                        totalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
+                        amount += refundItem.ExtendedPrice;
+                        tax += refundItem.TaxAmount;
+                    }
+                }
+                else if (refundModifier != null && refundModifier.IsSelectedItem)
+                {
+                    totalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
+                    amount += refundModifier.ExtendedPrice;
+                    tax += refundModifier.TaxAmount;
+                }
+            }
+
+            lblTotalRefundItem_Amount.Text = $"Subtotal {Utility.ConvertDecimalToMoneyString(amount)}";
+            lblTotalRefundItem_Tax.Text = $"Tax {Utility.ConvertDecimalToMoneyString(tax)}";
+            lblTotalRefundItem_TotalAmount.Text = Utility.ConvertDecimalToMoneyString(totalAmount);
+
+            chkAll.Checked = items > 0 && selectedItems == items;
+            chkAll.Enabled = items > 0;
+
+            bool hasSelection = HasSelection();
+            Color back = hasSelection ? RefundRed : DisabledBack;
+            btnProcessRefundPartialItem.BackColor = btnProcessRefundPartialItem.BackgroundColor = btnProcessRefundPartialItem.BorderColor = back;
+            btnProcessRefundPartialItem.ForeColor = btnProcessRefundPartialItem.TextColor = hasSelection ? Color.White : DisabledText;
+            btnProcessRefundPartialItem.Cursor = hasSelection ? Cursors.Hand : Cursors.Default;
+            btnProcessRefundPartialItem.Text = hasSelection ? $"Refund {Utility.ConvertDecimalToMoneyString(totalAmount)}" : "Refund";
+            btnProcessRefundPartialItem.Invalidate();
+        }
+
+        private bool HasSelection()
+        {
+            foreach (System.Windows.Forms.Control item in pnlRefundItemContainer.Controls)
+            {
+                if ((item as RefundItemRow)?.IsSelectedItem == true || (item as RefundModiferRow)?.IsSelectedItem == true)
+                    return true;
+            }
+            return false;
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
@@ -42,9 +129,8 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                lblTotalRefundItem_Amount.Text = $"Subtotal: 0";
-                lblTotalRefundItem_Tax.Text = $"Tax amount: 0";
-                lblTotalRefundItem_TotalAmount.Text = $"Total amount: 0";
+                if (!string.IsNullOrWhiteSpace(MainSaleReceiptNumber))
+                    lblSubtitle.Text = $"Ticket #{MainSaleReceiptNumber}  ·  Selecting an item also selects its modifiers.";
 
                 DataTable dtSaleReceiptDetails = new DataTable("SaleReceiptDetails");
                 DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
@@ -112,65 +198,50 @@ namespace ThirdPartyTool.SaleReceipt
                     }
 
                 }
+
+                if (pnlRefundItemContainer.Controls.Count == 0)
+                {
+                    pnlRefundItemContainer.Controls.Add(new Label
+                    {
+                        Dock = DockStyle.Fill,
+                        Text = "No items left to refund on this ticket.",
+                        TextAlign = ContentAlignment.MiddleCenter,
+                        Font = new Font("Roboto", 11F),
+                        ForeColor = Color.FromArgb(117, 117, 117),
+                    });
+                }
             }
             catch (Exception ex)
             {
                 BLogicLogger.Exception("BindingPartialRefundItems", ex);
             }
+            UpdateSummary();
+            AlignColumnHeaders();
         }
 
         private void RefundItem_SelectedItemChanges(object sender, DataEventArgs<RequestModel> e)
         {
             try
             {
-                decimal totalAmount = 0;
-                decimal amount = 0;
-                decimal tax = 0;
-
                 foreach (System.Windows.Forms.Control item in pnlRefundItemContainer.Controls)
                 {
                     RefundItemRow refundItem = item as RefundItemRow;
                     RefundModiferRow refundModifier = item as RefundModiferRow;
 
-                    if (refundItem != null)
+                    if (refundItem != null && refundItem.GroupID == e.Data.GroupID)
                     {
-                        if (refundItem.GroupID == e.Data.GroupID)
-                        {
-                            refundItem.IsSelectedItem = e.Data.IsSelectedItem;
-                            refundItem.chkCheck.Checked = e.Data.IsSelectedItem;
-                            refundItem.BackColor = e.Data.IsSelectedItem ? Color.Red : Color.White;
-                        }
-
-                        if (refundItem.IsSelectedItem)
-                        {
-                            totalAmount += refundItem.ExtendedPrice + refundItem.TaxAmount;
-                            amount += refundItem.ExtendedPrice;
-                            tax += refundItem.TaxAmount;
-                        }
-                        continue;
+                        refundItem.IsSelectedItem = e.Data.IsSelectedItem;
+                        refundItem.chkCheck.Checked = e.Data.IsSelectedItem;
+                        refundItem.BackColor = e.Data.IsSelectedItem ? RefundItemRow.SelectedBackColor : Color.White;
                     }
-
-                    if (refundModifier != null)
+                    else if (refundModifier != null && refundModifier.GroupID == e.Data.GroupID)
                     {
-                        if (refundModifier.GroupID == e.Data.GroupID)
-                        {
-                            refundModifier.IsSelectedItem = e.Data.IsSelectedItem;
-                            refundModifier.BackColor = e.Data.IsSelectedItem ? Color.Red : Color.White;
-                        }
-
-                        if (refundModifier.IsSelectedItem)
-                        {
-                            totalAmount += refundModifier.ExtendedPrice + refundModifier.TaxAmount;
-                            amount += refundModifier.ExtendedPrice;
-                            tax += refundModifier.TaxAmount;
-                        }
-                        continue;
+                        refundModifier.IsSelectedItem = e.Data.IsSelectedItem;
+                        refundModifier.BackColor = e.Data.IsSelectedItem ? RefundItemRow.SelectedBackColor : Color.White;
                     }
                 }
 
-                lblTotalRefundItem_Amount.Text = $"Subtotal: {Utility.ConvertDecimalToMoneyString(amount)}";
-                lblTotalRefundItem_Tax.Text = $"Tax amount: {Utility.ConvertDecimalToMoneyString(tax)}";
-                lblTotalRefundItem_TotalAmount.Text = $"Total Amount: {Utility.ConvertDecimalToMoneyString(totalAmount)}";
+                UpdateSummary();
             }
             catch (Exception ex)
             {
@@ -182,6 +253,10 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
+                // Nothing picked: don't query payments or ask which payment to refund.
+                if (!HasSelection())
+                    return;
+
                 RequestModel requestModel = new RequestModel();
                 requestModel.SaleReceiptID = MainSaleReceiptID;
                 requestModel.SaleReceiptPaymentDetailID = MainSaleReceiptPaymentDetailID;
@@ -259,7 +334,7 @@ namespace ThirdPartyTool.SaleReceipt
                 if (requestModel.objectValues.Count == 0)
                     return;
 
-                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to Refund ${requestModel.TotalAmount} of ticket #{MainSaleReceiptNumber}?");
+                ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to refund {Utility.ConvertDecimalToMoneyString(requestModel.TotalAmount)} on ticket #{MainSaleReceiptNumber}?");
                 var result = confirmFirmDialog.ShowDialog();
                 if (result == DialogResult.No)
                     return;
@@ -276,7 +351,7 @@ namespace ThirdPartyTool.SaleReceipt
                 }
                 else
                 {
-                    InformationDialogForm errorDialog = new InformationDialogForm("Add Tip Fail. Please contact TruongDS");
+                    InformationDialogForm errorDialog = new InformationDialogForm("Refund items failed. Please contact TruongDS");
                     errorDialog.ShowDialog();
                 }
             }

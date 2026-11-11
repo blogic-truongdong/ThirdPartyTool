@@ -505,6 +505,9 @@
     <Compile Include="CustomControl\BLabel_Rounded.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomControl\NoticeBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomControl\BPanel_Rounded.cs">
       <SubType>Component</SubType>
     </Compile>

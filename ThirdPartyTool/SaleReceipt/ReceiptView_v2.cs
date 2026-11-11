@@ -336,6 +336,8 @@ namespace ThirdPartyTool.SaleReceipt
             {
                 TokenSaleReceiptID = string.Empty;
                 TokenSaleReceiptNumber = string.Empty;
+                TokenTotalAmount = 0;
+                UpdateTokenSummary();
 
                 PrintControl_TokenReceipt.PrintingSystem?.Dispose();
                 PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
@@ -351,6 +353,22 @@ namespace ThirdPartyTool.SaleReceipt
                 InformationDialogForm errorDialog = new InformationDialogForm("Add Tip Fail. Please contact TruongDS");
                 errorDialog.ShowDialog();
             }
+        }
+
+        /// <summary>Shows which token ticket is loaded, the tip it adds, and the target ticket.</summary>
+        private void UpdateTokenSummary()
+        {
+            bool hasToken = !string.IsNullOrWhiteSpace(TokenSaleReceiptNumber);
+            lblTokenNumber.Text = hasToken ? "#" + TokenSaleReceiptNumber : "Not selected";
+            lblTokenNumber.ForeColor = hasToken ? System.Drawing.Color.FromArgb(33, 33, 33) : System.Drawing.Color.FromArgb(158, 158, 158);
+            lblTokenAmount.Text = Utility.ConvertDecimalToMoneyString(hasToken ? TokenTotalAmount : 0);
+            lblTokenTarget.Text = string.IsNullOrWhiteSpace(MainSaleReceiptNumber) ? "" : $"Adds to ticket #{MainSaleReceiptNumber}";
+
+            System.Drawing.Color back = hasToken ? System.Drawing.Color.FromArgb(42, 108, 228) : System.Drawing.Color.FromArgb(229, 231, 235);
+            btnProcessAddTipBySaleToken.BackColor = btnProcessAddTipBySaleToken.BackgroundColor = btnProcessAddTipBySaleToken.BorderColor = back;
+            btnProcessAddTipBySaleToken.ForeColor = btnProcessAddTipBySaleToken.TextColor = hasToken ? System.Drawing.Color.White : System.Drawing.Color.FromArgb(156, 163, 175);
+            btnProcessAddTipBySaleToken.Cursor = hasToken ? Cursors.Hand : Cursors.Default;
+            btnProcessAddTipBySaleToken.Invalidate();
         }
 
         private void TxtSearchTokenReceipt_KeyUp(object sender, KeyEventArgs e)
@@ -394,6 +412,7 @@ namespace ThirdPartyTool.SaleReceipt
                     TokenSaleReceiptID = string.Empty;
                     TokenSaleReceiptNumber = string.Empty;
                     TokenTotalAmount = 0;
+                    UpdateTokenSummary();
 
                     PrintControl_TokenReceipt.PrintingSystem?.Dispose();
                     PrintControl_TokenReceipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
@@ -405,6 +424,7 @@ namespace ThirdPartyTool.SaleReceipt
                 TokenSaleReceiptID = processForm.SaleReceiptID;
                 TokenSaleReceiptNumber = processForm.SaleReceiptNumber;
                 TokenTotalAmount = processForm.GetReceiptTemplateByTicketNumber_TotalAmount;
+                UpdateTokenSummary();
                 xReport.PrintingSystem.SetCommandVisibility(DevExpress.XtraPrinting.PrintingSystemCommand.DocumentMap, DevExpress.XtraPrinting.CommandVisibility.All);
                 xReport.PrintingSystem.ShowMarginsWarning = false;
                 PrintControl_TokenReceipt.PrintingSystem = xReport.PrintingSystem;
@@ -606,6 +626,7 @@ namespace ThirdPartyTool.SaleReceipt
 
                     PartialRefundItemForm partialRefundItemForm = new PartialRefundItemForm();
                     partialRefundItemForm.MainSaleReceiptID = MainSaleReceiptID;
+                    partialRefundItemForm.MainSaleReceiptNumber = MainSaleReceiptNumber;
                     if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(partialRefundItemForm, Helper.MainForm) == DialogResult.OK)
                         ReloadCurrentReceipt();
                 }
@@ -618,6 +639,7 @@ namespace ThirdPartyTool.SaleReceipt
                         return;
                     }
 
+                    UpdateTokenSummary();
                     pnlAddTipBySaleToken.BringToFront();
                 }
                 else if (control.Name == btnShowAddTipForPaymentDetail.Name)
@@ -787,36 +809,7 @@ namespace ThirdPartyTool.SaleReceipt
                             Utility.GetDecimalFromRow("CoinDiscountAmount", item));
 
                     int paymentMethodID = Utility.GetIntFromRow("PaymentMethodID", item);
-                    if (paymentMethodID == 1 || paymentMethodID >= 3 || paymentMethodID < -3)
-                    {
-                        paymentDetailView.lblCard.Visible = false;
-                        paymentDetailView.lblCardValue.Visible = false;
-                        paymentDetailView.lblTotal.Visible = false;
-                        paymentDetailView.lblTotalValue.Visible = false;
-                        paymentDetailView.lblCardType.Visible = false;
-                        paymentDetailView.lblEntryMode.Visible = false;
-                        paymentDetailView.lblApproval.Visible = false;
-                        paymentDetailView.lblApprovalValue.Visible = false;
-                        paymentDetailView.lblBatch.Visible = false;
-                        paymentDetailView.lblBatchValue.Visible = false;
-                        paymentDetailView.lblTerminal.Visible = false;
-                        paymentDetailView.lblTerminalValue.Visible = false;
-                    }
-                    else
-                    {
-                        paymentDetailView.lblCard.Visible = true;
-                        paymentDetailView.lblCardValue.Visible = true;
-                        paymentDetailView.lblTotal.Visible = true;
-                        paymentDetailView.lblTotalValue.Visible = true;
-                        paymentDetailView.lblCardType.Visible = true;
-                        paymentDetailView.lblEntryMode.Visible = true;
-                        paymentDetailView.lblApproval.Visible = true;
-                        paymentDetailView.lblApprovalValue.Visible = true;
-                        paymentDetailView.lblBatch.Visible = true;
-                        paymentDetailView.lblBatchValue.Visible = true;
-                        paymentDetailView.lblTerminal.Visible = true;
-                        paymentDetailView.lblTerminalValue.Visible = true;
-                    }
+                    bool isCardPayment = !(paymentMethodID == 1 || paymentMethodID >= 3 || paymentMethodID < -3);
                     paymentDetailView.lblTotalValue.Text = paymentDetailView.lblPaymentValue.Text;
 
                     DataRow[] drs = dtTransactionDetail.Select($"ID = '{item["CreditCardTransactionID"]}'", "");
@@ -825,8 +818,10 @@ namespace ThirdPartyTool.SaleReceipt
                         paymentDetailView.lblEntryMode.Text = Utility.GetStringFromRow("CCEntry", drs[0]);
                         paymentDetailView.lblBatchValue.Text = Utility.GetStringFromRow("BatchID", drs[0]);
                     }
+                    paymentDetailView.ShowCardDetails(isCardPayment);
                     paymentDetailView.btnUpdate.Click += BtnUpdateTip_Click;
                     pnlPaymentDetails.Controls.Add(paymentDetailView);
+                    paymentDetailView.BringToFront();
                 }
             }
             catch (Exception ex)
@@ -841,7 +836,10 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                PaymentDetailView paymentDetailView = (sender as Control).Parent.Parent.Parent as PaymentDetailView;
+                Control owner = sender as Control;
+                while (owner != null && !(owner is PaymentDetailView))
+                    owner = owner.Parent;
+                PaymentDetailView paymentDetailView = owner as PaymentDetailView;
                 if (paymentDetailView != null)
                 {
                     ConfirmDialogForm confirmFirmDialog = new ConfirmDialogForm(Const.ConfirmTitle, $"Are you sure you want to update ${paymentDetailView.txtGratuity.Value:N2} for this payment detail?");

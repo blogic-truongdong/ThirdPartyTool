@@ -1,6 +1,7 @@
 ﻿using BLogicSystems.XPos.Utilites;
 using Microsoft.Practices.CompositeUI.Utility;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using ThirdPartyTool.Models;
 
@@ -23,20 +24,36 @@ namespace ThirdPartyTool.SaleReceipt
 
             txtQuantity.TextChanged += TxtQuantity_TextChanged;
 
+            this.Click += LblItemName_Click;
             lblItemName.Click += LblItemName_Click;
             lblPrice.Click += LblItemName_Click;
+            txtQuantity.Click += LblItemName_Click;
         }
 
         private void LblItemName_Click(object sender, EventArgs e)
         {
             IsSelectedItem = !IsSelectedItem;
 
-            this.BackColor = IsSelectedItem ? System.Drawing.Color.Red : System.Drawing.Color.White;
+            this.BackColor = IsSelectedItem ? RefundItemRow.SelectedBackColor : Color.White;
 
             RequestModel requestModel = new RequestModel();
             requestModel.GroupID = GroupID;
             requestModel.IsSelectedItem = IsSelectedItem;
             SelectedItemChanges?.Invoke(null, new DataEventArgs<RequestModel>(requestModel));
+        }
+
+        protected override void OnBackColorChanged(EventArgs e)
+        {
+            base.OnBackColorChanged(e);
+            Invalidate();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            if (IsSelectedItem)
+                using (SolidBrush brush = new SolidBrush(RefundItemRow.SelectedAccent))
+                    e.Graphics.FillRectangle(brush, 0, 0, 3, Height);
         }
 
         private void TxtQuantity_TextChanged(object sender, EventArgs e)
