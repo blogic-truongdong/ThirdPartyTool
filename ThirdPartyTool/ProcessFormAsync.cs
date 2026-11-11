@@ -120,7 +120,7 @@ namespace ThirdPartyTool
         public void RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate, SqlParameter[] cmdParams = null)
         {
             BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
-            sqlCommand.CommandText = scriptUpdate;
+            sqlCommand.CommandText = SqlSafety.LowPriority + scriptUpdate;
 
             if (cmdParams != null)
             {
@@ -138,18 +138,28 @@ namespace ThirdPartyTool
                 BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
                 throw new Exception();
             }
+            AuditLog.Statement(sqlCommand.Connection.Database, scriptUpdate, cmdParams, AuditAction());
+        }
+
+        private string AuditAction()
+        {
+            return CurrentProcessName == ProcessNameEnum.None ? null : CurrentProcessName.ToString();
         }
 
         private async Task RunQueryUpdateAsync(SqlConnection conn, string sql, object parameters = null)
         {
             try
             {
-                var result = await conn.ExecuteAsync(sql, parameters, null, 180, System.Data.CommandType.Text);
+                var result = await conn.ExecuteAsync(SqlSafety.LowPriority + sql, parameters, null, 180, System.Data.CommandType.Text);
 
                 if (result < 0)
                 {
                     ErrorMessage = $"Something went wrong while run script update.{Environment.NewLine}Please try contact TruongDS.";
                     BLogicLogger.Exception("RunQueryUpdateTryCatch in RunQueryUpdateAsync", null, new System.Collections.Generic.List<object>() { sql, parameters });
+                }
+                else
+                {
+                    AuditLog.Statement(conn.Database, sql + AuditLog.DapperParams(parameters), null, AuditAction());
                 }
             }
             catch (Exception ex)

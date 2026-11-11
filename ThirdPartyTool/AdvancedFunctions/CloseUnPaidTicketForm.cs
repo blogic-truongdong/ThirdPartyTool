@@ -22,6 +22,13 @@ namespace ThirdPartyTool.AdvancedFunctions
 
         private void BtnOK_Click(object sender, EventArgs e)
         {
+            // One audit row for everything this action changes.
+            using (AuditLog.Group("Advanced: close unpaid tickets", singleTicket: false))
+                BtnOK_ClickCore(sender, e);
+        }
+
+        private void BtnOK_ClickCore(object sender, EventArgs e)
+        {
             try
             {
                 DateTime startDate = new DateTime(StartDate.Value.Year, StartDate.Value.Month, StartDate.Value.Day, 0, 0, 0);
@@ -59,7 +66,7 @@ namespace ThirdPartyTool.AdvancedFunctions
 
                     sqlCommand.Connection = conn;
 
-                    var sql = $"update BLOGICPOS7.dbo.SaleReceipts set TransactionStatusID = 'CLO' where TransactionStatusID = 'OPER' and DateCreated between '{startDate}' and '{endDate}' and PaidAmount = '0'";
+                    var sql = $"update SaleReceipts set TransactionStatusID = 'CLO' where TransactionStatusID = 'OPER' and DateCreated between '{startDate}' and '{endDate}' and PaidAmount = '0'";
 
                     Helper.RunQueryUpdate(sqlCommand, sql);
                 }

@@ -99,6 +99,9 @@ namespace ThirdPartyTool
 
         public RequestModel requestModel = new RequestModel();
 
+        /// <summary>Transaction of the Dapper-based action in progress (Update service charges); every Dapper call joins it.</summary>
+        private SqlTransaction dapperTx;
+
         public ProcessForm()
         {
             InitializeComponent();
@@ -158,8 +161,32 @@ namespace ThirdPartyTool
             }
         }
 
+        /// <summary>Actions that run as one transaction and write their own complete audit row.</summary>
+        private static bool WritesOwnAudit(ProcessNameEnum process)
+        {
+            switch (process)
+            {
+                case ProcessNameEnum.PartialRefundItems:
+                case ProcessNameEnum.AddSpecialItem:
+                case ProcessNameEnum.CloseReceipt:
+                case ProcessNameEnum.VoidReceipt:
+                case ProcessNameEnum.CancelReceipt:
+                case ProcessNameEnum.AddTipForPaymentDetail:
+                case ProcessNameEnum.AddTipByTokenReceipt:
+                case ProcessNameEnum.UpdateServiceChargeBySaleReceiptID:
+                case ProcessNameEnum.UpdateShift:
+                case ProcessNameEnum.ProcessSyncRoleForEmployee:
+                case ProcessNameEnum.ReSyncItemType:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         private async Task StartProcess()
         {
+            IDisposable auditGroup = WritesOwnAudit(CurrentProcessName) ? null
+                : AuditLog.Group(AuditLog.ActionName(CurrentProcessName.ToString()), AuditSaleReceiptID(), SaleReceiptNumber);
             try
             {
                 switch (CurrentProcessName)
@@ -181,6 +208,7 @@ namespace ThirdPartyTool
             }
             finally
             {
+                auditGroup?.Dispose();
                 CloseForm();
             }
         }
@@ -195,6 +223,10 @@ namespace ThirdPartyTool
 
         private async void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            // Older functions: all statements of this action become one audit row. Refund items, Add special item and
+            // Close ticket write their own complete row inside their transaction, so they are left out.
+            bool ownAudit = WritesOwnAudit(CurrentProcessName);
+            IDisposable auditGroup = ownAudit ? null : AuditLog.Group(AuditLog.ActionName(CurrentProcessName.ToString()), AuditSaleReceiptID(), SaleReceiptNumber);
             try
             {
 
@@ -269,6 +301,10 @@ namespace ThirdPartyTool
                 // log exception
                 BLogicLogger.Exception("BackgroundWorker_DoWork", ex, new System.Collections.Generic.List<object>() { CurrentProcessName });
             }
+            finally
+            {
+                auditGroup?.Dispose();
+            }
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -307,127 +343,118 @@ namespace ThirdPartyTool
             }
         }
 
+        /// <summary>Sync employee role: TimeClock rates and PaymentRoleDetails of the date range, one execute in one transaction.</summary>
         public void ProcessSyncRoleForEmployee()
         {
-            try
+            RunTicketTransaction(AuditLog.ActionName("ProcessSyncRoleForEmployee"), (sqlCommand, merchantDb) =>
             {
-                DataTable dtEmployee = new DataTable("Employees");
-                DataTable dtRoles = new DataTable("Roles");
+                int employeeID = EmployeeView_EmployeeID;
+                int roleID = EmployeeView_RolesID;
+                DateTime startDate = EmployeeView_StartDate;
+                DateTime endDate = EmployeeView_EndDate;
 
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                DataTable dtEmployee = Query(sqlCommand, $"Select * from Employees where EmployeeID = '{employeeID}'");
+                DataTable dtRoles = Query(sqlCommand, $"Select * from Roles where RolesID = '{roleID}'");
+                if (dtEmployee.Rows.Count == 0 || dtRoles.Rows.Count == 0)
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
+                    ErrorMessage = "Employee or role not found.";
+                    return null;
+                }
 
-                    int employeeID = EmployeeView_EmployeeID;
-                    int roleID = EmployeeView_RolesID;
-                    DateTime startDate = EmployeeView_StartDate;
-                    DateTime endDate = EmployeeView_EndDate;
+                DataRow employeeRow = dtEmployee.Rows[0];
 
-                    sqlCommand.CommandText = $"Select * from Employees where EmployeeID = '{employeeID}'";
-                    var reader = sqlCommand.ExecuteReader();
-                    dtEmployee.Load(reader);
-                    reader.Close();
+                bool IsHourlyWage = Utility.GetBoolFromObject(employeeRow["IsHourlyWage"]);
+                decimal dHourlyWage = Utility.GetDecimalFromObject(employeeRow["HourlyWage"]);
+                decimal dHourlyWageOT = Utility.GetDecimalFromObject(employeeRow["HourlyWageOT"]);
+                bool bIsDailyOverTime = Utility.GetBoolFromObject(employeeRow["IsDailyOverTime"]);
+                bool isUsingRoleWage = Utility.GetBoolFromObject(employeeRow["IsUsingRoleWage"]);
 
-                    sqlCommand.CommandText = $"Select * from Roles where RolesID = '{roleID}'";
-                    reader = sqlCommand.ExecuteReader();
-                    dtRoles.Load(reader);
-                    reader.Close();
+                bool isUsingRoleTipPool = Utility.GetBoolFromObject(employeeRow["IsUsingRoleTipPool"]);
+                decimal dTipRate = Utility.GetDecimalFromObject(employeeRow["TipRate"]);
+                decimal dTipRateOT = Utility.GetDecimalFromObject(employeeRow["TipRateOT"]);
+                decimal dTrainingTipRate = Utility.GetDecimalFromObject(employeeRow["TrainingTipRate"]);
+                decimal dTrainingTipRateOT = Utility.GetDecimalFromObject(employeeRow["TrainingTipRateOT"]);
+                decimal dMaxTipHour = Utility.GetDecimalFromObject(employeeRow["MaxTipHour"]);
+                decimal dMaxTipHourOT = Utility.GetDecimalFromObject(employeeRow["MaxTipHourOT"]);
+                decimal dHourlyWageOT2nd = Utility.GetDecimalFromObject(employeeRow["HourlyWageOT2nd"]);
+                bool bIsDailyOverTime2nd = Utility.GetBoolFromObject(employeeRow["IsDailyOverTime2nd"]);
 
-                    DataRow employeeRow = dtEmployee.Rows[0];
+                decimal dServiceChargesRate = Utility.GetDecimalFromObject(employeeRow["ServiceChargesRate"]);
+                decimal dServiceChargesRateOT = Utility.GetDecimalFromObject(employeeRow["ServiceChargesRateOT"]);
+                decimal dServiceChargesMaxHour = Utility.GetDecimalFromObject(employeeRow["ServiceChargesMaxHour"]);
+                decimal dServiceChargesMaxHourOT = Utility.GetDecimalFromObject(employeeRow["ServiceChargesMaxHourOT"]);
+                bool dEnableTrainingMode = Utility.GetBoolFromObject(employeeRow["EnableTrainingMode"]);
+                if (dEnableTrainingMode)
+                {
+                    dTipRate = dTrainingTipRate;
+                    dTipRateOT = dTrainingTipRateOT;
+                }
 
-                    bool IsHourlyWage = Utility.GetBoolFromObject(employeeRow["IsHourlyWage"]);
-                    decimal dHourlyWage = Utility.GetDecimalFromObject(employeeRow["HourlyWage"]);
-                    decimal dHourlyWageOT = Utility.GetDecimalFromObject(employeeRow["HourlyWageOT"]);
-                    bool bIsDailyOverTime = Utility.GetBoolFromObject(employeeRow["IsDailyOverTime"]);
-                    bool isUsingRoleWage = Utility.GetBoolFromObject(employeeRow["IsUsingRoleWage"]);
+                if (!IsHourlyWage)
+                    dHourlyWage = 0;
 
-                    bool isUsingRoleTipPool = Utility.GetBoolFromObject(employeeRow["IsUsingRoleTipPool"]);
-                    decimal dTipRate = Utility.GetDecimalFromObject(employeeRow["TipRate"]);
-                    decimal dTipRateOT = Utility.GetDecimalFromObject(employeeRow["TipRateOT"]);
-                    decimal dTrainingTipRate = Utility.GetDecimalFromObject(employeeRow["TrainingTipRate"]);
-                    decimal dTrainingTipRateOT = Utility.GetDecimalFromObject(employeeRow["TrainingTipRateOT"]);
-                    decimal dMaxTipHour = Utility.GetDecimalFromObject(employeeRow["MaxTipHour"]);
-                    decimal dMaxTipHourOT = Utility.GetDecimalFromObject(employeeRow["MaxTipHourOT"]);
-                    decimal dHourlyWageOT2nd = Utility.GetDecimalFromObject(employeeRow["HourlyWageOT2nd"]);
-                    bool bIsDailyOverTime2nd = Utility.GetBoolFromObject(employeeRow["IsDailyOverTime2nd"]);
-
-                    decimal dServiceChargesRate = Utility.GetDecimalFromObject(employeeRow["ServiceChargesRate"]);
-                    decimal dServiceChargesRateOT = Utility.GetDecimalFromObject(employeeRow["ServiceChargesRateOT"]);
-                    decimal dServiceChargesMaxHour = Utility.GetDecimalFromObject(employeeRow["ServiceChargesMaxHour"]);
-                    decimal dServiceChargesMaxHourOT = Utility.GetDecimalFromObject(employeeRow["ServiceChargesMaxHourOT"]);
-                    bool dEnableTrainingMode = Utility.GetBoolFromObject(employeeRow["EnableTrainingMode"]);
-                    if (dEnableTrainingMode)
-                    {
-                        dTipRate = dTrainingTipRate;
-                        dTipRateOT = dTrainingTipRateOT;
-                    }
+                DataRow drRole = dtRoles.Rows[0];
+                if (isUsingRoleWage)
+                {
+                    IsHourlyWage = Utility.GetBoolFromObject(drRole["IsHourlyWage"]);
+                    dHourlyWage = Utility.GetDecimalFromObject(drRole["HourlyWage"]);
+                    dHourlyWageOT = Utility.GetDecimalFromObject(drRole["HourlyWageOT"]);
+                    bIsDailyOverTime = Utility.GetBoolFromObject(drRole["IsDailyOverTime"]);
+                    bIsDailyOverTime2nd = Utility.GetBoolFromObject(drRole["IsDailyOverTime2nd"]);
+                    dHourlyWageOT2nd = Utility.GetDecimalFromObject(drRole["HourlyWageOT2nd"]);
 
                     if (!IsHourlyWage)
                         dHourlyWage = 0;
-
-                    DataRow drRole = dtRoles.Rows[0];
-                    if (isUsingRoleWage)
-                    {
-                        IsHourlyWage = Utility.GetBoolFromObject(drRole["IsHourlyWage"]);
-                        dHourlyWage = Utility.GetDecimalFromObject(drRole["HourlyWage"]);
-                        dHourlyWageOT = Utility.GetDecimalFromObject(drRole["HourlyWageOT"]);
-                        bIsDailyOverTime = Utility.GetBoolFromObject(drRole["IsDailyOverTime"]);
-                        bIsDailyOverTime2nd = Utility.GetBoolFromObject(drRole["IsDailyOverTime2nd"]);
-                        dHourlyWageOT2nd = Utility.GetDecimalFromObject(drRole["HourlyWageOT2nd"]);
-
-                        if (!IsHourlyWage)
-                            dHourlyWage = 0;
-                    }
-
-                    if (isUsingRoleTipPool)
-                    {
-                        if (dEnableTrainingMode)
-                        {
-                            dTipRate = Utility.GetDecimalFromObject(drRole["TrainingTipRate"]);
-                            dTipRateOT = Utility.GetDecimalFromObject(drRole["TrainingTipRateOT"]);
-                        }
-                        else
-                        {
-                            dTipRate = Utility.GetDecimalFromObject(drRole["TipRate"]);
-                            dTipRateOT = Utility.GetDecimalFromObject(drRole["TipRateOT"]);
-                        }
-
-                        dMaxTipHour = Utility.GetDecimalFromObject(drRole["MaxTipHour"]);
-                        dMaxTipHourOT = Utility.GetDecimalFromObject(drRole["MaxTipHourOT"]);
-
-                        dServiceChargesRate = Utility.GetDecimalFromObject(drRole["ServiceChargesRate"]);
-                        dServiceChargesRateOT = Utility.GetDecimalFromObject(drRole["ServiceChargesRateOT"]);
-                        dServiceChargesMaxHour = Utility.GetDecimalFromObject(drRole["ServiceChargesMaxHour"]);
-                        dServiceChargesMaxHourOT = Utility.GetDecimalFromObject(drRole["ServiceChargesMaxHourOT"]);
-                    }
-
-                    var sql = $"update TimeClock set " +
-                        $"HourlyWage = '{dHourlyWage}', HourlyWageOT = '{dHourlyWageOT}', HourlyWageOT2nd = '{dHourlyWageOT2nd}', " +
-                        $"IsDailyOverTime = '{bIsDailyOverTime}', IsDailyOverTime2nd = '{bIsDailyOverTime2nd}', " +
-                        $"TipRate = '{dTipRate}', TipRateOT = '{dTipRateOT}', " +
-                        $"MaxTipHour = '{dMaxTipHour}', MaxTipHourOT = '{dMaxTipHourOT}', " +
-                        $"ServiceChargesRate = '{dServiceChargesRate}', ServiceChargesRateOT = '{dServiceChargesRateOT}', " +
-                        $"ServiceChargesMaxHour = '{dServiceChargesMaxHour}', ServiceChargesMaxHourOT = '{dServiceChargesMaxHourOT}', " +
-                        $"RolesID = '{roleID}' " +
-                        $"where EmployeeID = '{employeeID}' and DateTimeIn >= '{startDate}' and DateTimeIn <= '{endDate}'";
-                    RunQueryUpdate(sqlCommand, sql);
-
-                    sql = $"update PaymentRoleDetails set TipRate = '{dTipRate}', TipRateOT = '{dTipRateOT}', RolesID = '{roleID}' " +
-                        $"where EmployeeID = '{employeeID}' and DateCreated >= '{startDate}' and DateCreated <= '{endDate}'";
-                    RunQueryUpdate(sqlCommand, sql);
-
-                    IsSuccess = true;
                 }
 
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("SyncEmployeeData in TimeClock", ex);
-            }
+                if (isUsingRoleTipPool)
+                {
+                    if (dEnableTrainingMode)
+                    {
+                        dTipRate = Utility.GetDecimalFromObject(drRole["TrainingTipRate"]);
+                        dTipRateOT = Utility.GetDecimalFromObject(drRole["TrainingTipRateOT"]);
+                    }
+                    else
+                    {
+                        dTipRate = Utility.GetDecimalFromObject(drRole["TipRate"]);
+                        dTipRateOT = Utility.GetDecimalFromObject(drRole["TipRateOT"]);
+                    }
+
+                    dMaxTipHour = Utility.GetDecimalFromObject(drRole["MaxTipHour"]);
+                    dMaxTipHourOT = Utility.GetDecimalFromObject(drRole["MaxTipHourOT"]);
+
+                    dServiceChargesRate = Utility.GetDecimalFromObject(drRole["ServiceChargesRate"]);
+                    dServiceChargesRateOT = Utility.GetDecimalFromObject(drRole["ServiceChargesRateOT"]);
+                    dServiceChargesMaxHour = Utility.GetDecimalFromObject(drRole["ServiceChargesMaxHour"]);
+                    dServiceChargesMaxHourOT = Utility.GetDecimalFromObject(drRole["ServiceChargesMaxHourOT"]);
+                }
+
+                string range = $"where EmployeeID = '{employeeID}' and DateTimeIn >= '{startDate}' and DateTimeIn <= '{endDate}'";
+                DataTable clocksBefore = Query(sqlCommand, $"select * from TimeClock {range}");
+
+                // Both updates in one execute.
+                var sql = $"update TimeClock set " +
+                    $"HourlyWage = '{dHourlyWage}', HourlyWageOT = '{dHourlyWageOT}', HourlyWageOT2nd = '{dHourlyWageOT2nd}', " +
+                    $"IsDailyOverTime = '{bIsDailyOverTime}', IsDailyOverTime2nd = '{bIsDailyOverTime2nd}', " +
+                    $"TipRate = '{dTipRate}', TipRateOT = '{dTipRateOT}', " +
+                    $"MaxTipHour = '{dMaxTipHour}', MaxTipHourOT = '{dMaxTipHourOT}', " +
+                    $"ServiceChargesRate = '{dServiceChargesRate}', ServiceChargesRateOT = '{dServiceChargesRateOT}', " +
+                    $"ServiceChargesMaxHour = '{dServiceChargesMaxHour}', ServiceChargesMaxHourOT = '{dServiceChargesMaxHourOT}', " +
+                    $"RolesID = '{roleID}' " + range + ";" + Environment.NewLine +
+                    $"update PaymentRoleDetails set TipRate = '{dTipRate}', TipRateOT = '{dTipRateOT}', RolesID = '{roleID}' " +
+                    $"where EmployeeID = '{employeeID}' and DateCreated >= '{startDate}' and DateCreated <= '{endDate}';";
+                RunQueryUpdate(sqlCommand, sql);
+
+                Func<DataRow, string, string> col = (r, c) => r.Table.Columns.Contains(c) ? Utility.GetStringFromRow(c, r) : "";
+                string name = col(employeeRow, "FirstName") + " " + col(employeeRow, "LastName");
+                return new TxResult
+                {
+                    Summary = $"Synced role '{col(drRole, "RolesName")}' (#{roleID}) for employee {name.Trim()} (#{employeeID}), " +
+                        $"{startDate:MM/dd/yyyy} - {endDate:MM/dd/yyyy}: {clocksBefore.Rows.Count} clock-in(s)",
+                    Before = clocksBefore.Rows.Cast<DataRow>().Select(r => AuditLog.Pick(r, "TimeClockID", "DateTimeIn", "RolesID", "HourlyWage", "TipRate", "TipRateOT")).ToList(),
+                    After = new { RolesID = roleID, HourlyWage = dHourlyWage, TipRate = dTipRate, TipRateOT = dTipRateOT },
+                };
+            });
         }
 
         private void GetEmployeeInfos()
@@ -916,192 +943,135 @@ namespace ThirdPartyTool
         }
 
 
+        /// <summary>
+        /// Add tip by sale token: the token ticket is closed and its payments move to the main ticket as tip, with
+        /// their PaymentRoleDetails, the main ticket FinalGratuity, the card transactions and their batches - all in
+        /// one transaction (see RunTicketTransaction).
+        /// </summary>
         private void UpdateTipByTokenReceipt()
         {
-            DataRow[] drs = null;
-            string scriptUpdate = string.Empty;
-            string scriptUpdatePaymentRoleDetails = string.Empty;
-            string sql = string.Empty;
-            int resultQueryUpdate = 0;
-
-            try
+            RunTicketTransaction(AuditLog.ActionName("AddTipByTokenReceipt"), (sqlCommand, merchantDb) =>
             {
-                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
-                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
+                DataRow[] drs = null;
+                string scriptUpdate = string.Empty;
 
-                DataTable dtTokenSaleReceipts = new DataTable("SaleReceipts");
-                DataTable dtTokenSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
-
+                DataTable dtSaleReceipts = Query(sqlCommand, $"select * from SaleReceipts with (UPDLOCK, ROWLOCK) where SaleReceiptID = '{SaleReceiptID}'");
+                DataTable dtTokenSaleReceipts = Query(sqlCommand, $"select * from SaleReceipts with (UPDLOCK, ROWLOCK) where SaleReceiptID = '{TokenSaleReceiptID}'");
+                DataTable dtTokenSaleReceiptPaymentDetails = Query(sqlCommand, $"select a.*, b.PaymentMethodType from " +
+                    $" SaleReceiptPaymentDetails a with (UPDLOCK, ROWLOCK) left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
+                    $" where SaleReceiptID = '{TokenSaleReceiptID}'");
                 DataTable dtPaymentRoleDetails = new DataTable("PaymentRoleDetails");
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+
+                #region verify Receipt
+                if (dtSaleReceipts.Rows.Count == 0)
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
+                    ErrorMessage = "The ticket does not exist.";
+                    return null;
+                }
+                if (dtTokenSaleReceiptPaymentDetails.Rows.Count == 0)
+                {
+                    ErrorMessage = "The Token Receipt don't exist any Payment Detail.";
+                    return null;
+                }
+                #endregion
 
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptID = '{SaleReceiptID}'";
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    dtSaleReceipts.Load(reader);
-                    reader.Close();
+                object tokenBefore = new
+                {
+                    TokenTicket = AuditLog.Pick(dtTokenSaleReceipts.Rows.Cast<DataRow>().FirstOrDefault(), "SaleReceiptNumber", "TransactionStatusID", "TotalAmount"),
+                    TokenPayments = dtTokenSaleReceiptPaymentDetails.Rows.Cast<DataRow>().Select(r => AuditLog.Pick(r, "SaleReceiptPaymentDetailID", "SaleReceiptID", "AmountTendered", "Gratuity", "SVCFeeAmount", "MerchantFee", "CreditCardTransactionID")).ToList(),
+                    MainTicket = AuditLog.Pick(dtSaleReceipts.Rows[0], "SaleReceiptNumber", "FinalGratuity"),
+                };
 
-                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptID = '{TokenSaleReceiptID}'";
-                    reader = sqlCommand.ExecuteReader();
-                    dtTokenSaleReceipts.Load(reader);
-                    reader.Close();
+                // Card transactions of the token payments, read (and locked) before anything is written.
+                List<string> cardIds = dtTokenSaleReceiptPaymentDetails.Rows.Cast<DataRow>()
+                    .Select(r => Utility.GetStringFromRow("CreditCardTransactionID", r)).Where(id => !string.IsNullOrWhiteSpace(id)).ToList();
+                DataTable cardsBefore = cardIds.Count == 0 ? new DataTable()
+                    : Query(sqlCommand, $"select * from {merchantDb}.dbo.TransactionDetail with (UPDLOCK, ROWLOCK) where ID in ({string.Join(",", cardIds.Select(id => "'" + id.Replace("'", "''") + "'"))})");
 
-                    sqlCommand.CommandText = $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{SaleReceiptID}'";
-                    reader = sqlCommand.ExecuteReader();
-                    dtSaleReceiptPaymentDetails.Load(reader);
-                    reader.Close();
+                var CashierID = Utility.GetIntFromRow("CashierID", dtSaleReceipts.Rows[0]);
+                var DateCreated = Utility.GetDateTimeFromRow("DateCreated", dtSaleReceipts.Rows[0]);
 
-                    sqlCommand.CommandText = $"select a.*, b.PaymentMethodType from " +
-                        $" SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
-                        $" where SaleReceiptID = '{TokenSaleReceiptID}'";
-                    reader = sqlCommand.ExecuteReader();
-                    dtTokenSaleReceiptPaymentDetails.Load(reader);
-                    reader.Close();
+                var employeeClockInInfoEntity = Helper.GetEmployeeClockInInfoEntity(sqlCommand, CashierID, DateCreated);
 
-                    #region verify Receipt
-                    if (dtTokenSaleReceiptPaymentDetails == null || dtTokenSaleReceiptPaymentDetails.Rows.Count == 0)
+                scriptUpdate = $"    update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{TokenSaleReceiptID}';";
+
+                foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
+                {
+                    item["CreatedDate"] = DateCreated;
+                    item["Gratuity"] = Utility.GetDecimalFromObject(item["AmountTendered"]) - Utility.GetDecimalFromObject(item["AmountReturn"]) + Utility.GetDecimalFromObject(item["Gratuity"]) + Utility.GetDecimalFromObject(item["SVCFeeAmount"]) - Utility.GetDecimalFromObject(item["CashDiscountAmount"]);
+
+                    if (Utility.GetDecimalFromRow("SVCFeeAmount", item) != 0)
+                        item["SVCFeeForGratuity"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
+                    else
+                        item["SVCFeeForGratuity"] = 0;
+
+                    item["SVCFeeAmount"] = 0;
+
+                    if (Utility.GetDecimalFromRow("MerchantFee", item) != 0)
                     {
-                        ErrorMessage = "The Token Receipt don't exist any Payment Detail.";
-                        return;
+                        item["MerchantFee"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+                        item["MerchantFeeForTip"] = item["MerchantFee"];
                     }
-                    #endregion
-
-                    var CashierID = Utility.GetIntFromRow("CashierID", dtSaleReceipts.Rows[0]);
-                    var DateCreated = Utility.GetDateTimeFromRow("DateCreated", dtSaleReceipts.Rows[0]);
-
-                    var employeeClockInInfoEntity = Helper.GetEmployeeClockInInfoEntity(sqlCommand, CashierID, DateCreated);
-
-                    DataTable dtSumSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
-
-                    if (dtTokenSaleReceiptPaymentDetails?.Rows.Count > 0)
+                    else
                     {
-                        scriptUpdate = $"    update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{TokenSaleReceiptID}';";
-                        RunQueryUpdate(sqlCommand, scriptUpdate);
-
-                        foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
-                        {
-                            item["CreatedDate"] = DateCreated;
-                            item["Gratuity"] = Utility.GetDecimalFromObject(item["AmountTendered"]) - Utility.GetDecimalFromObject(item["AmountReturn"]) + Utility.GetDecimalFromObject(item["Gratuity"]) + Utility.GetDecimalFromObject(item["SVCFeeAmount"]) - Utility.GetDecimalFromObject(item["CashDiscountAmount"]);
-
-                            if (Utility.GetDecimalFromRow("SVCFeeAmount", item) != 0)
-                                item["SVCFeeForGratuity"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
-                            else
-                                item["SVCFeeForGratuity"] = 0;
-
-                            item["SVCFeeAmount"] = 0;
-
-                            if (Utility.GetDecimalFromRow("MerchantFee", item) != 0)
-                            {
-                                item["MerchantFee"] = Math.Round(Utility.GetDecimalFromObject(item["Gratuity"]) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
-                                item["MerchantFeeForTip"] = item["MerchantFee"];
-                            }
-                            else
-                            {
-                                item["MerchantFee"] = 0;
-                                item["MerchantFeeForTip"] = 0;
-                            }
-
-
-                            scriptUpdate = $"    update SaleReceiptPaymentDetails set CreatedDate = '{DateCreated}', AmountTendered = '0', SaleReceiptID = '{SaleReceiptID}', SVCFeeAmount = '{item["SVCFeeAmount"]}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', Gratuity = '{item["Gratuity"]}', MerchantFee = '{item["MerchantFee"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}';";
-
-                            RunQueryUpdate(sqlCommand, scriptUpdate);
-                        }
-
-                        drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
-                        if (drs.Length > 0)
-                        {
-                            sqlCommand.CommandText = $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{SaleReceiptID}'";
-                            reader = sqlCommand.ExecuteReader();
-                            dtPaymentRoleDetails.Load(reader);
-                            reader.Close();
-
-                            scriptUpdate = string.Empty;
-                            foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
-                            {
-                                drs = dtPaymentRoleDetails.Select($"SaleReceiptID = '{item["SaleReceiptID"]}' and SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}'", "");
-                                if (drs.Length > 0)
-                                {
-                                    scriptUpdate = $"update PaymentRoleDetails set Gratuity = '{item["Gratuity"]}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{drs[0]["ID"]}';";
-                                }
-                                else
-                                {
-                                    scriptUpdate = $"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)";
-                                    scriptUpdate += $"    VALUES (NEWID(), '{SaleReceiptID}', '{item["SaleReceiptPaymentDetailID"]}', '{item["PaymentMethodID"]}', '{item["PaymentMethodType"]}', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{item["Gratuity"]}', '{item["SVCFeeForGratuity"]}', '{item["MerchantFeeForTip"]}', '{DateCreated}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}'  )";
-                                }
-
-                                RunQueryUpdate(sqlCommand, scriptUpdate);
-                            }
-                        }
+                        item["MerchantFee"] = 0;
+                        item["MerchantFeeForTip"] = 0;
                     }
 
-                    UpdateFinalGratuityForSaleReceipts(sqlCommand, SaleReceiptID);
+                    scriptUpdate += $"    update SaleReceiptPaymentDetails set CreatedDate = '{DateCreated}', AmountTendered = '0', SaleReceiptID = '{SaleReceiptID}', SVCFeeAmount = '{item["SVCFeeAmount"]}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', Gratuity = '{item["Gratuity"]}', MerchantFee = '{item["MerchantFee"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}';";
                 }
 
-                if (dtTokenSaleReceiptPaymentDetails?.Rows.Count > 0)
+                drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
+                if (drs.Length > 0)
                 {
-                    string batchUnique = string.Empty;
-                    DataTable dtTransactionDetail = new DataTable("TransactionDetail");
-                    using (SqlCommand sqlCommand = new SqlCommand())
-                    using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
-                    {
-                        if (conn.State == ConnectionState.Closed)
-                            conn.Open();
-
-                        sqlCommand.Connection = conn;
-                        sqlCommand.CommandType = CommandType.Text;
-
-                        scriptUpdate = string.Empty;
-
-                        foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
-                        {
-                            if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("CreditCardTransactionID", item)))
-                                scriptUpdate += $"update TransactionDetail set InvoiceNo = '{dtSaleReceipts.Rows[0]["InvoiceNum"]}', Amount = 0, Gratuity = '{item["Gratuity"]}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0', TicketNumber = '{SaleReceiptNumber}', SVCFee = '0',SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}',MerchantFee = '{item["MerchantFeeForTip"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{item["CreditCardTransactionID"]}'";
-                        }
-
-                        RunQueryUpdate(sqlCommand, scriptUpdate);
-                    }
+                    dtPaymentRoleDetails = Query(sqlCommand, $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{SaleReceiptID}'");
 
                     foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
                     {
-                        using (SqlCommand sqlCommand = new SqlCommand())
-                        using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                        drs = dtPaymentRoleDetails.Select($"SaleReceiptID = '{item["SaleReceiptID"]}' and SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}'", "");
+                        if (drs.Length > 0)
                         {
-                            if (conn.State == ConnectionState.Closed)
-                                conn.Open();
-
-                            sqlCommand.Connection = conn;
-                            sqlCommand.CommandType = CommandType.Text;
-
-                            if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("CreditCardTransactionID", item)))
-                            {
-                                sql = $"select distinct BatchUnique from MERCHANT.dbo.TransactionDetail where ID = '{dtTokenSaleReceiptPaymentDetails.Rows[0]["CreditCardTransactionID"]}'";
-                                sqlCommand.CommandText = sql;
-                                batchUnique = Utility.GetStringFromObject(sqlCommand.ExecuteScalar());
-                            }
+                            scriptUpdate += $"update PaymentRoleDetails set Gratuity = '{item["Gratuity"]}', SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{drs[0]["ID"]}';";
                         }
-
-                        if (!string.IsNullOrWhiteSpace(batchUnique))
-                            UpdateBatchByBatchUnique(batchUnique);
+                        else
+                        {
+                            scriptUpdate += $"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)";
+                            scriptUpdate += $"    VALUES (NEWID(), '{SaleReceiptID}', '{item["SaleReceiptPaymentDetailID"]}', '{item["PaymentMethodID"]}', '{item["PaymentMethodType"]}', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{item["Gratuity"]}', '{item["SVCFeeForGratuity"]}', '{item["MerchantFeeForTip"]}', '{DateCreated}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}'  );";
+                        }
                     }
                 }
 
-                IsSuccess = true;
+                foreach (DataRow item in dtTokenSaleReceiptPaymentDetails.Rows)
+                {
+                    if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("CreditCardTransactionID", item)))
+                        scriptUpdate += $"update {merchantDb}.dbo.TransactionDetail with (ROWLOCK) set InvoiceNo = '{dtSaleReceipts.Rows[0]["InvoiceNum"]}', Amount = 0, Gratuity = '{item["Gratuity"]}', SubTotal= '0', TaxAmount = '0', TotalAmount = '0', TicketNumber = '{SaleReceiptNumber}', SVCFee = '0',SVCFeeForGratuity = '{item["SVCFeeForGratuity"]}',MerchantFee = '{item["MerchantFeeForTip"]}', MerchantFeeForTip = '{item["MerchantFeeForTip"]}' where ID = '{item["CreditCardTransactionID"]}';";
+                }
 
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"Something went wrong while searching for the ticket.{Environment.NewLine}Please try again or contact TruongDS.";
-                BLogicLogger.Exception("UpdateTipByTokenReceipt", ex, new System.Collections.Generic.List<object>() { SaleReceiptID, TokenSaleReceiptID });
-            }
-            finally
-            {
+                // Token ticket, payments, payment roles and card transactions in one execute.
+                RunQueryUpdate(sqlCommand, scriptUpdate);
 
-            }
+                UpdateFinalGratuityForSaleReceipts(sqlCommand, SaleReceiptID);
+
+                // Every batch a moved card transaction belongs to (the old code only looked at the first one).
+                foreach (string batch in cardsBefore.Rows.Cast<DataRow>().Select(r => Utility.GetStringFromRow("BatchUnique", r))
+                    .Where(b => !string.IsNullOrWhiteSpace(b)).Distinct())
+                    RecalculateBatch(sqlCommand, merchantDb, batch);
+
+                DataTable paymentsAfter = Query(sqlCommand, $"select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID in ({string.Join(",", dtTokenSaleReceiptPaymentDetails.Rows.Cast<DataRow>().Select(r => "'" + r["SaleReceiptPaymentDetailID"] + "'"))})");
+                return new TxResult
+                {
+                    SaleReceiptID = SaleReceiptID,
+                    SaleReceiptNumber = dtSaleReceipts.Rows[0]["SaleReceiptNumber"],
+                    Summary = $"Moved {dtTokenSaleReceiptPaymentDetails.Rows.Count} payment(s) of token ticket #{TokenSaleReceiptNumber} to ticket #{SaleReceiptNumber} as tip " +
+                        $"({Utility.ConvertDecimalToMoneyString(dtTokenSaleReceiptPaymentDetails.Rows.Cast<DataRow>().Sum(r => Utility.GetDecimalFromRow("Gratuity", r)))}); token ticket closed",
+                    Before = tokenBefore,
+                    After = new
+                    {
+                        TokenTicket = new { TransactionStatusID = "CLO" },
+                        Payments = paymentsAfter.Rows.Cast<DataRow>().Select(r => AuditLog.Pick(r, "SaleReceiptPaymentDetailID", "SaleReceiptID", "AmountTendered", "Gratuity", "SVCFeeAmount", "SVCFeeForGratuity", "MerchantFee", "MerchantFeeForTip")).ToList(),
+                    },
+                };
+            });
         }
 
         private void UpdateFinalGratuityForSaleReceipts(SqlCommand sqlCommand, string saleID)
@@ -1128,7 +1098,7 @@ namespace ThirdPartyTool
         private void RunQueryUpdate(SqlCommand sqlCommand, string scriptUpdate, SqlParameter[] cmdParams = null)
         {
             BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
-            sqlCommand.CommandText = scriptUpdate;
+            sqlCommand.CommandText = SqlSafety.LowPriority + scriptUpdate;
 
             if (cmdParams != null)
             {
@@ -1146,6 +1116,20 @@ namespace ThirdPartyTool
                 BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
                 throw new Exception();
             }
+            AuditLog.Statement(sqlCommand.Connection.Database, scriptUpdate, cmdParams, AuditAction(), AuditSaleReceiptID());
+        }
+
+        /// <summary>Audit "Action" for statements of this process (e.g. VoidReceipt, AddTipForPaymentDetail).</summary>
+        private string AuditAction()
+        {
+            return CurrentProcessName == ProcessNameEnum.None ? null : CurrentProcessName.ToString();
+        }
+
+        /// <summary>Ticket this process works on, used when the statement itself does not name one.</summary>
+        private string AuditSaleReceiptID()
+        {
+            if (!string.IsNullOrWhiteSpace(requestModel?.SaleReceiptID)) return requestModel.SaleReceiptID;
+            return string.IsNullOrWhiteSpace(SaleReceiptID) ? null : SaleReceiptID;
         }
 
         private void UpdateBatchByBatchUnique(object batchUnique)
@@ -1219,159 +1203,124 @@ namespace ThirdPartyTool
             }
         }
 
+        /// <summary>
+        /// Add tip to one payment: payment tip/fees, its PaymentRoleDetails row, the ticket FinalGratuity, the card
+        /// transaction and its batch - all in one transaction (see RunTicketTransaction).
+        /// </summary>
         private void AddTipForPaymentDetail()
         {
-            DataRow[] drs = null;
-            string scriptUpdate = string.Empty;
-            string scriptUpdatePaymentRoleDetails = string.Empty;
-            string sql = string.Empty;
-            int resultQueryUpdate = 0;
-
-            try
+            RunTicketTransaction(AuditLog.ActionName("AddTipForPaymentDetail"), (sqlCommand, merchantDb) =>
             {
+                DataRow[] drs = null;
+                string scriptUpdate = string.Empty;
                 SaleReceiptPaymentDetailEntity paymentDetailEntity = null;
 
-                DataTable dtSaleReceipts = new DataTable("SaleReceipts");
-                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
-
+                DataTable dtSaleReceipts = Query(sqlCommand, $"select * from SaleReceipts with (UPDLOCK, ROWLOCK) where SaleReceiptID = '{SaleReceiptID}'");
+                DataTable dtSaleReceiptPaymentDetails = Query(sqlCommand, $"select a.*, b.PaymentMethodType from " +
+                    $" SaleReceiptPaymentDetails a with (UPDLOCK, ROWLOCK) left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
+                    $" where SaleReceiptPaymentDetailID = '{SaleReceiptPaymentDetailID}'");
                 DataTable dtPaymentRoleDetails = new DataTable("PaymentRoleDetails");
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+
+                #region verify Receipt
+                if (dtSaleReceipts.Rows.Count == 0 || dtSaleReceiptPaymentDetails.Rows.Count == 0)
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = $"select * from SaleReceipts where SaleReceiptID = '{SaleReceiptID}'";
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    dtSaleReceipts.Load(reader);
-                    reader.Close();
-
-                    sqlCommand.CommandText = $"select a.*, b.PaymentMethodType from " +
-                        $" SaleReceiptPaymentDetails a left join PaymentMethods b on a.PaymentMethodID = b.PaymentMethodID " +
-                        $" where SaleReceiptPaymentDetailID = '{SaleReceiptPaymentDetailID}'";
-                    reader = sqlCommand.ExecuteReader();
-                    dtSaleReceiptPaymentDetails.Load(reader);
-                    reader.Close();
-
-                    #region verify Receipt
-                    if (dtSaleReceiptPaymentDetails == null || dtSaleReceiptPaymentDetails.Rows.Count == 0)
-                    {
-                        ErrorMessage = "The Receipt don't exist any Payment Detail.";
-                        return;
-                    }
-
-                    paymentDetailEntity = SaleReceiptPaymentDetailEntity.FromDataRow(dtSaleReceiptPaymentDetails.Rows[0]);
-
-                    paymentDetailEntity.Gratuity = AddTipForPaymentDetail_Gratuity;
-
-                    if (paymentDetailEntity.SVCFeeAmount != 0)
-                        paymentDetailEntity.SVCFeeForGratuity = Math.Round(paymentDetailEntity.Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
-                    else
-                        paymentDetailEntity.SVCFeeForGratuity = 0;
-
-                    if (paymentDetailEntity.MerchantFee != 0)
-                    {
-                        paymentDetailEntity.MerchantFee = Math.Round((paymentDetailEntity.AmountTendered - paymentDetailEntity.AmountReturn + paymentDetailEntity.Gratuity) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
-                        paymentDetailEntity.MerchantFeeForTip = Math.Round(paymentDetailEntity.Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
-                    }
-                    else
-                    {
-                        paymentDetailEntity.MerchantFee = 0;
-                        paymentDetailEntity.MerchantFeeForTip = 0;
-                    }
-
-                    #endregion
-
-                    var CashierID = Utility.GetIntFromRow("CashierID", dtSaleReceipts.Rows[0]);
-                    var DateCreated = Utility.GetDateTimeFromRow("DateCreated", dtSaleReceipts.Rows[0]);
-
-                    var employeeClockInInfoEntity = Helper.GetEmployeeClockInInfoEntity(sqlCommand, CashierID, DateCreated);
-
-                    if (dtSaleReceiptPaymentDetails?.Rows.Count > 0)
-                    {
-                        scriptUpdate = $"    update SaleReceiptPaymentDetails set Gratuity = '{paymentDetailEntity.Gratuity}', " +
-                            $" SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}', " +
-                            $" MerchantFee = '{paymentDetailEntity.MerchantFee}', " +
-                            $" MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' " +
-                            $" where SaleReceiptPaymentDetailID = '{paymentDetailEntity.SaleReceiptPaymentDetailID}';";
-
-                        RunQueryUpdate(sqlCommand, scriptUpdate);
-
-                        drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
-                        if (drs.Length > 0)
-                        {
-                            sqlCommand.CommandText = $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{SaleReceiptID}' and SaleReceiptPaymentDetailID = '{SaleReceiptPaymentDetailID}'";
-                            reader = sqlCommand.ExecuteReader();
-                            dtPaymentRoleDetails.Load(reader);
-                            reader.Close();
-
-                            scriptUpdate = string.Empty;
-
-                            drs = dtPaymentRoleDetails.Select($"SaleReceiptID = '{paymentDetailEntity.SaleReceiptID}' and SaleReceiptPaymentDetailID = '{paymentDetailEntity.SaleReceiptPaymentDetailID}'", "");
-                            if (drs.Length > 0)
-                            {
-                                scriptUpdate += $"update PaymentRoleDetails set Gratuity = '{paymentDetailEntity.Gratuity}', SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}', MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' where ID = '{drs[0]["ID"]}';";
-                            }
-                            else
-                            {
-                                scriptUpdate += $"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)";
-                                scriptUpdate += $"    VALUES (NEWID(), '{paymentDetailEntity.SaleReceiptID}', '{paymentDetailEntity.SaleReceiptPaymentDetailID}', '{paymentDetailEntity.PaymentMethodID}', '{paymentDetailEntity.PaymentMethodType}', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{paymentDetailEntity.Gratuity}', '{paymentDetailEntity.SVCFeeForGratuity}', '{paymentDetailEntity.MerchantFeeForTip}', '{DateCreated}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}'  )";
-                            }
-
-                            RunQueryUpdate(sqlCommand, scriptUpdate);
-                        }
-                    }
-
-                    UpdateFinalGratuityForSaleReceipts(sqlCommand, SaleReceiptID);
-
+                    ErrorMessage = "The Receipt don't exist any Payment Detail.";
+                    return null;
                 }
 
-                string batchUnique = string.Empty;
+                DataRow paymentBefore = dtSaleReceiptPaymentDetails.Rows[0];
+                paymentDetailEntity = SaleReceiptPaymentDetailEntity.FromDataRow(paymentBefore);
+
+                paymentDetailEntity.Gratuity = AddTipForPaymentDetail_Gratuity;
+
+                if (paymentDetailEntity.SVCFeeAmount != 0)
+                    paymentDetailEntity.SVCFeeForGratuity = Math.Round(paymentDetailEntity.Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.SVCFee / 100, 2);
+                else
+                    paymentDetailEntity.SVCFeeForGratuity = 0;
+
+                if (paymentDetailEntity.MerchantFee != 0)
+                {
+                    paymentDetailEntity.MerchantFee = Math.Round((paymentDetailEntity.AmountTendered - paymentDetailEntity.AmountReturn + paymentDetailEntity.Gratuity) * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+                    paymentDetailEntity.MerchantFeeForTip = Math.Round(paymentDetailEntity.Gratuity * POSConfig.Configuration.ConfigValue.CreditCardConfigValue.MerchantFee / 100, 2);
+                }
+                else
+                {
+                    paymentDetailEntity.MerchantFee = 0;
+                    paymentDetailEntity.MerchantFeeForTip = 0;
+                }
+                #endregion
+
+                // Card transaction, read (and locked) before anything is written.
+                DataRow saleBefore = null;
                 if (!string.IsNullOrWhiteSpace(paymentDetailEntity.CreditCardTransactionID))
                 {
-                    DataTable dtTransactionDetail = new DataTable("TransactionDetail");
-                    using (SqlCommand sqlCommand = new SqlCommand())
-                    using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+                    DataTable sale = Query(sqlCommand, $"select * from {merchantDb}.dbo.TransactionDetail with (UPDLOCK, ROWLOCK) where ID = '{paymentDetailEntity.CreditCardTransactionID}'");
+                    saleBefore = sale.Rows.Count > 0 ? sale.Rows[0] : null;
+                }
+
+                var CashierID = Utility.GetIntFromRow("CashierID", dtSaleReceipts.Rows[0]);
+                var DateCreated = Utility.GetDateTimeFromRow("DateCreated", dtSaleReceipts.Rows[0]);
+
+                var employeeClockInInfoEntity = Helper.GetEmployeeClockInInfoEntity(sqlCommand, CashierID, DateCreated);
+
+                scriptUpdate = $"    update SaleReceiptPaymentDetails set Gratuity = '{paymentDetailEntity.Gratuity}', " +
+                    $" SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}', " +
+                    $" MerchantFee = '{paymentDetailEntity.MerchantFee}', " +
+                    $" MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' " +
+                    $" where SaleReceiptPaymentDetailID = '{paymentDetailEntity.SaleReceiptPaymentDetailID}';";
+
+                drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
+                if (drs.Length > 0)
+                {
+                    dtPaymentRoleDetails = Query(sqlCommand, $"select top 1 * from PaymentRoleDetails where SaleReceiptID = '{SaleReceiptID}' and SaleReceiptPaymentDetailID = '{SaleReceiptPaymentDetailID}'");
+
+                    drs = dtPaymentRoleDetails.Select($"SaleReceiptID = '{paymentDetailEntity.SaleReceiptID}' and SaleReceiptPaymentDetailID = '{paymentDetailEntity.SaleReceiptPaymentDetailID}'", "");
+                    if (drs.Length > 0)
                     {
-                        if (conn.State == ConnectionState.Closed)
-                            conn.Open();
-
-                        sqlCommand.Connection = conn;
-                        sqlCommand.CommandType = CommandType.Text;
-
-                        scriptUpdate = $"update TransactionDetail set Gratuity = '{paymentDetailEntity.Gratuity}'," +
-                            $" SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}'," +
-                            $" MerchantFee = '{paymentDetailEntity.MerchantFee}'," +
-                            $" Total = Amount + {paymentDetailEntity.Gratuity}," +
-                            $" MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' " +
-                            $" where ID = '{paymentDetailEntity.CreditCardTransactionID}'";
-
-                        RunQueryUpdate(sqlCommand, scriptUpdate);
-
-                        sql = $"select distinct BatchUnique from MERCHANT.dbo.TransactionDetail where ID = '{paymentDetailEntity.CreditCardTransactionID}'";
-                        sqlCommand.CommandText = sql;
-                        batchUnique = Utility.GetStringFromObject(sqlCommand.ExecuteScalar());
+                        scriptUpdate += $"update PaymentRoleDetails set Gratuity = '{paymentDetailEntity.Gratuity}', SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}', MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' where ID = '{drs[0]["ID"]}';";
+                    }
+                    else
+                    {
+                        scriptUpdate += $"    INSERT INTO PaymentRoleDetails (ID,SaleReceiptID,SaleReceiptPaymentDetailID,PaymentMethodID,PaymentMethodType,EmployeeID,RolesID,TipRate,TipRateOT,Gratuity,SVCFeeForGratuity,MerchantFeeForTip,DateCreated,PartyServiceFeeAmount,PartyServiceFeeTaxAmount,SVCFeeForPartyServiceFeeAmount,MerchantFeeForPartyServiceFeeAmount,AutoGratuityAmount,AutoGratuityTaxAmount,SVCFeeForAutoGratuityAmount,MerchantFeeForAutoGratuityAmount,AreaFeeAmount,AreaFeeTaxAmount,SVCFeeForAreaFeeAmount,MerchantFeeForAreaFeeAmount,ServiceFee,ServiceFeeTaxAmount,SVCFeeForServiceFee,MerchantFeeForServiceFee)";
+                        scriptUpdate += $"    VALUES (NEWID(), '{paymentDetailEntity.SaleReceiptID}', '{paymentDetailEntity.SaleReceiptPaymentDetailID}', '{paymentDetailEntity.PaymentMethodID}', '{paymentDetailEntity.PaymentMethodType}', '{dtSaleReceipts.Rows[0]["CashierID"]}', '{employeeClockInInfoEntity.RolesID}', '{employeeClockInInfoEntity.TipRate}', '{employeeClockInInfoEntity.TipRateOT}', '{paymentDetailEntity.Gratuity}', '{paymentDetailEntity.SVCFeeForGratuity}', '{paymentDetailEntity.MerchantFeeForTip}', '{DateCreated}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}', '{0}'  );";
                     }
                 }
 
+                if (saleBefore != null)
+                {
+                    scriptUpdate += $"update {merchantDb}.dbo.TransactionDetail with (ROWLOCK) set Gratuity = '{paymentDetailEntity.Gratuity}'," +
+                        $" SVCFeeForGratuity = '{paymentDetailEntity.SVCFeeForGratuity}'," +
+                        $" MerchantFee = '{paymentDetailEntity.MerchantFee}'," +
+                        $" Total = Amount + {paymentDetailEntity.Gratuity}," +
+                        $" MerchantFeeForTip = '{paymentDetailEntity.MerchantFeeForTip}' " +
+                        $" where ID = '{paymentDetailEntity.CreditCardTransactionID}';";
+                }
 
+                // Payment, payment role and card transaction in one execute.
+                RunQueryUpdate(sqlCommand, scriptUpdate);
+
+                UpdateFinalGratuityForSaleReceipts(sqlCommand, SaleReceiptID);
+
+                string batchUnique = saleBefore == null ? "" : Utility.GetStringFromRow("BatchUnique", saleBefore);
                 if (!string.IsNullOrWhiteSpace(batchUnique))
-                    UpdateBatchByBatchUnique(batchUnique);
+                    RecalculateBatch(sqlCommand, merchantDb, batchUnique);
 
-                IsSuccess = true;
+                DataRow paymentAfter = Query(sqlCommand, $"select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{SaleReceiptPaymentDetailID}'").Rows[0];
+                DataRow saleAfter = saleBefore == null ? null
+                    : Query(sqlCommand, $"select * from {merchantDb}.dbo.TransactionDetail where ID = '{paymentDetailEntity.CreditCardTransactionID}'").Rows.Cast<DataRow>().FirstOrDefault();
+                string[] paymentColumns = { "SaleReceiptPaymentDetailID", "AmountTendered", "Gratuity", "SVCFeeForGratuity", "MerchantFee", "MerchantFeeForTip" };
+                string[] saleColumns = { "ID", "Number", "Amount", "Gratuity", "Total", "SVCFeeForGratuity", "MerchantFee", "MerchantFeeForTip", "BatchUnique", "BatchTotal" };
 
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"Something went wrong while searching for the ticket.{Environment.NewLine}Please try again or contact TruongDS.";
-                BLogicLogger.Exception("AddTipForPaymentDetail in ProcessForm", ex, new System.Collections.Generic.List<object>() { SaleReceiptID, SaleReceiptPaymentDetailID, AddTipForPaymentDetail_Gratuity });
-            }
-            finally
-            {
-
-            }
+                return new TxResult
+                {
+                    SaleReceiptID = SaleReceiptID,
+                    SaleReceiptNumber = dtSaleReceipts.Rows[0]["SaleReceiptNumber"],
+                    Summary = $"Tip {Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("Gratuity", paymentBefore))} -> {Utility.ConvertDecimalToMoneyString(paymentDetailEntity.Gratuity)} " +
+                        $"on payment {SaleReceiptPaymentDetailID}" + (saleBefore != null ? $", card transaction {Utility.GetStringFromRow("Number", saleBefore)}" : ""),
+                    Before = new { Payment = AuditLog.Pick(paymentBefore, paymentColumns), CardTransaction = AuditLog.Pick(saleBefore, saleColumns) },
+                    After = new { Payment = AuditLog.Pick(paymentAfter, paymentColumns), CardTransaction = AuditLog.Pick(saleAfter, saleColumns) },
+                };
+            });
         }
 
         private void ProcessSettleBatchOffline()
@@ -1679,12 +1628,16 @@ namespace ThirdPartyTool
 
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = sql;
+                    sqlCommand.CommandText = SqlSafety.LowPriority + sql;
                     var result = sqlCommand.ExecuteNonQuery();
 
                     if (result <= 0)
                     {
                         BLogicLogger.Error($"ProcessBatchCloseLocal error with:  {sql}");
+                    }
+                    else
+                    {
+                        AuditLog.Statement(conn.Database, sql, null, "ProcessBatchCloseLocal");
                     }
                 }
             }
@@ -1810,71 +1763,93 @@ namespace ThirdPartyTool
             }
         }
 
+        /// <summary>
+        /// Close ticket: status CLO, its PaymentRoleDetails removed, its card transactions taken out of their batch
+        /// (BatchStatus Closed, BatchUnique empty) and those batches recalculated. One transaction on one connection
+        /// (Merchant reached by name): all of it is saved or none of it, with one audit row.
+        /// </summary>
         public void CloseReceipt()
         {
             try
             {
-                DataTable dtEmployee = new DataTable("Employees");
-                DataTable dtRoles = new DataTable("Roles");
-
-                DataTable dtBatch = new DataTable("TransactionDetail");
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    var sql = $"update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = '{SaleReceiptID}'; ";
-
-                    RunQueryUpdate(sqlCommand, sql);
-
-                    DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
-                    if (drs.Length > 0)
-                    {
-                        sql = $"delete from PaymentRoleDetails where SaleReceiptID = '{SaleReceiptID}'; ";
-
-                        RunQueryUpdate(sqlCommand, sql);
-                    }
-                }
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    var sql = $"select distinct BatchUnique from TransactionDetail where ISNULL(BatchUnique, '') <> '' and " +
-                        $" ID in (select CreditCardTransactionID from {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails a where a.SaleReceiptID = '{SaleReceiptID}' and ISNULL(CreditCardTransactionID, '') <> '')";
-                    sqlCommand.CommandText = sql;
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    dtBatch.Load(reader);
-                    reader.Close();
-
-                    sql = $"update TransactionDetail set BatchStatus = 'Closed', BatchUnique = '{Guid.Empty}' " +
-                        $"where ID in (select CreditCardTransactionID from {Helper.BLOGICPOS7_Name}.dbo.SaleReceiptPaymentDetails a where a.SaleReceiptID = '{SaleReceiptID}' and ISNULL(CreditCardTransactionID, '') <> '')";
-
-                    RunQueryUpdate(sqlCommand, sql);
-
-                }
-
-                foreach (DataRow item in dtBatch.Rows)
-                {
-                    UpdateBatchByBatchUnique(item["BatchUnique"]);
-                }
+                SqlSafety.RunWithRetry(CloseReceiptOnce);
                 IsSuccess = true;
-
+            }
+            catch (Exception ex) when (SqlSafety.IsBusy(ex))
+            {
+                ErrorMessage = SqlSafety.BusyMessage;
+                BLogicLogger.Exception("CloseReceipt gave up after retries", ex);
             }
             catch (Exception ex)
             {
+                ErrorMessage = ex.Message;
                 BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
             }
+            finally
+            {
+                AuditLog.EndCapture();
+            }
         }
+
+        private void CloseReceiptOnce()
+        {
+            string merchantDb = "[" + Helper.Merchant_Name.Replace("]", "]]") + "]";
+            bool hasPaymentRoles = CurrentTableInDatabaseBLogicPOS7 == null
+                || CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "").Length > 0;
+            string cardIds = "select CreditCardTransactionID from SaleReceiptPaymentDetails where SaleReceiptID = @id and ISNULL(CreditCardTransactionID, '') <> ''";
+
+            using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+            {
+                conn.Open();
+                SqlSafety.PrepareTransactionalSession(conn);
+                using (SqlTransaction transaction = conn.BeginTransaction())
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+                    AuditLog.BeginCapture();
+
+                    DataTable receipt = LoadRows(cmd, "select * from SaleReceipts with (UPDLOCK, ROWLOCK) where SaleReceiptID = @id", SaleReceiptID);
+                    if (receipt.Rows.Count == 0)
+                        throw new Exception("Ticket not found.");
+                    DataTable cardsBefore = LoadRows(cmd, $"select ID, Number, TranType, TranStatus, BatchStatus, BatchUnique, Total from {merchantDb}.dbo.TransactionDetail with (UPDLOCK, ROWLOCK) where ID in ({cardIds})", SaleReceiptID);
+                    List<string> batches = cardsBefore.Rows.Cast<DataRow>().Select(r => Utility.GetStringFromRow("BatchUnique", r))
+                        .Where(b => !string.IsNullOrWhiteSpace(b) && b != Guid.Empty.ToString()).Distinct().ToList();
+                    int rolesBefore = hasPaymentRoles ? Convert.ToInt32(LoadRows(cmd, "select count(*) from PaymentRoleDetails where SaleReceiptID = @id", SaleReceiptID).Rows[0][0]) : 0;
+
+                    // The three changes, sent as one batch inside the transaction.
+                    string sql = "update SaleReceipts set TransactionStatusID = 'CLO' where SaleReceiptID = @id;" + Environment.NewLine +
+                        (hasPaymentRoles ? "delete from PaymentRoleDetails where SaleReceiptID = @id;" + Environment.NewLine : "") +
+                        $"update {merchantDb}.dbo.TransactionDetail with (ROWLOCK) set BatchStatus = 'Closed', BatchUnique = @empty where ID in ({cardIds});";
+                    ExecuteLogged(cmd, sql, new SqlParameter("@id", SaleReceiptID), new SqlParameter("@empty", Guid.Empty.ToString()));
+
+                    foreach (string batch in batches)
+                        RecalculateBatch(cmd, merchantDb, batch);
+
+                    DataTable cardsAfter = LoadRows(cmd, $"select ID, Number, TranType, TranStatus, BatchStatus, BatchUnique, Total from {merchantDb}.dbo.TransactionDetail where ID in ({cardIds})", SaleReceiptID);
+                    DataRow ticket = receipt.Rows[0];
+                    object before = new
+                    {
+                        Ticket = AuditLog.Pick(ticket, "SaleReceiptNumber", "TransactionStatusID", "TotalAmount", "PaidAmount"),
+                        PaymentRoleDetails = rolesBefore,
+                        CardTransactions = cardsBefore.Rows.Cast<DataRow>().Select(r => AuditLog.Pick(r, "ID", "Number", "BatchStatus", "BatchUnique", "Total")).ToList(),
+                    };
+                    object after = new
+                    {
+                        Ticket = new { TransactionStatusID = "CLO" },
+                        PaymentRoleDetails = 0,
+                        CardTransactions = cardsAfter.Rows.Cast<DataRow>().Select(r => AuditLog.Pick(r, "ID", "Number", "BatchStatus", "BatchUnique", "Total")).ToList(),
+                        RecalculatedBatches = batches,
+                    };
+                    string summary = $"Closed ticket #{ticket["SaleReceiptNumber"]} (was {ticket["TransactionStatusID"]})" +
+                        (rolesBefore > 0 ? $", removed {rolesBefore} payment role row(s)" : "") +
+                        (cardsBefore.Rows.Count > 0 ? $", took {cardsBefore.Rows.Count} card transaction(s) out of {batches.Count} batch(es)" : "");
+                    AuditLog.Write(cmd, AuditLog.ActionName("CloseReceipt"), SaleReceiptID, ticket["SaleReceiptNumber"], summary, before, after, AuditLog.EndCapture());
+
+                    transaction.Commit();
+                }
+            }
+        }
+
 
         public void HotFix_UpgradeTaxForTicket()
         {
@@ -2563,39 +2538,25 @@ namespace ThirdPartyTool
             }
         }
 
+        /// <summary>
+        /// Re-sync item types: lines of the date range with ItemGroupID 0 get their item's group. One set-based
+        /// statement (atomic and short), instead of one update per item group.
+        /// </summary>
         private void ReSyncItemType()
         {
-            try
+            RunTicketTransaction(AuditLog.ActionName("ReSyncItemType"), (sqlCommand, merchantDb) =>
             {
-                DataTable dtItems = new DataTable("Tables");
+                string groups = $"select distinct a.GroupID, c.ItemGroupID from SaleReceiptDetails a left join SaleReceipts b on a.SaleReceiptID = b.SaleReceiptID left join Items c on a.ItemID = c.ItemID" +
+                    $" where (a.PriceInitial is null or a.PriceInitial = 'P') and a.ItemGroupID = '0' and b.StartDate >= '{Item_StartDate}' and b.StartDate <= '{Item_EndDate}' and c.ItemGroupID is not null";
+                int groupCount = Query(sqlCommand, groups).Rows.Count;
 
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (var conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                RunQueryUpdate(sqlCommand, $";with g as ({groups}) update d set ItemGroupID = g.ItemGroupID from SaleReceiptDetails d with (ROWLOCK) join g on d.GroupID = g.GroupID;");
+
+                return new TxResult
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    sqlCommand.CommandText = $"select distinct a.GroupID, c.ItemGroupID from SaleReceiptDetails a left join SaleReceipts b on a.SaleReceiptID = b.SaleReceiptID left join Items c on a.ItemID = c.ItemID" +
-                        $" where(a.PriceInitial is null or a.PriceInitial = 'P') and a.ItemGroupID = '0' and b.StartDate >= '{Item_StartDate}' and b.StartDate <= '{Item_EndDate}' ";
-                    var reader = sqlCommand.ExecuteReader();
-                    dtItems.Load(reader);
-                    reader.Close();
-
-                    foreach (DataRow item in dtItems.Rows)
-                    {
-                        RunQueryUpdate(sqlCommand, $"update SaleReceiptDetails set ItemGroupID = '{item["ItemGroupID"]}' where GroupID = '{item["GroupID"]}'");
-                    }
-
-                    IsSuccess = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("GetListTableInDatabaseBLogicPOS7", ex);
-            }
+                    Summary = $"Re-synced item types for {groupCount} item group(s) of tickets started {Item_StartDate:MM/dd/yyyy} - {Item_EndDate:MM/dd/yyyy}",
+                };
+            });
         }
 
         private void EmployeePaycor_GetEmployees()
@@ -2994,160 +2955,94 @@ namespace ThirdPartyTool
             }
         }
 
+        /// <summary>Void ticket: status VOID (-115), payment roles removed, card Sales voided - one transaction.</summary>
         public void VoidReceipt()
         {
-            try
-            {
-                string sql = string.Empty;
-                DataTable dtSaleReceiptPaymentDetails = new DataTable("Employees");
-                DataTable dtRoles = new DataTable("Roles");
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    sql = $" update SaleReceipts set TransactionStatusID = 'VOID', ReturnCode = '-115' where SaleReceiptID = '{SaleReceiptID}'; ";
-
-                    RunQueryUpdate(sqlCommand, sql);
-                }
-
-                VoidTransactionDetail();
-
-                IsSuccess = true;
-
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
-            }
+            RunTicketTransaction(AuditLog.ActionName("VoidReceipt"), (sqlCommand, merchantDb) =>
+                VoidOrCancel(sqlCommand, merchantDb, "VOID", "-115", deletePayments: false));
         }
 
+        /// <summary>Cancel ticket: status CANR (-106), payment roles removed, card Sales voided, payments deleted - one transaction.</summary>
         public void CancelReceipt()
         {
-            try
-            {
-                string sql = string.Empty;
-                DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    sql = $" update SaleReceipts set TransactionStatusID = 'CANR', ReturnCode = '-106' where SaleReceiptID = '{SaleReceiptID}'; ";
-
-                    RunQueryUpdate(sqlCommand, sql);
-                }
-
-                VoidTransactionDetail();
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
-                    {
-                        sql = $"delete from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = '{item["SaleReceiptPaymentDetailID"]}'";
-                        RunQueryUpdate(sqlCommand, sql);
-                    }
-                }
-
-                IsSuccess = true;
-
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("CloseReceipt in ProcessForm", ex);
-            }
+            RunTicketTransaction(AuditLog.ActionName("CancelReceipt"), (sqlCommand, merchantDb) =>
+                VoidOrCancel(sqlCommand, merchantDb, "CANR", "-106", deletePayments: true));
         }
 
-        private void VoidTransactionDetail()
+        /// <summary>
+        /// Shared body of Void / Cancel, run inside RunTicketTransaction: ticket status, PaymentRoleDetails, each card
+        /// Sale set VOIDED with a VoidSale copy, its batch recalculated, and (Cancel) the payment rows deleted.
+        /// </summary>
+        private TxResult VoidOrCancel(SqlCommand sqlCommand, string merchantDb, string status, string returnCode, bool deletePayments)
         {
-            string sql = string.Empty;
-
-            DataTable dtSaleReceiptPaymentDetails = new DataTable("SaleReceiptPaymentDetails");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+            DataTable receipt = Query(sqlCommand, $"select * from SaleReceipts with (UPDLOCK, ROWLOCK) where SaleReceiptID = '{SaleReceiptID}'");
+            if (receipt.Rows.Count == 0)
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-                sqlCommand.Connection = conn;
-                sqlCommand.CommandType = CommandType.Text;
-
-                DataRow[] drs = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "");
-                if (drs.Length > 0)
-                {
-                    sql = $"delete from PaymentRoleDetails where SaleReceiptID = '{SaleReceiptID}'; ";
-
-                    RunQueryUpdate(sqlCommand, sql);
-                }
-
-                sqlCommand.CommandText = $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{SaleReceiptID}'";
-                SqlDataReader reader = sqlCommand.ExecuteReader();
-                dtSaleReceiptPaymentDetails.Load(reader);
-                reader.Close();
+                ErrorMessage = "The ticket does not exist.";
+                return null;
             }
+            DataTable payments = Query(sqlCommand, $"select * from SaleReceiptPaymentDetails with (UPDLOCK, ROWLOCK) where SaleReceiptID = '{SaleReceiptID}'");
 
-            using (SqlCommand sqlCommand = new SqlCommand())
-            using (SqlConnection conn = new SqlConnection(Helper.Merchant_Connection))
+            string sql = $" update SaleReceipts set TransactionStatusID = '{status}', ReturnCode = '{returnCode}' where SaleReceiptID = '{SaleReceiptID}'; ";
+            if (CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'PaymentRoleDetails'", "").Length > 0)
+                sql += $"delete from PaymentRoleDetails where SaleReceiptID = '{SaleReceiptID}'; ";
+            RunQueryUpdate(sqlCommand, sql);
+
+            // Card Sales: VOIDED + a VoidSale copy (same as before), then their batches.
+            List<string> voided = new List<string>();
+            HashSet<string> batches = new HashSet<string>();
+            foreach (DataRow item in payments.Rows)
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                if (Utility.GetIntFromRow("PaymentMethodID", item) != 2 || !Utility.GetStringFromRow("CreditCardTransactionType", item).Contains("Sale"))
+                    continue;
 
-                sqlCommand.Connection = conn;
-                sqlCommand.CommandType = CommandType.Text;
+                DataTable dtTransactionDetail = Query(sqlCommand, $"select * from {merchantDb}.dbo.TransactionDetail with (UPDLOCK, ROWLOCK) where ID = '{item["CreditCardTransactionID"]}'");
+                dtTransactionDetail.TableName = "TransactionDetail";
+                if (dtTransactionDetail.Rows.Count == 0)
+                    continue;
 
-                foreach (DataRow item in dtSaleReceiptPaymentDetails.Rows)
+                RunQueryUpdate(sqlCommand, $"update {merchantDb}.dbo.TransactionDetail with (ROWLOCK) set TranStatus = 'VOIDED' where ID = '{dtTransactionDetail.Rows[0]["ID"]}'");
+
+                string insert = GetSqlInsert(dtTransactionDetail).Replace("INSERT INTO dbo.TransactionDetail", $"INSERT INTO {merchantDb}.dbo.TransactionDetail");
+                SqlParameter[] parparms = GetCreateParameters(dtTransactionDetail);
+                for (int i = 0; i < dtTransactionDetail.Columns.Count; i++)
                 {
-                    if (Utility.GetIntFromRow("PaymentMethodID", item) == 2 &&
-                        Utility.GetStringFromRow("CreditCardTransactionType", item).Contains("Sale"))
-                    {
-                        DataTable dtTransactionDetail = new DataTable("TransactionDetail");
-                        sqlCommand.CommandText = $"select * from TransactionDetail where ID = '{item["CreditCardTransactionID"]}'";
-                        var readerMerchant = sqlCommand.ExecuteReader();
-                        dtTransactionDetail.Load(readerMerchant);
-                        readerMerchant.Close();
-
-                        if (dtTransactionDetail?.Rows.Count > 0)
-                        {
-                            sql = $"update MERCHANT.dbo.TransactionDetail set TranStatus = 'VOIDED' where ID = '{dtTransactionDetail.Rows[0]["ID"]}'";
-                            RunQueryUpdate(sqlCommand, sql);
-
-                            sql = GetSqlInsert(dtTransactionDetail);
-                            SqlParameter[] parparms = GetCreateParameters(dtTransactionDetail);
-
-                            int colCount = dtTransactionDetail.Columns.Count;
-
-                            for (int i = 0; i < colCount; i++)
-                            {
-                                if (i == 0)
-                                    parparms[i].Value = Guid.NewGuid().ToString();
-                                else if (dtTransactionDetail.Columns[i].ColumnName == "TranType")
-                                    parparms[i].Value = "VoidSale";
-                                else
-                                    parparms[i].Value = dtTransactionDetail.Rows[0][i];
-                            }
-
-                            RunQueryUpdate(sqlCommand, sql, parparms);
-
-                            if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", dtTransactionDetail.Rows[0])))
-                                UpdateBatchByBatchUnique(dtTransactionDetail.Rows[0]["BatchUnique"]);
-                        }
-                    }
+                    if (i == 0)
+                        parparms[i].Value = Guid.NewGuid().ToString();
+                    else if (dtTransactionDetail.Columns[i].ColumnName == "TranType")
+                        parparms[i].Value = "VoidSale";
+                    else
+                        parparms[i].Value = dtTransactionDetail.Rows[0][i];
                 }
+                RunQueryUpdate(sqlCommand, insert, parparms);
+                sqlCommand.Parameters.Clear();
+
+                voided.Add(Utility.GetStringFromRow("Number", dtTransactionDetail.Rows[0]));
+                string batch = Utility.GetStringFromRow("BatchUnique", dtTransactionDetail.Rows[0]);
+                if (!string.IsNullOrWhiteSpace(batch))
+                    batches.Add(batch);
             }
+            foreach (string batch in batches)
+                RecalculateBatch(sqlCommand, merchantDb, batch);
+
+            if (deletePayments && payments.Rows.Count > 0)
+                RunQueryUpdate(sqlCommand, $"delete from SaleReceiptPaymentDetails where SaleReceiptID = '{SaleReceiptID}'");
+
+            DataRow ticket = receipt.Rows[0];
+            return new TxResult
+            {
+                SaleReceiptID = SaleReceiptID,
+                SaleReceiptNumber = ticket["SaleReceiptNumber"],
+                Summary = $"Ticket #{ticket["SaleReceiptNumber"]} {ticket["TransactionStatusID"]} -> {status}" +
+                    (voided.Count > 0 ? $", voided card transaction(s) {string.Join(", ", voided)}" : "") +
+                    (deletePayments && payments.Rows.Count > 0 ? $", deleted {payments.Rows.Count} payment(s)" : ""),
+                Before = new
+                {
+                    Ticket = AuditLog.Pick(ticket, "SaleReceiptNumber", "TransactionStatusID", "ReturnCode", "TotalAmount", "PaidAmount"),
+                    Payments = payments.Rows.Cast<DataRow>().Select(r => AuditLog.Pick(r, "SaleReceiptPaymentDetailID", "PaymentMethodID", "AmountTendered", "Gratuity", "CreditCardTransactionID", "CreditCardTransactionType")).ToList(),
+                },
+                After = new { Ticket = new { TransactionStatusID = status, ReturnCode = returnCode }, VoidedCardTransactions = voided, PaymentsDeleted = deletePayments ? payments.Rows.Count : 0, RecalculatedBatches = batches.ToList() },
+            };
         }
 
         private string GetSqlInsert(DataTable dt)
@@ -3247,16 +3142,46 @@ namespace ThirdPartyTool
         {
             try
             {
+                // A deadlock or a lock wait > 5 s rolls the whole refund back; it is then simply run again.
+                SqlSafety.RunWithRetry(PartialRefundItemsOnce);
+                IsSuccess = true;
+            }
+            catch (RefundStop stop)
+            {
+                ErrorMessage = stop.Message;
+                BLogicLogger.Error("PartialRefundItems stopped: " + stop.Message);
+            }
+            catch (Exception ex) when (SqlSafety.IsBusy(ex))
+            {
+                ErrorMessage = SqlSafety.BusyMessage;
+                BLogicLogger.Exception("PartialRefundItems gave up after retries", ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                BLogicLogger.Exception("PartialRefundItems in ProcessForm", ex);
+            }
+            finally
+            {
+                AuditLog.EndCapture();
+            }
+        }
+
+        private void PartialRefundItemsOnce()
+        {
+            {
                 string merchantDb = "[" + Helper.Merchant_Name.Replace("]", "]]") + "]";
                 bool hasTaxDetails = CurrentTableInDatabaseBLogicPOS7.Select("TABLE_NAME = 'SaleReceiptDetailTaxDetails'", "").Length > 0;
 
                 using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
                 {
                     conn.Open();
+                    SqlSafety.PrepareTransactionalSession(conn);
                     using (SqlTransaction transaction = conn.BeginTransaction())
                     using (SqlCommand sqlCommand = conn.CreateCommand())
                     {
                         sqlCommand.Transaction = transaction;
+                        AuditLog.BeginCapture();
                         RefundCheck before = ReadRefundState(sqlCommand, merchantDb, hasTaxDetails);
 
                         // ---- guards: nothing has been written yet --------------------------------------------
@@ -3403,22 +3328,130 @@ namespace ThirdPartyTool
                         if (gaps.Count > 0)
                             throw new RefundStop("The refund did not add up, nothing was changed:" + Environment.NewLine + string.Join(Environment.NewLine, gaps));
 
+                        // ---- 7. audit row, in the same transaction as the refund -----------------------------------
+                        HashSet<string> groups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        List<string> refunded = new List<string>();
+                        foreach (ObjectValues item in requestModel.objectValues)
+                        {
+                            DataRow line = before.Lines.Rows.Cast<DataRow>().First(r => string.Equals(r["SaleReceiptDetailID"].ToString(), item.SaleReceiptDetailID?.ToString(), StringComparison.OrdinalIgnoreCase));
+                            groups.Add(Utility.GetStringFromRow("GroupID", line));
+                            refunded.Add($"{Utility.GetStringFromRow("Description", line)} x{item.RefundQuantity:0.##}" + (item.IsPartialRefund ? $" of {item.Quantity:0.##}" : ""));
+                        }
+                        Func<RefundCheck, object> snapshot = s => new
+                        {
+                            Ticket = AuditLog.Pick(s.Receipt, "SaleReceiptNumber", "TransactionStatusID", "TotalAmount", "TaxAmount", "PaidAmount", "SaleReceiptOriginalInfo"),
+                            Payment = AuditLog.Pick(s.Payment, "SaleReceiptPaymentDetailID", "PaymentMethodID", "AmountTendered", "CreditCardTransactionID", "CreditCardTransactionType"),
+                            CardTransaction = s.IsCard ? AuditLog.Pick(s.Sale, "ID", "Number", "TranType", "Amount", "Total", "AuthorizeAmount", "SubTotal", "TaxAmount", "TotalAmount", "MerchantFee", "BatchUnique", "BatchTotal") : null,
+                            Lines = s.Lines.Rows.Cast<DataRow>().Where(r => groups.Contains(Utility.GetStringFromRow("GroupID", r)))
+                                .Select(r => AuditLog.Pick(r, "SaleReceiptDetailID", "Description", "Quantity", "ExtendedPrice", "TaxAmount", "Status", "ReturnCode")).ToList(),
+                        };
+                        string summary = $"Refunded {string.Join(", ", refunded)}: {Utility.ConvertDecimalToMoneyString(refundTotal)} (tax {Utility.ConvertDecimalToMoneyString(refundTax)}) " +
+                            $"from payment {payment["SaleReceiptPaymentDetailID"]}" + (before.IsCard ? $", card transaction {Utility.GetStringFromRow("Number", sale)}" : "");
+                        AuditLog.Write(sqlCommand, "Refund items", receipt["SaleReceiptID"], receipt["SaleReceiptNumber"], summary,
+                            snapshot(before), snapshot(after), AuditLog.EndCapture());
+
                         transaction.Commit();
                     }
                 }
-
-                IsSuccess = true;
             }
-            catch (RefundStop stop)
+        }
+
+        /// <summary>What a transactional action reports for its audit row.</summary>
+        private sealed class TxResult
+        {
+            public object SaleReceiptID;
+            public object SaleReceiptNumber;
+            public string Summary;
+            public object Before;
+            public object After;
+        }
+
+        /// <summary>
+        /// Runs one user action as ONE transaction on ONE POS connection: the Merchant database is reached by name
+        /// (<paramref name="body"/> gets the quoted name), so POS and Merchant changes are saved together or not at
+        /// all. The body must use only the given command (never open its own connection) and may return null to stop
+        /// without saving (set ErrorMessage first). Adds the audit row, commits, and retries on deadlock / lock timeout.
+        /// </summary>
+        private void RunTicketTransaction(string action, Func<SqlCommand, string, TxResult> body)
+        {
+            try
             {
-                ErrorMessage = stop.Message;
-                BLogicLogger.Error("PartialRefundItems stopped: " + stop.Message);
+                bool saved = false;
+                SqlSafety.RunWithRetry(() =>
+                {
+                    saved = false;
+                    string merchantDb = "[" + Helper.Merchant_Name.Replace("]", "]]") + "]";
+                    using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                    {
+                        conn.Open();
+                        SqlSafety.PrepareTransactionalSession(conn);
+                        using (SqlTransaction transaction = conn.BeginTransaction())
+                        using (SqlCommand cmd = conn.CreateCommand())
+                        {
+                            cmd.Transaction = transaction;
+                            cmd.CommandType = CommandType.Text;
+                            AuditLog.BeginCapture();
+
+                            TxResult result = body(cmd, merchantDb);
+                            if (result == null)
+                            {
+                                AuditLog.EndCapture();
+                                return; // nothing saved: the transaction is rolled back on dispose
+                            }
+
+                            AuditLog.Write(cmd, action, result.SaleReceiptID, result.SaleReceiptNumber, result.Summary, result.Before, result.After, AuditLog.EndCapture());
+                            transaction.Commit();
+                            saved = true;
+                        }
+                    }
+                });
+                IsSuccess = saved;
+            }
+            catch (Exception ex) when (SqlSafety.IsBusy(ex))
+            {
+                ErrorMessage = SqlSafety.BusyMessage;
+                BLogicLogger.Exception(action + " gave up after retries", ex);
             }
             catch (Exception ex)
             {
-                ErrorMessage = ex.Message;
-                BLogicLogger.Exception("PartialRefundItems in ProcessForm", ex);
+                if (string.IsNullOrWhiteSpace(ErrorMessage))
+                    ErrorMessage = $"{action} failed, nothing was changed.{Environment.NewLine}{ex.Message}";
+                BLogicLogger.Exception(action + " in ProcessForm", ex);
             }
+            finally
+            {
+                AuditLog.EndCapture();
+            }
+        }
+
+        /// <summary>Service charge fields of the ticket, its payment and card transaction, for the audit row.</summary>
+        private object ServiceChargeSnapshot(SqlCommand cmd, string merchantDb)
+        {
+            string id = requestModel.serviceChargesValues.SaleReceiptID;
+            DataRow receipt = Query(cmd, $"select * from SaleReceipts where SaleReceiptID = '{id}'").Rows.Cast<DataRow>().FirstOrDefault();
+            DataRow payment = Query(cmd, $"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{id}'").Rows.Cast<DataRow>().FirstOrDefault();
+            string card = payment == null ? "" : Utility.GetStringFromRow("CreditCardTransactionID", payment);
+            DataRow sale = string.IsNullOrWhiteSpace(card) ? null
+                : Query(cmd, $"select * from {merchantDb}.dbo.TransactionDetail where ID = '{card}'").Rows.Cast<DataRow>().FirstOrDefault();
+            return new
+            {
+                Ticket = AuditLog.Pick(receipt, "SaleReceiptNumber", "TotalAmount", "PaidAmount", "TaxAmount", "SalesOrderFee", "ServiceChargeTaxAmount",
+                    "PartyServiceFeeAmount", "PartyServiceFeeTaxAmount", "AreaFeeAmount", "AreaFeeTaxAmount", "AutoGratuityAmount", "AutoGratuityTaxAmount", "ServiceFee", "ServiceFeeTaxAmount"),
+                Payment = AuditLog.Pick(payment, "SaleReceiptPaymentDetailID", "AmountTendered", "PaidServiceFee", "PartyServiceFeeAmount", "PartyServiceFeeTaxAmount",
+                    "SVCFeeForServiceCharge", "SVCFeeForPartyServiceFeeAmount", "MerchantFee", "MerchantFeeForPartyServiceFeeAmount"),
+                CardTransaction = AuditLog.Pick(sale, "ID", "Number", "Amount", "AuthorizeAmount", "Total", "SVCFee", "MerchantFee", "TaxAmount", "TotalAmount", "BatchUnique", "BatchTotal"),
+            };
+        }
+
+        /// <summary>Rows of a query run on the transaction's command (POS or "[Merchant].dbo." names).</summary>
+        private static DataTable Query(SqlCommand cmd, string sql)
+        {
+            DataTable table = new DataTable();
+            cmd.Parameters.Clear();
+            cmd.CommandText = sql;
+            using (SqlDataReader reader = cmd.ExecuteReader())
+                table.Load(reader);
+            return table;
         }
 
         /// <summary>A refund rule was not met; the message is shown to the user as is.</summary>
@@ -3444,14 +3477,14 @@ namespace ThirdPartyTool
         {
             RefundCheck state = new RefundCheck();
             // UPDLOCK: the rows stay ours until COMMIT, so nobody can refund the same lines in between.
-            DataTable receipt = LoadRows(sqlCommand, "select * from SaleReceipts with (UPDLOCK) where SaleReceiptID = @id", requestModel.SaleReceiptID);
+            DataTable receipt = LoadRows(sqlCommand, "select * from SaleReceipts with (UPDLOCK, ROWLOCK) where SaleReceiptID = @id", requestModel.SaleReceiptID);
             state.Receipt = receipt.Rows.Count > 0 ? receipt.Rows[0] : null;
 
-            DataTable payment = LoadRows(sqlCommand, "select * from SaleReceiptPaymentDetails with (UPDLOCK) where SaleReceiptPaymentDetailID = @id", requestModel.SaleReceiptPaymentDetailID);
+            DataTable payment = LoadRows(sqlCommand, "select * from SaleReceiptPaymentDetails with (UPDLOCK, ROWLOCK) where SaleReceiptPaymentDetailID = @id", requestModel.SaleReceiptPaymentDetailID);
             state.Payment = payment.Rows.Count > 0 && string.Equals(payment.Rows[0]["SaleReceiptID"].ToString(), requestModel.SaleReceiptID, StringComparison.OrdinalIgnoreCase)
                 ? payment.Rows[0] : null;
 
-            state.Lines = LoadRows(sqlCommand, "select * from SaleReceiptDetails with (UPDLOCK) where SaleReceiptID = @id", requestModel.SaleReceiptID);
+            state.Lines = LoadRows(sqlCommand, "select * from SaleReceiptDetails with (UPDLOCK, ROWLOCK) where SaleReceiptID = @id", requestModel.SaleReceiptID);
             foreach (DataRow line in state.Lines.Rows)
             {
                 if (Utility.GetIntFromRow("Status", line) == 2) continue;
@@ -3471,7 +3504,7 @@ namespace ThirdPartyTool
             state.IsCard = state.Payment != null && Utility.GetIntFromRow("PaymentMethodID", state.Payment) == 2 && !string.IsNullOrWhiteSpace(cardID);
             if (state.IsCard)
             {
-                DataTable sale = LoadRows(sqlCommand, $"select * from {merchantDb}.dbo.TransactionDetail with (UPDLOCK) where ID = @id", cardID);
+                DataTable sale = LoadRows(sqlCommand, $"select * from {merchantDb}.dbo.TransactionDetail with (UPDLOCK, ROWLOCK) where ID = @id", cardID);
                 state.Sale = sale.Rows.Count > 0 ? sale.Rows[0] : null;
             }
             return state;
@@ -3530,8 +3563,14 @@ namespace ThirdPartyTool
         private static void RecalculateBatch(SqlCommand sqlCommand, string merchantDb, string batchUnique)
         {
             string td = merchantDb + ".dbo.TransactionDetail";
+            // Same as UpdateBatchByBatchUnique: a batch with no transactions left is removed.
             ExecuteLogged(sqlCommand, $@"
-;with t as (
+if not exists (select 1 from {td} where BatchUnique = @b)
+begin
+    delete from {merchantDb}.dbo.Batch where BatchUnique = @b;
+    return;
+end;
+with t as (
     select sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Total else 0 end) - sum(case when TranType = 'Return' then Total else 0 end) as Total,
            sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then SVCFeeForGratuity else 0 end) as TotalSVCFeeForTip,
            sum(case when (TranType = 'Sale' or TranType = 'PreAuthCapture') and TranStatus = 'ACTIVE' then Amount - SVCFee else 0 end) as TotalSales,
@@ -3543,10 +3582,11 @@ namespace ThirdPartyTool
       from {td} where BatchUnique = @b)
 update b set Total = t.Total, TotalSVCFeeForTip = t.TotalSVCFeeForTip, TotalSales = t.TotalSales, TotalTips = t.TotalTips,
              TotalSVCFeeAmount = t.TotalSVCFeeAmount, DepositAmount = t.DepositAmount, MerchantFeeAmount = t.MerchantFeeAmount, Quantity = t.TicketCount
-  from {merchantDb}.dbo.Batch b cross join t
+  from {merchantDb}.dbo.Batch b with (ROWLOCK) cross join t
  where b.BatchUnique = @b;
-update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where BatchUnique = @b) where BatchUnique = @b
-   and exists (select 1 from {merchantDb}.dbo.Batch where BatchUnique = @b);", new SqlParameter("@b", batchUnique));
+declare @batchTotal money = (select Total from {merchantDb}.dbo.Batch where BatchUnique = @b);
+if @batchTotal is not null
+    update {td} with (ROWLOCK) set BatchTotal = @batchTotal where BatchUnique = @b and ISNULL(BatchTotal, -1) <> @batchTotal;", new SqlParameter("@b", batchUnique));
         }
 
         private static int ExecuteLoggedCount(SqlCommand sqlCommand, string sql, params SqlParameter[] parameters)
@@ -3556,6 +3596,7 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
             sqlCommand.CommandText = sql;
             sqlCommand.Parameters.AddRange(parameters);
             int rows = sqlCommand.ExecuteNonQuery();
+            AuditLog.Statement(sqlCommand.Connection.Database, sql, parameters);
             sqlCommand.Parameters.Clear();
             return rows;
         }
@@ -3721,6 +3762,7 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
             sqlCommand.CommandText = sql;
             sqlCommand.Parameters.AddRange(parameters);
             sqlCommand.ExecuteNonQuery();
+            AuditLog.Statement(sqlCommand.Connection.Database, sql, parameters);
             sqlCommand.Parameters.Clear();
         }
 
@@ -3774,28 +3816,52 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
         }
 
         /// <summary>
-        /// Adds an Open Price / Negative Price item (no tax) to a finished ticket and moves the chosen
-        /// payment by the same amount. For a card payment the Merchant TransactionDetail follows and its
-        /// batch is recalculated. POS writes are one transaction; the Merchant write is committed right after.
+        /// Adds an Open Price / Negative Price item (no tax) to a finished ticket and moves the chosen payment by the
+        /// same amount. For a card payment the Merchant TransactionDetail follows and an open batch is recalculated.
+        /// Everything (POS, Merchant, audit row) is one transaction; a deadlock or long lock wait rolls it back and
+        /// runs it again.
         /// </summary>
         public void AddSpecialItem()
         {
-            SpecialItemValues values = requestModel.specialItemValues;
             try
             {
-                object batchUnique = null;
+                SqlSafety.RunWithRetry(AddSpecialItemOnce);
+                IsSuccess = true;
+            }
+            catch (Exception ex) when (SqlSafety.IsBusy(ex))
+            {
+                ErrorMessage = SqlSafety.BusyMessage;
+                BLogicLogger.Exception("AddSpecialItem gave up after retries", ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                BLogicLogger.Exception("AddSpecialItem in ProcessForm", ex);
+            }
+            finally
+            {
+                AuditLog.EndCapture();
+            }
+        }
 
-                using (SqlConnection pos = new SqlConnection(Helper.BLOGICPOS7_Connection))
-                using (SqlConnection merchant = new SqlConnection(Helper.Merchant_Connection))
+        private void AddSpecialItemOnce()
+        {
+            SpecialItemValues values = requestModel.specialItemValues;
+            string merchantDb = "[" + Helper.Merchant_Name.Replace("]", "]]") + "]";
+
+            using (SqlConnection pos = new SqlConnection(Helper.BLOGICPOS7_Connection))
+            {
+                pos.Open();
+                SqlSafety.PrepareTransactionalSession(pos);
+                using (SqlTransaction posTransaction = pos.BeginTransaction())
+                using (SqlCommand posCommand = pos.CreateCommand())
                 {
-                    pos.Open();
-                    SqlTransaction posTransaction = pos.BeginTransaction();
-                    SqlCommand posCommand = pos.CreateCommand();
                     posCommand.Transaction = posTransaction;
+                    AuditLog.BeginCapture();
 
-                    DataTable dtReceipt = LoadRows(posCommand, "select * from SaleReceipts where SaleReceiptID = @id", values.SaleReceiptID);
+                    DataTable dtReceipt = LoadRows(posCommand, "select * from SaleReceipts with (UPDLOCK, ROWLOCK) where SaleReceiptID = @id", values.SaleReceiptID);
                     DataTable dtItem = LoadRows(posCommand, "select * from Items where ItemID = @id", values.ItemID);
-                    DataTable dtPayment = LoadRows(posCommand, "select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = @id", values.SaleReceiptPaymentDetailID);
+                    DataTable dtPayment = LoadRows(posCommand, "select * from SaleReceiptPaymentDetails with (UPDLOCK, ROWLOCK) where SaleReceiptPaymentDetailID = @id", values.SaleReceiptPaymentDetailID);
                     // An existing item line of the ticket is the template, so every POS column gets a sensible value.
                     DataTable dtTemplate = LoadRows(posCommand, "select top 1 * from SaleReceiptDetails where SaleReceiptID = @id and ISNULL(PriceInitial,'') in ('','P') " +
                         "order by case when Status = 2 then 1 else 0 end, Range", values.SaleReceiptID);
@@ -3805,6 +3871,28 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                     if (dtPayment.Rows.Count == 0) throw new Exception("Payment not found.");
                     if (dtTemplate.Rows.Count == 0) throw new Exception("The ticket has no item line to copy from.");
 
+                    DataRow receipt = dtReceipt.Rows[0];
+                    DataRow payment = dtPayment.Rows[0];
+                    decimal amount = values.Amount;
+                    decimal newTendered = Utility.GetDecimalFromRow("AmountTendered", payment) + amount;
+                    if (newTendered < 0)
+                        throw new Exception("The payment amount cannot go below zero.");
+
+                    // Card payment: read (and lock) the Merchant transaction before writing anything.
+                    DataRow sale = null;
+                    string cardTransactionID = Utility.GetStringFromRow("CreditCardTransactionID", payment);
+                    if (Utility.GetIntFromRow("PaymentMethodID", payment) == 2 && !string.IsNullOrWhiteSpace(cardTransactionID))
+                    {
+                        DataTable dtTransaction = LoadRows(posCommand, $"select * from {merchantDb}.dbo.TransactionDetail with (UPDLOCK, ROWLOCK) where ID = @id", cardTransactionID);
+                        sale = dtTransaction.Rows.Count > 0 ? dtTransaction.Rows[0] : null;
+                    }
+                    object before = new
+                    {
+                        Ticket = AuditLog.Pick(receipt, "SaleReceiptNumber", "TransactionStatusID", "TotalAmount", "PaidAmount", "TotalQuantity"),
+                        Payment = AuditLog.Pick(payment, "SaleReceiptPaymentDetailID", "PaymentMethodID", "AmountTendered", "CreditCardTransactionID"),
+                        CardTransaction = AuditLog.Pick(sale, "ID", "Number", "TranType", "Amount", "Total", "AuthorizeAmount", "TotalAmount", "BatchUnique", "BatchTotal"),
+                    };
+
                     posCommand.Parameters.Clear();
                     posCommand.CommandText = "select ISNULL(MAX(Range), -1) from SaleReceiptDetails where SaleReceiptID = @id";
                     posCommand.Parameters.AddWithValue("@id", values.SaleReceiptID);
@@ -3812,12 +3900,11 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                     posCommand.Parameters.Clear();
 
                     DateTime now = DateTime.Now;
-                    decimal amount = values.Amount;
                     DataRow template = dtTemplate.Rows[0];
-                    InsertCopy(posCommand, "SaleReceiptDetails", template, BuildSpecialItemLine(template, dtItem.Rows[0], values, nextRange, now));
+                    Dictionary<string, object> newLine = BuildSpecialItemLine(template, dtItem.Rows[0], values, nextRange, now);
+                    InsertCopy(posCommand, "SaleReceiptDetails", template, newLine);
 
                     // Ticket totals
-                    DataRow receipt = dtReceipt.Rows[0];
                     decimal newTotal = Utility.GetDecimalFromRow("TotalAmount", receipt) + amount;
                     List<SqlParameter> receiptParams = new List<SqlParameter>
                     {
@@ -3830,10 +3917,10 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                         receiptSet += ", TotalQuantity = ISNULL(TotalQuantity, 0) + 1";
                     if (receipt.Table.Columns.Contains("DetailSummary"))
                     {
-                        string summary = Utility.GetStringFromRow("DetailSummary", receipt);
+                        string detailSummary = Utility.GetStringFromRow("DetailSummary", receipt);
                         string line = $"(1) {values.ItemName}";
                         receiptSet += ", DetailSummary = @summary";
-                        receiptParams.Add(new SqlParameter("@summary", string.IsNullOrWhiteSpace(summary) ? line : summary + ", " + line));
+                        receiptParams.Add(new SqlParameter("@summary", string.IsNullOrWhiteSpace(detailSummary) ? line : detailSummary + ", " + line));
                     }
                     if (receipt.Table.Columns.Contains("LastModifyDateTime"))
                     {
@@ -3843,66 +3930,54 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                     ExecuteLogged(posCommand, $"update SaleReceipts set {receiptSet} where SaleReceiptID = @id", receiptParams.ToArray());
 
                     // Payment moves by the same amount
-                    DataRow payment = dtPayment.Rows[0];
-                    decimal newTendered = Utility.GetDecimalFromRow("AmountTendered", payment) + amount;
-                    if (newTendered < 0)
-                        throw new Exception("The payment amount cannot go below zero.");
                     ExecuteLogged(posCommand, "update SaleReceiptPaymentDetails set AmountTendered = @a where SaleReceiptPaymentDetailID = @id",
                         new SqlParameter("@a", newTendered),
                         new SqlParameter("@id", payment["SaleReceiptPaymentDetailID"]));
 
-                    // Card payment: the Merchant transaction follows (Sale and PreAuth alike)
-                    SqlTransaction merchantTransaction = null;
-                    string cardTransactionID = Utility.GetStringFromRow("CreditCardTransactionID", payment);
-                    if (Utility.GetIntFromRow("PaymentMethodID", payment) == 2 && !string.IsNullOrWhiteSpace(cardTransactionID))
+                    // Card payment: the Merchant transaction follows (Sale and PreAuth alike), then its open batch
+                    if (sale != null)
                     {
-                        merchant.Open();
-                        merchantTransaction = merchant.BeginTransaction();
-                        SqlCommand merchantCommand = merchant.CreateCommand();
-                        merchantCommand.Transaction = merchantTransaction;
-
-                        DataTable dtTransaction = LoadRows(merchantCommand, "select * from TransactionDetail where ID = @id", cardTransactionID);
-                        if (dtTransaction.Rows.Count > 0)
+                        decimal oldAmount = Utility.GetDecimalFromRow("Amount", sale);
+                        List<SqlParameter> tranParams = new List<SqlParameter>
                         {
-                            DataRow transaction = dtTransaction.Rows[0];
-                            decimal oldAmount = Utility.GetDecimalFromRow("Amount", transaction);
-                            List<SqlParameter> tranParams = new List<SqlParameter>
-                            {
-                                new SqlParameter("@amount", oldAmount + amount),
-                                new SqlParameter("@total", Utility.GetDecimalFromRow("Total", transaction) + amount),
-                                new SqlParameter("@id", transaction["ID"]),
-                            };
-                            string tranSet = "Amount = @amount, Total = @total";
-                            if (transaction.Table.Columns.Contains("AuthorizeAmount") && Utility.GetDecimalFromRow("AuthorizeAmount", transaction) == oldAmount)
-                            {
-                                tranSet += ", AuthorizeAmount = @amount";
-                            }
-                            if (transaction.Table.Columns.Contains("TotalAmount"))
-                            {
-                                tranSet += ", TotalAmount = @ticketTotal";
-                                tranParams.Add(new SqlParameter("@ticketTotal", newTotal));
-                            }
-                            ExecuteLogged(merchantCommand, $"update TransactionDetail set {tranSet} where ID = @id", tranParams.ToArray());
-
-                            if (!string.IsNullOrWhiteSpace(Utility.GetStringFromRow("BatchUnique", transaction)))
-                                batchUnique = transaction["BatchUnique"];
+                            new SqlParameter("@amount", oldAmount + amount),
+                            new SqlParameter("@total", Utility.GetDecimalFromRow("Total", sale) + amount),
+                            new SqlParameter("@id", sale["ID"]),
+                        };
+                        string tranSet = "Amount = @amount, Total = @total";
+                        if (sale.Table.Columns.Contains("AuthorizeAmount") && Utility.GetDecimalFromRow("AuthorizeAmount", sale) == oldAmount)
+                            tranSet += ", AuthorizeAmount = @amount";
+                        if (sale.Table.Columns.Contains("TotalAmount"))
+                        {
+                            tranSet += ", TotalAmount = @ticketTotal";
+                            tranParams.Add(new SqlParameter("@ticketTotal", newTotal));
                         }
+                        ExecuteLogged(posCommand, $"update {merchantDb}.dbo.TransactionDetail with (ROWLOCK) set {tranSet} where ID = @id", tranParams.ToArray());
+
+                        string batchUnique = Utility.GetStringFromRow("BatchUnique", sale);
+                        if (!string.IsNullOrWhiteSpace(batchUnique))
+                            RecalculateBatch(posCommand, merchantDb, batchUnique);
                     }
 
+                    // Audit row, in the same transaction
+                    DataRow saleAfter = sale == null ? null
+                        : LoadRows(posCommand, $"select * from {merchantDb}.dbo.TransactionDetail where ID = @id", cardTransactionID).Rows.Cast<DataRow>().FirstOrDefault();
+                    object after = new
+                    {
+                        Ticket = AuditLog.Pick(LoadRows(posCommand, "select * from SaleReceipts where SaleReceiptID = @id", values.SaleReceiptID).Rows[0],
+                            "SaleReceiptNumber", "TransactionStatusID", "TotalAmount", "PaidAmount", "TotalQuantity"),
+                        Payment = AuditLog.Pick(LoadRows(posCommand, "select * from SaleReceiptPaymentDetails where SaleReceiptPaymentDetailID = @id", values.SaleReceiptPaymentDetailID).Rows[0],
+                            "SaleReceiptPaymentDetailID", "PaymentMethodID", "AmountTendered", "CreditCardTransactionID"),
+                        CardTransaction = AuditLog.Pick(saleAfter, "ID", "Number", "TranType", "Amount", "Total", "AuthorizeAmount", "TotalAmount", "BatchUnique", "BatchTotal"),
+                        NewLine = new { SaleReceiptDetailID = newLine["SaleReceiptDetailID"], Description = values.ItemName, ItemID = values.ItemID, Price = amount, Range = nextRange },
+                    };
+                    string summary = $"Added {values.ItemName} ({Utility.ConvertDecimalToMoneyString(amount)}, no tax); payment {payment["SaleReceiptPaymentDetailID"]} " +
+                        $"{Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("AmountTendered", payment))} -> {Utility.ConvertDecimalToMoneyString(newTendered)}" +
+                        (sale != null ? $", card transaction {Utility.GetStringFromRow("Number", sale)}" : "");
+                    AuditLog.Write(posCommand, "Add special item", receipt["SaleReceiptID"], receipt["SaleReceiptNumber"], summary, before, after, AuditLog.EndCapture());
+
                     posTransaction.Commit();
-                    merchantTransaction?.Commit();
                 }
-
-                // Runs on its own connection, after the TransactionDetail change is committed.
-                if (batchUnique != null)
-                    UpdateBatchByBatchUnique(batchUnique);
-
-                IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                BLogicLogger.Exception("AddSpecialItem in ProcessForm", ex);
             }
         }
 
@@ -3988,6 +4063,14 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
 
+                    // One transaction for the whole update (POS, Merchant, batch); every Dapper call below joins it.
+                    SqlSafety.PrepareTransactionalSession(conn);
+                    dapperTx = conn.BeginTransaction();
+                    sqlCommand.Transaction = dapperTx;
+                    AuditLog.BeginCapture();
+                    string merchantDb = "[" + Helper.Merchant_Name.Replace("]", "]]") + "]";
+                    object chargesBefore = ServiceChargeSnapshot(sqlCommand, merchantDb);
+
                     int _svcFeeType = 0;
                     decimal _svcFee = 0;
                     decimal _merchantFee = 0;
@@ -4002,7 +4085,7 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                         " where ConfigurationName in ('CreditCardConfigValue.SVCFee', 'CreditCardConfigValue.SVCFeeType', 'CreditCardConfigValue.MerchantFee', 'CreditCardConfigValue.CashDiscount', " +
                         " 'CreditCardConfigValue.TaxIncludeInSVCFee','CreditCardConfigValue.ApplyCustomFeeWhenPurchaseGiftCard','CreditCardConfigValue.DualPricePercent','SystemConfigValue.EnableDualPrice')";
 
-                    var configuratios = await conn.QueryAsync<Models.ConfigurationsEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                    var configuratios = await conn.QueryAsync<Models.ConfigurationsEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
 
                     foreach (var item in configuratios)
                     {
@@ -4046,22 +4129,22 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                     await UpdateServiceChargesForSaleReceipts(conn, ServiceChargeType.AutoServiceFee);
 
                     sql = $@"select * from SaleReceipts where SaleReceiptID = '{requestModel.serviceChargesValues.SaleReceiptID}'";
-                    var saleEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                    var saleEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
 
                     sql = $@"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{requestModel.serviceChargesValues.SaleReceiptID}'";
-                    var paymentEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptPaymentDetailEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                    var paymentEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptPaymentDetailEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
 
                     int cashAdjust = 1;
                     if (_EnableDualPrice == "1" && _DualPricePercent > 0)
                     {
                         sql = $"select IsDualPrice from PaymentMethods where PaymentMethodID = '{paymentEntity.PaymentMethodID}'";
-                        var tempResult = await conn.QueryFirstOrDefaultAsync<PaymentMethodEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                        var tempResult = await conn.QueryFirstOrDefaultAsync<PaymentMethodEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
                         cashAdjust = tempResult.IsDualPrice ? 2 : 1;
                     }
                     else
                     {
                         sql = $"select CashAdjust from PaymentMethods where PaymentMethodID = '{paymentEntity.PaymentMethodID}'";
-                        var tempResult = await conn.QueryFirstOrDefaultAsync<PaymentMethodEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                        var tempResult = await conn.QueryFirstOrDefaultAsync<PaymentMethodEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
                         cashAdjust = tempResult.CashAdjust;
                     }
 
@@ -4148,7 +4231,7 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                     if (!string.IsNullOrWhiteSpace(paymentEntity.CreditCardTransactionID))
                     {
                         sql = $@"select * from {Helper.Merchant_Name}.dbo.TransactionDetail where ID = '{paymentEntity.CreditCardTransactionID}'";
-                        var transactionDetailEntity = await conn.QueryFirstOrDefaultAsync<TransactionDetailEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+                        var transactionDetailEntity = await conn.QueryFirstOrDefaultAsync<TransactionDetailEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
 
                         if (transactionDetailEntity != null)
                         {
@@ -4165,10 +4248,15 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
                             await RunQueryUpdateAsync(conn, sql);
 
                             if (!string.IsNullOrWhiteSpace(transactionDetailEntity.BatchUnique))
-                                UpdateBatchByBatchUnique(transactionDetailEntity.BatchUnique);
+                                RecalculateBatch(sqlCommand, merchantDb, transactionDetailEntity.BatchUnique);
                         }
 
                     }
+
+                    AuditLog.Write(sqlCommand, AuditLog.ActionName("UpdateServiceChargeBySaleReceiptID"), requestModel.serviceChargesValues.SaleReceiptID, saleEntity.SaleReceiptNumber,
+                        $"Service charges updated on ticket #{saleEntity.SaleReceiptNumber}: total {Utility.ConvertDecimalToMoneyString(saleEntity.TotalAmount)}",
+                        chargesBefore, ServiceChargeSnapshot(sqlCommand, merchantDb), AuditLog.EndCapture());
+                    dapperTx.Commit();
                 }
 
                 IsSuccess = true;
@@ -4176,7 +4264,14 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
             }
             catch (Exception ex)
             {
+                ErrorMessage = SqlSafety.IsBusy(ex) ? SqlSafety.BusyMessage : $"Updating the service charges failed, nothing was changed.{Environment.NewLine}{ex.Message}";
                 BLogicLogger.Exception("UpdateServiceChargeBySaleReceiptID in ProcessFormAsync", ex);
+            }
+            finally
+            {
+                dapperTx?.Dispose(); // rolls back when not committed
+                dapperTx = null;
+                AuditLog.EndCapture();
             }
         }
 
@@ -4395,17 +4490,23 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
             try
             {
                 BLogicLogger.Error($"Run Script for {conn.Database} : {sql}");
-                var result = await conn.ExecuteAsync(sql, parameters, null, 180, System.Data.CommandType.Text);
+                var result = await conn.ExecuteAsync(SqlSafety.LowPriority + sql, parameters, dapperTx, 180, System.Data.CommandType.Text);
 
                 if (result < 0)
                 {
                     ErrorMessage = $"Something went wrong while run script update.{Environment.NewLine}Please try contact TruongDS.";
                     BLogicLogger.Exception("RunQueryUpdateAsync in ProcessForm", null, new System.Collections.Generic.List<object>() { sql, parameters });
                 }
+                else
+                {
+                    AuditLog.Statement(conn.Database, sql + AuditLog.DapperParams(parameters), null, AuditAction(), AuditSaleReceiptID());
+                }
             }
             catch (Exception ex)
             {
                 BLogicLogger.Exception("RunQueryUpdateAsync in ProcessForm", ex, new List<object>() { sql, parameters });
+                if (dapperTx != null)
+                    throw; // inside a transaction a failed statement must stop (and roll back) the whole action
             }
 
         }
@@ -4413,10 +4514,10 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
         private async Task UpdateServiceChargesForSaleReceipts(SqlConnection conn, ServiceChargeType serviceChargeType)
         {
             string sql = $@"select * from SaleReceipts where SaleReceiptID = '{requestModel.serviceChargesValues.SaleReceiptID}'";
-            var saleReceiptEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+            var saleReceiptEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
 
             sql = $@"select * from SaleReceiptPaymentDetails where SaleReceiptID = '{requestModel.serviceChargesValues.SaleReceiptID}'";
-            var saleReceiptPaymentDetailEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptPaymentDetailEntity>(sql, null, null, 180, System.Data.CommandType.Text);
+            var saleReceiptPaymentDetailEntity = await conn.QueryFirstOrDefaultAsync<SaleReceiptPaymentDetailEntity>(sql, null, dapperTx, 180, System.Data.CommandType.Text);
 
             decimal new_ServiceChargeAmount = 0;
             decimal new_ServiceChargeTaxAmount = 0;
@@ -4749,32 +4850,30 @@ update {td} set BatchTotal = (select Total from {merchantDb}.dbo.Batch where Bat
             }
         }
 
+        /// <summary>Update shift opening / closing amount, in one transaction with its audit row.</summary>
         public async Task UpdateShift()
         {
-            try
+            await Task.Run(() => RunTicketTransaction(AuditLog.ActionName("UpdateShift"), (sqlCommand, merchantDb) =>
             {
-
-                using (SqlCommand sqlCommand = new SqlCommand())
-                using (SqlConnection conn = new SqlConnection(Helper.BLOGICPOS7_Connection))
+                DataTable shift = Query(sqlCommand, $"select ShiftID, OpeningAmount, ClosingAmount, OpeningTime from Shift with (UPDLOCK, ROWLOCK) where ShiftID = '{requestModel.ShiftID}'");
+                if (shift.Rows.Count == 0)
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    sqlCommand.Connection = conn;
-                    sqlCommand.CommandType = CommandType.Text;
-
-                    string sql = $"update Shift set OpeningAmount = '{requestModel.OpeningAmount}', ClosingAmount = '{requestModel.ClosingAmount}' where ShiftID = '{requestModel.ShiftID}'";
-
-                    await RunQueryUpdateAsync(conn, sql);
+                    ErrorMessage = "Shift not found.";
+                    return null;
                 }
 
-                IsSuccess = true;
+                RunQueryUpdate(sqlCommand, $"update Shift set OpeningAmount = '{requestModel.OpeningAmount}', ClosingAmount = '{requestModel.ClosingAmount}' where ShiftID = '{requestModel.ShiftID}'");
 
-            }
-            catch (Exception ex)
-            {
-                BLogicLogger.Exception("UpdateServiceChargeBySaleReceiptID in ProcessFormAsync", ex);
-            }
+                DataRow before = shift.Rows[0];
+                return new TxResult
+                {
+                    Summary = $"Shift {requestModel.ShiftID} ({Utility.GetDateTimeFromRow("OpeningTime", before):MM/dd/yyyy HH:mm}): opening " +
+                        $"{Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("OpeningAmount", before))} -> {Utility.ConvertDecimalToMoneyString(requestModel.OpeningAmount)}, closing " +
+                        $"{Utility.ConvertDecimalToMoneyString(Utility.GetDecimalFromRow("ClosingAmount", before))} -> {Utility.ConvertDecimalToMoneyString(requestModel.ClosingAmount)}",
+                    Before = AuditLog.Pick(before, "ShiftID", "OpeningAmount", "ClosingAmount"),
+                    After = new { requestModel.ShiftID, requestModel.OpeningAmount, requestModel.ClosingAmount },
+                };
+            }));
         }
 
         private void ReCalculateServiceChargesInSaleReceiptPaymentDetails()

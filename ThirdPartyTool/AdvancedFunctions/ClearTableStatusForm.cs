@@ -33,6 +33,13 @@ namespace ThirdPartyTool.AdvancedFunctions
 
         private void DgvTables_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            // One audit row for everything this action changes.
+            using (AuditLog.Group("Advanced: clear table status", singleTicket: false))
+                DgvTables_CellClickCore(sender, e);
+        }
+
+        private void DgvTables_CellClickCore(object sender, DataGridViewCellEventArgs e)
+        {
             try
             {
                 if (e.RowIndex < 0)
@@ -67,10 +74,16 @@ namespace ThirdPartyTool.AdvancedFunctions
 
                         var script = GenerateScriptInsertNewTableBaseOldTable(dtTemp);
 
-                        var resultInsert = Helper.RunQueryUpdate(sqlCommand, script);
-                        if (resultInsert > 0)
+                        // New table row + old row marked deleted: both or neither (committed before any dialog shows).
+                        SqlSafety.PrepareTransactionalSession(conn);
+                        using (SqlTransaction transaction = conn.BeginTransaction())
                         {
-                            resultInsert = Helper.RunQueryUpdate(sqlCommand, $"Update Tables set isDeleted = '1' where TableID = '{tableID}'");
+                            sqlCommand.Transaction = transaction;
+                            var resultInsert = Helper.RunQueryUpdate(sqlCommand, script);
+                            if (resultInsert > 0)
+                                Helper.RunQueryUpdate(sqlCommand, $"Update Tables set isDeleted = '1' where TableID = '{tableID}'");
+                            transaction.Commit();
+                            sqlCommand.Transaction = null;
                         }
 
                         sqlCommand.CommandText = $"select TableID,AreaID,TableName from Tables where isDeleted = '0' order by TableName";

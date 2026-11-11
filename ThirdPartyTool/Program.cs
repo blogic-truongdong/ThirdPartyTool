@@ -34,6 +34,13 @@ namespace ThirdPartyTool
             Helper.BLOGICPOS7_Name = loginForm.PosDatabase;
             Helper.Merchant_Name = loginForm.MerchantDatabase;
 
+            // Change history of this tool: dbo.UpdateToolAuditLog in the POS database (created here when missing).
+            if (!string.IsNullOrWhiteSpace(Helper.BLOGICPOS7_Connection) && !AuditLog.EnsureTable(Helper.BLOGICPOS7_Connection))
+            {
+                new Dialog.InformationDialogForm($"The change history table ({AuditLog.TableName}) could not be created, so changes are only written to the log file." +
+                    Environment.NewLine + AuditLog.LastError).ShowDialog();
+            }
+
             HomeForm homeForm = new HomeForm();
             Helper.MainForm = homeForm;
             //homeForm.Icon = appIcon;

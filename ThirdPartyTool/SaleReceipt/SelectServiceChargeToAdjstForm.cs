@@ -112,10 +112,29 @@ namespace ThirdPartyTool.SaleReceipt
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            if (string.IsNullOrWhiteSpace(saveError))
+                return;
+            IsChangedServiceCharges = false;
+            BLogicMessageBox.ShowPopUpFormWithDIMBackground(new Dialog.ErrorDialogForm(saveError), this);
         }
 
+        /// <summary>Why the last change was not saved (null when it was).</summary>
+        private string saveError;
+
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // All statements of this change in one transaction (and one audit row): saved together or not at all.
+            saveError = null;
+            using (SqlUnit unit = SqlUnit.Begin("Update service charges", SaleReceiptID))
+            {
+                BackgroundWorker_DoWorkCore(sender, e);
+                if (!unit.Complete())
+                    saveError = SqlSafety.IsBusy(unit.Error) ? SqlSafety.BusyMessage
+                        : "Updating the service charge failed, nothing was changed." + (unit.Error == null ? "" : Environment.NewLine + unit.Error.Message);
+            }
+        }
+
+        private void BackgroundWorker_DoWorkCore(object sender, DoWorkEventArgs e)
         {
             try
             {

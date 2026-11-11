@@ -134,6 +134,21 @@ namespace ThirdPartyTool.SaleReceipt
 
         private void BtnOK_Click(object sender, EventArgs e)
         {
+            // All statements (POS, Merchant, batch) in one transaction and one audit row: saved together or not at all.
+            using (SqlUnit unit = SqlUnit.Begin("Finish ticket", SaleReceiptID))
+            {
+                BtnOK_ClickCore(sender, e);
+                if (!unit.Complete() && unit.Failed)
+                {
+                    string message = SqlSafety.IsBusy(unit.Error) ? SqlSafety.BusyMessage
+                        : "Finishing the ticket failed, nothing was changed." + (unit.Error == null ? "" : Environment.NewLine + unit.Error.Message);
+                    BLogicMessageBox.ShowPopUpFormWithDIMBackground(new ErrorDialogForm(message));
+                }
+            }
+        }
+
+        private void BtnOK_ClickCore(object sender, EventArgs e)
+        {
             //FinishTicketWithPaymentDetailForm_Load(sender, e);
             //return;
             //this.Close();

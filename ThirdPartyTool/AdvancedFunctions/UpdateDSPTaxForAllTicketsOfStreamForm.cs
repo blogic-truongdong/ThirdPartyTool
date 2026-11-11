@@ -102,6 +102,12 @@ namespace ThirdPartyTool.AdvancedFunctions
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            // Each ticket is updated in its own transaction (see the loop), with its own audit row.
+            BackgroundWorker_DoWorkCore(sender, e);
+        }
+
+        private void BackgroundWorker_DoWorkCore(object sender, DoWorkEventArgs e)
+        {
             try
             {
                 string sql = "select SaleReceiptID, TotalAmount, TaxAmount, SaleReceiptJson from SaleReceipts where SaleTypeID = '10' and TransactionStatusID in ('FIN','VOID')";
@@ -142,6 +148,7 @@ namespace ThirdPartyTool.AdvancedFunctions
                     decimal balance = newTax - TaxAmount;
 
                     if (balance < 0)
+                    using (SqlUnit unit = SqlUnit.Begin("Advanced: update DSP tax", Convert.ToString(rowReceipt["SaleReceiptID"])))
                     {
                         sql = $"select a.* from SaleReceiptDetails a where SaleReceiptID = '{rowReceipt["SaleReceiptID"]}' order by Range";
                         var listSaleReceiptDetails = Helper.ProcessQueryEntity<SaleReceiptDetailEntity>(true, sql);
@@ -237,6 +244,10 @@ namespace ThirdPartyTool.AdvancedFunctions
 
                         sql = $"update SaleReceipts set TotalAmount = '{TotalAmount + balance}', TaxAmount = '{newTax}' where SaleReceiptID = '{rowReceipt["SaleReceiptID"]}';";
                         Helper.RunQueryUpdate(true, sql);
+
+                        // This ticket's lines, tax lines and header: all or nothing.
+                        if (!unit.Complete())
+                            BLogicLogger.Error($"Update DSP tax: ticket {rowReceipt["SaleReceiptID"]} rolled back - {unit.Error?.Message}");
                     }
                     else
                     {

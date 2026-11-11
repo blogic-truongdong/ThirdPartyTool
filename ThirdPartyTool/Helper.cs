@@ -1230,11 +1230,15 @@ namespace ThirdPartyTool
         {
             try
             {
-                var result = await conn.ExecuteAsync(sql, parameters, null, 180, System.Data.CommandType.Text);
+                var result = await conn.ExecuteAsync(SqlSafety.LowPriority + sql, parameters, null, 180, System.Data.CommandType.Text);
 
                 if (result < 0)
                 {
                     BLogicLogger.Exception("RunQueryUpdateAsync in ProcessForm", null, new System.Collections.Generic.List<object>() { sql, parameters });
+                }
+                else
+                {
+                    AuditLog.Statement(conn.Database, sql + AuditLog.DapperParams(parameters));
                 }
             }
             catch (Exception ex)
@@ -1248,7 +1252,7 @@ namespace ThirdPartyTool
         {
             int result = -1;
             BLogicLogger.Error($"Run Script for {sqlCommand.Connection.Database} : {scriptUpdate}");
-            sqlCommand.CommandText = scriptUpdate;
+            sqlCommand.CommandText = SqlSafety.LowPriority + scriptUpdate;
             sqlCommand.CommandType = CommandType.Text;
 
             if (cmdParams != null)
@@ -1265,6 +1269,10 @@ namespace ThirdPartyTool
             {
                 BLogicLogger.Exception("RunQueryUpdate", null, new System.Collections.Generic.List<object>() { scriptUpdate });
             }
+            else
+            {
+                AuditLog.Statement(sqlCommand.Connection.Database, scriptUpdate, cmdParams);
+            }
 
             return result;
         }
@@ -1272,6 +1280,23 @@ namespace ThirdPartyTool
         public static DataTable ProcessQuery(bool isRunOnBLogicPOS7, string sql, string tableName)
         {
             DataTable dtReturn = new DataTable(tableName);
+
+            SqlUnit unit = SqlUnit.Current;
+            if (unit != null)
+            {
+                try
+                {
+                    using (SqlCommand cmd = unit.Command(isRunOnBLogicPOS7, sql))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                        dtReturn.Load(reader);
+                }
+                catch (Exception ex)
+                {
+                    unit.MarkFailed(ex);
+                    BLogicLogger.Exception("ProcessQuery in Helper (transaction)", ex, new List<object>() { sql });
+                }
+                return dtReturn;
+            }
 
             try
             {
@@ -1302,6 +1327,22 @@ namespace ThirdPartyTool
             object result = null;
 
             DataTable dtReturn = new DataTable();
+
+            SqlUnit unit = SqlUnit.Current;
+            if (unit != null)
+            {
+                try
+                {
+                    using (SqlCommand cmd = unit.Command(isRunOnBLogicPOS7, sql))
+                        result = cmd.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    unit.MarkFailed(ex);
+                    BLogicLogger.Exception("CreateQuerySelectUnique in Helper (transaction)", ex, new List<object>() { sql });
+                }
+                return result == DBNull.Value ? null : result;
+            }
 
             try
             {
@@ -1335,6 +1376,22 @@ namespace ThirdPartyTool
         public static List<T> ProcessQueryEntity<T>(bool isRunOnBLogicPOS7, string sql)
         {
             List<T> result = null;
+
+            SqlUnit unit = SqlUnit.Current;
+            if (unit != null)
+            {
+                try
+                {
+                    result = unit.Query<T>(isRunOnBLogicPOS7, sql);
+                }
+                catch (Exception ex)
+                {
+                    unit.MarkFailed(ex);
+                    BLogicLogger.Exception("ProcessQueryEntity in Helper (transaction)", ex, new List<object>() { sql });
+                }
+                return result;
+            }
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(isRunOnBLogicPOS7 ? BLOGICPOS7_Connection : Merchant_Connection))
@@ -1357,6 +1414,25 @@ namespace ThirdPartyTool
         {
             int result = -1;
 
+            SqlUnit unit = SqlUnit.Current;
+            if (unit != null)
+            {
+                BLogicLogger.Error($"Run Update Script (transaction): {scriptUpdate}");
+                try
+                {
+                    using (SqlCommand cmd = unit.Command(isRunOnBLogicPOS7, scriptUpdate, cmdParams))
+                        result = cmd.ExecuteNonQuery();
+                    AuditLog.Statement(isRunOnBLogicPOS7 ? BLOGICPOS7_Name : Merchant_Name, scriptUpdate, cmdParams);
+                }
+                catch (Exception ex)
+                {
+                    unit.MarkFailed(ex);
+                    BLogicLogger.Exception("RunQueryUpdate in Helper (transaction)", ex, new System.Collections.Generic.List<object>() { scriptUpdate });
+                    result = -1;
+                }
+                return result;
+            }
+
             try
             {
                 BLogicLogger.Error($"Run Update Script: {scriptUpdate}");
@@ -1369,7 +1445,7 @@ namespace ThirdPartyTool
 
                     sqlCommand.Connection = conn;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = scriptUpdate;
+                    sqlCommand.CommandText = SqlSafety.LowPriority + scriptUpdate;
 
                     if (cmdParams != null)
                     {
@@ -1381,6 +1457,8 @@ namespace ThirdPartyTool
                     }
 
                     result = sqlCommand.ExecuteNonQuery();
+                    if (result >= 0)
+                        AuditLog.Statement(conn.Database, scriptUpdate, cmdParams);
                 }
             }
             catch (Exception ex)
