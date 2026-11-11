@@ -22,16 +22,15 @@ namespace ThirdPartyTool.SaleReceipt
             RecalculatePaddingForTableLayoutPanel();
         }
 
+        /// <summary>Fits the dialog to the list: up to 4 rows show without scrolling.</summary>
         private void RecalculatePaddingForTableLayoutPanel()
         {
             try
             {
-                int count = this.pnlListReceipt.Controls.Count;
-                int width = count == 1 ? 270 : 540;
-                int height = count <= 3 ? 160 : 320;
-                int paddingLeft = (this.pnlListReceipt.Width - width) / 2;
-                int paddingTop = (this.pnlListReceipt.Height - height) / 2;
-                pnlListReceipt.Padding = new Padding(paddingLeft, 0, 0, 0);
+                const int rowHeight = 88; // 78 card + 10 gap
+                int rows = System.Math.Max(1, System.Math.Min(4, this.pnlListReceipt.Controls.Count));
+                int listHeight = rows * rowHeight + pnlListReceipt.Padding.Vertical;
+                this.ClientSize = new System.Drawing.Size(this.ClientSize.Width, pnlHeader.Height + listHeight + Padding.Vertical);
             }
             catch (System.Exception ex)
             {

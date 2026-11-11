@@ -14,6 +14,22 @@ namespace ThirdPartyTool.SaleReceipt
 
             this.Load += EnterServiceChargeForm_Load;
             this.Shown += EnterServiceChargeForm_Shown;
+
+            pnlPartyGratuity.Click += (s, e) => txtAmount.Focus();
+            bPanel_Rounded1.Click += (s, e) => txtTax.Focus();
+
+            KeyPreview = true;
+            KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Escape) BtnCancel_Click(s, e);
+                else if (e.KeyCode == Keys.Enter) BtnOK_Click(s, e);
+            };
+        }
+
+        /// <summary>Name of the charge being edited, shown as the title (e.g. "Party Gratuity").</summary>
+        public string ChargeName
+        {
+            set { if (!string.IsNullOrWhiteSpace(value)) lblTitle.Text = value; }
         }
 
         private void EnterServiceChargeForm_Shown(object sender, EventArgs e)

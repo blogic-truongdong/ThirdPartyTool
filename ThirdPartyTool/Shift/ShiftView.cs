@@ -131,6 +131,11 @@ namespace ThirdPartyTool.Shift
                 UpdateShiftForm updateShift = new UpdateShiftForm();
                 updateShift.txtOpeningAmount.Value = openingAmount;
                 updateShift.txtClosingAmount.Value = closingAmount;
+                string workstation = Utility.GetStringFromObject(gridRow.Cells["WorkstationName"].Value);
+                object opened = gridRow.Cells["OpeningTime"].Value;
+                updateShift.ShiftDescription = opened is DateTime
+                    ? $"{workstation}  ·  Opened {(DateTime)opened:MM/dd/yyyy hh:mm tt}"
+                    : workstation;
                 if (BLogicMessageBox.ShowPopUpFormWithDIMBackground(updateShift, Helper.MainForm) == DialogResult.OK)
                 {
                     ProcessForm processForm = new ProcessForm();

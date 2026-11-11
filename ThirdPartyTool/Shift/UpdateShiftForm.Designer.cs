@@ -29,215 +29,223 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnCancel = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.txtFocus = new System.Windows.Forms.TextBox();
-            this.pnlMerchant = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.pnlBLogicPOS7 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.btnOK = new ThirdPartyTool.CustomControl.BLabel_Rounded();
-            this.bTextBox1 = new ThirdPartyTool.CustomControl.BTextBox();
+            this.lblSubtitle = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pnlBLogicPOS7 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.txtOpeningAmount = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pnlMerchant = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.txtClosingAmount = new ThirdPartyTool.CustomControl.NumericTextBox();
+            this.btnCancel = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.btnOK = new ThirdPartyTool.CustomControl.BLabel_Rounded();
+            this.txtFocus = new System.Windows.Forms.TextBox();
+            this.bTextBox1 = new ThirdPartyTool.CustomControl.BTextBox();
             this.panel1.SuspendLayout();
-            this.pnlMerchant.SuspendLayout();
             this.pnlBLogicPOS7.SuspendLayout();
+            this.pnlMerchant.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // panel1
-            // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.txtFocus);
-            this.panel1.Controls.Add(this.pnlMerchant);
+            //
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.lblTitle);
+            this.panel1.Controls.Add(this.lblSubtitle);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.pnlBLogicPOS7);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.lblTitle);
+            this.panel1.Controls.Add(this.pnlMerchant);
+            this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Controls.Add(this.btnOK);
+            this.panel1.Controls.Add(this.txtFocus);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(1, 1);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(400, 250);
+            this.panel1.Size = new System.Drawing.Size(378, 310);
             this.panel1.TabIndex = 4;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.White;
-            this.btnCancel.BackgroundColor = System.Drawing.Color.White;
-            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
-            this.btnCancel.BorderRadius = 5;
-            this.btnCancel.BorderSize = 1;
-            this.btnCancel.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Location = new System.Drawing.Point(40, 190);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(150, 40);
-            this.btnCancel.TabIndex = 5;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnCancel.TextColor = System.Drawing.Color.Black;
-            // 
-            // txtFocus
-            // 
-            this.txtFocus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFocus.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtFocus.Font = new System.Drawing.Font("Roboto", 12F);
-            this.txtFocus.Location = new System.Drawing.Point(109, -50);
-            this.txtFocus.Name = "txtFocus";
-            this.txtFocus.Size = new System.Drawing.Size(180, 20);
-            this.txtFocus.TabIndex = 4;
-            // 
-            // pnlMerchant
-            // 
-            this.pnlMerchant.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlMerchant.BorderColor = System.Drawing.Color.Gray;
-            this.pnlMerchant.BorderRadius = 5;
-            this.pnlMerchant.BorderSize = 1;
-            this.pnlMerchant.Controls.Add(this.txtClosingAmount);
-            this.pnlMerchant.Location = new System.Drawing.Point(185, 123);
-            this.pnlMerchant.Name = "pnlMerchant";
-            this.pnlMerchant.Size = new System.Drawing.Size(170, 40);
-            this.pnlMerchant.TabIndex = 3;
-            // 
+            //
+            // lblTitle
+            //
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTitle.Location = new System.Drawing.Point(22, 18);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.TabIndex = 1;
+            this.lblTitle.Text = "Edit shift";
+            //
+            // lblSubtitle
+            //
+            this.lblSubtitle.AutoEllipsis = true;
+            this.lblSubtitle.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblSubtitle.Location = new System.Drawing.Point(24, 46);
+            this.lblSubtitle.Name = "lblSubtitle";
+            this.lblSubtitle.Size = new System.Drawing.Size(330, 18);
+            this.lblSubtitle.TabIndex = 2;
+            this.lblSubtitle.Text = "Change the cash counted at open and close.";
+            //
+            // label1
+            //
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.label1.Location = new System.Drawing.Point(24, 82);
+            this.label1.Name = "label1";
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Opening amount";
+            //
             // pnlBLogicPOS7
-            // 
-            this.pnlBLogicPOS7.BackgroundColor = System.Drawing.Color.Transparent;
-            this.pnlBLogicPOS7.BorderColor = System.Drawing.Color.Gray;
+            //
+            this.pnlBLogicPOS7.BackColor = System.Drawing.Color.White;
+            this.pnlBLogicPOS7.BackgroundColor = System.Drawing.Color.White;
+            this.pnlBLogicPOS7.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.pnlBLogicPOS7.BorderRadius = 5;
             this.pnlBLogicPOS7.BorderSize = 1;
             this.pnlBLogicPOS7.Controls.Add(this.txtOpeningAmount);
-            this.pnlBLogicPOS7.Location = new System.Drawing.Point(185, 73);
+            this.pnlBLogicPOS7.Location = new System.Drawing.Point(24, 104);
             this.pnlBLogicPOS7.Name = "pnlBLogicPOS7";
-            this.pnlBLogicPOS7.Size = new System.Drawing.Size(170, 40);
+            this.pnlBLogicPOS7.Size = new System.Drawing.Size(330, 40);
             this.pnlBLogicPOS7.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(45, 135);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(123, 19);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Closing Amount";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(45, 85);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 19);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Opening Amount";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTitle
-            // 
-            this.lblTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblTitle.Font = new System.Drawing.Font("Roboto", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.Location = new System.Drawing.Point(0, 0);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.lblTitle.Size = new System.Drawing.Size(398, 50);
-            this.lblTitle.TabIndex = 1;
-            this.lblTitle.Text = "Edit Shift";
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnOK
-            // 
-            this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(87)))), ((int)(((byte)(183)))));
-            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(87)))), ((int)(((byte)(183)))));
-            this.btnOK.BorderColor = System.Drawing.Color.Gray;
-            this.btnOK.BorderRadius = 5;
-            this.btnOK.BorderSize = 1;
-            this.btnOK.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-            this.btnOK.ForeColor = System.Drawing.Color.White;
-            this.btnOK.Location = new System.Drawing.Point(210, 190);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(150, 40);
-            this.btnOK.TabIndex = 0;
-            this.btnOK.Text = "OK";
-            this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnOK.TextColor = System.Drawing.Color.White;
-            // 
-            // bTextBox1
-            // 
-            this.bTextBox1.ForeColor = System.Drawing.Color.Gray;
-            this.bTextBox1.Location = new System.Drawing.Point(159, 145);
-            this.bTextBox1.Name = "bTextBox1";
-            this.bTextBox1.PlaceholderColor = System.Drawing.Color.Gray;
-            this.bTextBox1.PlaceholderText = "Enter text here...";
-            this.bTextBox1.Size = new System.Drawing.Size(100, 20);
-            this.bTextBox1.TabIndex = 3;
-            this.bTextBox1.Text = "Enter text here...";
-            // 
+            //
             // txtOpeningAmount
-            // 
+            //
+            this.txtOpeningAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtOpeningAmount.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtOpeningAmount.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtOpeningAmount.FormatSpecifier = "c2";
-            this.txtOpeningAmount.Location = new System.Drawing.Point(10, 11);
-            this.txtOpeningAmount.Margin = new System.Windows.Forms.Padding(5);
+            this.txtOpeningAmount.Location = new System.Drawing.Point(12, 10);
             this.txtOpeningAmount.MaxValue = new decimal(new int[] {
             999999999,
             0,
             0,
             0});
             this.txtOpeningAmount.Name = "txtOpeningAmount";
-            this.txtOpeningAmount.Size = new System.Drawing.Size(150, 20);
-            this.txtOpeningAmount.TabIndex = 34;
-            this.txtOpeningAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtOpeningAmount.Size = new System.Drawing.Size(306, 20);
+            this.txtOpeningAmount.TabIndex = 0;
+            this.txtOpeningAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtOpeningAmount.Value = new decimal(new int[] {
             0,
             0,
             0,
             0});
-            // 
+            //
+            // label2
+            //
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.label2.Location = new System.Drawing.Point(24, 158);
+            this.label2.Name = "label2";
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Closing amount";
+            //
+            // pnlMerchant
+            //
+            this.pnlMerchant.BackColor = System.Drawing.Color.White;
+            this.pnlMerchant.BackgroundColor = System.Drawing.Color.White;
+            this.pnlMerchant.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
+            this.pnlMerchant.BorderRadius = 5;
+            this.pnlMerchant.BorderSize = 1;
+            this.pnlMerchant.Controls.Add(this.txtClosingAmount);
+            this.pnlMerchant.Location = new System.Drawing.Point(24, 180);
+            this.pnlMerchant.Name = "pnlMerchant";
+            this.pnlMerchant.Size = new System.Drawing.Size(330, 40);
+            this.pnlMerchant.TabIndex = 4;
+            //
             // txtClosingAmount
-            // 
+            //
+            this.txtClosingAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtClosingAmount.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtClosingAmount.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtClosingAmount.FormatSpecifier = "c2";
-            this.txtClosingAmount.Location = new System.Drawing.Point(10, 11);
-            this.txtClosingAmount.Margin = new System.Windows.Forms.Padding(5);
+            this.txtClosingAmount.Location = new System.Drawing.Point(12, 10);
             this.txtClosingAmount.MaxValue = new decimal(new int[] {
             999999999,
             0,
             0,
             0});
             this.txtClosingAmount.Name = "txtClosingAmount";
-            this.txtClosingAmount.Size = new System.Drawing.Size(150, 20);
-            this.txtClosingAmount.TabIndex = 35;
-            this.txtClosingAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtClosingAmount.Size = new System.Drawing.Size(306, 20);
+            this.txtClosingAmount.TabIndex = 0;
+            this.txtClosingAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtClosingAmount.Value = new decimal(new int[] {
             0,
             0,
             0,
             0});
-            // 
+            //
+            // btnCancel
+            //
+            this.btnCancel.BackColor = System.Drawing.Color.White;
+            this.btnCancel.BackgroundColor = System.Drawing.Color.White;
+            this.btnCancel.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
+            this.btnCancel.BorderRadius = 5;
+            this.btnCancel.BorderSize = 1;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCancel.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.btnCancel.Location = new System.Drawing.Point(144, 246);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(100, 40);
+            this.btnCancel.TabIndex = 5;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnCancel.TextColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            //
+            // btnOK
+            //
+            this.btnOK.BackColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BorderColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BorderRadius = 5;
+            this.btnOK.BorderSize = 1;
+            this.btnOK.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnOK.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnOK.ForeColor = System.Drawing.Color.White;
+            this.btnOK.Location = new System.Drawing.Point(254, 246);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(100, 40);
+            this.btnOK.TabIndex = 6;
+            this.btnOK.Text = "Save";
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnOK.TextColor = System.Drawing.Color.White;
+            //
+            // txtFocus
+            //
+            this.txtFocus.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtFocus.Location = new System.Drawing.Point(109, -50);
+            this.txtFocus.Name = "txtFocus";
+            this.txtFocus.Size = new System.Drawing.Size(180, 20);
+            this.txtFocus.TabIndex = 7;
+            //
+            // bTextBox1
+            //
+            this.bTextBox1.Location = new System.Drawing.Point(20, 20);
+            this.bTextBox1.Name = "bTextBox1";
+            this.bTextBox1.Size = new System.Drawing.Size(100, 20);
+            this.bTextBox1.TabIndex = 8;
+            //
             // UpdateShiftForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(400, 250);
+            this.BackColor = System.Drawing.Color.FromArgb(189, 189, 189);
+            this.ClientSize = new System.Drawing.Size(380, 312);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.bTextBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "UpdateShiftForm";
+            this.Padding = new System.Windows.Forms.Padding(1);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "UpdateShiftForm";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.pnlMerchant.ResumeLayout(false);
-            this.pnlMerchant.PerformLayout();
             this.pnlBLogicPOS7.ResumeLayout(false);
             this.pnlBLogicPOS7.PerformLayout();
+            this.pnlMerchant.ResumeLayout(false);
+            this.pnlMerchant.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -245,6 +253,7 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblSubtitle;
         private CustomControl.BLabel_Rounded btnOK;
         private CustomControl.BTextBox bTextBox1;
         private System.Windows.Forms.Label label1;

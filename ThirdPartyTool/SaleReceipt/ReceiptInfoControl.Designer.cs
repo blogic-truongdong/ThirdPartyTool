@@ -2,12 +2,12 @@
 {
     partial class ReceiptInfoControl
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,200 +22,234 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlContainer = new System.Windows.Forms.Panel();
-            this.lblFinalTotalValue = new System.Windows.Forms.Label();
-            this.lblTipValue = new System.Windows.Forms.Label();
-            this.lblTotalValue = new System.Windows.Forms.Label();
-            this.lblStatusValue = new System.Windows.Forms.Label();
-            this.lblTicketNumberValue = new System.Windows.Forms.Label();
-            this.lblFinalTotalText = new System.Windows.Forms.Label();
-            this.lblTipText = new System.Windows.Forms.Label();
-            this.lblTotalText = new System.Windows.Forms.Label();
-            this.lblStatusText = new System.Windows.Forms.Label();
+            this.pnlContainer = new ThirdPartyTool.CustomControl.BPanel_Rounded();
+            this.flpTitle = new System.Windows.Forms.FlowLayoutPanel();
             this.lblTicketNumberText = new System.Windows.Forms.Label();
+            this.lblTicketNumberValue = new System.Windows.Forms.Label();
+            this.lblStatusValue = new System.Windows.Forms.Label();
+            this.flpDate = new System.Windows.Forms.FlowLayoutPanel();
             this.lblDateText = new System.Windows.Forms.Label();
             this.lblDateValue = new System.Windows.Forms.Label();
+            this.lblStatusText = new System.Windows.Forms.Label();
+            this.tlpAmounts = new System.Windows.Forms.TableLayoutPanel();
+            this.lblTotalText = new System.Windows.Forms.Label();
+            this.lblTotalValue = new System.Windows.Forms.Label();
+            this.lblTipText = new System.Windows.Forms.Label();
+            this.lblTipValue = new System.Windows.Forms.Label();
+            this.lblFinalTotalText = new System.Windows.Forms.Label();
+            this.lblFinalTotalValue = new System.Windows.Forms.Label();
             this.pnlContainer.SuspendLayout();
+            this.flpTitle.SuspendLayout();
+            this.flpDate.SuspendLayout();
+            this.tlpAmounts.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // pnlContainer
-            // 
-            this.pnlContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlContainer.Controls.Add(this.lblFinalTotalValue);
-            this.pnlContainer.Controls.Add(this.lblTipValue);
-            this.pnlContainer.Controls.Add(this.lblTotalValue);
-            this.pnlContainer.Controls.Add(this.lblStatusValue);
-            this.pnlContainer.Controls.Add(this.lblDateValue);
-            this.pnlContainer.Controls.Add(this.lblTicketNumberValue);
-            this.pnlContainer.Controls.Add(this.lblFinalTotalText);
-            this.pnlContainer.Controls.Add(this.lblTipText);
-            this.pnlContainer.Controls.Add(this.lblTotalText);
+            //
+            this.pnlContainer.BackColor = System.Drawing.Color.White;
+            this.pnlContainer.BackgroundColor = System.Drawing.Color.White;
+            this.pnlContainer.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
+            this.pnlContainer.BorderRadius = 8;
+            this.pnlContainer.BorderSize = 1;
+            this.pnlContainer.Controls.Add(this.flpTitle);
+            this.pnlContainer.Controls.Add(this.flpDate);
+            this.pnlContainer.Controls.Add(this.tlpAmounts);
             this.pnlContainer.Controls.Add(this.lblStatusText);
-            this.pnlContainer.Controls.Add(this.lblDateText);
-            this.pnlContainer.Controls.Add(this.lblTicketNumberText);
+            this.pnlContainer.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContainer.Location = new System.Drawing.Point(0, 0);
             this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Size = new System.Drawing.Size(260, 178);
+            this.pnlContainer.Size = new System.Drawing.Size(556, 78);
             this.pnlContainer.TabIndex = 0;
-            // 
-            // lblFinalTotalValue
-            // 
-            this.lblFinalTotalValue.AutoSize = true;
-            this.lblFinalTotalValue.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFinalTotalValue.Location = new System.Drawing.Point(102, 150);
-            this.lblFinalTotalValue.Margin = new System.Windows.Forms.Padding(5);
-            this.lblFinalTotalValue.Name = "lblFinalTotalValue";
-            this.lblFinalTotalValue.Size = new System.Drawing.Size(85, 18);
-            this.lblFinalTotalValue.TabIndex = 9;
-            this.lblFinalTotalValue.Text = "Final Total:";
-            // 
-            // lblTipValue
-            // 
-            this.lblTipValue.AutoSize = true;
-            this.lblTipValue.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTipValue.Location = new System.Drawing.Point(102, 122);
-            this.lblTipValue.Margin = new System.Windows.Forms.Padding(5);
-            this.lblTipValue.Name = "lblTipValue";
-            this.lblTipValue.Size = new System.Drawing.Size(35, 18);
-            this.lblTipValue.TabIndex = 8;
-            this.lblTipValue.Text = "Tip:";
-            this.lblTipValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTotalValue
-            // 
-            this.lblTotalValue.AutoSize = true;
-            this.lblTotalValue.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalValue.Location = new System.Drawing.Point(102, 94);
-            this.lblTotalValue.Margin = new System.Windows.Forms.Padding(5);
-            this.lblTotalValue.Name = "lblTotalValue";
-            this.lblTotalValue.Size = new System.Drawing.Size(47, 18);
-            this.lblTotalValue.TabIndex = 7;
-            this.lblTotalValue.Text = "Total:";
-            // 
-            // lblStatusValue
-            // 
-            this.lblStatusValue.AutoSize = true;
-            this.lblStatusValue.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusValue.Location = new System.Drawing.Point(102, 66);
-            this.lblStatusValue.Margin = new System.Windows.Forms.Padding(5);
-            this.lblStatusValue.Name = "lblStatusValue";
-            this.lblStatusValue.Size = new System.Drawing.Size(57, 18);
-            this.lblStatusValue.TabIndex = 6;
-            this.lblStatusValue.Text = "Status:";
-            // 
-            // lblTicketNumberValue
-            // 
-            this.lblTicketNumberValue.AutoSize = true;
-            this.lblTicketNumberValue.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTicketNumberValue.Location = new System.Drawing.Point(102, 38);
-            this.lblTicketNumberValue.Margin = new System.Windows.Forms.Padding(5);
-            this.lblTicketNumberValue.Name = "lblTicketNumberValue";
-            this.lblTicketNumberValue.Size = new System.Drawing.Size(68, 18);
-            this.lblTicketNumberValue.TabIndex = 5;
-            this.lblTicketNumberValue.Text = "Ticket #:";
-            // 
-            // lblFinalTotalText
-            // 
-            this.lblFinalTotalText.AutoSize = true;
-            this.lblFinalTotalText.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFinalTotalText.Location = new System.Drawing.Point(10, 150);
-            this.lblFinalTotalText.Margin = new System.Windows.Forms.Padding(5);
-            this.lblFinalTotalText.Name = "lblFinalTotalText";
-            this.lblFinalTotalText.Size = new System.Drawing.Size(82, 18);
-            this.lblFinalTotalText.TabIndex = 4;
-            this.lblFinalTotalText.Text = "Final Total:";
-            // 
-            // lblTipText
-            // 
-            this.lblTipText.AutoSize = true;
-            this.lblTipText.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTipText.Location = new System.Drawing.Point(10, 122);
-            this.lblTipText.Margin = new System.Windows.Forms.Padding(5);
-            this.lblTipText.Name = "lblTipText";
-            this.lblTipText.Size = new System.Drawing.Size(33, 18);
-            this.lblTipText.TabIndex = 3;
-            this.lblTipText.Text = "Tip:";
-            this.lblTipText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTotalText
-            // 
-            this.lblTotalText.AutoSize = true;
-            this.lblTotalText.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalText.Location = new System.Drawing.Point(10, 94);
-            this.lblTotalText.Margin = new System.Windows.Forms.Padding(5);
-            this.lblTotalText.Name = "lblTotalText";
-            this.lblTotalText.Size = new System.Drawing.Size(46, 18);
-            this.lblTotalText.TabIndex = 2;
-            this.lblTotalText.Text = "Total:";
-            // 
-            // lblStatusText
-            // 
-            this.lblStatusText.AutoSize = true;
-            this.lblStatusText.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusText.Location = new System.Drawing.Point(10, 66);
-            this.lblStatusText.Margin = new System.Windows.Forms.Padding(5);
-            this.lblStatusText.Name = "lblStatusText";
-            this.lblStatusText.Size = new System.Drawing.Size(55, 18);
-            this.lblStatusText.TabIndex = 1;
-            this.lblStatusText.Text = "Status:";
-            // 
+            //
+            // flpTitle
+            //
+            this.flpTitle.AutoSize = true;
+            this.flpTitle.BackColor = System.Drawing.Color.White;
+            this.flpTitle.Controls.Add(this.lblTicketNumberText);
+            this.flpTitle.Controls.Add(this.lblTicketNumberValue);
+            this.flpTitle.Controls.Add(this.lblStatusValue);
+            this.flpTitle.Location = new System.Drawing.Point(16, 14);
+            this.flpTitle.Name = "flpTitle";
+            this.flpTitle.Size = new System.Drawing.Size(250, 24);
+            this.flpTitle.WrapContents = false;
+            //
             // lblTicketNumberText
-            // 
+            //
             this.lblTicketNumberText.AutoSize = true;
-            this.lblTicketNumberText.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTicketNumberText.Location = new System.Drawing.Point(10, 38);
-            this.lblTicketNumberText.Margin = new System.Windows.Forms.Padding(5);
+            this.lblTicketNumberText.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTicketNumberText.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTicketNumberText.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.lblTicketNumberText.Name = "lblTicketNumberText";
-            this.lblTicketNumberText.Size = new System.Drawing.Size(67, 18);
-            this.lblTicketNumberText.TabIndex = 0;
-            this.lblTicketNumberText.Text = "Ticket #:";
-            // 
+            this.lblTicketNumberText.Text = "Ticket #";
+            //
+            // lblTicketNumberValue
+            //
+            this.lblTicketNumberValue.AutoSize = true;
+            this.lblTicketNumberValue.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTicketNumberValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTicketNumberValue.Margin = new System.Windows.Forms.Padding(0, 2, 10, 0);
+            this.lblTicketNumberValue.Name = "lblTicketNumberValue";
+            this.lblTicketNumberValue.Text = "";
+            //
+            // lblStatusValue
+            //
+            this.lblStatusValue.AutoSize = true;
+            this.lblStatusValue.BackColor = System.Drawing.Color.FromArgb(238, 238, 238);
+            this.lblStatusValue.Font = new System.Drawing.Font("Roboto", 8.5F, System.Drawing.FontStyle.Bold);
+            this.lblStatusValue.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.lblStatusValue.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.lblStatusValue.Name = "lblStatusValue";
+            this.lblStatusValue.Padding = new System.Windows.Forms.Padding(6, 2, 6, 2);
+            this.lblStatusValue.Text = "";
+            //
+            // flpDate
+            //
+            this.flpDate.AutoSize = true;
+            this.flpDate.BackColor = System.Drawing.Color.White;
+            this.flpDate.Controls.Add(this.lblDateText);
+            this.flpDate.Controls.Add(this.lblDateValue);
+            this.flpDate.Location = new System.Drawing.Point(16, 44);
+            this.flpDate.Name = "flpDate";
+            this.flpDate.Size = new System.Drawing.Size(250, 18);
+            this.flpDate.WrapContents = false;
+            //
             // lblDateText
-            // 
+            //
             this.lblDateText.AutoSize = true;
-            this.lblDateText.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDateText.Location = new System.Drawing.Point(10, 10);
-            this.lblDateText.Margin = new System.Windows.Forms.Padding(5);
+            this.lblDateText.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblDateText.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblDateText.Margin = new System.Windows.Forms.Padding(0);
             this.lblDateText.Name = "lblDateText";
-            this.lblDateText.Size = new System.Drawing.Size(43, 18);
-            this.lblDateText.TabIndex = 0;
-            this.lblDateText.Text = "Date:";
-            // 
+            this.lblDateText.Text = "Created ";
+            //
             // lblDateValue
-            // 
+            //
             this.lblDateValue.AutoSize = true;
-            this.lblDateValue.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDateValue.Location = new System.Drawing.Point(102, 10);
-            this.lblDateValue.Margin = new System.Windows.Forms.Padding(5);
+            this.lblDateValue.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblDateValue.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblDateValue.Margin = new System.Windows.Forms.Padding(0);
             this.lblDateValue.Name = "lblDateValue";
-            this.lblDateValue.Size = new System.Drawing.Size(68, 18);
-            this.lblDateValue.TabIndex = 5;
-            this.lblDateValue.Text = "Ticket #:";
-            // 
+            this.lblDateValue.Text = "";
+            //
+            // lblStatusText (kept for compatibility, not shown: the pill already says the status)
+            //
+            this.lblStatusText.Name = "lblStatusText";
+            this.lblStatusText.Text = "Status:";
+            this.lblStatusText.Visible = false;
+            //
+            // tlpAmounts
+            //
+            this.tlpAmounts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpAmounts.BackColor = System.Drawing.Color.White;
+            this.tlpAmounts.ColumnCount = 2;
+            this.tlpAmounts.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpAmounts.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.tlpAmounts.Controls.Add(this.lblTotalText, 0, 0);
+            this.tlpAmounts.Controls.Add(this.lblTotalValue, 1, 0);
+            this.tlpAmounts.Controls.Add(this.lblTipText, 0, 1);
+            this.tlpAmounts.Controls.Add(this.lblTipValue, 1, 1);
+            this.tlpAmounts.Controls.Add(this.lblFinalTotalText, 0, 2);
+            this.tlpAmounts.Controls.Add(this.lblFinalTotalValue, 1, 2);
+            this.tlpAmounts.Location = new System.Drawing.Point(366, 9);
+            this.tlpAmounts.Name = "tlpAmounts";
+            this.tlpAmounts.RowCount = 3;
+            this.tlpAmounts.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tlpAmounts.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            this.tlpAmounts.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tlpAmounts.Size = new System.Drawing.Size(174, 60);
+            //
+            // lblTotalText
+            //
+            this.lblTotalText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTotalText.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblTotalText.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblTotalText.Margin = new System.Windows.Forms.Padding(0);
+            this.lblTotalText.Name = "lblTotalText";
+            this.lblTotalText.Text = "Total";
+            this.lblTotalText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
+            // lblTotalValue
+            //
+            this.lblTotalValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTotalValue.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblTotalValue.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.lblTotalValue.Margin = new System.Windows.Forms.Padding(0);
+            this.lblTotalValue.Name = "lblTotalValue";
+            this.lblTotalValue.Text = "";
+            this.lblTotalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
+            // lblTipText
+            //
+            this.lblTipText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTipText.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblTipText.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.lblTipText.Margin = new System.Windows.Forms.Padding(0);
+            this.lblTipText.Name = "lblTipText";
+            this.lblTipText.Text = "Tip";
+            this.lblTipText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
+            // lblTipValue
+            //
+            this.lblTipValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTipValue.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.lblTipValue.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.lblTipValue.Margin = new System.Windows.Forms.Padding(0);
+            this.lblTipValue.Name = "lblTipValue";
+            this.lblTipValue.Text = "";
+            this.lblTipValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
+            // lblFinalTotalText
+            //
+            this.lblFinalTotalText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblFinalTotalText.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.lblFinalTotalText.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblFinalTotalText.Margin = new System.Windows.Forms.Padding(0);
+            this.lblFinalTotalText.Name = "lblFinalTotalText";
+            this.lblFinalTotalText.Text = "Final total";
+            this.lblFinalTotalText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
+            // lblFinalTotalValue
+            //
+            this.lblFinalTotalValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblFinalTotalValue.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.lblFinalTotalValue.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblFinalTotalValue.Margin = new System.Windows.Forms.Padding(0);
+            this.lblFinalTotalValue.Name = "lblFinalTotalValue";
+            this.lblFinalTotalValue.Text = "";
+            this.lblFinalTotalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
             // ReceiptInfoControl
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.pnlContainer);
-            this.Margin = new System.Windows.Forms.Padding(5);
+            this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.Name = "ReceiptInfoControl";
-            this.Size = new System.Drawing.Size(260, 178);
+            this.Size = new System.Drawing.Size(556, 78);
             this.pnlContainer.ResumeLayout(false);
             this.pnlContainer.PerformLayout();
+            this.flpTitle.ResumeLayout(false);
+            this.flpTitle.PerformLayout();
+            this.flpDate.ResumeLayout(false);
+            this.flpDate.PerformLayout();
+            this.tlpAmounts.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel pnlContainer;
+        private CustomControl.BPanel_Rounded pnlContainer;
+        private System.Windows.Forms.FlowLayoutPanel flpTitle;
+        private System.Windows.Forms.FlowLayoutPanel flpDate;
+        private System.Windows.Forms.TableLayoutPanel tlpAmounts;
         private System.Windows.Forms.Label lblTicketNumberText;
         private System.Windows.Forms.Label lblFinalTotalText;
         private System.Windows.Forms.Label lblTipText;

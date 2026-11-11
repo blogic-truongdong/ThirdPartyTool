@@ -52,7 +52,7 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // panel1
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Controls.Add(this.btnOK);
             this.panel1.Controls.Add(this.label5);
@@ -71,49 +71,52 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             this.btnCancel.BackColor = System.Drawing.Color.White;
             this.btnCancel.BackgroundColor = System.Drawing.Color.White;
-            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
-            this.btnCancel.BorderRadius = 8;
+            this.btnCancel.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
+            this.btnCancel.BorderRadius = 5;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancel.BorderSize = 1;
             this.btnCancel.FlatAppearance.BorderSize = 0;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("BLogic", 14F, System.Drawing.FontStyle.Bold);
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Location = new System.Drawing.Point(55, 291);
+            this.btnCancel.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
+            this.btnCancel.Location = new System.Drawing.Point(115, 290);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(5);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(140, 50);
+            this.btnCancel.Size = new System.Drawing.Size(110, 42);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.TabStop = false;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextColor = System.Drawing.Color.Black;
+            this.btnCancel.TextColor = System.Drawing.Color.FromArgb(66, 66, 66);
             this.btnCancel.UseVisualStyleBackColor = false;
             // 
             // btnOK
             // 
-            this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnOK.BorderColor = System.Drawing.Color.Gray;
-            this.btnOK.BorderRadius = 8;
+            this.btnOK.BackColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BorderColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BorderRadius = 5;
+            this.btnOK.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnOK.BorderSize = 1;
             this.btnOK.FlatAppearance.BorderSize = 0;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("BLogic", 14F, System.Drawing.FontStyle.Bold);
+            this.btnOK.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
             this.btnOK.ForeColor = System.Drawing.Color.White;
-            this.btnOK.Location = new System.Drawing.Point(205, 291);
+            this.btnOK.Location = new System.Drawing.Point(235, 290);
             this.btnOK.Margin = new System.Windows.Forms.Padding(5);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(140, 50);
+            this.btnOK.Size = new System.Drawing.Size(110, 42);
             this.btnOK.TabIndex = 4;
             this.btnOK.TabStop = false;
-            this.btnOK.Text = "OK";
+            this.btnOK.Text = "Save";
             this.btnOK.TextColor = System.Drawing.Color.White;
             this.btnOK.UseVisualStyleBackColor = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("BLogic", 14F);
-            this.label5.Location = new System.Drawing.Point(50, 189);
+            this.label5.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.label5.Location = new System.Drawing.Point(52, 188);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 27);
             this.label5.TabIndex = 13;
@@ -122,7 +125,7 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.Controls.Add(this.lblTitle);
             this.panel2.Controls.Add(this.detailServiceCharge);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -134,33 +137,34 @@ namespace ThirdPartyTool.SaleReceipt
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("BLogic", 15.75F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.White;
-            this.lblTitle.Location = new System.Drawing.Point(15, 15);
+            this.lblTitle.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTitle.Location = new System.Drawing.Point(17, 16);
             this.lblTitle.Margin = new System.Windows.Forms.Padding(5);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(217, 30);
             this.lblTitle.TabIndex = 6;
-            this.lblTitle.Text = "Enter Service Charge";
+            this.lblTitle.Text = "Edit service charge";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // detailServiceCharge
             // 
             this.detailServiceCharge.AutoSize = true;
-            this.detailServiceCharge.Font = new System.Drawing.Font("BLogic", 10F);
-            this.detailServiceCharge.ForeColor = System.Drawing.Color.White;
-            this.detailServiceCharge.Location = new System.Drawing.Point(16, 50);
+            this.detailServiceCharge.Font = new System.Drawing.Font("Roboto", 9.75F);
+            this.detailServiceCharge.ForeColor = System.Drawing.Color.FromArgb(117, 117, 117);
+            this.detailServiceCharge.Location = new System.Drawing.Point(20, 46);
             this.detailServiceCharge.Name = "detailServiceCharge";
             this.detailServiceCharge.Size = new System.Drawing.Size(288, 19);
             this.detailServiceCharge.TabIndex = 9;
-            this.detailServiceCharge.Text = "Enter the Amount & Tax for this service charge.";
+            this.detailServiceCharge.Text = "Enter the amount and tax for this charge.";
             this.detailServiceCharge.UseMnemonic = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("BLogic", 14F);
-            this.label2.Location = new System.Drawing.Point(50, 99);
+            this.label2.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            this.label2.Location = new System.Drawing.Point(52, 104);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 27);
             this.label2.TabIndex = 11;
@@ -170,12 +174,13 @@ namespace ThirdPartyTool.SaleReceipt
             // bPanel_Rounded1
             // 
             this.bPanel_Rounded1.BackgroundColor = System.Drawing.Color.White;
-            this.bPanel_Rounded1.BorderColor = System.Drawing.Color.Gray;
+            this.bPanel_Rounded1.BackColor = System.Drawing.Color.White;
+            this.bPanel_Rounded1.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.bPanel_Rounded1.BorderRadius = 5;
             this.bPanel_Rounded1.BorderSize = 1;
             this.bPanel_Rounded1.Controls.Add(this.txtTax);
             this.bPanel_Rounded1.Controls.Add(this.label4);
-            this.bPanel_Rounded1.Location = new System.Drawing.Point(55, 221);
+            this.bPanel_Rounded1.Location = new System.Drawing.Point(55, 210);
             this.bPanel_Rounded1.Margin = new System.Windows.Forms.Padding(5);
             this.bPanel_Rounded1.Name = "bPanel_Rounded1";
             this.bPanel_Rounded1.Size = new System.Drawing.Size(290, 40);
@@ -184,19 +189,19 @@ namespace ThirdPartyTool.SaleReceipt
             // txtTax
             // 
             this.txtTax.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtTax.Font = new System.Drawing.Font("BLogic", 14F);
+            this.txtTax.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtTax.FormatSpecifier = "c";
-            this.txtTax.Location = new System.Drawing.Point(39, 8);
+            this.txtTax.Location = new System.Drawing.Point(39, 10);
             this.txtTax.MaxValue = new decimal(new int[] {
             999999999,
             0,
             0,
             0});
             this.txtTax.Name = "txtTax";
-            this.txtTax.Size = new System.Drawing.Size(240, 23);
+            this.txtTax.Size = new System.Drawing.Size(238, 20);
             this.txtTax.TabIndex = 2;
             this.txtTax.Text = "0.00";
-            this.txtTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtTax.Value = new decimal(new int[] {
             0,
             0,
@@ -214,12 +219,13 @@ namespace ThirdPartyTool.SaleReceipt
             // pnlPartyGratuity
             // 
             this.pnlPartyGratuity.BackgroundColor = System.Drawing.Color.White;
-            this.pnlPartyGratuity.BorderColor = System.Drawing.Color.Gray;
+            this.pnlPartyGratuity.BackColor = System.Drawing.Color.White;
+            this.pnlPartyGratuity.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.pnlPartyGratuity.BorderRadius = 5;
             this.pnlPartyGratuity.BorderSize = 1;
             this.pnlPartyGratuity.Controls.Add(this.txtAmount);
             this.pnlPartyGratuity.Controls.Add(this.label1);
-            this.pnlPartyGratuity.Location = new System.Drawing.Point(55, 131);
+            this.pnlPartyGratuity.Location = new System.Drawing.Point(55, 126);
             this.pnlPartyGratuity.Margin = new System.Windows.Forms.Padding(5);
             this.pnlPartyGratuity.Name = "pnlPartyGratuity";
             this.pnlPartyGratuity.Size = new System.Drawing.Size(290, 40);
@@ -228,19 +234,19 @@ namespace ThirdPartyTool.SaleReceipt
             // txtAmount
             // 
             this.txtAmount.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtAmount.Font = new System.Drawing.Font("BLogic", 14F);
+            this.txtAmount.Font = new System.Drawing.Font("Roboto", 12F);
             this.txtAmount.FormatSpecifier = "c";
-            this.txtAmount.Location = new System.Drawing.Point(39, 8);
+            this.txtAmount.Location = new System.Drawing.Point(39, 10);
             this.txtAmount.MaxValue = new decimal(new int[] {
             999999999,
             0,
             0,
             0});
             this.txtAmount.Name = "txtAmount";
-            this.txtAmount.Size = new System.Drawing.Size(240, 23);
+            this.txtAmount.Size = new System.Drawing.Size(238, 20);
             this.txtAmount.TabIndex = 1;
             this.txtAmount.Text = "0.00";
-            this.txtAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtAmount.Value = new decimal(new int[] {
             0,
             0,
@@ -259,8 +265,9 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(400, 366);
+            this.BackColor = System.Drawing.Color.FromArgb(189, 189, 189);
+            this.ClientSize = new System.Drawing.Size(400, 360);
+            this.Padding = new System.Windows.Forms.Padding(1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "EnterServiceChargeForm";

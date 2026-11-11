@@ -99,7 +99,7 @@ namespace ThirdPartyTool.SaleReceipt
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            
             this.panel1.Controls.Add(this.panel7);
             this.panel1.Controls.Add(this.panel5);
             this.panel1.Controls.Add(this.pnlBatchID);
@@ -142,7 +142,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label19
             // 
-            this.label19.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label19.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.label19.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label19.Location = new System.Drawing.Point(20, 10);
             this.label19.Margin = new System.Windows.Forms.Padding(0);
             this.label19.Name = "label19";
@@ -253,7 +254,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label13
             // 
-            this.label13.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label13.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label13.Location = new System.Drawing.Point(460, 40);
             this.label13.Margin = new System.Windows.Forms.Padding(0);
             this.label13.Name = "label13";
@@ -301,7 +303,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label15
             // 
-            this.label15.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label15.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label15.Location = new System.Drawing.Point(240, 104);
             this.label15.Margin = new System.Windows.Forms.Padding(0);
             this.label15.Name = "label15";
@@ -312,7 +315,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label12
             // 
-            this.label12.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label12.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label12.Location = new System.Drawing.Point(240, 40);
             this.label12.Margin = new System.Windows.Forms.Padding(0);
             this.label12.Name = "label12";
@@ -323,7 +327,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label23
             // 
-            this.label23.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label23.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label23.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label23.Location = new System.Drawing.Point(240, 168);
             this.label23.Margin = new System.Windows.Forms.Padding(0);
             this.label23.Name = "label23";
@@ -334,7 +339,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label25
             // 
-            this.label25.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label25.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label25.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label25.Location = new System.Drawing.Point(20, 168);
             this.label25.Margin = new System.Windows.Forms.Padding(0);
             this.label25.Name = "label25";
@@ -345,7 +351,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label14
             // 
-            this.label14.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label14.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label14.Location = new System.Drawing.Point(20, 104);
             this.label14.Margin = new System.Windows.Forms.Padding(0);
             this.label14.Name = "label14";
@@ -356,7 +363,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label10
             // 
-            this.label10.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label10.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label10.Location = new System.Drawing.Point(20, 40);
             this.label10.Margin = new System.Windows.Forms.Padding(0);
             this.label10.Name = "label10";
@@ -367,18 +375,19 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label6
             // 
-            this.label6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label6.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label6.Location = new System.Drawing.Point(20, 10);
             this.label6.Margin = new System.Windows.Forms.Padding(0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(190, 30);
             this.label6.TabIndex = 1;
-            this.label6.Text = "Card Infomation";
+            this.label6.Text = "Card information";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label11
             // 
-            this.label11.BackColor = System.Drawing.Color.Gray;
+            this.label11.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
             this.label11.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label11.Location = new System.Drawing.Point(20, 236);
             this.label11.Margin = new System.Windows.Forms.Padding(0);
@@ -406,20 +415,20 @@ namespace ThirdPartyTool.SaleReceipt
             this.btnBrowseBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBrowseBatch.BackColor = System.Drawing.Color.White;
             this.btnBrowseBatch.BackgroundColor = System.Drawing.Color.White;
-            this.btnBrowseBatch.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.btnBrowseBatch.BorderColor = System.Drawing.Color.FromArgb(42, 108, 228);
             this.btnBrowseBatch.BorderRadius = 4;
             this.btnBrowseBatch.BorderSize = 1;
             this.btnBrowseBatch.FlatAppearance.BorderSize = 0;
             this.btnBrowseBatch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBrowseBatch.Font = new System.Drawing.Font("BLogic", 12F);
-            this.btnBrowseBatch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.btnBrowseBatch.Font = new System.Drawing.Font("Roboto", 10.5F);
+            this.btnBrowseBatch.ForeColor = System.Drawing.Color.FromArgb(42, 108, 228);
             this.btnBrowseBatch.Location = new System.Drawing.Point(301, 9);
             this.btnBrowseBatch.Margin = new System.Windows.Forms.Padding(0);
             this.btnBrowseBatch.Name = "btnBrowseBatch";
             this.btnBrowseBatch.Size = new System.Drawing.Size(96, 34);
             this.btnBrowseBatch.TabIndex = 9;
             this.btnBrowseBatch.Text = "Browse";
-            this.btnBrowseBatch.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.btnBrowseBatch.TextColor = System.Drawing.Color.FromArgb(42, 108, 228);
             this.btnBrowseBatch.UseVisualStyleBackColor = false;
             // 
             // txtBatchID
@@ -436,18 +445,19 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label17
             // 
-            this.label17.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label17.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.label17.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label17.Location = new System.Drawing.Point(20, 15);
             this.label17.Margin = new System.Windows.Forms.Padding(0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(70, 30);
             this.label17.TabIndex = 1;
-            this.label17.Text = "Batch:";
+            this.label17.Text = "Batch";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label18
             // 
-            this.label18.BackColor = System.Drawing.Color.Gray;
+            this.label18.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
             this.label18.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label18.Location = new System.Drawing.Point(20, 53);
             this.label18.Margin = new System.Windows.Forms.Padding(0);
@@ -472,7 +482,7 @@ namespace ThirdPartyTool.SaleReceipt
             // cmbPaymentMethod
             // 
             this.cmbPaymentMethod.BackColor = System.Drawing.Color.White;
-            this.cmbPaymentMethod.BorderColor = System.Drawing.Color.Gray;
+            this.cmbPaymentMethod.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.cmbPaymentMethod.BorderSize = 1;
             this.cmbPaymentMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPaymentMethod.Font = new System.Drawing.Font("Roboto", 12F);
@@ -491,18 +501,19 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label4
             // 
-            this.label4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label4.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label4.Location = new System.Drawing.Point(20, 10);
             this.label4.Margin = new System.Windows.Forms.Padding(0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(140, 30);
             this.label4.TabIndex = 1;
-            this.label4.Text = "Payment Method:";
+            this.label4.Text = "Payment method";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label8
             // 
-            this.label8.BackColor = System.Drawing.Color.Gray;
+            this.label8.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
             this.label8.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label8.Location = new System.Drawing.Point(20, 49);
             this.label8.Margin = new System.Windows.Forms.Padding(0);
@@ -598,13 +609,14 @@ namespace ThirdPartyTool.SaleReceipt
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label22.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label22.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label22.Location = new System.Drawing.Point(359, 45);
             this.label22.Margin = new System.Windows.Forms.Padding(0);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(192, 19);
             this.label22.TabIndex = 17;
-            this.label22.Text = "Final Total ( Exclude Tax )";
+            this.label22.Text = "Final total (excl. tax)";
             this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtTotalAmount_NoneTax_Include_CashDiscount
@@ -630,13 +642,14 @@ namespace ThirdPartyTool.SaleReceipt
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label21.Font = new System.Drawing.Font("Roboto", 10F);
+            this.label21.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             this.label21.Location = new System.Drawing.Point(20, 45);
             this.label21.Margin = new System.Windows.Forms.Padding(0);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(188, 19);
             this.label21.TabIndex = 15;
-            this.label21.Text = "Final Total ( Include Tax )";
+            this.label21.Text = "Final total (incl. tax)";
             this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel4
@@ -671,7 +684,8 @@ namespace ThirdPartyTool.SaleReceipt
             // label20
             // 
             this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label20.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label20.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.label20.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label20.Location = new System.Drawing.Point(20, 115);
             this.label20.Margin = new System.Windows.Forms.Padding(0);
             this.label20.Name = "label20";
@@ -682,7 +696,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label7
             // 
-            this.label7.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label7.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label7.Location = new System.Drawing.Point(20, 10);
             this.label7.Margin = new System.Windows.Forms.Padding(0);
             this.label7.Name = "label7";
@@ -693,7 +708,7 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label9
             // 
-            this.label9.BackColor = System.Drawing.Color.Gray;
+            this.label9.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
             this.label9.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label9.Location = new System.Drawing.Point(20, 154);
             this.label9.Margin = new System.Windows.Forms.Padding(0);
@@ -716,7 +731,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+            this.label2.Font = new System.Drawing.Font("Roboto", 10.5F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label2.Location = new System.Drawing.Point(20, 10);
             this.label2.Margin = new System.Windows.Forms.Padding(0);
             this.label2.Name = "label2";
@@ -727,7 +743,8 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Roboto", 12F);
+            this.label3.Font = new System.Drawing.Font("Roboto", 10.5F);
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label3.Location = new System.Drawing.Point(90, 10);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
@@ -738,7 +755,7 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // label5
             // 
-            this.label5.BackColor = System.Drawing.Color.Gray;
+            this.label5.BackColor = System.Drawing.Color.FromArgb(235, 235, 235);
             this.label5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label5.Location = new System.Drawing.Point(0, 49);
             this.label5.Margin = new System.Windows.Forms.Padding(0);
@@ -750,14 +767,14 @@ namespace ThirdPartyTool.SaleReceipt
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
-            this.btnOK.BorderColor = System.Drawing.Color.Gray;
+            this.btnOK.BackColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BackgroundColor = System.Drawing.Color.FromArgb(42, 108, 228);
+            this.btnOK.BorderColor = System.Drawing.Color.FromArgb(42, 108, 228);
             this.btnOK.BorderRadius = 8;
             this.btnOK.BorderSize = 1;
             this.btnOK.FlatAppearance.BorderSize = 0;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
+            this.btnOK.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
             this.btnOK.ForeColor = System.Drawing.Color.White;
             this.btnOK.Location = new System.Drawing.Point(516, 668);
             this.btnOK.Margin = new System.Windows.Forms.Padding(0);
@@ -773,35 +790,36 @@ namespace ThirdPartyTool.SaleReceipt
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.BackColor = System.Drawing.Color.White;
             this.btnCancel.BackgroundColor = System.Drawing.Color.White;
-            this.btnCancel.BorderColor = System.Drawing.Color.Gray;
+            this.btnCancel.BorderColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.btnCancel.BorderRadius = 8;
             this.btnCancel.BorderSize = 1;
             this.btnCancel.FlatAppearance.BorderSize = 0;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("BLogic", 12F, System.Drawing.FontStyle.Bold);
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
+            this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(66, 66, 66);
             this.btnCancel.Location = new System.Drawing.Point(356, 668);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(0);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(150, 50);
             this.btnCancel.TabIndex = 20;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextColor = System.Drawing.Color.Black;
+            this.btnCancel.TextColor = System.Drawing.Color.FromArgb(66, 66, 66);
             this.btnCancel.UseVisualStyleBackColor = false;
             // 
             // label1
             // 
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(87)))), ((int)(((byte)(208)))));
+            this.label1.BackColor = System.Drawing.Color.White;
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Roboto", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Bold);
+            this.label1.Padding = new System.Windows.Forms.Padding(18, 0, 0, 0);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(684, 50);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Finish Ticket";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label1.Text = "Finish ticket";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FinishTicketWithPaymentDetailForm
             // 
@@ -809,7 +827,9 @@ namespace ThirdPartyTool.SaleReceipt
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(686, 733);
             this.Controls.Add(this.panel1);
+            this.BackColor = System.Drawing.Color.FromArgb(189, 189, 189);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Padding = new System.Windows.Forms.Padding(1);
             this.Name = "FinishTicketWithPaymentDetailForm";
             this.Text = "FinishSaleReceiptForm";
             this.panel1.ResumeLayout(false);

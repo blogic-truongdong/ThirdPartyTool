@@ -513,18 +513,22 @@ namespace ThirdPartyTool.SaleReceipt
                 switch (serviceChargeType)
                 {
                     case ServiceChargeType.ManualServiceFee:
+                        enterServiceChargeForm.ChargeName = titleServiceCharge.Text;
                         enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountServiceChargeValue.Text);
                         enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxServiceChargeValue.Text);
                         break;
                     case ServiceChargeType.AreaServiceFee:
+                        enterServiceChargeForm.ChargeName = titleAreaGratuity.Text;
                         enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountAreaGratuityValue.Text);
                         enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxAreaGratuityValue.Text);
                         break;
                     case ServiceChargeType.PartyServiceFee:
+                        enterServiceChargeForm.ChargeName = titlePartyGratuity.Text;
                         enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountPartyGratuityValue.Text);
                         enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxPartyGratuityValue.Text);
                         break;
                     case ServiceChargeType.AutoServiceFee:
+                        enterServiceChargeForm.ChargeName = titleAutoServiceCharge.Text;
                         enterServiceChargeForm.txtAmount.Value = Utility.ConvertMoneyStringToDecimal(amountAutoServiceChargeValue.Text);
                         enterServiceChargeForm.txtTax.Value = Utility.ConvertMoneyStringToDecimal(taxAutoServiceChargeValue.Text);
                         break;
