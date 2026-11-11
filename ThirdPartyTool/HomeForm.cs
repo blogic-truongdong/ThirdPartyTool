@@ -30,6 +30,8 @@ namespace ThirdPartyTool
         public HomeForm()
         {
             InitializeComponent();
+            label4.Text = Helper.VersionText;
+            label3.Text = Helper.ReleaseText;
 
             this.Load += HomeForm_Load;
 

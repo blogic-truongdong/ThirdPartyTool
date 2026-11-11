@@ -49,6 +49,10 @@ namespace ThirdPartyTool
         public static string BLOGICPOS7_Name = "";
         public static string Merchant_Name = "";
 
+        /// <summary>Shown on the login screen and in the sidebar footer.</summary>
+        public const string VersionText = "Version 4.00";
+        public const string ReleaseText = "Release 03-03-2026";
+
         public static async Task<EmployeeClockInInfoEntity> GetEmployeeClockInInfo(SqlConnection conn, object employeeID, DateTime startDate)
         {
             EmployeeClockInInfoEntity employeeClockInInfoEntity = new EmployeeClockInInfoEntity();

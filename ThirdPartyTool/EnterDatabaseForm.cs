@@ -28,17 +28,21 @@ namespace ThirdPartyTool
         private void BtnCancel_Click(object sender, System.EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        /// <summary>Opens the form pre-filled with the databases in use (from the login screen).</summary>
+        public EnterDatabaseForm(string posDatabase, string merchantDatabase) : this()
+        {
+            txtBLogicPOS7.Text = posDatabase;
+            txtMerchant.Text = merchantDatabase;
+            btnYes.Text = "Save";
         }
 
         private void EnterDatabaseForm_Load(object sender, System.EventArgs e)
         {
-#if DEBUG
-            txtBLogicPOS7.Text = "BLogicPOS7_Testing";
-            txtBLogicPOS7.Text = "BLogicPOS7_Testing";
-#endif
-            var time = DateTime.Now.ToShortTimeString();
-
-            txtFocus.Focus();
+            txtBLogicPOS7.Focus();
+            txtBLogicPOS7.SelectAll();
         }
 
         private void PnlMerchant_Click(object sender, System.EventArgs e)
