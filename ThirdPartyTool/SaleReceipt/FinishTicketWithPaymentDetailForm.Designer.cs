@@ -38,8 +38,8 @@ namespace ThirdPartyTool.SaleReceipt
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label24 = new System.Windows.Forms.Label();
-            this.paymentTime = new System.Windows.Forms.DateTimePicker();
-            this.paymentDate = new System.Windows.Forms.DateTimePicker();
+            this.paymentTime = new ThirdPartyTool.CustomControl.DateField();
+            this.paymentDate = new ThirdPartyTool.CustomControl.DateField();
             this.txtCardNumber = new System.Windows.Forms.TextBox();
             this.txtAuthCode = new System.Windows.Forms.TextBox();
             this.txtCardType = new System.Windows.Forms.TextBox();
@@ -154,7 +154,6 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // panel5
             // 
-            this.panel5.Controls.Add(this.panel6);
             this.panel5.Controls.Add(this.paymentTime);
             this.panel5.Controls.Add(this.paymentDate);
             this.panel5.Controls.Add(this.txtCardNumber);
@@ -203,20 +202,19 @@ namespace ThirdPartyTool.SaleReceipt
             // 
             // paymentTime
             // 
-            this.paymentTime.Font = new System.Drawing.Font("Roboto", 12F);
-            this.paymentTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.paymentTime.Location = new System.Drawing.Point(377, 201);
+            this.paymentTime.Font = new System.Drawing.Font("Roboto", 10.5F);
+            this.paymentTime.ShowTime = true;
+            this.paymentTime.Location = new System.Drawing.Point(392, 196);
             this.paymentTime.Name = "paymentTime";
-            this.paymentTime.Size = new System.Drawing.Size(133, 27);
+            this.paymentTime.Size = new System.Drawing.Size(130, 34);
             this.paymentTime.TabIndex = 20;
             // 
             // paymentDate
             // 
-            this.paymentDate.Font = new System.Drawing.Font("Roboto", 12F);
-            this.paymentDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.paymentDate.Location = new System.Drawing.Point(244, 201);
+            this.paymentDate.Font = new System.Drawing.Font("Roboto", 10.5F);
+            this.paymentDate.Location = new System.Drawing.Point(244, 196);
             this.paymentDate.Name = "paymentDate";
-            this.paymentDate.Size = new System.Drawing.Size(127, 27);
+            this.paymentDate.Size = new System.Drawing.Size(140, 34);
             this.paymentDate.TabIndex = 19;
             // 
             // txtCardNumber
@@ -899,10 +897,10 @@ namespace ThirdPartyTool.SaleReceipt
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.DateTimePicker paymentDate;
+        private ThirdPartyTool.CustomControl.DateField paymentDate;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.DateTimePicker paymentTime;
+        private ThirdPartyTool.CustomControl.DateField paymentTime;
         private IntergeTextBox txtReferenceNumber;
         private System.Windows.Forms.Label label25;
     }

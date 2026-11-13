@@ -28,6 +28,7 @@ namespace ThirdPartyTool.SaleReceipt
         public ReceiptView_v2()
         {
             InitializeComponent();
+            InitReceiptPreview();
 
             txtSearch.KeyUp += TxtSearch_KeyUp;
             btnSearch.Click += BtnSearch_Click;
@@ -543,6 +544,7 @@ namespace ThirdPartyTool.SaleReceipt
                     PrintControl_Receipt.PrintingSystem?.Dispose();
                     PrintControl_Receipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
                     PrintControl_Receipt.Refresh();
+                    SetPreviewEmpty(true);
 
                     BtnBackCloseTicket_Click(null, null);
                 }
@@ -904,6 +906,7 @@ namespace ThirdPartyTool.SaleReceipt
                 PrintControl_Receipt.PrintingSystem = xReport.PrintingSystem;
                 xReport.CreateDocument();
                 PrintControl_Receipt.ExecCommand(DevExpress.XtraPrinting.PrintingSystemCommand.ZoomToPageWidth);
+                SetPreviewEmpty(false);
 
                 DataTable dtSaleReceipt = new DataTable("SaleReceipt");
 
@@ -947,6 +950,7 @@ namespace ThirdPartyTool.SaleReceipt
                 PrintControl_Receipt.PrintingSystem?.Dispose();
                 PrintControl_Receipt.PrintingSystem = new DevExpress.XtraPrinting.PrintingSystem();
                 PrintControl_Receipt.Refresh();
+                SetPreviewEmpty(true);
                 UpdateTicketHeader(null);
             }
             catch (Exception ex)

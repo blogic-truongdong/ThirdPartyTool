@@ -46,6 +46,7 @@ namespace ThirdPartyTool
             btnAdvancedFuntion.Click += BtnOption_Click;
 
             InitNavButtons();
+            InitChrome();
         }
 
         private void BtnOption_Click(object sender, EventArgs e)

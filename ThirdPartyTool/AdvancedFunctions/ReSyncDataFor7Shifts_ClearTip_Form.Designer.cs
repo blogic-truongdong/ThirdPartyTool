@@ -40,8 +40,8 @@
             this.pnlLoadingContainer = new System.Windows.Forms.Panel();
             this.pnlLoading = new System.Windows.Forms.PictureBox();
             this.btnCancelProcess = new System.Windows.Forms.Button();
-            this.EndDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
-            this.StartDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
+            this.EndDate = new ThirdPartyTool.CustomControl.DateField();
+            this.StartDate = new ThirdPartyTool.CustomControl.DateField();
             this.pnlContainer.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -194,23 +194,17 @@
             // 
             // EndDate
             // 
-            this.EndDate.BackColor = System.Drawing.Color.White;
-            this.EndDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.EndDate.Location = new System.Drawing.Point(194, 90);
             this.EndDate.Name = "EndDate";
-            this.EndDate.Size = new System.Drawing.Size(200, 35);
+            this.EndDate.Size = new System.Drawing.Size(200, 40);
             this.EndDate.TabIndex = 5;
-            this.EndDate.Value = new System.DateTime(((long)(0)));
             // 
             // StartDate
             // 
-            this.StartDate.BackColor = System.Drawing.Color.White;
-            this.StartDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.StartDate.Location = new System.Drawing.Point(194, 45);
             this.StartDate.Name = "StartDate";
-            this.StartDate.Size = new System.Drawing.Size(200, 35);
+            this.StartDate.Size = new System.Drawing.Size(200, 40);
             this.StartDate.TabIndex = 4;
-            this.StartDate.Value = new System.DateTime(((long)(0)));
             // 
             // ReSyncDataFor7ShiftsForm
             // 
@@ -243,8 +237,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private CustomControl.CustomDateTimePicker StartDate;
-        private CustomControl.CustomDateTimePicker EndDate;
+        private CustomControl.DateField StartDate;
+        private CustomControl.DateField EndDate;
         private System.Windows.Forms.Panel pnlLoadingContainer;
         private System.Windows.Forms.Button btnCancelProcess;
         private System.Windows.Forms.PictureBox pnlLoading;

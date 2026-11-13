@@ -45,28 +45,132 @@ namespace ThirdPartyTool.AdvancedFunctions
             btnSyncDataFor7Shifts_ClearTip.Click += BtnSyncDataFor7Shifts_ClearTip_Click;
 
 #endif
+            SetupLayout();
             flpContent.Resize += (s, e) => LayoutCards();
             UpdateSections();
             LayoutCards();
         }
 
-        /// <summary>Shows a section heading only when at least one of its tools is listed.</summary>
-        private void UpdateSections()
+        private static readonly Color TicketsAccent = Color.FromArgb(42, 108, 228);
+        private static readonly Color SevenShiftsAccent = Color.FromArgb(22, 163, 74);
+        private static readonly Color DeveloperAccent = Color.FromArgb(107, 114, 128);
+        private CustomControl.NoticeBox notice;
+
+        /// <summary>Card grid (2 columns when there is room), icon tiles per section and a "use with care" notice.</summary>
+        private void SetupLayout()
         {
-            lblSectionTickets.Visible = btnCloseUnPaidTicket.IsListed || btnClearTableStatus.IsListed || btnUpdateDSPTax.IsListed || btnCorrectDataStreamOrder.IsListed;
-            lblSection7Shifts.Visible = btnSyncDataFor7Shifts.IsListed || btnSyncDataFor7Shifts_ClearTip.IsListed || btnClearSalesData7Shifts.IsListed;
-            lblSectionDeveloper.Visible = btnTest.IsListed;
+            flpContent.FlowDirection = FlowDirection.LeftToRight;
+            flpContent.WrapContents = true;
+            flpContent.Padding = new Padding(16, 8, 24, 24);
+            lblSubtitle.Text = "Maintenance tools for tickets and 7shifts.";
+
+            notice = new CustomControl.NoticeBox
+            {
+                Title = "Use with care",
+                Lines = new[]
+                {
+                    "These tools change the store's live data directly.",
+                    "Each change is saved in one transaction and recorded in the UpdateToolAuditLog table.",
+                },
+                Margin = new Padding(0, 12, 0, 4),
+            };
+            flpContent.Controls.Add(notice);
+            flpContent.Controls.SetChildIndex(notice, 0);
+
+            Style(btnCloseUnPaidTicket, TicketsAccent, "");
+            Style(btnClearTableStatus, TicketsAccent, "");
+            Style(btnUpdateDSPTax, TicketsAccent, "");
+            Style(btnCorrectDataStreamOrder, TicketsAccent, "");
+            Style(btnSyncDataFor7Shifts, SevenShiftsAccent, "");
+            Style(btnSyncDataFor7Shifts_ClearTip, SevenShiftsAccent, "");
+            Style(btnClearSalesData7Shifts, SevenShiftsAccent, "");
+            Style(btnTest, DeveloperAccent, "");
+
+            foreach (Label section in new[] { lblSectionTickets, lblSection7Shifts, lblSectionDeveloper })
+            {
+                section.AutoSize = false;
+                section.Height = 30;
+                section.TextAlign = ContentAlignment.BottomLeft;
+                section.Paint += Section_Paint;
+            }
         }
 
-        /// <summary>Stretches cards to the content width (capped so lines stay readable).</summary>
+        private static void Style(ActionCard card, Color accent, string glyph)
+        {
+            card.Accent = accent;
+            card.Glyph = glyph;
+        }
+
+        /// <summary>Section heading: "TICKETS  1" followed by a thin rule to the right edge.</summary>
+        private void Section_Paint(object sender, PaintEventArgs e)
+        {
+            Label section = (Label)sender;
+            Size text = TextRenderer.MeasureText(e.Graphics, section.Text, section.Font);
+            int x = text.Width + 2;
+            int baseline = section.Height - text.Height / 2 - 2;
+            if (section.Tag is int count && count > 0)
+            {
+                string label = count.ToString();
+                using (Font font = new Font("Roboto", 8F, FontStyle.Bold))
+                {
+                    Size size = TextRenderer.MeasureText(e.Graphics, label, font);
+                    Rectangle pill = new Rectangle(x + 2, baseline - 9, Math.Max(18, size.Width + 2), 18);
+                    e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    using (GraphicsPath path = ActionCard.RoundedRect(pill, 9))
+                    using (SolidBrush brush = new SolidBrush(Color.FromArgb(241, 243, 246)))
+                        e.Graphics.FillPath(brush, path);
+                    TextRenderer.DrawText(e.Graphics, label, font, pill, Color.FromArgb(107, 114, 128), TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                    x = pill.Right + 10;
+                }
+            }
+            using (Pen pen = new Pen(Color.FromArgb(229, 231, 235)))
+                e.Graphics.DrawLine(pen, x, baseline, section.Width, baseline);
+        }
+
+        /// <summary>Shows a section heading only when at least one of its tools is listed, with the number listed.</summary>
+        private void UpdateSections()
+        {
+            Func<ActionCard[], int> listed = cards => cards.Count(c => c.IsListed);
+            int tickets = listed(new[] { btnCloseUnPaidTicket, btnClearTableStatus, btnUpdateDSPTax, btnCorrectDataStreamOrder });
+            int sevenShifts = listed(new[] { btnSyncDataFor7Shifts, btnSyncDataFor7Shifts_ClearTip, btnClearSalesData7Shifts });
+            int developer = listed(new[] { btnTest });
+            lblSectionTickets.Visible = tickets > 0; lblSectionTickets.Tag = tickets;
+            lblSection7Shifts.Visible = sevenShifts > 0; lblSection7Shifts.Tag = sevenShifts;
+            lblSectionDeveloper.Visible = developer > 0; lblSectionDeveloper.Tag = developer;
+        }
+
+        /// <summary>Two cards per row when the page is wide enough, one otherwise; headings and the notice span the row.</summary>
         private void LayoutCards()
         {
-            int width = Math.Min(flpContent.ClientSize.Width - flpContent.Padding.Horizontal, 720);
+            const int gap = 12;
+            int width = Math.Min(flpContent.ClientSize.Width - flpContent.Padding.Horizontal - 1, 1120);
             if (width < 200)
                 return;
+            int columns = width >= 640 ? 2 : 1;
+            int cardWidth = (width - gap * columns) / columns;
+
             flpContent.SuspendLayout();
+            Control previous = null;
             foreach (Control control in flpContent.Controls)
-                control.Width = width;
+            {
+                if (control is ActionCard card)
+                {
+                    card.Size = new Size(cardWidth, 92);
+                    card.Margin = new Padding(0, 0, gap, gap);
+                    flpContent.SetFlowBreak(card, false);
+                }
+                else
+                {
+                    // Headings and the notice always sit on their own row, however wide the window is.
+                    // Headings span the whole row (a narrower flow-break control leaves an empty row below it).
+                    control.Width = control is Label ? flpContent.ClientSize.Width - flpContent.Padding.Horizontal - 1 : width;
+                    flpContent.SetFlowBreak(control, true);
+                    if (previous != null)
+                        flpContent.SetFlowBreak(previous, true);
+                }
+                if (control.Visible || (control as ActionCard)?.IsListed == true)
+                    previous = control;
+            }
             flpContent.ResumeLayout();
         }
 
@@ -286,6 +390,17 @@ namespace ThirdPartyTool.AdvancedFunctions
         [DefaultValue("")]
         public string Badge { get; set; } = "";
 
+        /// <summary>Colour of the icon tile (section colour).</summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Color Accent { get; set; } = Color.FromArgb(42, 108, 228);
+
+        /// <summary>Segoe MDL2 Assets glyph for the icon tile; the first letter of the title is used when that font is missing.</summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string Glyph { get; set; } = "";
+
+        private static readonly bool HasIconFont = FontFamily.Families.Any(f => f.Name == "Segoe MDL2 Assets");
+        private static readonly Font IconFont = HasIconFont ? new Font("Segoe MDL2 Assets", 14F) : new Font("Roboto", 13F, FontStyle.Bold);
+
         /// <summary>The visibility this card was given (Visible reads false while the parent is hidden).</summary>
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsListed { get; private set; } = true;
@@ -325,24 +440,36 @@ namespace ThirdPartyTool.AdvancedFunctions
                     g.DrawPath(pen, path);
             }
 
-            const int left = 20;
-            int textRight = Width - 48;
+            // Icon tile in the section colour
+            Rectangle tile = new Rectangle(16, (Height - 44) / 2, 44, 44);
+            using (GraphicsPath path = RoundedRect(tile, 10))
+            using (SolidBrush brush = new SolidBrush(Color.FromArgb(hover ? 40 : 26, Accent)))
+                g.FillPath(brush, path);
+            string icon = HasIconFont && !string.IsNullOrEmpty(Glyph) ? Glyph : (string.IsNullOrEmpty(Text) ? "?" : Text.Substring(0, 1).ToUpperInvariant());
+            TextRenderer.DrawText(g, icon, IconFont, tile, Accent, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix);
+
+            int left = tile.Right + 14;
+            int textRight = Width - 44;
             TextFormatFlags flags = TextFormatFlags.NoPrefix | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis;
 
-            Size titleSize = TextRenderer.MeasureText(g, Text, TitleFont, new Size(textRight - left, 24), flags);
-            TextRenderer.DrawText(g, Text, TitleFont, new Rectangle(left, 14, textRight - left, 24), hover ? Primary : TitleColor, flags);
+            int badgeSpace = string.IsNullOrEmpty(Badge) ? 0 : TextRenderer.MeasureText(g, Badge, BadgeFont).Width + 14;
+            Size titleSize = TextRenderer.MeasureText(g, Text, TitleFont, new Size(textRight - left - badgeSpace, 24), flags);
+            int titleWidth = Math.Min(titleSize.Width, textRight - left - badgeSpace);
+            TextRenderer.DrawText(g, Text, TitleFont, new Rectangle(left, 18, titleWidth, 24), hover ? Primary : TitleColor, flags);
 
             if (!string.IsNullOrEmpty(Badge))
             {
                 Size badgeSize = TextRenderer.MeasureText(g, Badge, BadgeFont);
-                Rectangle badge = new Rectangle(left + titleSize.Width + 6, 17, badgeSize.Width + 4, 18);
+                Rectangle badge = new Rectangle(left + titleWidth + 6, 21, badgeSize.Width + 4, 18);
                 using (GraphicsPath path = RoundedRect(badge, 4))
                 using (SolidBrush brush = new SolidBrush(BadgeBack))
                     g.FillPath(brush, path);
                 TextRenderer.DrawText(g, Badge, BadgeFont, badge, BadgeText, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix);
             }
 
-            TextRenderer.DrawText(g, Description, DescriptionFont, new Rectangle(left, 40, textRight - left, 20), MutedColor, flags);
+            // Description: up to two lines
+            TextRenderer.DrawText(g, Description, DescriptionFont, new Rectangle(left, 44, textRight - left, 36), MutedColor,
+                TextFormatFlags.NoPrefix | TextFormatFlags.WordBreak | TextFormatFlags.EndEllipsis);
 
             int cx = Width - 26;
             int cy = Height / 2;
@@ -353,7 +480,7 @@ namespace ThirdPartyTool.AdvancedFunctions
             }
         }
 
-        private static GraphicsPath RoundedRect(Rectangle r, int radius)
+        internal static GraphicsPath RoundedRect(Rectangle r, int radius)
         {
             int d = radius * 2;
             GraphicsPath path = new GraphicsPath();

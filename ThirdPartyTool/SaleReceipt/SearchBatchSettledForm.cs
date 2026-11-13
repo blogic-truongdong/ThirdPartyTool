@@ -74,7 +74,7 @@ namespace ThirdPartyTool.SaleReceipt
         {
             try
             {
-                DataTable dtBatchs = Helper.ProcessQuery(false, $"select BatchUnique, Date as DateCreated, WorkStationName,MerchantID,ID,Quantity,Total  from Batch a where a.Date between '{startDate.DateTimeValues}' and '{endDate.DateTimeValues}' order by a.Date desc", "Batch");
+                DataTable dtBatchs = Helper.ProcessQuery(false, $"select BatchUnique, Date as DateCreated, WorkStationName,MerchantID,ID,Quantity,Total  from Batch a where a.Date between '{startDate.Value:yyyy-MM-dd HH:mm:ss}' and '{endDate.EndValue:yyyy-MM-dd HH:mm:ss.fff}' order by a.Date desc", "Batch");
 
                 dgvBatchs.DataSource = dtBatchs;
             }

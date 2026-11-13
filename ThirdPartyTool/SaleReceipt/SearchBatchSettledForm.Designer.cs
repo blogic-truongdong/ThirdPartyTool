@@ -40,8 +40,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgvBatchs = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.endDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
-            this.startDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
+            this.endDate = new ThirdPartyTool.CustomControl.DateField();
+            this.startDate = new ThirdPartyTool.CustomControl.DateField();
             this.label2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btnSearch = new ThirdPartyTool.CustomControl.BLabel_Rounded();
@@ -140,28 +140,18 @@
             // endDate
             // 
             this.endDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.endDate.DateTimeValues = new System.DateTime(2015, 12, 14, 11, 10, 0, 0);
             this.endDate.Location = new System.Drawing.Point(243, 53);
-            this.endDate.Margin = new System.Windows.Forms.Padding(4);
             this.endDate.Name = "endDate";
-            this.endDate.ShowCheckBox = true;
-            this.endDate.ShowDate = true;
-            this.endDate.Size = new System.Drawing.Size(248, 39);
+            this.endDate.Size = new System.Drawing.Size(248, 40);
             this.endDate.TabIndex = 687;
-            this.endDate.WrongValues = false;
             // 
             // startDate
             // 
             this.startDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.startDate.DateTimeValues = new System.DateTime(2015, 12, 14, 11, 10, 0, 0);
             this.startDate.Location = new System.Drawing.Point(243, 8);
-            this.startDate.Margin = new System.Windows.Forms.Padding(4);
             this.startDate.Name = "startDate";
-            this.startDate.ShowCheckBox = true;
-            this.startDate.ShowDate = true;
-            this.startDate.Size = new System.Drawing.Size(248, 39);
+            this.startDate.Size = new System.Drawing.Size(248, 40);
             this.startDate.TabIndex = 688;
-            this.startDate.WrongValues = false;
             // 
             // label2
             // 
@@ -383,8 +373,8 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
         private RJCodeAdvance.RJControls.RJButton btnCancel;
-        public BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom endDate;
-        public BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom startDate;
+        public ThirdPartyTool.CustomControl.DateField endDate;
+        public ThirdPartyTool.CustomControl.DateField startDate;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label6;
         public CustomControl.BLabel_Rounded btnSearch;

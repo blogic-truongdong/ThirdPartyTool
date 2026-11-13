@@ -388,7 +388,7 @@ namespace ThirdPartyTool.AdvancedFunctions
             string sql = $"SELECT top 100 a.SaleReceiptID, a.TransactionStatusID, a.SaleReceiptType, " +
                         $"a.TotalAmount, a.TaxAmount, a.SalesOrderFee, a.TotalDiscountAmount, a.DateCreated " +
                         $"FROM SaleReceipts a " +
-                        $"WHERE a.DateCreated >= '{StartDate.Value}' AND a.DateCreated <= '{EndDate.Value}' " +
+                        $"WHERE a.DateCreated >= '{StartDate.Value}' AND a.DateCreated <= '{EndDate.EndValue}' " +
                         $"AND a.TransactionStatusID IN ('{STATUS_FINISHED}', '{STATUS_VOID}', '{STATUS_RETURN}') " +
                         $"AND a.SaleReceiptID NOT IN (SELECT b.SaleReceiptID FROM SaleReceiptThirdPartyMappings b) " +
                         $"ORDER BY a.DateCreated";

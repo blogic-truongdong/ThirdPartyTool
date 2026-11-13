@@ -30,8 +30,8 @@
         {
             this.pnlContainer = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.EndDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
-            this.StartDate = new ThirdPartyTool.CustomControl.CustomDateTimePicker();
+            this.EndDate = new ThirdPartyTool.CustomControl.DateField();
+            this.StartDate = new ThirdPartyTool.CustomControl.DateField();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -73,23 +73,17 @@
             // 
             // EndDate
             // 
-            this.EndDate.BackColor = System.Drawing.Color.White;
-            this.EndDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.EndDate.Location = new System.Drawing.Point(194, 90);
             this.EndDate.Name = "EndDate";
-            this.EndDate.Size = new System.Drawing.Size(200, 35);
+            this.EndDate.Size = new System.Drawing.Size(200, 40);
             this.EndDate.TabIndex = 5;
-            this.EndDate.Value = new System.DateTime(((long)(0)));
             // 
             // StartDate
             // 
-            this.StartDate.BackColor = System.Drawing.Color.White;
-            this.StartDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.StartDate.Location = new System.Drawing.Point(194, 45);
             this.StartDate.Name = "StartDate";
-            this.StartDate.Size = new System.Drawing.Size(200, 35);
+            this.StartDate.Size = new System.Drawing.Size(200, 40);
             this.StartDate.TabIndex = 4;
-            this.StartDate.Value = new System.DateTime(((long)(0)));
             // 
             // label3
             // 
@@ -201,7 +195,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private CustomControl.CustomDateTimePicker StartDate;
-        private CustomControl.CustomDateTimePicker EndDate;
+        private CustomControl.DateField StartDate;
+        private CustomControl.DateField EndDate;
     }
 }

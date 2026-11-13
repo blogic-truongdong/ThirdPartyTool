@@ -505,6 +505,9 @@
     <Compile Include="CustomControl\BLabel_Rounded.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomControl\DateField.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomControl\NoticeBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -647,6 +650,10 @@
     </Compile>
     <Compile Include="AuditLog.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="HomeForm.Chrome.cs">
+      <DependentUpon>HomeForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="HomeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -817,6 +824,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SaleReceipt\ReceiptView_v2.Designer.cs">
+      <DependentUpon>ReceiptView_v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SaleReceipt\ReceiptView_v2.Preview.cs">
       <DependentUpon>ReceiptView_v2.cs</DependentUpon>
     </Compile>
     <Compile Include="SaleReceipt\RefundItemRow.cs">

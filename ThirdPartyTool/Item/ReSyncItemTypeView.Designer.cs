@@ -35,10 +35,10 @@
             this.label7 = new System.Windows.Forms.Label();
             this.bPanel_Rounded4 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.pnlStartDateClip = new System.Windows.Forms.Panel();
-            this.startDate = new System.Windows.Forms.DateTimePicker();
+            this.startDate = new ThirdPartyTool.CustomControl.DateField();
             this.bPanel_Rounded5 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.pnlEndDateClip = new System.Windows.Forms.Panel();
-            this.endDate = new System.Windows.Forms.DateTimePicker();
+            this.endDate = new ThirdPartyTool.CustomControl.DateField();
             this.btnSyncRoles = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlCard.SuspendLayout();
             this.bPanel_Rounded4.SuspendLayout();
@@ -58,8 +58,8 @@
             this.pnlCard.Controls.Add(this.lblCardDesc);
             this.pnlCard.Controls.Add(this.label5);
             this.pnlCard.Controls.Add(this.label7);
-            this.pnlCard.Controls.Add(this.bPanel_Rounded4);
-            this.pnlCard.Controls.Add(this.bPanel_Rounded5);
+            this.pnlCard.Controls.Add(this.startDate);
+            this.pnlCard.Controls.Add(this.endDate);
             this.pnlCard.Controls.Add(this.btnSyncRoles);
             this.pnlCard.Location = new System.Drawing.Point(20, 16);
             this.pnlCard.Name = "pnlCard";
@@ -125,7 +125,6 @@
             //
             // pnlStartDateClip
             //
-            this.pnlStartDateClip.Controls.Add(this.startDate);
             this.pnlStartDateClip.Location = new System.Drawing.Point(8, 10);
             this.pnlStartDateClip.Name = "pnlStartDateClip";
             this.pnlStartDateClip.Size = new System.Drawing.Size(152, 20);
@@ -133,13 +132,11 @@
             //
             // startDate
             //
-            this.startDate.CustomFormat = "MM/dd/yyyy";
             this.startDate.Font = new System.Drawing.Font("Roboto", 11F);
-            this.startDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.startDate.Location = new System.Drawing.Point(-2, -2);
+            this.startDate.Location = new System.Drawing.Point(20, 114);
             this.startDate.Name = "startDate";
-            this.startDate.Size = new System.Drawing.Size(156, 25);
-            this.startDate.TabIndex = 0;
+            this.startDate.Size = new System.Drawing.Size(168, 40);
+            this.startDate.TabIndex = 2;
             //
             // bPanel_Rounded5
             //
@@ -156,7 +153,6 @@
             //
             // pnlEndDateClip
             //
-            this.pnlEndDateClip.Controls.Add(this.endDate);
             this.pnlEndDateClip.Location = new System.Drawing.Point(8, 10);
             this.pnlEndDateClip.Name = "pnlEndDateClip";
             this.pnlEndDateClip.Size = new System.Drawing.Size(152, 20);
@@ -164,13 +160,11 @@
             //
             // endDate
             //
-            this.endDate.CustomFormat = "MM/dd/yyyy";
             this.endDate.Font = new System.Drawing.Font("Roboto", 11F);
-            this.endDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.endDate.Location = new System.Drawing.Point(-2, -2);
+            this.endDate.Location = new System.Drawing.Point(200, 114);
             this.endDate.Name = "endDate";
-            this.endDate.Size = new System.Drawing.Size(156, 25);
-            this.endDate.TabIndex = 0;
+            this.endDate.Size = new System.Drawing.Size(168, 40);
+            this.endDate.TabIndex = 3;
             //
             // btnSyncRoles
             //
@@ -217,10 +211,10 @@
         private System.Windows.Forms.Label label7;
         private CustomControl.BPanel_Rounded bPanel_Rounded4;
         private System.Windows.Forms.Panel pnlStartDateClip;
-        private System.Windows.Forms.DateTimePicker startDate;
+        private ThirdPartyTool.CustomControl.DateField startDate;
         private CustomControl.BPanel_Rounded bPanel_Rounded5;
         private System.Windows.Forms.Panel pnlEndDateClip;
-        private System.Windows.Forms.DateTimePicker endDate;
+        private ThirdPartyTool.CustomControl.DateField endDate;
         private CustomControl.BLabel_Rounded btnSyncRoles;
     }
 }

@@ -68,10 +68,10 @@ namespace ThirdPartyTool.Employee
             this.label7 = new System.Windows.Forms.Label();
             this.bPanel_Rounded4 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.pnlStartDateClip = new System.Windows.Forms.Panel();
-            this.startDate = new System.Windows.Forms.DateTimePicker();
+            this.startDate = new ThirdPartyTool.CustomControl.DateField();
             this.bPanel_Rounded5 = new ThirdPartyTool.CustomControl.BPanel_Rounded();
             this.pnlEndDateClip = new System.Windows.Forms.Panel();
-            this.endDate = new System.Windows.Forms.DateTimePicker();
+            this.endDate = new ThirdPartyTool.CustomControl.DateField();
             this.btnSyncRoles = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.lblStartDate = new System.Windows.Forms.Label();
             this.lblEndDate = new System.Windows.Forms.Label();
@@ -354,8 +354,8 @@ namespace ThirdPartyTool.Employee
             this.pnlSync.Controls.Add(this.bPanel_Rounded2);
             this.pnlSync.Controls.Add(this.label5);
             this.pnlSync.Controls.Add(this.label7);
-            this.pnlSync.Controls.Add(this.bPanel_Rounded4);
-            this.pnlSync.Controls.Add(this.bPanel_Rounded5);
+            this.pnlSync.Controls.Add(this.startDate);
+            this.pnlSync.Controls.Add(this.endDate);
             this.pnlSync.Controls.Add(this.btnSyncRoles);
             this.pnlSync.Controls.Add(this.lblStartDate);
             this.pnlSync.Controls.Add(this.lblEndDate);
@@ -539,7 +539,6 @@ namespace ThirdPartyTool.Employee
             // pnlStartDateClip
             //
             this.pnlStartDateClip.BackColor = System.Drawing.Color.White;
-            this.pnlStartDateClip.Controls.Add(this.startDate);
             this.pnlStartDateClip.Location = new System.Drawing.Point(6, 10);
             this.pnlStartDateClip.Name = "pnlStartDateClip";
             this.pnlStartDateClip.Size = new System.Drawing.Size(120, 20);
@@ -547,13 +546,11 @@ namespace ThirdPartyTool.Employee
             //
             // startDate
             //
-            this.startDate.CustomFormat = "MM/dd/yyyy";
-            this.startDate.Font = new System.Drawing.Font("Roboto", 11F);
-            this.startDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.startDate.Location = new System.Drawing.Point(-2, -2);
+            this.startDate.Font = new System.Drawing.Font("Roboto", 10.5F);
+            this.startDate.Location = new System.Drawing.Point(24, 304);
             this.startDate.Name = "startDate";
-            this.startDate.Size = new System.Drawing.Size(124, 25);
-            this.startDate.TabIndex = 0;
+            this.startDate.Size = new System.Drawing.Size(132, 40);
+            this.startDate.TabIndex = 8;
             //
             // bPanel_Rounded5
             //
@@ -571,7 +568,6 @@ namespace ThirdPartyTool.Employee
             // pnlEndDateClip
             //
             this.pnlEndDateClip.BackColor = System.Drawing.Color.White;
-            this.pnlEndDateClip.Controls.Add(this.endDate);
             this.pnlEndDateClip.Location = new System.Drawing.Point(6, 10);
             this.pnlEndDateClip.Name = "pnlEndDateClip";
             this.pnlEndDateClip.Size = new System.Drawing.Size(120, 20);
@@ -579,13 +575,11 @@ namespace ThirdPartyTool.Employee
             //
             // endDate
             //
-            this.endDate.CustomFormat = "MM/dd/yyyy";
-            this.endDate.Font = new System.Drawing.Font("Roboto", 11F);
-            this.endDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.endDate.Location = new System.Drawing.Point(-2, -2);
+            this.endDate.Font = new System.Drawing.Font("Roboto", 10.5F);
+            this.endDate.Location = new System.Drawing.Point(164, 304);
             this.endDate.Name = "endDate";
-            this.endDate.Size = new System.Drawing.Size(124, 25);
-            this.endDate.TabIndex = 0;
+            this.endDate.Size = new System.Drawing.Size(132, 40);
+            this.endDate.TabIndex = 9;
             //
             // btnSyncRoles
             //
@@ -695,10 +689,10 @@ namespace ThirdPartyTool.Employee
         private System.Windows.Forms.Label label7;
         private CustomControl.BPanel_Rounded bPanel_Rounded4;
         private System.Windows.Forms.Panel pnlStartDateClip;
-        private System.Windows.Forms.DateTimePicker startDate;
+        private ThirdPartyTool.CustomControl.DateField startDate;
         private CustomControl.BPanel_Rounded bPanel_Rounded5;
         private System.Windows.Forms.Panel pnlEndDateClip;
-        private System.Windows.Forms.DateTimePicker endDate;
+        private ThirdPartyTool.CustomControl.DateField endDate;
         private CustomControl.BLabel_Rounded btnSyncRoles;
         private System.Windows.Forms.Label lblStartDate;
         private System.Windows.Forms.Label lblEndDate;

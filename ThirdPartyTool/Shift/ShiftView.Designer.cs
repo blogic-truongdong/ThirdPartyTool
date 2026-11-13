@@ -42,9 +42,9 @@
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblCount = new System.Windows.Forms.Label();
             this.lblFrom = new System.Windows.Forms.Label();
-            this.startDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
+            this.startDate = new ThirdPartyTool.CustomControl.DateField();
             this.lblTo = new System.Windows.Forms.Label();
-            this.endDate = new BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom();
+            this.endDate = new ThirdPartyTool.CustomControl.DateField();
             this.btnView = new ThirdPartyTool.CustomControl.BLabel_Rounded();
             this.pnlDivider = new System.Windows.Forms.Panel();
             this.pnlGrid = new System.Windows.Forms.Panel();
@@ -127,22 +127,17 @@
             //
             // startDate
             //
-            this.startDate.DateTimeValues = new System.DateTime(2015, 12, 14, 0, 0, 0, 0);
             this.startDate.Location = new System.Drawing.Point(66, 72);
-            this.startDate.Margin = new System.Windows.Forms.Padding(4);
             this.startDate.Name = "startDate";
-            this.startDate.ShowCheckBox = true;
-            this.startDate.ShowDate = true;
-            this.startDate.Size = new System.Drawing.Size(248, 39);
+            this.startDate.Size = new System.Drawing.Size(170, 40);
             this.startDate.TabIndex = 4;
-            this.startDate.WrongValues = false;
             //
             // lblTo
             //
             this.lblTo.AutoSize = true;
             this.lblTo.Font = new System.Drawing.Font("Roboto", 11F);
             this.lblTo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(66)))), ((int)(((byte)(66)))));
-            this.lblTo.Location = new System.Drawing.Point(330, 82);
+            this.lblTo.Location = new System.Drawing.Point(254, 82);
             this.lblTo.Name = "lblTo";
             this.lblTo.Size = new System.Drawing.Size(24, 18);
             this.lblTo.TabIndex = 5;
@@ -150,15 +145,10 @@
             //
             // endDate
             //
-            this.endDate.DateTimeValues = new System.DateTime(2015, 12, 14, 0, 0, 0, 0);
-            this.endDate.Location = new System.Drawing.Point(362, 72);
-            this.endDate.Margin = new System.Windows.Forms.Padding(4);
+            this.endDate.Location = new System.Drawing.Point(286, 72);
             this.endDate.Name = "endDate";
-            this.endDate.ShowCheckBox = true;
-            this.endDate.ShowDate = true;
-            this.endDate.Size = new System.Drawing.Size(248, 39);
+            this.endDate.Size = new System.Drawing.Size(170, 40);
             this.endDate.TabIndex = 6;
-            this.endDate.WrongValues = false;
             //
             // btnView
             //
@@ -170,9 +160,9 @@
             this.btnView.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnView.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Bold);
             this.btnView.ForeColor = System.Drawing.Color.White;
-            this.btnView.Location = new System.Drawing.Point(626, 72);
+            this.btnView.Location = new System.Drawing.Point(472, 72);
             this.btnView.Name = "btnView";
-            this.btnView.Size = new System.Drawing.Size(110, 39);
+            this.btnView.Size = new System.Drawing.Size(110, 40);
             this.btnView.TabIndex = 7;
             this.btnView.Text = "View";
             this.btnView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -390,9 +380,9 @@
         private System.Windows.Forms.Label lblSubtitle;
         private System.Windows.Forms.Label lblCount;
         private System.Windows.Forms.Label lblFrom;
-        public BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom startDate;
+        public ThirdPartyTool.CustomControl.DateField startDate;
         private System.Windows.Forms.Label lblTo;
-        public BLogicSystems.POSBackOffice.Control.BUserControl.BDateTimePickerCustom endDate;
+        public ThirdPartyTool.CustomControl.DateField endDate;
         public CustomControl.BLabel_Rounded btnView;
         private System.Windows.Forms.Panel pnlDivider;
         private System.Windows.Forms.Panel pnlGrid;
